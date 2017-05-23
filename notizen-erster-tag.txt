@@ -1,0 +1,37 @@
+  Simulation
+  ^       ^             Keine Verfälschung
+  R       R
+------------------------------------------------
+ /  ^ ^  |  \
+|  /   \ |   |      Verfälschendes Netzwerk
+| C <--> C   |
+|  \   v_/   |
++---\ C-</---+
+
+Rundenbasiert
+Controller kriegt alle Position+Neigungswinkel der Roboter <- Simulation macht broadcast
+1 zu 1 oder many C zu 1 R
+Studenten programmieren auf jeden Fall Controller
+--> überlegen sich selbst wie sie dazwischen Kommunikation machen
+--> ?wer welchen Roboter steuert. Wie viele diesen Roboter steuern? oder ?ip whitelist?
+auch in dem Roboter (also im sicheren Teil) einen Voter der von den Studenten geschrieben wird -> dieser kann aber auch ausfallen
+--> aber nicht der Roboter selber. Wiederbelebung?
+--> Protokoll von Voter zu R sehr simpel. Iwie UDP, ein Paket mit Radwinkel L + Radwinkel R
+
+Controller übernehmen ist doof, weil unbekanntes Studentenprotokoll. Also zwischen R und Simulation ein override das mit Joystick gesteurt werden kann
+
+Simulation
+==========
+fälschungssicher
+immer Stromverbrauch an den R, höher beim bewegen
+Ladestation an der Kante, geht schnell, e-Funktion 10 Takte = voll geladen
+Kollision => Minuspunkte
+Kein Runterfallen, am Rand kippt Platte
+Punktesystem mit ringen, rot->gelb->mitte grün. Tote Roboter geben Minuspunkte. Neigung gibt Minuspunkte
+
+beim anfahren nachwippen in den Neigungssensoren?
+ "    "         "        an der Platte?
+
+Anzeige
+=======
+Platformübergreifend
