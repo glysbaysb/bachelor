@@ -1,0 +1,84 @@
+\documentclass[
+    12pt,
+    toc=sectionentrywithdots,
+    bibliography=totoc,
+    ngerman
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+%\usepackage[decimalsymbol=comma]{siunitx}
+
+%\usepackage[style=ieee]{biblatex}
+\usepackage{setspace}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks,linktoc=all,pdfusetitle]{hyperref}
+\usepackage[ampersand]{easylist}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\usepackage{lscape}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{rotating}
+\usepackage{subcaption}
+\usepackage{amssymb} % for \checkmark
+\usepackage{alltt}
+\usepackage[nottoc,numbib]{tocbibind}
+
+\setstretch{1.433} %entspricht 1,5 in Word 
+\graphicspath{{images/}}
+\MakeOuterQuote{"}
+\pagestyle{fancy}
+\lstset{frame=single,breaklines=true}
+%\setcounter{biburllcpenalty}{7000}
+%\setcounter{biburlucpenalty}{8000}
+
+\newcommand{\includevisio}[2][]{\includegraphics[clip, trim=1cm 1cm 1cm 1cm, #1]{#2}}
+
+\titlehead{{\large Fachhochschule Südwestfalen} \\ Fachbereich für Elektrotechnik und Informationstechnik \\ Studiengang Technische Informatik}
+\subject{\vspace{2cm} Projektarbeit}
+\title{XXXXXXX}
+\subtitle{Dokumentation}
+\author{Geert Martin Ijewski}
+\publishers{\vfill Betreuer: Prof. Dr.-Ing. habil. Jan Richling}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\clearpage
+\tableofcontents
+\listoffigures
+%\addcontentsline{toc}{section}{\listfigurename}
+\listoftables
+
+\clearpage
+\section{Einleitung}
+\LaTeX bbbbbb \cite{lamport94} sdfsfsdf
+
+\clearpage
+\section{Momentaner Workflow für die Studenten}
+aaaaaa
+
+\clearpage
+%\nocite{*} alle unbenutzen Literatureinträge trotzdem anzeigen
+\begin{thebibliography}{9}
+
+\bibitem{lamport94}
+  Leslie Lamport,
+  \emph{\LaTeX: a document preparation system},
+  Addison Wesley, Massachusetts,
+  2nd edition,
+  1994.
+  
+\end{thebibliography}
+
+\end{document}
