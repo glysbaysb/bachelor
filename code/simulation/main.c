@@ -21,7 +21,7 @@
  * \param secs the nanosecond partof the inital expiration and interval value
  * \return a valid fd or something < 0
  */
-int create_timerfd(int secs, int nsecs) {
+static int create_timerfd(int secs, int nsecs) {
 	int tfd;
 	if ((tfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) == 1) {
         perror("timerfd_create");
@@ -37,7 +37,7 @@ int create_timerfd(int secs, int nsecs) {
 	return tfd;
 }
 
-const char* get_time() {
+static const char* get_time() {
 	static char buffer[32] = {0};
 
 	struct timespec spec;
