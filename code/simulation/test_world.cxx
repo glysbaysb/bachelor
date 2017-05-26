@@ -60,28 +60,32 @@ TEST_F(WorldTest, AddRobot) {
 TEST_F(WorldTest, AddRobotOutsideWorld) {
 	auto dimensions = w->getDimensions();
 	auto res = w->addRobot({dimensions.first + 1, 1});
-	ASSERT_LT(0, res);
+	ASSERT_LT(res, 0);
 }
 
 TEST_F(WorldTest, AddOverlappingRobots) {
+	ASSERT_EQ(false, true);
 	// create
 	// add
 	// add
 }
 
 TEST_F(WorldTest, AddFuelSource) {
+	ASSERT_EQ(false, true);
 	// create
 	// add
 	// test
 }
 
 TEST_F(WorldTest, AddFuelSourceTwice) {
+	ASSERT_EQ(false, true);
 	// create
 	// add
 	// add
 }
 
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource) {
+	ASSERT_EQ(false, true);
 	// create
 	// add
 	// add
