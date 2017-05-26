@@ -58,8 +58,9 @@ TEST_F(WorldTest, AddRobot) {
 }
 
 TEST_F(WorldTest, AddRobotOutsideWorld) {
-	// create
-	// add
+	auto dimensions = w->getDimensions();
+	auto res = w->addRobot({dimensions.first + 1, 1});
+	ASSERT_LT(0, res);
 }
 
 TEST_F(WorldTest, AddOverlappingRobots) {

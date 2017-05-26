@@ -129,6 +129,10 @@ public:
 	 * @brief returns the robots currently in this world
 	 */
 	std::vector<Robot> getRobots(); 
+	
+	std::pair<uint32_t, uint32_t> getDimensions() {
+		return std::pair<uint32_t, uint32_t>(dimension_, dimension_);
+	}
 };
 
 #endif // WORLD_H
