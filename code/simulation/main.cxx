@@ -1,25 +1,33 @@
 /**
+ * @file
+ * @section DESCRIPTION
  * This is the simulation for the XXXX.
  * 
  * 
  */
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <stdint.h>
 #include <inttypes.h>
 #include <time.h>
 #include <sys/timerfd.h>
 #include <poll.h>
 #include <unistd.h>
-#include <math.h>
+#include <assert.h>
+#include <memory>
+#include <utility>
+#include <vector>
+#include <cmath>
+
+#include "world.h"
 
 /**
- * \brief creates a timerfd
+ * @brief creates a timerfd
  *
  * Creates a timerfd, with the specified inital expiration and interval values.
- * \param secs the second part of the inital expiration and interval value 
- * \param secs the nanosecond partof the inital expiration and interval value
- * \return a valid fd or something < 0
+ * @param secs the second part of the inital expiration and interval value 
+ * @param secs the nanosecond partof the inital expiration and interval value
+ * @return a valid fd or something < 0
  */
 static int create_timerfd(int secs, int nsecs) {
 	int tfd;
@@ -27,8 +35,7 @@ static int create_timerfd(int secs, int nsecs) {
         perror("timerfd_create");
         return tfd;
     }
-    struct itimerspec timer = {.it_interval.tv_sec = secs, .it_value.tv_sec = secs, 
-		.it_interval.tv_nsec = nsecs, .it_value.tv_nsec = nsecs};
+    struct itimerspec timer = {secs, nsecs, secs, nsecs};
     if (timerfd_settime(tfd, 0, &timer, NULL) == -1) {
         perror("timerfd_set");
         return tfd;
@@ -37,6 +44,9 @@ static int create_timerfd(int secs, int nsecs) {
 	return tfd;
 }
 
+/**
+ * Returns a (static) string that holds the current time
+ */
 static const char* get_time() {
 	static char buffer[32] = {0};
 
@@ -44,9 +54,9 @@ static const char* get_time() {
 	clock_gettime(CLOCK_REALTIME, &spec);
 
 	time_t s = spec.tv_sec;
-	long ms = lround(spec.tv_nsec / 1.0e6); // todo: man math_error
+	long ms = lround(spec.tv_nsec / 1.0e6); // todo: man math_error or c++11 std::lround
 
-	int ret = snprintf(buffer, sizeof(buffer), "[%"PRIdMAX".%03ld]", (intmax_t)s, ms);
+	int ret = snprintf(buffer, sizeof(buffer), "[%" PRIdMAX ".%03ld]", (intmax_t)s, ms);
 	if(ret > sizeof(buffer) || ret < 0) {
 		perror("get_time(): snprintf");
 		exit(-1);
@@ -62,7 +72,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
-	int numberOfRobots = atoi(argv[1]);
+	int numberOfRobots = std::atoi(argv[1]);
 	
 	/* init */
 #ifdef DEBUG
