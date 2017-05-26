@@ -42,9 +42,19 @@ public:
 };
 
 TEST_F(WorldTest, AddRobot) {
-	// test number
-	// add
-	// test number
+	/* the world should be empty right after creation */
+	auto robotsOld = w->getRobots();
+	EXPECT_EQ(robotsOld.size(), 0);
+	
+	/* add one robot */
+	w->addRobot({1, 1});
+	
+	/* test */
+	auto robotsNew = w->getRobots();
+	EXPECT_EQ(robotsNew.size(), 1);
+	auto pos = robotsNew.at(0).getPosition();
+	EXPECT_EQ(pos.first, 1);
+	EXPECT_EQ(pos.second, 1);
 }
 
 TEST_F(WorldTest, AddRobotOutsideWorld) {

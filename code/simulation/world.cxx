@@ -8,7 +8,7 @@
 #include <vector>
 #include "world.h"
 
-static const int ROBOT_DIMENSION = 1;
+uint32_t Robot::GLOBAL_ID = 0;
 
 World::World(int8_t dimension)
 {	
@@ -19,8 +19,9 @@ int World::addRobot(Position p)
 {
 	// todo: does the robot fit into the world?
 	
-	robots_.emplace_back(p);
-	return 0;
+	auto r = Robot(p);
+	robots_.push_back(r);
+	return r.getID();
 }
 
 int World::addFuelSource(Position p) {

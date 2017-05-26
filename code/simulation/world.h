@@ -60,7 +60,7 @@ private:
 	int8_t fuelStatus_; // 0 <= fuelStatus_ <= 100
 	
 	uint32_t id_;
-	static uint32_t GLOBAL_ID = 0;
+	static uint32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
 	
 public:
 	Robot(Position p) : Object(p), id_(GLOBAL_ID++) {
@@ -82,6 +82,8 @@ public:
 	uint32_t getID() {
 		return id_;
 	}
+	
+	static const int ROBOT_DIMENSION = 1;
 };
 
 
@@ -102,7 +104,8 @@ public:
 	 */
 	World(int8_t dimension);
 	
-	~World();
+	~World() {
+	}
 	
 	/**
 	 * adds an robot to {world} at position {p}
