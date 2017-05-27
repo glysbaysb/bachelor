@@ -64,28 +64,28 @@ TEST_F(WorldTest, AddRobotOutsideWorld) {
 }
 
 TEST_F(WorldTest, AddOverlappingRobots) {
-	ASSERT_EQ(false, true);
+	ASSERT_TRUE(false);
 	// create
 	// add
 	// add
 }
 
 TEST_F(WorldTest, AddFuelSource) {
-	ASSERT_EQ(false, true);
+	ASSERT_TRUE(false);
 	// create
 	// add
 	// test
 }
 
 TEST_F(WorldTest, AddFuelSourceTwice) {
-	ASSERT_EQ(false, true);
+	ASSERT_TRUE(false);
 	// create
 	// add
 	// add
 }
 
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource) {
-	ASSERT_EQ(false, true);
+	ASSERT_TRUE(false);
 	// create
 	// add
 	// add

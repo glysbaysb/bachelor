@@ -3,14 +3,14 @@
 
 class Position {
 private:
-	int _x,
+	uint32_t _x,
 		_y;
 public:
-	Position(int x, int y) : _x(x), _y(y) {
+	Position(uint32_t x, uint32_t y) : _x(x), _y(y) {
 	}
 	
-	std::pair<int, int> get() {
-		return std::pair<int, int>(_x, _y);
+	std::pair<uint32_t, uint32_t> get() {
+		return std::pair<uint32_t, uint32_t>(_x, _y);
 	}
 	
 	// todo: operator overload or whatever and then replace Object:getPosition()?
