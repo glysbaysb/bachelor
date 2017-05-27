@@ -22,12 +22,12 @@ public:
 class Object {
 private:
 	Position p_;
-	int dimension_;
+	uint32_t dimension_;
 
 public:
 	// todo: virtual deconstructor
 	
-	Object(Position p) : p_(p) {
+	Object(Position p, uint32_t dimension) : p_(p), dimension_(dimension) {
 	}
 
 	std::pair<int, int> getPosition() {
@@ -44,6 +44,8 @@ public:
 
 class FuelSource : public Object {
 public:
+	static const int FUEL_SOURCE_DIMENSION = 2;
+	
 	/**
 	 * @brief a fuel source cannot move, so calling this function does nothing
 	 */
@@ -51,7 +53,7 @@ public:
 		;
 	}
 	
-	FuelSource(Position p) : Object(p) {
+	FuelSource(Position p) : Object(p, FUEL_SOURCE_DIMENSION) {
 	}
 };
 
@@ -61,9 +63,10 @@ private:
 	
 	uint32_t id_;
 	static uint32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
-	
 public:
-	Robot(Position p) : Object(p), id_(GLOBAL_ID++) {
+	static const int ROBOT_DIMENSION = 1;
+
+	Robot(Position p) : Object(p, ROBOT_DIMENSION), id_(GLOBAL_ID++) {
 	}
 	
 	int8_t getFuelStatus() {
@@ -82,8 +85,6 @@ public:
 	uint32_t getID() {
 		return id_;
 	}
-	
-	static const int ROBOT_DIMENSION = 1;
 };
 
 
