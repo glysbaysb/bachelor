@@ -29,6 +29,7 @@
 \usepackage{amssymb} % for \checkmark
 \usepackage{alltt}
 \usepackage[nottoc,numbib]{tocbibind}
+\usepackage{todonotes}
 
 \setstretch{1.433} %entspricht 1,5 in Word 
 \graphicspath{{images/}}
@@ -65,11 +66,37 @@ anforderungen
 
 \clearpage
 \section{The World}
+\todo{Renderbild, Bild von der Ausgabe?}
 The simulated world is a rectangular shaped plate sitting on a knob. $N$ Robots and $1$ fuel source may be placed
 onto it. The combined weight of all those objects tip the plate - if the weights are placed very unevenly, 
 the plate may tip over and the simulation ends.
 
+The robots may move freely around the plate. As they move they empty their tank and eventually have to fuel up
+again at the fuel station. If they stay idle, they also use up fuel (at a lower rate).
 
+Furthermore there are up to $M$ ($M >= N$) controllers. One or more controllers come to an agreement on how to best
+move the robots, so that:
+\begin{itemize}
+\item the robots don't run out of fuel
+\item the robots don't bump into each other
+\item the plate doesn't tip over
+\end{itemize}
+
+\clearpage
+\section{Network}
+wer, in welchem drin ist. \todo{aufteilung im netzwerk als Bild}
+
+\clearpage
+\section{Interface between simulation and Voter}
+
+\clearpage
+\section{Reference implementation}
+\subsection{Voter}
+\subsection{Consensus algorithm}
+\paragraph{Protecting against transmisson errors}
+\paragraph{Protecting against byzantine failures}
+Ãhm, damit hÃtte ich doch auch die anderen Fehler abgedeckt?
+Gibt es ein extra wort fÃ¼r dieses Dings da mit den mitschicken was man selbst empfangen hat?
 
 \clearpage
 %\nocite{*} % alle unbenutzen Literatureinträge trotzdem anzeigen

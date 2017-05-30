@@ -41,3 +41,8 @@ Fragen
 Was passiert wenn die Simulation mehrere Bewegungskommandos für den gleichen Roboter kriegt?
 Wie viele Roboter mindestens und maximal?
 Wie weit rotiert der Roboter denn pro Simulationsschritt?
+Fehlermodellprogramm
+
+Fragen zur Doku
+===============
+
