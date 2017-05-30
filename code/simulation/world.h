@@ -96,9 +96,6 @@ private:
 	int32_t dimension_;
 	
 public:
-	// getRobot() / getRobots()
-	// getFuelSource()
-	
 	/**
 	 * @brief creates an empty world
 	 *
@@ -115,6 +112,11 @@ public:
 	 * case of an error
 	 */
 	int addRobot(Position p);
+
+	/**
+	 * @brief returns the robots currently in this world
+	 */
+	std::vector<Robot> getRobots(); 	
 	
 	/**
 	 *
@@ -124,12 +126,12 @@ public:
 	/**
 	 *
 	 */
-	float getWorldDegree();
-	
+	FuelSource* getFuelSource();
+
 	/**
-	 * @brief returns the robots currently in this world
+	 *
 	 */
-	std::vector<Robot> getRobots(); 
+	float getWorldDegree();
 	
 	std::pair<int32_t, int32_t> getDimensions() {
 		return std::pair<int32_t, int32_t>(dimension_, dimension_);

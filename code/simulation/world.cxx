@@ -66,8 +66,17 @@ int World::addRobot(Position p)
 	return r.getID();
 }
 
+FuelSource* World::getFuelSource()
+{
+	return fuelSource_.get();
+}
+
 int World::addFuelSource(Position p) {
+	if(fuelSource_) 
+		return -1;
+
 	fuelSource_ = std::make_unique<FuelSource>(p);
+	return 0;
 }
 
 float World::getWorldDegree() {

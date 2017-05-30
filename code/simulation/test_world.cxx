@@ -96,21 +96,18 @@ TEST_F(WorldTest, AddOverlappingRobots) {
 	EXPECT_LT(res3, 0) << "3rd robot, overlapping the 2nd one";
 }
 
-#if 0
 TEST_F(WorldTest, AddFuelSource) {
-	ASSERT_TRUE(false);
-	// create
-	// add
-	// test
+	ASSERT_EQ(w->addFuelSource({0, 0}), 0);
+	ASSERT_TRUE(w->getFuelSource());
 }
 
 TEST_F(WorldTest, AddFuelSourceTwice) {
-	ASSERT_TRUE(false);
-	// create
-	// add
-	// add
+	auto res = w->addFuelSource({0, 0});
+	EXPECT_TRUE(res);
+	ASSERT_LT(w->addFuelSource({5, 5}), 0);
 }
 
+#if 0
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource) {
 	ASSERT_TRUE(false);
 	// create
