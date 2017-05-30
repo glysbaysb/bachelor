@@ -1,3 +1,18 @@
+/**
+ * @file
+ * @section DESCRIPTION
+ * The unit tests for the basic simulation reside in this file. 
+ *
+ * More specifically this file tests:
+ * 1) can Objects be added to the world?
+ * 2) does the collision detection work?
+ *
+ * All test functions are member functions of WorldTest, which initalizes a
+ * new empty world before each test. Most of the the unit tests test "normally",
+ * i.e. they expect all function calls to succed. Sometimes a unit test specifically
+ * tries to do something illegal to test the error path - to improve clarity
+ * the comment explaining that block of code starts with "F:".
+ */
 #include <gtest/gtest.h>
 #include <memory>
 #include <utility>
@@ -10,9 +25,6 @@ TEST(FuelSourceTest, CantMove) {
 	// get pos
 	// move
 	// oldPos == newPos
-}
-
-TEST(RobotTest, Move) {
 }
 #endif
 
@@ -60,13 +72,13 @@ TEST_F(WorldTest, AddRobot) {
 TEST_F(WorldTest, AddRobotOutsideWorld) {
 	auto dimensions = w->getDimensions();
 
-	/* outside of the world, right side */
+	/* F: outside of the world, right side */
 	{
 		auto res = w->addRobot({dimensions.first + 1, 1});
 		ASSERT_LT(res, 0);
 	}
 	
-	/* outside of the world, bottom */
+	/* F: outside of the world, bottom */
 	{
 		auto res = w->addRobot({0, dimensions.second + 1});
 		ASSERT_LT(res, 0);
@@ -104,6 +116,8 @@ TEST_F(WorldTest, AddFuelSource) {
 TEST_F(WorldTest, AddFuelSourceTwice) {
 	auto res = w->addFuelSource({0, 0});
 	EXPECT_TRUE(res);
+	
+	/* F: */
 	ASSERT_LT(w->addFuelSource({5, 5}), 0);
 }
 
