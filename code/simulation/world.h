@@ -3,14 +3,14 @@
 
 class Position {
 private:
-	uint32_t _x,
+	int32_t _x,
 		_y;
 public:
-	Position(uint32_t x, uint32_t y) : _x(x), _y(y) {
+	Position(int32_t x, int32_t y) : _x(x), _y(y) {
 	}
 	
-	std::pair<uint32_t, uint32_t> get() {
-		return std::pair<uint32_t, uint32_t>(_x, _y);
+	std::pair<int32_t, int32_t> get() {
+		return std::pair<int32_t, int32_t>(_x, _y);
 	}
 	
 	// todo: operator overload or whatever and then replace Object:getPosition()?
@@ -22,12 +22,12 @@ public:
 class Object {
 private:
 	Position p_;
-	uint32_t dimension_;
+	int32_t dimension_;
 
 public:
 	// todo: virtual deconstructor
 	
-	Object(Position p, uint32_t dimension) : p_(p), dimension_(dimension) {
+	Object(Position p, int32_t dimension) : p_(p), dimension_(dimension) {
 	}
 
 	std::pair<int, int> getPosition() {
@@ -44,7 +44,7 @@ public:
 
 class FuelSource : public Object {
 public:
-	static const int FUEL_SOURCE_DIMENSION = 2;
+	static const int DIMENSION = 2;
 	
 	/**
 	 * @brief a fuel source cannot move, so calling this function does nothing
@@ -53,7 +53,7 @@ public:
 		;
 	}
 	
-	FuelSource(Position p) : Object(p, FUEL_SOURCE_DIMENSION) {
+	FuelSource(Position p) : Object(p, DIMENSION) {
 	}
 };
 
@@ -61,12 +61,12 @@ class Robot : public Object {
 private:
 	int8_t fuelStatus_; // 0 <= fuelStatus_ <= 100
 	
-	uint32_t id_;
-	static uint32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
+	int32_t id_;
+	static int32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
 public:
-	static const int ROBOT_DIMENSION = 1;
+	static const int DIMENSION = 3;
 
-	Robot(Position p) : Object(p, ROBOT_DIMENSION), id_(GLOBAL_ID++) {
+	Robot(Position p) : Object(p, DIMENSION), id_(GLOBAL_ID++) {
 	}
 	
 	int8_t getFuelStatus() {
@@ -82,7 +82,7 @@ public:
 		assert(false);
 	}
 	
-	uint32_t getID() {
+	int32_t getID() {
 		return id_;
 	}
 };
@@ -93,7 +93,7 @@ private:
 	std::vector<Robot> robots_;
 	std::unique_ptr<FuelSource> fuelSource_;
 	
-	int8_t dimension_;
+	int32_t dimension_;
 	
 public:
 	// getRobot() / getRobots()
@@ -103,7 +103,7 @@ public:
 	 * @brief creates an empty world
 	 *
 	 */
-	World(int8_t dimension);
+	World(int32_t dimension);
 	
 	~World() {
 	}
@@ -131,8 +131,8 @@ public:
 	 */
 	std::vector<Robot> getRobots(); 
 	
-	std::pair<uint32_t, uint32_t> getDimensions() {
-		return std::pair<uint32_t, uint32_t>(dimension_, dimension_);
+	std::pair<int32_t, int32_t> getDimensions() {
+		return std::pair<int32_t, int32_t>(dimension_, dimension_);
 	}
 };
 

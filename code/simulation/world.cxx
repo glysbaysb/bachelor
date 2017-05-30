@@ -8,21 +8,21 @@
 #include <vector>
 #include "world.h"
 
-uint32_t Robot::GLOBAL_ID = 0;
+int32_t Robot::GLOBAL_ID = 0;
 
-World::World(int8_t dimension)
+World::World(int32_t dimension)
 {	
 	dimension_ = dimension;
 }
 
-static bool doesObjectFitIntoWorld(Position& object, uint32_t sizeOfObject,
-	std::pair<uint32_t, uint32_t> sizeOfWorld)
+static bool doesObjectFitIntoWorld(Position& object, int32_t sizeOfObject,
+	std::pair<int32_t, int32_t> sizeOfWorld)
 {
 	auto p = object.get();
 	auto x = p.first;
 	auto y = p.second;
 	
-	if((x - sizeOfObject) < 0 || (y - sizeOfObject) < 0)
+	if(x < 0 || y < 0)
 		return false;
 	
 	if((x + sizeOfObject) > sizeOfWorld.first || (y + sizeOfObject) > sizeOfWorld.second)
@@ -31,13 +31,37 @@ static bool doesObjectFitIntoWorld(Position& object, uint32_t sizeOfObject,
 	return true;
 }
 
+static bool doObjectsOverlap(Object& a, Object& b)
+{
+	// https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
+	// if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
+     	//     RectA.Top > RectB.Bottom && RectA.Bottom < RectB.Top )
+	// adapted for the different coordinate system, so flip the comparsions on the Y-axis
+	bool t1 = (a.getPosition().first < (b.getPosition().first + b.getDimension()));
+	bool t2 = ((a.getPosition().first + a.getDimension()) > b.getPosition().first);
+	bool t3 = (a.getPosition().second < (b.getPosition().second + b.getDimension()));
+	bool t4 = ((a.getPosition().second + a.getDimension()) > b.getPosition().second);
+
+	return t1 && t2 && t3 && t4;
+}
+
 int World::addRobot(Position p)
 {
-	// todo: does the robot fit into the world?
-	if(!doesObjectFitIntoWorld(p, Robot::ROBOT_DIMENSION, getDimensions()))
+	/* does the robot fit into the world? */
+	if(!doesObjectFitIntoWorld(p, Robot::DIMENSION, getDimensions()))
 		return -1;
 	
 	auto r = Robot(p);
+	for(auto&& x : robots_) {
+		if(doObjectsOverlap(x, r)) {
+			return -2;
+		}
+	}
+
+	//if(fuelSource_ && doObjectsOverlap(fuelSource_.get(), r))
+	//	return -3;
+	
+	/* add */
 	robots_.push_back(r);
 	return r.getID();
 }
