@@ -88,8 +88,23 @@ int World::addFuelSource(Position p) {
 	return 0;
 }
 
-float World::getWorldDegree() {
-	assert(false);
+std::pair<int32_t, int32_t> getWorldTiltAngle() {
+	auto worldDimensions = getDimensions();
+	auto midX = worldDimensions.first / 2,
+	     midY = worldDimensions.second / 2;
+
+	int32_t weightY = 0,
+		weightZ = 0;
+	for(auto&& r : robots_) {
+		/* compute the pressure that is pushing on the plate */
+		auto diffX = r.getPosition().first - midX,
+		     diffY = r.getPosition.second - midY;
+		auto vectorResult = sqrt(diffX * diffX + diffY * diffY);
+
+		/* with the coordinate system in the mid point, compute
+		   the degree of that force */
+		   
+	}	 
 }
 
 std::vector<Robot> World::getRobots() {
