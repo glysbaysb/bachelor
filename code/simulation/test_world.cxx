@@ -115,20 +115,14 @@ TEST_F(WorldTest, AddFuelSource) {
 
 TEST_F(WorldTest, AddFuelSourceTwice) {
 	auto res = w->addFuelSource({0, 0});
-	EXPECT_TRUE(res);
+	ASSERT_EQ(res, 0);
 	
 	/* F: */
 	ASSERT_LT(w->addFuelSource({5, 5}), 0);
 }
 
-#if 0
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource) {
-	ASSERT_TRUE(false);
-	// create
-	// add
-	// add
 }
-#endif
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
