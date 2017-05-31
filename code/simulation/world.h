@@ -23,21 +23,28 @@ class Object {
 private:
 	Position p_;
 	int32_t dimension_;
+	uint32_t weight_;
 
 public:
 	// todo: virtual deconstructor
 	
-	Object(Position p, int32_t dimension) : p_(p), dimension_(dimension) {
+	Object(Position p, int32_t dimension, uint32_t weight) : p_(p), 
+		dimension_(dimension), weight_(weight)
+	{
 	}
 
 	std::pair<int, int> getPosition() const {
 		return p_.get();
 	}
 	
-	int getDimension() const {
+	int32_t getDimension() const {
 		return dimension_;
 	}
 	
+	uint32_t getWeight() const {
+		return weight_;
+	}
+
 	// todo: args?
 	virtual void move() = 0;
 
@@ -52,6 +59,7 @@ public:
 class FuelSource : public Object {
 public:
 	static const int DIMENSION = 2;
+	static const uint32_t WEIGHT = 5;
 	
 	/**
 	 * @brief a fuel source cannot move, so calling this function does nothing
@@ -60,7 +68,7 @@ public:
 		;
 	}
 	
-	FuelSource(Position p) : Object(p, DIMENSION) {
+	FuelSource(Position p) : Object(p, DIMENSION, WEIGHT) {
 	}
 };
 
@@ -71,9 +79,10 @@ private:
 	int32_t id_;
 	static int32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
 public:
+	static const uint32_t WEIGHT = 1;
 	static const int DIMENSION = 3;
 
-	Robot(Position p) : Object(p, DIMENSION), id_(GLOBAL_ID++) {
+	Robot(Position p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++) {
 	}
 	
 	int8_t getFuelStatus() const {
@@ -85,6 +94,11 @@ public:
 		fuelStatus_ = fuelStatus;
 	}
 	
+	uint32_t getWeight() const {
+		// todo: somehow make this dependent on fuel status
+		return weight_;
+	}
+
 	void move() {
 		assert(false);
 	}
