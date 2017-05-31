@@ -76,7 +76,7 @@ public:
 	Robot(Position p) : Object(p, DIMENSION), id_(GLOBAL_ID++) {
 	}
 	
-	int8_t getFuelStatus() {
+	int8_t getFuelStatus() const {
 		return fuelStatus_;
 	}
 	
@@ -89,7 +89,7 @@ public:
 		assert(false);
 	}
 	
-	int32_t getID() {
+	int32_t getID() const {
 		return id_;
 	}
 };
@@ -102,7 +102,7 @@ private:
 	
 	int32_t dimension_;
 	
-	int doesObjectOverlapWithRobots(Object& a);
+	int doesObjectOverlapWithRobots(Object& a) const;
 
 public:
 	/**
@@ -125,7 +125,7 @@ public:
 	/**
 	 * @brief returns the robots currently in this world
 	 */
-	std::vector<Robot> getRobots(); 	
+	std::vector<Robot> getRobots() const; 	
 	
 	/**
 	 *
@@ -135,7 +135,7 @@ public:
 	/**
 	 *
 	 */
-	FuelSource* getFuelSource();
+	FuelSource* getFuelSource() const;
 
 	/**
 	 * calculates the tilting angle in Z and Y
