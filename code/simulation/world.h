@@ -102,7 +102,7 @@ private:
 	
 	int32_t dimension_;
 	
-	bool doesObjectOverlapWithRobots(Object& a);
+	int doesObjectOverlapWithRobots(Object& a);
 
 public:
 	/**

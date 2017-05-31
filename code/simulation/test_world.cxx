@@ -17,6 +17,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <iostream>
 #include "world.h"
 
 #if 0
@@ -121,7 +122,20 @@ TEST_F(WorldTest, AddFuelSourceTwice) {
 	ASSERT_LT(w->addFuelSource({5, 5}), 0);
 }
 
-TEST_F(WorldTest, AddOverlappingRobotAndFuelSource) {
+/**
+ * first add the source then the robot
+ */
+TEST_F(WorldTest, AddOverlappingRobotAndFuelSource1) {
+	ASSERT_EQ(w->addFuelSource({0, 0}), 0);
+	ASSERT_LT(w->addRobot({0, 1}), 0);
+}
+
+/**
+ * first add the robot then the source
+ */
+TEST_F(WorldTest, AddOverlappingRobotAndFuelSource2) {
+	ASSERT_GT(w->addRobot({0, 1}), 0);
+	ASSERT_LT(w->addFuelSource({0, 0}), 0);
 }
 
 int main(int argc, char **argv) {

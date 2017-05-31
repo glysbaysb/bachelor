@@ -6,6 +6,7 @@
  * 
  */
 #include <cstdio>
+#include <iostream>
 #include <cstdlib>
 #include <stdint.h>
 #include <inttypes.h>

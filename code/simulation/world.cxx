@@ -1,5 +1,6 @@
 /**
  */
+#include <iostream>
 #include <stdint.h>
 #include <inttypes.h>
 #include <memory>
@@ -45,6 +46,17 @@ static bool doObjectsOverlap(Object& a, Object& b)
 	return t1 && t2 && t3 && t4;
 }
 
+int World::doesObjectOverlapWithRobots(Object& a)
+{
+	for(auto&& x : robots_) {
+		if(doObjectsOverlap(x, a)) {
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
 int World::addRobot(Position p)
 {
 	/* does the robot fit into the world? */
@@ -52,15 +64,11 @@ int World::addRobot(Position p)
 		return -1;
 	
 	auto r = Robot(p);
-	for(auto&& x : robots_) {
-		if(doObjectsOverlap(x, r)) {
-			return -2;
-		}
-	}
+	if((doesObjectOverlapWithRobots(r) < 0))
+		return -2;
+	if(getFuelSource() && doObjectsOverlap(*getFuelSource(), r))
+		return -3;
 
-	//if(fuelSource_ && doObjectsOverlap(fuelSource_.get(), r))
-	//	return -3;
-	
 	/* add */
 	robots_.push_back(r);
 	return r.getID();
@@ -72,7 +80,8 @@ FuelSource* World::getFuelSource()
 }
 
 int World::addFuelSource(Position p) {
-	if(fuelSource_) 
+	FuelSource tmp(p); // todo: kinda hacky to always construct a temp object...
+	if(fuelSource_ || doesObjectOverlapWithRobots(tmp))
 		return -1;
 
 	fuelSource_ = std::make_unique<FuelSource>(p);
