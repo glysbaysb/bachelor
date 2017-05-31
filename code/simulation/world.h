@@ -138,9 +138,9 @@ public:
 	FuelSource* getFuelSource();
 
 	/**
-	 *
+	 * calculates the tilting angle in Z and Y
 	 */
-	float getWorldDegree();
+	std::pair<int32_t, int32_t> getWorldTiltAngle() const;
 	
 	std::pair<int32_t, int32_t> getDimensions() {
 		return std::pair<int32_t, int32_t>(dimension_, dimension_);
