@@ -9,7 +9,7 @@ public:
 	Position(int32_t x, int32_t y) : _x(x), _y(y) {
 	}
 	
-	std::pair<int32_t, int32_t> get() {
+	std::pair<int32_t, int32_t> get() const {
 		return std::pair<int32_t, int32_t>(_x, _y);
 	}
 	
@@ -30,16 +30,23 @@ public:
 	Object(Position p, int32_t dimension) : p_(p), dimension_(dimension) {
 	}
 
-	std::pair<int, int> getPosition() {
+	std::pair<int, int> getPosition() const {
 		return p_.get();
 	}
 	
-	int getDimension() {
+	int getDimension() const {
 		return dimension_;
 	}
 	
 	// todo: args?
 	virtual void move() = 0;
+
+	friend std::ostream& operator<< (std::ostream& stream, const Object& o) {
+		auto leftTop = o.getPosition();
+		std::cout << "[" << leftTop.first << "," << leftTop.second << "|" << 
+			leftTop.first + o.getDimension() << "," << leftTop.second + o.getDimension() << "]";
+
+        }
 };
 
 class FuelSource : public Object {
@@ -95,6 +102,8 @@ private:
 	
 	int32_t dimension_;
 	
+	bool doesObjectOverlapWithRobots(Object& a);
+
 public:
 	/**
 	 * @brief creates an empty world
