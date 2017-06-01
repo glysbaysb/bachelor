@@ -6,7 +6,7 @@ private:
 	int32_t _x,
 		_y;
 public:
-	Position(int32_t x, int32_t y) : _x(x), _y(y) {
+	Position(const int32_t x, const int32_t y) : _x(x), _y(y) {
 	}
 	
 	std::pair<int32_t, int32_t> get() const {
@@ -28,7 +28,7 @@ protected:
 public:
 	// todo: virtual deconstructor
 	
-	Object(Position p, int32_t dimension, uint32_t weight) : p_(p), 
+	Object(const Position& p, const int32_t dimension, const uint32_t weight) : p_(p), 
 		dimension_(dimension), weight_(weight)
 	{
 	}
@@ -68,7 +68,7 @@ public:
 		;
 	}
 	
-	FuelSource(Position p) : Object(p, DIMENSION, WEIGHT) {
+	FuelSource(const Position& p) : Object(p, DIMENSION, WEIGHT) {
 	}
 };
 
@@ -82,14 +82,14 @@ public:
 	static const uint32_t WEIGHT = 1;
 	static const int DIMENSION = 3;
 
-	Robot(Position p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++) {
+	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++) {
 	}
 	
 	int8_t getFuelStatus() const {
 		return fuelStatus_;
 	}
 	
-	void setFuelStatus(int8_t fuelStatus) {
+	void setFuelStatus(const int8_t fuelStatus) {
 		assert(fuelStatus >= 0 && fuelStatus <= 100);
 		fuelStatus_ = fuelStatus;
 	}
@@ -116,14 +116,14 @@ private:
 	
 	const int32_t dimension_;
 	
-	int doesObjectOverlapWithRobots(Object& a) const;
+	int doesObjectOverlapWithRobots(const Object& a) const;
 
 public:
 	/**
 	 * @brief creates an empty world
 	 *
 	 */
-	World(int32_t dimension) : dimension_(dimension) {
+	World(const int32_t dimension) : dimension_(dimension) {
 		;
 	}
 	
@@ -136,7 +136,7 @@ public:
 	 * @return either the unique identifier of that robot or a negative value, in 
 	 * case of an error
 	 */
-	int addRobot(Position p);
+	int addRobot(const Position& p);
 
 	/**
 	 * @brief returns the robots currently in this world
@@ -146,7 +146,7 @@ public:
 	/**
 	 *
 	 */
-	int addFuelSource(Position p);
+	int addFuelSource(const Position& p);
 
 	/**
 	 *

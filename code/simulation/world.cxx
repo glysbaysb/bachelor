@@ -11,8 +11,8 @@
 
 int32_t Robot::GLOBAL_ID = 0;
 
-static bool doesObjectFitIntoWorld(Position& object, int32_t sizeOfObject,
-	uint32_t sizeOfWorld)
+static bool doesObjectFitIntoWorld(const Position& object, const int32_t sizeOfObject,
+	const uint32_t sizeOfWorld)
 {
 	auto p = object.get();
 	auto x = p.first;
@@ -41,7 +41,7 @@ static bool doObjectsOverlap(const Object& a, const Object& b)
 	return t1 && t2 && t3 && t4;
 }
 
-int World::doesObjectOverlapWithRobots(Object& a) const
+int World::doesObjectOverlapWithRobots(const Object& a) const
 {
 	for(auto&& x : robots_) {
 		if(doObjectsOverlap(x, a)) {
@@ -52,7 +52,7 @@ int World::doesObjectOverlapWithRobots(Object& a) const
 	return 0;
 }
 
-int World::addRobot(Position p)
+int World::addRobot(const Position& p)
 {
 	/* does the robot fit into the world? */
 	if(!doesObjectFitIntoWorld(p, Robot::DIMENSION, getDimension()))
@@ -74,7 +74,7 @@ FuelSource* World::getFuelSource() const
 	return fuelSource_.get();
 }
 
-int World::addFuelSource(Position p) {
+int World::addFuelSource(const Position& p) {
 	FuelSource tmp(p); // todo: kinda hacky to always construct a temp object...
 	if(fuelSource_ || doesObjectOverlapWithRobots(tmp))
 		return -1;
