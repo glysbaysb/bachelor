@@ -1,12 +1,13 @@
 \documentclass[
     12pt,
     bibliography=totoc,
+    ngerman
 ]{scrartcl}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[english]{babel}
+\usepackage[ngerman]{babel}
 %\usepackage[decimalsymbol=comma]{siunitx}
 
 %\usepackage[style=ieee]{biblatex}
@@ -41,10 +42,9 @@
 
 \newcommand{\includevisio}[2][]{\includegraphics[clip, trim=1cm 1cm 1cm 1cm, #1]{#2}}
 
-\titlehead{{\large Fachhochschule Südwestfalen} \\ Fachbereich für Elektrotechnik und Informationstechnik \\ Studiengang Technische Informatik}
+\titlehead{{\large Fachhochschule S{\"{u}}dwestfalen} \\ Fachbereich f{\"{u}}r Elektrotechnik und Informationstechnik \\ Studiengang Technische Informatik}
 \subject{\vspace{2cm} Bachelorarbeit}
 \title{XXXXXXX}
-\subtitle{Dokumentation}
 \author{Geert Martin Ijewski}
 \publishers{\vfill Betreuer: Prof. Dr.-Ing. habil. Jan Richling}
 
@@ -60,46 +60,80 @@
 \listoftables
 
 \clearpage
-\section{Introduction}
-goal of all this, maybe even with a story
-anforderungen
-
-\clearpage
-\section{The World}
+\section{Einf{\"{u}}hrung}
 \todo{Renderbild, Bild von der Ausgabe?}
-The simulated world is a rectangular shaped plate sitting on a knob. $N$ Robots and $1$ fuel source may be placed
-onto it. The combined weight of all those objects tip the plate - if the weights are placed very unevenly, 
-the plate may tip over and the simulation ends.
 
-The robots may move freely around the plate. As they move they empty their tank and eventually have to fuel up
-again at the fuel station. If they stay idle, they also use up fuel (at a lower rate).
+\paragraph{Motivation}
+\todo{...}
 
-Furthermore there are up to $M$ ($M >= N$) controllers. One or more controllers come to an agreement on how to best
-move the robots, so that:
+\paragraph{Simulation}
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+platziert werden. Die Summer ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}ßig verteilt, kippt
+die Platte und die Simulation endet.
+
+Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen verbrauchen sie Energie (allerdings weniger
+schnell).
+
+Kontrolliert werden die Roboter von bis zu $M$ $(M >= N)$ Kontrollern. Einer oder mehr Kontroller stimmen sich ab,
+so dass:
 \begin{itemize}
-\item the robots don't run out of fuel
-\item the robots don't bump into each other
-\item the plate doesn't tip over
+\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
+\item die Roboter nicht kollidieren
+\item die Platte nicht kippt
 \end{itemize}
 
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abhängig vom Verhältniss der Anzahl der Kontroller zur
+Anzahl der Roboter können verschiedene Stufen der Fehlertoleran erreicht werden.) Teil dieser Bachelorarbeit ist eine
+Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
+
+\todo{anforderungen?}
+
+\paragraph{Nutzung durch die Studenten}
+\todo{Einleitung}
+\todo{interface}
+
 \clearpage
-\section{Network}
+\section{Grundlagen}
+\todo{einleitung}
+
+\subsection{Vektorrechnung}
+
+\todo{mehr physikalisches? Was denn Sinus?}
+\subsection{Fehlerinjektion}
+
+\clearpage
+\section{Die Welt}
+
+
+\clearpage
+\section{Netzwerk}
+\todo{Einleitung}
 wer, in welchem drin ist. \todo{aufteilung im netzwerk als Bild}
 
 \clearpage
-\section{Interface between simulation and Voter}
+\section{Interface f{\"{u}}r die Studenten}
+Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren können gibt es Interfaces. \todo{umformulieren} 
+
+\paragraph{Voter}
 
 \clearpage
-\section{Reference implementation}
+\section{Fehlerinjektion}
+
+\clearpage
+\section{Referenzimplementation}
 \subsection{Voter}
 \subsection{Consensus algorithm}
-\paragraph{Protecting against transmisson errors}
-\paragraph{Protecting against byzantine failures}
-Ãhm, damit hÃtte ich doch auch die anderen Fehler abgedeckt?
-Gibt es ein extra wort fÃ¼r dieses Dings da mit den mitschicken was man selbst empfangen hat?
+\paragraph{Schutzmassnahmen gegen omission failure}
+\paragraph{bla bla bla}
+
 
 \clearpage
-%\nocite{*} % alle unbenutzen Literatureinträge trotzdem anzeigen
+\section{Evaluation}
+
+
+\clearpage
+%\nocite{*} % alle unbenutzen Literatureintr{\"{a}}ge trotzdem anzeigen
 \begin{thebibliography}{9}
 
 \bibitem{lamport94}
@@ -109,6 +143,13 @@ Gibt es ein extra wort fÃ¼r dieses Dings da mit den mitschicken was man selbst
   2nd edition,
   1994.
   
+\bibitem{Werner00}
+  Matthias Werner,
+  Responsivit{\"{a}}t: ein konsensbasierter Ansatz,
+  Humboldt University of Berlin, Germany,
+  978-3-89811-924-5,
+  2000.
+   
 \end{thebibliography}
 
 \end{document}
