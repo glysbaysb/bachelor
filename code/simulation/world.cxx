@@ -83,7 +83,22 @@ int World::addFuelSource(const Position& p) {
 	return 0;
 }
 
-std::pair<int32_t, int32_t> getWorldTiltAngle() {
+std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
+	int32_t vectorX = 0, //! the sum of the x part all forces --> for the left-right angle
+		vectorY = 0; //! the sum of the y part of all forces -> for the front-back angle
+
+	for(auto&& r : robots_) {
+		vectorX += r.getPosition().first * r.getWeight();
+		vectorY += r.getPosition().second * r.getWeight();
+	}
+
+	if(getFuelSource()) {
+		auto f = *getFuelSource();
+		vectorX += f.getPosition().first * f.getWeight();
+		vectorY += f.getPosition().second * f.getWeight();
+	}
+
+	return {vectorX, vectorY};
 }
 
 std::vector<Robot> World::getRobots() const {

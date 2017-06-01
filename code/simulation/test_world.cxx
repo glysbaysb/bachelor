@@ -138,7 +138,29 @@ TEST_F(WorldTest, AddOverlappingRobotAndFuelSource2) {
 	ASSERT_LT(w->addFuelSource({0, 0}), 0);
 }
 
+TEST_F(WorldTest, CheckPressureVector) {
+	/* there is no pressure on an empty world */
+	auto v0 = w->getWorldPressureVector();
+	ASSERT_EQ(v0.first, 0);
+	ASSERT_EQ(v0.second, 0);
+
+	/* add two objects of the same weight the same distance from the mid ... */
+	w->addRobot({5, -5});
+	w->addRobot({-5, 5});
+
+	/* ... means that the resulting vector is the nullvector */
+	auto v1 = w->getWorldPressureVector();
+	ASSERT_EQ(v1.first, 0);
+	ASSERT_EQ(v1.second, 0);
+
+	/* adding another object anywhere else means that the force is applied unevenly */
+	w->addFuelSource({-1, 0});
+	auto v2 = w->getWorldPressureVector();
+	ASSERT_LT(v2.first, v1.first);
+	ASSERT_EQ(v2.second, v2.second);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  return RUN_ALL_TESTS(); 
 }

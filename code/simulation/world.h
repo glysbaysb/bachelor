@@ -156,7 +156,7 @@ public:
 	/**
 	 * calculates the tilting angle in Z and Y
 	 */
-	std::pair<int32_t, int32_t> getWorldTiltAngle() const;
+	std::pair<int32_t, int32_t> getWorldPressureVector() const;
 	
 	uint32_t getDimension() {
 		return dimension_;
