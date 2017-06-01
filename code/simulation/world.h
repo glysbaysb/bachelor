@@ -20,7 +20,7 @@ public:
  * @brief base class for all objects
  */
 class Object {
-private:
+protected:
 	Position p_;
 	int32_t dimension_;
 	uint32_t weight_;
@@ -114,7 +114,7 @@ private:
 	std::vector<Robot> robots_;
 	std::unique_ptr<FuelSource> fuelSource_;
 	
-	int32_t dimension_;
+	const int32_t dimension_;
 	
 	int doesObjectOverlapWithRobots(Object& a) const;
 
@@ -123,7 +123,9 @@ public:
 	 * @brief creates an empty world
 	 *
 	 */
-	World(int32_t dimension);
+	World(int32_t dimension) : dimension_(dimension) {
+		;
+	}
 	
 	~World() {
 	}
@@ -156,8 +158,8 @@ public:
 	 */
 	std::pair<int32_t, int32_t> getWorldTiltAngle() const;
 	
-	std::pair<int32_t, int32_t> getDimensions() {
-		return std::pair<int32_t, int32_t>(dimension_, dimension_);
+	uint32_t getDimension() {
+		return dimension_;
 	}
 };
 

@@ -60,36 +60,36 @@ TEST_F(WorldTest, AddRobot) {
 	EXPECT_EQ(robotsOld.size(), 0);
 	
 	/* add one robot */
-	ASSERT_GE(w->addRobot({1, 1}), 0);
+	ASSERT_GE(w->addRobot({-1, 1}), 0);
 	
 	/* test */
 	auto robotsNew = w->getRobots();
 	ASSERT_EQ(robotsNew.size(), 1);
 	auto pos = robotsNew.at(0).getPosition();
-	EXPECT_EQ(pos.first, 1);
+	EXPECT_EQ(pos.first, -1);
 	EXPECT_EQ(pos.second, 1);
 }
 
 TEST_F(WorldTest, AddRobotOutsideWorld) {
-	auto dimensions = w->getDimensions();
+	auto dimension = w->getDimension();
 
 	/* F: outside of the world, right side */
 	{
-		auto res = w->addRobot({dimensions.first + 1, 1});
+		auto res = w->addRobot({dimension + 1, 1});
 		ASSERT_LT(res, 0);
 	}
 	
 	/* F: outside of the world, bottom */
 	{
-		auto res = w->addRobot({0, dimensions.second + 1});
+		auto res = w->addRobot({0, dimension});
 		ASSERT_LT(res, 0);
 	}
 }
 
 TEST_F(WorldTest, AddOverlappingRobots) {
 	// add
-	auto dimensions = w->getDimensions();
-	auto x = dimensions.first / 2 ;
+	auto dimension = w->getDimension();
+	auto x = dimension / 2 ;
 	auto res = w->addRobot({x, 1});
 
 	/* F: a second robot completly overlapping the other one */

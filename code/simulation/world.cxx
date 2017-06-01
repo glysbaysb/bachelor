@@ -11,28 +11,23 @@
 
 int32_t Robot::GLOBAL_ID = 0;
 
-World::World(int32_t dimension)
-{	
-	dimension_ = dimension;
-}
-
 static bool doesObjectFitIntoWorld(Position& object, int32_t sizeOfObject,
-	std::pair<int32_t, int32_t> sizeOfWorld)
+	uint32_t sizeOfWorld)
 {
 	auto p = object.get();
 	auto x = p.first;
 	auto y = p.second;
 	
-	if(x < 0 || y < 0)
-		return false;
-	
-	if((x + sizeOfObject) > sizeOfWorld.first || (y + sizeOfObject) > sizeOfWorld.second)
+	/* the coordinate system starts in the middle of the round plate.
+	   abs() reflects the object on the X or Y axis. If that value plus the size of the
+	   object is bigger than the size of the world the object does not fit*/
+	if((abs(x) + sizeOfObject) > sizeOfWorld || (abs(y) + sizeOfObject) > sizeOfWorld)
 		return false;
 	
 	return true;
 }
 
-static bool doObjectsOverlap(Object& a, Object& b)
+static bool doObjectsOverlap(const Object& a, const Object& b)
 {
 	// https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
 	// if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
@@ -46,7 +41,7 @@ static bool doObjectsOverlap(Object& a, Object& b)
 	return t1 && t2 && t3 && t4;
 }
 
-int World::doesObjectOverlapWithRobots(Object& a)
+int World::doesObjectOverlapWithRobots(Object& a) const
 {
 	for(auto&& x : robots_) {
 		if(doObjectsOverlap(x, a)) {
@@ -60,7 +55,7 @@ int World::doesObjectOverlapWithRobots(Object& a)
 int World::addRobot(Position p)
 {
 	/* does the robot fit into the world? */
-	if(!doesObjectFitIntoWorld(p, Robot::DIMENSION, getDimensions()))
+	if(!doesObjectFitIntoWorld(p, Robot::DIMENSION, getDimension()))
 		return -1;
 	
 	auto r = Robot(p);
@@ -74,7 +69,7 @@ int World::addRobot(Position p)
 	return r.getID();
 }
 
-FuelSource* World::getFuelSource()
+FuelSource* World::getFuelSource() const
 {
 	return fuelSource_.get();
 }
@@ -89,24 +84,8 @@ int World::addFuelSource(Position p) {
 }
 
 std::pair<int32_t, int32_t> getWorldTiltAngle() {
-	auto worldDimensions = getDimensions();
-	auto midX = worldDimensions.first / 2,
-	     midY = worldDimensions.second / 2;
-
-	int32_t weightY = 0,
-		weightZ = 0;
-	for(auto&& r : robots_) {
-		/* compute the pressure that is pushing on the plate */
-		auto diffX = r.getPosition().first - midX,
-		     diffY = r.getPosition.second - midY;
-		auto vectorResult = sqrt(diffX * diffX + diffY * diffY);
-
-		/* with the coordinate system in the mid point, compute
-		   the degree of that force */
-		   
-	}	 
 }
 
-std::vector<Robot> World::getRobots() {
+std::vector<Robot> World::getRobots() const {
 	return robots_;
 }
