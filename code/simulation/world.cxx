@@ -8,8 +8,8 @@
 #include <utility>
 #include <vector>
 #include "world.h"
+#include "robot.h"
 
-int32_t Robot::GLOBAL_ID = 0;
 
 static bool doesObjectFitIntoWorld(const Position& object, const int32_t sizeOfObject,
 	const uint32_t sizeOfWorld)
