@@ -142,13 +142,13 @@ public:
 	/**
 	 *
 	 */
-	Robot getRobot(uint32_t id) const {
+	std::experimental::optional<Robot> getRobot(uint32_t id) const {
 		for(auto&& r : robots_) {
 			if(r.getID() == id)
 				return static_cast<Robot>(r);
 		}
 
-		// todo: error case
+		return {};
 	}
 	
 	/**

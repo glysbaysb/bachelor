@@ -19,6 +19,7 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+#include <experimental/optional>
 #include "world.h"
 #include "robot.h"
 
@@ -68,7 +69,9 @@ TEST_F(WorldTest, AddRobot) {
 	/* test */
 	auto numAfter = w->getNumOfRobots();
 	ASSERT_EQ(numAfter, 1);
-	auto pos = w->getRobot(id).getPosition();
+	auto r = w->getRobot(id);
+	ASSERT_TRUE(r);
+	auto pos = r->getPosition();
 	EXPECT_EQ(pos.first, -1);
 	EXPECT_EQ(pos.second, 1);
 }

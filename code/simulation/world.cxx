@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <utility>
 #include <vector>
+#include <experimental/optional>
 #include "world.h"
 #include "robot.h"
 

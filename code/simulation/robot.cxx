@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <assert.h>
+#include <experimental/optional>
 #include "world.h"
 #include "robot.h"
 
