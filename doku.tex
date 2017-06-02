@@ -63,12 +63,10 @@
 \section{Einf{\"{u}}hrung}
 \todo{Renderbild, Bild von der Ausgabe?}
 
-\paragraph{Motivation}
-\todo{...}
+\paragraph{Motivation} \todo{...}
 
-\paragraph{Simulation}
-Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
-platziert werden. Die Summer ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}ßig verteilt, kippt
+\paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+platziert werden. Die Summer ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
 die Platte und die Simulation endet.
 
 Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
@@ -84,14 +82,15 @@ so dass:
 \end{itemize}
 
 Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
-Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleran erreicht werden.) Teil dieser Bachelorarbeit ist eine
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleran erreicht werden.\cite[s.149]{Werner00}) Teil dieser Bachelorarbeit ist eine
 Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \todo{anforderungen?}
 
-\paragraph{Nutzung durch die Studenten}
-\todo{Einleitung}
+\paragraph{Nutzung durch die Studenten} \todo{Einleitung}
 \todo{interface}
+
+\paragraph{Evaluation}
 
 \clearpage
 \section{Grundlagen}
@@ -105,7 +104,9 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \clearpage
 \section{Die Welt}
 \todo{Einleitung}
-
+\subsection{Die Platte}
+\subsection{Die Roboter}
+\subsection{Die F{\"{u}}llstation}
 
 \clearpage
 \section{Netzwerk}
@@ -159,7 +160,7 @@ $$ int rotate(RobotID r, Degree diff); // oder to? $$
   
 \bibitem{Werner00}
   Matthias Werner,
-  Responsivit{\"{a}}t: ein konsensbasierter Ansatz,
+  \emph{Responsivit{\"{a}}t: ein konsensbasierter Ansatz},
   Humboldt University of Berlin, Germany,
   978-3-89811-924-5,
   2000.
