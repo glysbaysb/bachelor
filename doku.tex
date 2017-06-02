@@ -83,8 +83,8 @@ so dass:
 \item die Platte nicht kippt
 \end{itemize}
 
-Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abhängig vom Verhältniss der Anzahl der Kontroller zur
-Anzahl der Roboter können verschiedene Stufen der Fehlertoleran erreicht werden.) Teil dieser Bachelorarbeit ist eine
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleran erreicht werden.) Teil dieser Bachelorarbeit ist eine
 Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \todo{anforderungen?}
@@ -104,6 +104,7 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \clearpage
 \section{Die Welt}
+\todo{Einleitung}
 
 
 \clearpage
@@ -113,9 +114,22 @@ wer, in welchem drin ist. \todo{aufteilung im netzwerk als Bild}
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}
-Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren können gibt es Interfaces. \todo{umformulieren} 
+Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Interfaces. \todo{umformulieren} 
+Im ganzen System gibt es drei Schnittstellen:
+\begin{itemize}
+\item Die Schnittstelle zwischen Controller und Voter
+\item Die Schnittstelle zwischen Voter und Roboter
+\item Die Schnittstelle zwischen Controller und simulierter Welt \todo{oder Voter und simulierter Welt und dann an Controller senden?}
+\end{itemize}
 
-\paragraph{Voter}
+\paragraph{Die Schnittstelle zwischen Controller und Voter} ist komplett den Studenten {\"{u}}berlassen.
+
+\paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
+Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
+\todo{wie macht man Code?}
+$$ int move(RobotID r, Position new); $$
+$$ int rotate(RobotID r, Degree diff); // oder to? $$ 
+
 
 \clearpage
 \section{Fehlerinjektion}
