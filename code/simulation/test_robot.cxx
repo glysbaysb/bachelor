@@ -31,7 +31,11 @@ class RobotTest: public ::testing::Test {
 public: 
    RobotTest( ) { 
        w = new World(100);
-       // todo: add robots and fuelsource
+
+       w->addRobot({5, 5});
+       w->addRobot({12, 0});
+       w->addRobot({-50, -5});
+       w->addFuelSource({0, 0});
    } 
 
    ~RobotTest( )  { 
@@ -42,10 +46,17 @@ public:
    World* w;
 };
 
+if 0
 TEST_F(RobotTest, CantMoveWithoutFuel) {
 }
 
 TEST_F(RobotTest, CanMoveWithFuel) {
+}
+
+TEST_F(RobotTest, MovementBurnsFuel) {
+}
+
+TEST_F(RobotTest, IdlingBurnsFuel) {
 }
 
 TEST_F(RobotTest, RotatesInRightDirection) {
@@ -59,6 +70,7 @@ TEST_F(RobotTest, MovesInRightDirection) {
 
 TEST_F(RobotTest, CantMoveTooMuchPerTurn) {
 }
+#endif
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
