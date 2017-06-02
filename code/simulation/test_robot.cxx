@@ -25,18 +25,30 @@
 #include <vector>
 #include <iostream>
 #include <experimental/optional>
+#include <random>
 #include "world.h"
 #include "robot.h"
 
 class RobotTest: public ::testing::Test { 
-public: 
-   RobotTest( ) { 
-       w = new World(100);
+private:
+	std::default_random_engine engine;
+	std::random_device dev;
+protected:
+	std::vector<uint32_t> ids;	
 
-       w->addRobot({5, 5});
-       w->addRobot({12, 0});
-       w->addRobot({-50, -5});
-       w->addFuelSource({0, 0});
+   uint32_t getRandomRobot() {
+   	std::uniform_int_distribution<size_t> dist(0, ids.size());
+	return ids.at(dist(engine));
+   }
+public: 
+   RobotTest( ) : dev{}, engine{dev()} { 
+	/* initalize world */
+	w = new World(100);
+
+	ids.emplace_back(w->addRobot({5, 5}));
+	ids.emplace_back(w->addRobot({12, 0}));
+	ids.emplace_back(w->addRobot({-50, -5}));
+	w->addFuelSource({0, 0});
    } 
 
    ~RobotTest( )  { 
@@ -50,10 +62,19 @@ public:
 #if 0
 TEST_F(RobotTest, CantMoveWithoutFuel) {
 }
+#endif
 
 TEST_F(RobotTest, CanMoveWithFuel) {
+	auto r = w->getRobot(getRandomRobot());
+	auto fuelBefore = r->getFuelStatus();
+	EXPECT_GT(fuelBefore, 0);
+
+	w->move(r->getID());
+	auto fuelAfter = r->getFuelStatus();
+	EXPECT_LT(fuelAfter, fuelBefore);
 }
 
+#if 0
 TEST_F(RobotTest, MovementBurnsFuel) {
 }
 
