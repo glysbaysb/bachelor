@@ -46,7 +46,7 @@ public:
    World* w;
 };
 
-if 0
+#if 0
 TEST_F(RobotTest, CantMoveWithoutFuel) {
 }
 

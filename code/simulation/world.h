@@ -76,7 +76,36 @@ public:
 
 class World {
 private:
-	std::vector<Robot> robots_;
+	/**
+	 * @brief helper class that saves state information for each robot to prevent cheating
+	 */
+	class RobotWithRoundInformation : public Robot {
+	private:
+		bool activeThisTurn;
+	public:
+		RobotWithRoundInformation(const Position& p) : Robot(p), activeThisTurn(false) {
+			;
+		}
+
+		void resetTurn() {
+			activeThisTurn = false;
+		}
+
+		void safeMove() {
+			if(activeThisTurn)
+				return;
+			move();
+			activeThisTurn = true;
+		}
+
+		void safeTurn() {
+			if(activeThisTurn)
+				return;
+			; // todo
+			activeThisTurn = true;
+		}
+	};
+	std::vector<RobotWithRoundInformation> robots_;
 	std::unique_ptr<FuelSource> fuelSource_;
 	
 	const int32_t dimension_;
@@ -104,9 +133,23 @@ public:
 	int addRobot(const Position& p);
 
 	/**
-	 * @brief returns the robots currently in this world
+	 * @brief returns number of robots currently in this world
 	 */
-	std::vector<Robot> getRobots() const; 	
+	size_t getNumOfRobots() const {
+		return robots_.size();
+	}
+
+	/**
+	 *
+	 */
+	Robot getRobot(uint32_t id) const {
+		for(auto&& r : robots_) {
+			if(r.getID() == id)
+				return static_cast<Robot>(r);
+		}
+
+		// todo: error case
+	}
 	
 	/**
 	 *

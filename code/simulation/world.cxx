@@ -58,7 +58,7 @@ int World::addRobot(const Position& p)
 	if(!doesObjectFitIntoWorld(p, Robot::DIMENSION, getDimension()))
 		return -1;
 	
-	auto r = Robot(p);
+	auto r = RobotWithRoundInformation(p);
 	if((doesObjectOverlapWithRobots(r) < 0))
 		return -2;
 	if(getFuelSource() && doObjectsOverlap(*getFuelSource(), r))
@@ -99,10 +99,6 @@ std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
 	}
 
 	return {vectorX, vectorY};
-}
-
-std::vector<Robot> World::getRobots() const {
-	return robots_;
 }
 
 int World::moveRobot(const int32_t robot, const Position& newPos) {

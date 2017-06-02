@@ -6,6 +6,7 @@
  * More specifically this file tests:
  * 1) can Objects be added to the world?
  * 2) does the collision detection work?
+ * 3) todo: test getRobot()
  *
  * All test functions are member functions of WorldTest, which initalizes a
  * new empty world before each test. Most of the the unit tests test "normally",
@@ -57,16 +58,17 @@ public:
 
 TEST_F(WorldTest, AddRobot) {
 	/* the world should be empty right after creation */
-	auto robotsOld = w->getRobots();
-	EXPECT_EQ(robotsOld.size(), 0);
+	auto num = w->getNumOfRobots();
+	EXPECT_EQ(num, 0);
 	
 	/* add one robot */
-	ASSERT_GE(w->addRobot({-1, 1}), 0);
+	auto id = w->addRobot({-1, 1});
+	ASSERT_GE(id, 0);
 	
 	/* test */
-	auto robotsNew = w->getRobots();
-	ASSERT_EQ(robotsNew.size(), 1);
-	auto pos = robotsNew.at(0).getPosition();
+	auto numAfter = w->getNumOfRobots();
+	ASSERT_EQ(numAfter, 1);
+	auto pos = w->getRobot(id).getPosition();
 	EXPECT_EQ(pos.first, -1);
 	EXPECT_EQ(pos.second, 1);
 }

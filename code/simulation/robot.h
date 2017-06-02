@@ -7,6 +7,16 @@ private:
 	
 	int32_t id_;
 	static int32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
+
+protected:
+	void move() {
+		assert(false);
+	}	
+
+	void setFuelStatus(const int8_t fuelStatus) {
+		assert(fuelStatus >= 0 && fuelStatus <= 100);
+		fuelStatus_ = fuelStatus;
+	}
 public:
 	static const uint32_t WEIGHT = 1;
 	static const int DIMENSION = 3;
@@ -18,20 +28,12 @@ public:
 		return fuelStatus_;
 	}
 	
-	void setFuelStatus(const int8_t fuelStatus) {
-		assert(fuelStatus >= 0 && fuelStatus <= 100);
-		fuelStatus_ = fuelStatus;
-	}
-	
 	uint32_t getWeight() const {
 		// todo: somehow make this dependent on fuel status
 		return weight_;
 	}
 
-	void move() {
-		assert(false);
-	}
-	
+
 	int32_t getID() const {
 		return id_;
 	}
