@@ -104,3 +104,12 @@ std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
 std::vector<Robot> World::getRobots() const {
 	return robots_;
 }
+
+int World::moveRobot(const int32_t robot, const Position& newPos) {
+	assert(false);
+}
+
+int World::rotateRobot(const int32_t robot, const int16_t degrees) {
+	assert(false);
+}
+

@@ -126,6 +126,19 @@ public:
 	uint32_t getDimension() {
 		return dimension_;
 	}
+
+	/**
+	 * @brief moves the robot towards newPos.
+	 * @todo uhm what if the robot is not rotated in that direction?
+	 */
+	int moveRobot(const int32_t robot, const Position& newPos);
+
+	/**
+	 * @brief rotates the robot by the specified amount of degrees.
+	 *
+	 * @param degrees -180 <= degrees <= 180
+	 */
+	int rotateRobot(const int32_t robot, const int16_t degrees);
 };
 
 #endif // WORLD_H
