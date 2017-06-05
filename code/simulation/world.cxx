@@ -102,11 +102,26 @@ std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
 	return {vectorX, vectorY};
 }
 
-int World::moveRobot(const int32_t robot, const Position& newPos) {
-	assert(false);
+int World::moveRobot(const int32_t robot, bool move) {
 }
 
-int World::rotateRobot(const int32_t robot, const int16_t degrees) {
-	assert(false);
+
+void World::update() {
+	for(auto&& r : robots_) {
+		/* move all robots and prepare them so they can be used again next round */
+		r.safeUpdate();
+		
+		/* todo: collision */
+		/* but what if a collision happens? Do the robots crash into eac other
+		   and then in the next round crash even further? Or do they bounce
+		   back to their old positions?
+		or maybe: 
+			new = r.update();
+			if(!collision)
+				r.apply(new);
+		*/
+		
+		/* todo: if near fuelSource: charge */
+	}
 }
 

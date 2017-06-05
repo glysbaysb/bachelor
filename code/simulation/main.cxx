@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
 	
 	/* simulation loop */
 	struct pollfd pfd[] = {
-        {.fd = timer, .events = POLLIN, 0},
+		{.fd = timer, .events = POLLIN, 0},
 	};
 	int s;
 	while((s = poll(pfd, (sizeof(pfd) / sizeof(pfd[0])), -1)) > 0) {
@@ -105,17 +105,9 @@ int main(int argc, char** argv) {
 			printf("%s next simulation step\n", get_time());
 		}
 		
-		/* get all robot commands */
-		
-		/* update robot positions */
+		/* get & apply all robot commands from the vothers */
 		
 		/* recalc world */
-		
-		// collision
-		// degree of plate
-		// ?
-		
-		/* recalc fuel status */
 		
 		/* calculate minus points */
 		

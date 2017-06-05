@@ -45,9 +45,6 @@ public:
 		return weight_;
 	}
 
-	// todo: args?
-	virtual void move() = 0;
-
 	friend std::ostream& operator<< (std::ostream& stream, const Object& o) {
 		auto leftTop = o.getPosition();
 		std::cout << "[" << leftTop.first << "," << leftTop.second << "|" << 
@@ -60,14 +57,7 @@ class FuelSource : public Object {
 public:
 	static const int DIMENSION = 2;
 	static const uint32_t WEIGHT = 5;
-	
-	/**
-	 * @brief a fuel source cannot move, so calling this function does nothing
-	 */
-	void move() {
-		;
-	}
-	
+		
 	FuelSource(const Position& p) : Object(p, DIMENSION, WEIGHT) {
 	}
 };
@@ -81,28 +71,29 @@ private:
 	 */
 	class RobotWithRoundInformation : public Robot {
 	private:
-		bool activeThisTurn;
+		bool activeThisTurn; //! automatically cleared by safeUpdate. Set by safeMove() or safeRotate()
 	public:
 		RobotWithRoundInformation(const Position& p) : Robot(p), activeThisTurn(false) {
 			;
 		}
 
-		void resetTurn() {
-			activeThisTurn = false;
-		}
-
 		void safeMove() {
-			if(activeThisTurn)
-				return;
-			move();
-			activeThisTurn = true;
-		}
-
-		void safeTurn() {
 			if(activeThisTurn)
 				return;
 			; // todo
 			activeThisTurn = true;
+		}
+
+		void safeRotate(int8_t leftWheel, int8_t rightWheel) {
+			if(activeThisTurn)
+				return;
+			; // todo
+			activeThisTurn = true;
+		}
+		
+		void safeUpdate() {
+			// todo:
+			activeThisTurn = false;
 		}
 	};
 	std::vector<RobotWithRoundInformation> robots_;
@@ -142,7 +133,7 @@ public:
 	/**
 	 *
 	 */
-	std::experimental::optional<Robot> getRobot(uint32_t id) const {
+	std::experimental::optional<Robot> getRobot(int32_t id) const {
 		for(auto&& r : robots_) {
 			if(r.getID() == id)
 				return static_cast<Robot>(r);
@@ -166,22 +157,26 @@ public:
 	 */
 	std::pair<int32_t, int32_t> getWorldPressureVector() const;
 	
-	uint32_t getDimension() {
+	uint32_t getDimension() const {
 		return dimension_;
 	}
 
 	/**
-	 * @brief moves the robot towards newPos.
-	 * @todo uhm what if the robot is not rotated in that direction?
+	 * @brief moves the robot
 	 */
-	int moveRobot(const int32_t robot, const Position& newPos);
+	int moveRobot(const int32_t robot, bool move);
 
 	/**
 	 * @brief rotates the robot by the specified amount of degrees.
 	 *
-	 * @param degrees -180 <= degrees <= 180
+	 * @param leftWheel -90<= degrees <= 90
+	 * @param rightWheel -90<= degrees <= 90
 	 */
-	int rotateRobot(const int32_t robot, const int16_t degrees);
+	int rotateRobot(const int32_t robot, const int8_t leftWheel, const int8_t rightWheel);
+	
+	/**
+	 */
+	void update();
 };
 
 #endif // WORLD_H

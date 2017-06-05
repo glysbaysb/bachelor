@@ -36,9 +36,9 @@ private:
 protected:
 	std::vector<uint32_t> ids;	
 
-   uint32_t getRandomRobot() {
-   	std::uniform_int_distribution<size_t> dist(0, ids.size());
-	return ids.at(dist(engine));
+	uint32_t getRandomRobot() {
+		std::uniform_int_distribution<size_t> dist(0, ids.size());
+		return ids.at(dist(engine));
    }
 public: 
    RobotTest( ) : dev{}, engine{dev()} { 
@@ -65,11 +65,16 @@ TEST_F(RobotTest, CantMoveWithoutFuel) {
 #endif
 
 TEST_F(RobotTest, CanMoveWithFuel) {
+	/* get state before */
 	auto r = w->getRobot(getRandomRobot());
 	auto fuelBefore = r->getFuelStatus();
 	EXPECT_GT(fuelBefore, 0);
 
-	w->move(r->getID());
+	/* change state by moving the robot */
+	w->moveRobot(r->getID(), true);
+	w->update();
+	
+	/* compare with old state */
 	auto fuelAfter = r->getFuelStatus();
 	EXPECT_LT(fuelAfter, fuelBefore);
 }

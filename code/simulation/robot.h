@@ -9,7 +9,7 @@ private:
 	static int32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
 
 protected:
-	void move() {
+	void update() {
 		assert(false);
 	}	
 
