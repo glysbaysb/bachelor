@@ -66,6 +66,20 @@ TEST_F(RobotTest, CantMoveWithoutFuel) {
 #endif
 
 TEST_F(RobotTest, CanMoveWithFuel) {
+	/* get position before */
+	auto r = w->getRobot(getRandomRobot());
+	auto position = r->getPosition();
+
+	/* change position by moving the robot */
+	w->moveRobot(r->getID(), true);
+	w->update();
+	
+	/* compare with old position */
+	auto newPosition = r->getPosition();
+	ASSERT_NEQ(position, newPosition);
+}
+
+TEST_F(RobotTest, MovementBurnsFuel) {
 	/* get state before */
 	auto r = w->getRobot(getRandomRobot());
 	auto fuelBefore = r->getFuelStatus();
@@ -80,13 +94,21 @@ TEST_F(RobotTest, CanMoveWithFuel) {
 	EXPECT_LT(fuelAfter, fuelBefore);
 }
 
-#if 0
-TEST_F(RobotTest, MovementBurnsFuel) {
-}
-
 TEST_F(RobotTest, IdlingBurnsFuel) {
+	/* get state before */
+	auto r = w->getRobot(getRandomRobot());
+	auto fuelBefore = r->getFuelStatus();
+	EXPECT_GT(fuelBefore, 0);
+
+	/* change state by idling */
+	w->update();
+	
+	/* compare with old state */
+	auto fuelAfter = r->getFuelStatus();
+	EXPECT_LT(fuelAfter, fuelBefore);
 }
 
+#if 0
 TEST_F(RobotTest, RotatesInRightDirection) {
 }
 
