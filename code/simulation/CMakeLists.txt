@@ -1,25 +1,23 @@
+#
+#
+#
 cmake_minimum_required(VERSION 2.8)
 project(simulation)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++14 -D_POSIX_C_SOURCE=200112L -g")
-set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
-#set(LIBS "-lm")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBS}")
+# Declare the library
+set(SOURCE_FILES_LIB
+	world.cxx world.h
+	robot.cxx robot.h)
+add_library(libsim STATIC
+    ${SOURCE_FILES_LIB}
+)
+target_link_libraries(libsim)
+# Specify the include directories exported by this library
+target_include_directories(libsim PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-set(CXX_WARNINGS "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs
--Wswitch-default -Wuninitialized -Wfloat-equal -Wundef -Wshadow -Wcast-qual
--Wcast-align -Wconversion -Wjump-misses-init -Wlogical-op -Wmissing-prototypes
--Wmissing-declarations -Wredundant-decls -Winline -Wdisabled-optimization
--Wnarrowing -Wstrict")
-
-set(SOURCE_FILES_SIMULATION main.cxx world.cxx robot.cxx)
+# and the actual program
+set(SOURCE_FILES_SIMULATION main.cxx)
 add_executable(simulation ${SOURCE_FILES_SIMULATION})
-target_link_libraries(simulation m)
-
-set(SOURCE_FILES_WORLD_TEST test_world.cxx world.cxx robot.cxx)
-add_executable(test_world ${SOURCE_FILES_WORLD_TEST})
-target_link_libraries(test_world gtest pthread)
-
-set(SOURCE_FILES_ROBOT_TEST test_robot.cxx world.cxx robot.cxx)
-add_executable(test_robot ${SOURCE_FILES_ROBOT_TEST})
-target_link_libraries(test_robot gtest pthread)
+target_link_libraries(simulation m libsim)

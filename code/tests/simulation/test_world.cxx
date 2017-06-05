@@ -20,8 +20,8 @@
 #include <vector>
 #include <iostream>
 #include <experimental/optional>
-#include "world.h"
-#include "robot.h"
+#include <simulation/world.h>
+#include <simulation/robot.h>
 
 #if 0
 TEST(FuelSourceTest, CantMove) {

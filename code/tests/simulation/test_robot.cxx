@@ -27,8 +27,8 @@
 #include <experimental/optional>
 #include <chrono>
 #include <random>
-#include "world.h"
-#include "robot.h"
+#include <simulation/world.h>
+#include <simulation/robot.h>
 
 std::minstd_rand0 random_(std::chrono::system_clock::now().time_since_epoch().count());
 
@@ -76,7 +76,7 @@ TEST_F(RobotTest, CanMoveWithFuel) {
 	
 	/* compare with old position */
 	auto newPosition = r->getPosition();
-	ASSERT_NEQ(position, newPosition);
+	ASSERT_NE(position, newPosition);
 }
 
 TEST_F(RobotTest, MovementBurnsFuel) {
