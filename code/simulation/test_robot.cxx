@@ -25,36 +25,37 @@
 #include <vector>
 #include <iostream>
 #include <experimental/optional>
+#include <chrono>
 #include <random>
 #include "world.h"
 #include "robot.h"
 
+std::minstd_rand0 random_(std::chrono::system_clock::now().time_since_epoch().count());
+
 class RobotTest: public ::testing::Test { 
 private:
-	std::default_random_engine engine;
-	std::random_device dev;
 protected:
 	std::vector<uint32_t> ids;	
 
 	uint32_t getRandomRobot() {
-		std::uniform_int_distribution<size_t> dist(0, ids.size());
-		return ids.at(dist(engine));
+		auto it = ids.begin();
+		std::advance(it, random_() % ids.size());
    }
 public: 
-   RobotTest( ) : dev{}, engine{dev()} { 
-	/* initalize world */
-	w = new World(100);
+	RobotTest( ) { 
+		/* initalize world */
+		w = new World(100);
 
-	ids.emplace_back(w->addRobot({5, 5}));
-	ids.emplace_back(w->addRobot({12, 0}));
-	ids.emplace_back(w->addRobot({-50, -5}));
-	w->addFuelSource({0, 0});
-   } 
+		ids.emplace_back(w->addRobot({5, 5}));
+		ids.emplace_back(w->addRobot({12, 0}));
+		ids.emplace_back(w->addRobot({-50, -5}));
+		w->addFuelSource({0, 0});
+	} 
 
-   ~RobotTest( )  { 
-       delete w;
-       // cleanup any pending stuff, but no exceptions allowed
-   }
+	~RobotTest( )  { 
+		delete w;
+		// cleanup any pending stuff, but no exceptions allowed
+	}
 
    World* w;
 };

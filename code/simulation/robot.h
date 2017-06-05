@@ -21,7 +21,9 @@ public:
 	static const uint32_t WEIGHT = 1;
 	static const int DIMENSION = 3;
 
-	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++) {
+	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++)
+	{
+		setFuelStatus(100);
 	}
 	
 	int8_t getFuelStatus() const {
