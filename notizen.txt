@@ -60,3 +60,17 @@ struct {
 		  degreeeFrontBack;
 	Robot robots[numOfRobots];
 };
+
+Blablabla
+=========
+doxygen parameter wo ich mir Gedanken machen muss:
+JAVADOC_AUTOBRIEF
+OPTIMIZE_OUTPUT_FOR_C
+BUILTIN_STL_SUPPORT
+EXTRACT_ALL
+_PRIVATE
+_STATIC
+HIDE_SCOPE_NAMES
+
+http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/
+Und evt. google test als module beim CMAKE einbinden? Ist im gtest readme enthalten
