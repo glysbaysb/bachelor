@@ -71,7 +71,8 @@ private:
 	 */
 	class RobotWithRoundInformation : public Robot {
 	private:
-		bool activeThisTurn; //! automatically cleared by safeUpdate. Set by safeMove() or safeRotate()
+		//! automatically cleared by safeUpdate. Set by safeMove() or safeRotate()
+		bool activeThisTurn; 
 	public:
 		RobotWithRoundInformation(const Position& p) : Robot(p), activeThisTurn(false) {
 			;

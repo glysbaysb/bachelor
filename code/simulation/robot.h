@@ -3,10 +3,10 @@
 
 class Robot : public Object {
 private:
-	int8_t fuelStatus_; // 0 <= fuelStatus_ <= 100
+	int8_t fuelStatus_; //!< 0 <= fuelStatus_ <= 100
 	
 	int32_t id_;
-	static int32_t GLOBAL_ID; //! 0 at programm startup, incremented for each invocation of constructor
+	static int32_t GLOBAL_ID; //!< 0 at programm startup, incremented for each invocation of constructor
 
 protected:
 	void update() {

@@ -32,7 +32,7 @@ static bool doObjectsOverlap(const Object& a, const Object& b)
 {
 	// https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
 	// if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
-     	//     RectA.Top > RectB.Bottom && RectA.Bottom < RectB.Top )
+	//     RectA.Top > RectB.Bottom && RectA.Bottom < RectB.Top )
 	// adapted for the different coordinate system, so flip the comparsions on the Y-axis
 	bool t1 = (a.getPosition().first < (b.getPosition().first + b.getDimension()));
 	bool t2 = ((a.getPosition().first + a.getDimension()) > b.getPosition().first);
@@ -85,8 +85,8 @@ int World::addFuelSource(const Position& p) {
 }
 
 std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
-	int32_t vectorX = 0, //! the sum of the x part all forces --> for the left-right angle
-		vectorY = 0; //! the sum of the y part of all forces -> for the front-back angle
+	int32_t vectorX = 0, // the sum of the x part all forces --> for the left-right angle
+		vectorY = 0; // the sum of the y part of all forces -> for the front-back angle
 
 	for(auto&& r : robots_) {
 		vectorX += r.getPosition().first * r.getWeight();
