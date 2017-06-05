@@ -1,6 +1,6 @@
   Simulation--------------------------------> Anzeigeserver
   ^       ^             Keine Verfälschung
-  R       R
+  V       V
 ------------------------------------------------
  /  ^ ^  |  \
 |  /   \ |   |      Verfälschendes Netzwerk
@@ -46,3 +46,17 @@ Fehlermodellprogramm
 Fragen zur Doku
 ===============
 
+Fragen zum Interface
+====================
+Voter <-> Welt
+--------------
+int rotate(RobotID r, Degree leftWheel, Degree rightWheel);
+int move(RobotID r, bool move); // true = moves, false = stops
+
+simulation -> Anzeige + Controller
+----------------------------------
+struct {
+	float degreeLeftRight,
+		  degreeeFrontBack;
+	Robot robots[numOfRobots];
+};

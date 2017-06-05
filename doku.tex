@@ -58,6 +58,7 @@
 \listoffigures
 %\addcontentsline{toc}{section}{\listfigurename}
 \listoftables
+\listoftodos
 
 \clearpage
 \section{Einf{\"{u}}hrung}
@@ -126,10 +127,11 @@ Im ganzen System gibt es drei Schnittstellen:
 \paragraph{Die Schnittstelle zwischen Controller und Voter} ist komplett den Studenten {\"{u}}berlassen.
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
-Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
-\todo{wie macht man Code?}
-$$ int move(RobotID r, Position new); $$
-$$ int rotate(RobotID r, Degree diff); // oder to? $$ 
+Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus der Funktionen:
+\begin{lstlisting}
+int rotate(RobotID r, Degree leftWheel, Degree rightWheel);
+int move(RobotID r, bool move); // true = moves, false = stops
+\end{lstlisting}
 
 
 \clearpage
