@@ -71,7 +71,7 @@ TEST_F(RobotTest, CanMoveWithFuel) {
 	auto position = r->getPosition();
 
 	/* change position by moving the robot */
-	w->moveRobot(r->getID(), true);
+	w->moveRobot(r->getID(), {0, 1});
 	w->update();
 	
 	/* compare with old position */
@@ -86,7 +86,7 @@ TEST_F(RobotTest, MovementBurnsFuel) {
 	EXPECT_GT(fuelBefore, 0);
 
 	/* change state by moving the robot */
-	w->moveRobot(r->getID(), true);
+	w->moveRobot(r->getID(), {0, 1});
 	w->update();
 	
 	/* compare with old state */

@@ -102,7 +102,16 @@ std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
 	return {vectorX, vectorY};
 }
 
-int World::moveRobot(const int32_t robot, bool move) {
+int World::moveRobot(const int32_t robot, const Position& diffVector) {
+	for(auto&& r : robots_) {
+		if(r.getID() != robot)
+			continue;
+
+		r.safeMove(diffVector);	
+		return 0;
+	}
+
+	return -1;
 }
 
 

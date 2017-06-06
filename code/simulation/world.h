@@ -13,6 +13,15 @@ public:
 		return std::pair<int32_t, int32_t>(_x, _y);
 	}
 	
+	friend Position operator+ (const Position& a, const Position& b) {
+		return Position(a._x + b._x, a._y + a._y);
+        }
+	
+	friend std::ostream& operator<< (std::ostream& stream, const Position& o) {
+		std::cout << "[" << o._x << "," << o._y << "]";
+
+        }
+	
 	// todo: operator overload or whatever and then replace Object:getPosition()?
 };
 
@@ -46,9 +55,9 @@ public:
 	}
 
 	friend std::ostream& operator<< (std::ostream& stream, const Object& o) {
-		auto leftTop = o.getPosition();
-		std::cout << "[" << leftTop.first << "," << leftTop.second << "|" << 
-			leftTop.first + o.getDimension() << "," << leftTop.second + o.getDimension() << "]";
+		auto leftTop = o.p_;
+		auto rightBottom = leftTop + Position{o.getDimension(), o.getDimension()};
+		std::cout << leftTop << "," << rightBottom;
 
         }
 };
@@ -78,22 +87,15 @@ private:
 			;
 		}
 
-		void safeMove() {
+		void safeMove(const Position& diff) {
 			if(activeThisTurn)
 				return;
-			; // todo
+			move(diff);
 			activeThisTurn = true;
 		}
 
-		void safeRotate(int8_t leftWheel, int8_t rightWheel) {
-			if(activeThisTurn)
-				return;
-			; // todo
-			activeThisTurn = true;
-		}
-		
 		void safeUpdate() {
-			// todo:
+			update();
 			activeThisTurn = false;
 		}
 	};
@@ -165,7 +167,7 @@ public:
 	/**
 	 * @brief moves the robot
 	 */
-	int moveRobot(const int32_t robot, bool move);
+	int moveRobot(const int32_t robot, const Position& diffVector);
 
 	/**
 	 * @brief rotates the robot by the specified amount of degrees.
