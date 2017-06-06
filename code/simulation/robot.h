@@ -3,7 +3,7 @@
 
 class Robot : public Object {
 private:
-	int8_t fuelStatus_; //!< 0 <= fuelStatus_ <= 100
+	int fuelStatus_; //!< 0 <= fuelStatus_ <= 100
 	
 	int32_t id_;
 	static int32_t GLOBAL_ID; //!< 0 at programm startup, incremented for each invocation of constructor
@@ -22,7 +22,7 @@ protected:
 		}
 	}	
 
-	void setFuelStatus(const int8_t fuelStatus) {
+	void setFuelStatus(const int fuelStatus) {
 		assert(fuelStatus >= 0 && fuelStatus <= 100);
 		fuelStatus_ = fuelStatus;
 	}
@@ -30,6 +30,7 @@ protected:
 	void update() {
 		p_ = p_ + movementVector_;
 		// todo: fuel
+		setFuelStatus(getFuelStatus() - 1); // always use up a bit
 	}
 
 public:
@@ -37,12 +38,11 @@ public:
 	static const int DIMENSION = 3;
 
 	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++),
-		movementVector_({0, 0})
+		movementVector_({0, 0}), fuelStatus_(100)
 	{
-		setFuelStatus(100);
 	}
 	
-	int8_t getFuelStatus() const {
+	int getFuelStatus() const {
 		return fuelStatus_;
 	}
 	
