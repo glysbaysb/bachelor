@@ -58,7 +58,6 @@
 \listoffigures
 %\addcontentsline{toc}{section}{\listfigurename}
 \listoftables
-\listoftodos
 
 \clearpage
 \section{Einf{\"{u}}hrung}
@@ -95,6 +94,7 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \clearpage
 \section{Grundlagen}
+\todo{ueberhaupt haben?}
 \todo{einleitung}
 
 \subsection{Vektorrechnung}
@@ -105,9 +105,41 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \clearpage
 \section{Die Welt}
 \todo{Einleitung}
-\subsection{Die Platte}
+
 \subsection{Die Roboter}
+In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen.
+Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
+$ \bigl(N_i = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ und
+seinen Geschwindigkeitsvektor
+$ \bigl(V_i = \begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix} \bigr)$.
+
+Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
+maximal eine Geschwindigkeit $ -3 <= \Delta x <= 3$, bzw. 
+$ -3 <= \Delta y <= 3$.
+Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
+Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
+
+\todo{gewicht}
+
+Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
+aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
+Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung. 
+$$ N_{i, n{\"{a}}chste Runde}(e) = N_{i, diese Runde}(e) - 1 - |V_i| $$
+
 \subsection{Die F{\"{u}}llstation}
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ \bigl(F = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ beschrieben.
+
+Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
+
+\todo{Aufladeformel}
+
+\subsection{Die Platte}
+Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
+Der Kippwinkel ist dabei abh{\"{a}}ngig vom Hebelgesetz:
+$$ V_{LinksRechts} = F(x) * F(w) + \sum_{i=0}^{|N|} N_i(x) * N_i(w) $$
+$$ cos(V_{LinksRechts}) = \beta = W_{LinksRechts} $$
+$$ V_{VorneHinten} = F(y) * F(w) + \sum_{i=0}^{|N|} N_i(y) * N_i(w) $$
+$$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
 \section{Netzwerk}
@@ -127,11 +159,10 @@ Im ganzen System gibt es drei Schnittstellen:
 \paragraph{Die Schnittstelle zwischen Controller und Voter} ist komplett den Studenten {\"{u}}berlassen.
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
-Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus der Funktionen:
-\begin{lstlisting}
-int rotate(RobotID r, Degree leftWheel, Degree rightWheel);
-int move(RobotID r, bool move); // true = moves, false = stops
-\end{lstlisting}
+Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
+\todo{wie macht man Code?}
+$$ int move(RobotID r, Position new); $$
+$$ int rotate(RobotID r, Degree diff); // oder to? $$ 
 
 
 \clearpage
