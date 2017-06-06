@@ -32,6 +32,9 @@ protected:
 
 		/* fuel */
 		auto speed = abs(movementVector_);
+		setFuelStatus(getFuelStatus() - floor(speed));
+		
+
 		setFuelStatus(getFuelStatus() - 1); // always use up a bit
 	}
 
