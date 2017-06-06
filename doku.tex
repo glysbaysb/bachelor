@@ -93,25 +93,15 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \paragraph{Evaluation}
 
 \clearpage
-\section{Grundlagen}
-\todo{ueberhaupt haben?}
-\todo{einleitung}
-
-\subsection{Vektorrechnung}
-
-\todo{mehr physikalisches? Was denn Sinus?}
-\subsection{Fehlerinjektion}
-
-\clearpage
 \section{Die Welt}
 \todo{Einleitung}
 
 \subsection{Die Roboter}
 In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen.
 Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
-$ N_i = \left(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\right)$ und
+$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ und
 seinen Geschwindigkeitsvektor
-$ V_i = \left(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\right)$.
+$ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$.
 
 Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
 maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
@@ -127,11 +117,14 @@ Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinh
 $$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
 
 \subsection{Die F{\"{u}}llstation}
-Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ \bigl(F = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ beschrieben.
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
+Falls sich ein Roboter an die Platte heranbewegt, also gilt: 
+$$ |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)| $$
+wird dieser Roboter aufgeladen. Die Ladefunktion folgt dabei einer e-Kurve:
+$$ e(N_i, n{\"{a}}chste Runde) = 100 + (e(N_i, diese Runde) - 100) * exp{-1 \over 2}  $$
 
-\todo{Aufladeformel}
 
 \subsection{Die Platte}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
