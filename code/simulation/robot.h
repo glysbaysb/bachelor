@@ -29,7 +29,9 @@ protected:
 
 	void update() {
 		p_ = p_ + movementVector_;
-		// todo: fuel
+
+		/* fuel */
+		auto speed = abs(movementVector_);
 		setFuelStatus(getFuelStatus() - 1); // always use up a bit
 	}
 

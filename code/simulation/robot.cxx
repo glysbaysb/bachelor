@@ -4,6 +4,7 @@
 #include <iostream>
 #include <assert.h>
 #include <experimental/optional>
+#include <math.h>
 #include "world.h"
 #include "robot.h"
 

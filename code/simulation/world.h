@@ -29,7 +29,10 @@ public:
 		std::cout << "[" << o._x << "," << o._y << "]";
 
         }
-	
+
+	friend double abs(const Position& a) {
+		return sqrt(a._x * a._x + a._y * a._y);
+	}
 	// todo: operator overload or whatever and then replace Object:getPosition()?
 };
 
