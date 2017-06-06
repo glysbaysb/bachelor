@@ -66,14 +66,14 @@
 \paragraph{Motivation} \todo{...}
 
 \paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
-platziert werden. Die Summer ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
+platziert werden. Die Summe ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
 die Platte und die Simulation endet.
 
 Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
-an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen verbrauchen sie Energie (allerdings weniger
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
 schnell).
 
-Kontrolliert werden die Roboter von bis zu $M$ $(M >= N)$ Kontrollern. Einer oder mehr Kontroller stimmen sich ab,
+Kontrolliert werden die Roboter von bis zu $M$ $(M \geq N)$ Kontrollern. Einer oder mehr Kontroller stimmen sich ab,
 so dass:
 \begin{itemize}
 \item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
@@ -82,7 +82,7 @@ so dass:
 \end{itemize}
 
 Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
-Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleran erreicht werden.\cite[s.149]{Werner00}) Teil dieser Bachelorarbeit ist eine
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00}) Teil dieser Bachelorarbeit ist eine
 Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \todo{anforderungen?}
@@ -109,13 +109,13 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \subsection{Die Roboter}
 In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen.
 Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
-$ \bigl(N_i = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ und
+$ N_i = \left(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\right)$ und
 seinen Geschwindigkeitsvektor
-$ \bigl(V_i = \begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix} \bigr)$.
+$ V_i = \left(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\right)$.
 
 Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
-maximal eine Geschwindigkeit $ -3 <= \Delta x <= 3$, bzw. 
-$ -3 <= \Delta y <= 3$.
+maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
+$ -3 \leq \Delta y \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
 Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
 
@@ -123,11 +123,11 @@ Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
 
 Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
 aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
-Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung. 
-$$ N_{i, n{\"{a}}chste Runde}(e) = N_{i, diese Runde}(e) - 1 - |V_i| $$
+Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
+$$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
 
 \subsection{Die F{\"{u}}llstation}
-Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ \bigl(F = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ beschrieben.
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ \bigl(F = \begin{smallmatrix} x \\ y \\ w \end{smallmatrix} \bigr)$ beschrieben.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
 
@@ -135,10 +135,16 @@ Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf n
 
 \subsection{Die Platte}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
-Der Kippwinkel ist dabei abh{\"{a}}ngig vom Hebelgesetz:
-$$ V_{LinksRechts} = F(x) * F(w) + \sum_{i=0}^{|N|} N_i(x) * N_i(w) $$
+Die Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, k{\"{o}}nnen in ihren X und Y Koordinaten getrennt betrachtet und in das Hebelgesetz eingesetzt werden. Der Druck
+der durch dieses berechnet wird kann dann benutzt werden um den Kippwinkel zu errechnen.
+\todo{herleitung?}
+
+F{\"{u}}r den Vektor der die in Links-Rechts wirkende Kr{\"{a}}fte beschreibt, gilt:
+$$ V_{LinksRechts} = \begin{pmatrix}x(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} x(N_i) \\ w(N_i) \end{pmatrix} $$
 $$ cos(V_{LinksRechts}) = \beta = W_{LinksRechts} $$
-$$ V_{VorneHinten} = F(y) * F(w) + \sum_{i=0}^{|N|} N_i(y) * N_i(w) $$
+
+Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach Vorne-Hinten gekippt wird:
+$$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} y(N_i) \\ w(N_i) \end{pmatrix} $$
 $$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
@@ -160,9 +166,10 @@ Im ganzen System gibt es drei Schnittstellen:
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
 Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
-\todo{wie macht man Code?}
-$$ int move(RobotID r, Position new); $$
-$$ int rotate(RobotID r, Degree diff); // oder to? $$ 
+\begin{lstlisting}
+int move(RobotID r, Position new);
+int rotate(RobotID r, Degree diff); // oder to?
+\end{lstlisting}
 
 
 \clearpage
