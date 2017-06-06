@@ -40,7 +40,8 @@ protected:
 	uint32_t getRandomRobot() {
 		auto it = ids.begin();
 		std::advance(it, random_() % ids.size());
-   }
+		return *it;
+	}
 public: 
 	RobotTest( ) { 
 		/* initalize world */
