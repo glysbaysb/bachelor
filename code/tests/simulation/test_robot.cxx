@@ -66,8 +66,9 @@ TEST_F(RobotTest, CantMoveWithoutFuel) {
 #endif
 
 TEST_F(RobotTest, CanMoveWithFuel) {
+	auto id = getRandomRobot();
 	/* get position before */
-	auto r = w->getRobot(getRandomRobot());
+	auto r = w->getRobot(id);
 	auto position = r->getPosition();
 
 	/* change position by moving the robot */
@@ -75,13 +76,15 @@ TEST_F(RobotTest, CanMoveWithFuel) {
 	w->update();
 	
 	/* compare with old position */
+	r = w->getRobot(id);
 	auto newPosition = r->getPosition();
 	ASSERT_NE(position, newPosition);
 }
 
 TEST_F(RobotTest, MovementBurnsFuel) {
+	auto id = getRandomRobot();
 	/* get state before */
-	auto r = w->getRobot(getRandomRobot());
+	auto r = w->getRobot(id);
 	auto fuelBefore = r->getFuelStatus();
 	EXPECT_GT(fuelBefore, 0);
 
@@ -90,13 +93,15 @@ TEST_F(RobotTest, MovementBurnsFuel) {
 	w->update();
 	
 	/* compare with old state */
+	r = w->getRobot(id);
 	auto fuelAfter = r->getFuelStatus();
 	EXPECT_LT(fuelAfter, fuelBefore);
 }
 
 TEST_F(RobotTest, IdlingBurnsFuel) {
+	auto id = getRandomRobot();
 	/* get state before */
-	auto r = w->getRobot(getRandomRobot());
+	auto r = w->getRobot(id);
 	auto fuelBefore = r->getFuelStatus();
 	EXPECT_GT(fuelBefore, 0);
 
@@ -104,6 +109,7 @@ TEST_F(RobotTest, IdlingBurnsFuel) {
 	w->update();
 	
 	/* compare with old state */
+	r = w->getRobot(id);
 	auto fuelAfter = r->getFuelStatus();
 	EXPECT_LT(fuelAfter, fuelBefore);
 }
