@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @section DESCRIPTION
+ * Definitions for a few auxiliary classes and, most importantly, the world.
+ *
+ *
+ *
+ */
 #ifndef WORLD_H
 #define WORLD_H
 
@@ -134,7 +142,16 @@ public:
 	}
 
 	/**
+	 * @brief returns a *copy* of the specified robot.
 	 *
+	 * That copy can be used to gather all kinds of information about the robot
+	 * but returns potentially invalid information after the next call to
+	 * World::update()
+	 *
+	 * @param id the ID of the robot
+	 * @return either a optional, so that it is possible to check whether 
+	 * a robot was found or not. The caller is supposed to check for that
+	 * before using the robot
 	 */
 	std::experimental::optional<Robot> getRobot(int32_t id) const {
 		for(auto&& r : robots_) {
@@ -170,14 +187,7 @@ public:
 	int moveRobot(const int32_t robot, const Position& diffVector);
 
 	/**
-	 * @brief rotates the robot by the specified amount of degrees.
-	 *
-	 * @param leftWheel -90<= degrees <= 90
-	 * @param rightWheel -90<= degrees <= 90
-	 */
-	int rotateRobot(const int32_t robot, const int8_t leftWheel, const int8_t rightWheel);
-	
-	/**
+	 * @brief actually commits the changes that were set by ::moveRobot() 
 	 */
 	void update();
 };
