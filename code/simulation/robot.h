@@ -9,9 +9,6 @@ private:
 	static int32_t GLOBAL_ID; //!< 0 at programm startup, incremented for each invocation of constructor
 
 	Position movementVector_;
-
-	static const uint32_t WEIGHT = 1;
-	static const int DIMENSION = 3;
 protected:
 	/**
 	 * @brief updates the movement vector by diff
@@ -47,6 +44,9 @@ protected:
 	}
 
 public:
+	static const uint32_t WEIGHT = 1;
+	static const int DIMENSION = 3;
+	
 	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++),
 		movementVector_({0, 0}), fuelStatus_(100)
 	{
