@@ -14,7 +14,7 @@ public:
 	}
 	
 	friend Position operator+ (const Position& a, const Position& b) {
-		return Position(a._x + b._x, a._y + a._y);
+		return Position(a._x + b._x, a._y + b._y);
         }
 	
 	friend std::ostream& operator<< (std::ostream& stream, const Position& o) {

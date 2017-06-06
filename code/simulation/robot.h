@@ -28,8 +28,7 @@ protected:
 	}
 
 	void update() {
-		std::cout << p_;
-		std::cout << " becomes " << (p_ + movementVector_) << '\n';
+		std::cout << p_ << '+' << movementVector_ << " = "  << (p_ + movementVector_) << '\n';
 		p_ = p_ + movementVector_;
 		// todo: fuel
 	}
