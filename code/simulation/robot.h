@@ -10,7 +10,16 @@ private:
 
 	Position movementVector_;
 
+	static const uint32_t WEIGHT = 1;
+	static const int DIMENSION = 3;
 protected:
+	/**
+	 * @brief updates the movement vector by diff
+	 *
+	 * However this function limits it to a maximum speed of 3 in each
+	 * direction.
+	 * todo: limit speed increase to 1 per turn
+	 */
 	void move(const Position& diff) {
 		/* calc new vector */
 		auto newMovement = movementVector_ + diff;
@@ -33,15 +42,11 @@ protected:
 		/* fuel */
 		auto speed = abs(movementVector_);
 		setFuelStatus(getFuelStatus() - floor(speed));
-		
 
 		setFuelStatus(getFuelStatus() - 1); // always use up a bit
 	}
 
 public:
-	static const uint32_t WEIGHT = 1;
-	static const int DIMENSION = 3;
-
 	Robot(const Position& p) : Object(p, DIMENSION, WEIGHT), id_(GLOBAL_ID++),
 		movementVector_({0, 0}), fuelStatus_(100)
 	{

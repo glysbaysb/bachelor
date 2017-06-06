@@ -74,10 +74,10 @@ public:
 };
 
 class FuelSource : public Object {
-public:
+private:
 	static const int DIMENSION = 2;
 	static const uint32_t WEIGHT = 5;
-		
+public:
 	FuelSource(const Position& p) : Object(p, DIMENSION, WEIGHT) {
 	}
 };
