@@ -57,7 +57,7 @@ public:
 	}
 	
 	uint32_t getWeight() const {
-		return weight_ + floor(fuelStatus_ * 0.3);
+		return weight_ + floor(fuelStatus_ * 0.03);
 	}
 
 
