@@ -29,8 +29,13 @@ protected:
 	}	
 
 	void setFuelStatus(const int fuelStatus) {
-		assert(fuelStatus >= 0 && fuelStatus <= 100);
-		fuelStatus_ = fuelStatus;
+		/* clamp */
+		if(fuelStatus > 100)
+			fuelStatus_ = 100;
+		else if(fuelStatus < 0)
+			fuelStatus_ = 0;
+		else
+			fuelStatus_ = fuelStatus;
 	}
 
 	void update() {
