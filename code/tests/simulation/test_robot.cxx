@@ -69,8 +69,6 @@ TEST_F(RobotTest, CantMoveWithoutFuel) {
 	/* use up all fuel, by moving back and forth */
 	uint32_t i = 0;
 	while(r->getFuelStatus()) {
-		if(i % 10 == 0)
-			std::cout << i << ':' << r->getFuelStatus() << '\r';
 		int32_t dir[] = {1, 0, -1};
 		w->moveRobot(r->getID(), {0, dir[i++]});
 		w->update();
@@ -94,7 +92,6 @@ TEST_F(RobotTest, CantMoveWithoutFuel) {
 
 	auto newPosition = r->getPosition();
 	ASSERT_EQ(position, newPosition);
-
 }
 
 TEST_F(RobotTest, CanMoveWithFuel) {
@@ -102,6 +99,7 @@ TEST_F(RobotTest, CanMoveWithFuel) {
 	/* get position before */
 	auto r = w->getRobot(id);
 	auto position = r->getPosition();
+	EXPECT_GT(r->getFuelStatus(), 0);
 
 	/* change position by moving the robot */
 	w->moveRobot(r->getID(), {0, 1});

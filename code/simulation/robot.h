@@ -19,12 +19,12 @@ protected:
 	 */
 	void move(const Position& diff) {
 		/* calc new vector */
-		auto newMovement = movementVector_ + diff;
+		auto newmovement = movementVector_ + diff;
 		/* if it doesn't speed up too much, set the new speed */
-		if(abs(newMovement.get().first) <= 3 &&
-		   abs(newMovement.get().second) <= 3)
+		if(abs(newmovement.get().first) <= 3 &&
+		   abs(newmovement.get().second) <= 3)
 		{
-			movementVector_ = newMovement;
+			movementVector_ = newmovement;
 		}
 	}	
 
@@ -39,13 +39,21 @@ protected:
 	}
 
 	void update() {
+		// todo: is that one simulation cycle too late?
+		setFuelStatus(getFuelStatus() - 1); // always use up a bit
+
+		/* is there enoguh fuel to move that much */
+		if(fuelStatus_ < abs(movementVector_)) {
+			/* todo: slow down */
+			return;
+		}
+
 		p_ = p_ + movementVector_;
 
 		/* fuel */
 		auto speed = abs(movementVector_);
 		setFuelStatus(getFuelStatus() - floor(speed));
 
-		setFuelStatus(getFuelStatus() - 1); // always use up a bit
 	}
 
 public:
