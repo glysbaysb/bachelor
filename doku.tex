@@ -94,7 +94,8 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \clearpage
 \section{Die Welt}
-\todo{Einleitung}
+Die simulierte Welt besteht aus den Robotern die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation an der die Robter Energie tanken k{\"{o}}nnen und
+der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
 \subsection{Die Roboter}
 In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen.
@@ -103,13 +104,14 @@ $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ 
 seinen Geschwindigkeitsvektor
 $ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$.
 
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}status: $ w(N_i) = 1 + e(N_i) * 0.03 $.
+
 Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
 maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
 $ -3 \leq \Delta y \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
 Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
 
-\todo{gewicht}
 
 Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
 aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
@@ -117,7 +119,7 @@ Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinh
 $$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
 
 \subsection{Die F{\"{u}}llstation}
-Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben.
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
 Falls sich ein Roboter an die Platte heranbewegt, also gilt: 
