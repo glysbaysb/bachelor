@@ -61,10 +61,41 @@ public:
    World* w;
 };
 
-#if 0
 TEST_F(RobotTest, CantMoveWithoutFuel) {
+	auto id = getRandomRobot();
+	/* get position before */
+	auto r = w->getRobot(id);
+
+	/* use up all fuel, by moving back and forth */
+	uint32_t i = 0;
+	while(r->getFuelStatus()) {
+		if(i % 10 == 0)
+			std::cout << i << ':' << r->getFuelStatus() << '\r';
+		int32_t dir[] = {1, 0, -1};
+		w->moveRobot(r->getID(), {0, dir[i++]});
+		w->update();
+
+		r = w->getRobot(id);
+	}
+
+	auto position = r->getPosition();
+	/* stop */
+	{
+		w->moveRobot(r->getID(), {0, 0});
+		w->update();
+
+		r = w->getRobot(id);
+	}
+
+	/* F: try to move */
+	w->moveRobot(r->getID(), {-1, 0});
+	w->update();
+	r = w->getRobot(id);
+
+	auto newPosition = r->getPosition();
+	ASSERT_EQ(position, newPosition);
+
 }
-#endif
 
 TEST_F(RobotTest, CanMoveWithFuel) {
 	auto id = getRandomRobot();
