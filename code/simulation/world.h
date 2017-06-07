@@ -26,8 +26,8 @@ public:
         }
 	
 	friend std::ostream& operator<< (std::ostream& stream, const Position& o) {
-		std::cout << "[" << o._x << "," << o._y << "]";
-
+		stream << "[" << o._x << "," << o._y << "]";
+		return stream;	
         }
 
 	friend double abs(const Position& a) {
@@ -68,8 +68,9 @@ public:
 	friend std::ostream& operator<< (std::ostream& stream, const Object& o) {
 		auto leftTop = o.p_;
 		auto rightBottom = leftTop + Position{o.getDimension(), o.getDimension()};
-		std::cout << leftTop << "," << rightBottom;
-
+		stream << leftTop << "," << rightBottom;
+		
+		return stream;
         }
 };
 
