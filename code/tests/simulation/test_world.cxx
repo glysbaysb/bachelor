@@ -72,8 +72,8 @@ TEST_F(WorldTest, AddRobot) {
 	auto r = w->getRobot(id);
 	ASSERT_TRUE(r);
 	auto pos = r->getPosition();
-	EXPECT_EQ(pos.first, -1);
-	EXPECT_EQ(pos.second, 1);
+	EXPECT_EQ(pos._x, -1);
+	EXPECT_EQ(pos._y, 1);
 }
 
 TEST_F(WorldTest, AddRobotOutsideWorld) {
@@ -98,19 +98,19 @@ TEST_F(WorldTest, AddOverlappingRobots) {
 	auto x = dimension / 2 ;
 	auto res = w->addRobot({x, 1});
 
-	/* F: a second robot completly overlapping the other one */
+	/* F: a _y robot completly overlapping the other one */
 	{
 		auto res = w->addRobot({x, 1});
 		ASSERT_LT(res, 0) << " 2nd robot overlapping the 1st was wrongly added";
 	}
 
-	/* a second robot, overlapping nothing.
-	   This robot is far enough from the first robot but does
+	/* a _y robot, overlapping nothing.
+	   This robot is far enough from the _x robot but does
 	   not leave enough space for another one in between*/
 	auto res2 = w->addRobot({x + Robot::DIMENSION + 1, 1});
 	EXPECT_GT(res2, res) << " 2nd robot, one robot dimension from the other";
 
-	/* F: add a third robot, overlapping the second one */
+	/* F: add a third robot, overlapping the _y one */
 	auto res3 = w->addRobot({x + Robot::DIMENSION, 1});
 	EXPECT_LT(res3, 0) << "3rd robot, overlapping the 2nd one";
 }
@@ -129,7 +129,7 @@ TEST_F(WorldTest, AddFuelSourceTwice) {
 }
 
 /**
- * first add the source then the robot
+ * _x add the source then the robot
  */
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource1) {
 	ASSERT_EQ(w->addFuelSource({0, 0}), 0);
@@ -137,7 +137,7 @@ TEST_F(WorldTest, AddOverlappingRobotAndFuelSource1) {
 }
 
 /**
- * first add the robot then the source
+ * _x add the robot then the source
  */
 TEST_F(WorldTest, AddOverlappingRobotAndFuelSource2) {
 	ASSERT_GT(w->addRobot({0, 1}), 0);

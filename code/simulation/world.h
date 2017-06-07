@@ -10,21 +10,24 @@
 #define WORLD_H
 
 class Position {
-private:
+public:
 	int32_t _x,
 		_y;
-public:
 	Position(const int32_t x, const int32_t y) : _x(x), _y(y) {
-	}
-	
-	std::pair<int32_t, int32_t> get() const {
-		return std::pair<int32_t, int32_t>(_x, _y);
 	}
 	
 	friend Position operator+ (const Position& a, const Position& b) {
 		return Position(a._x + b._x, a._y + b._y);
         }
-	
+
+	friend bool operator== (const Position& a, const Position& b) {
+		return a._x == b._x && a._y == b._y;
+        }
+
+	friend bool operator!= (const Position& a, const Position& b) {
+		return !(a == b);
+        }
+
 	friend std::ostream& operator<< (std::ostream& stream, const Position& o) {
 		stream << "[" << o._x << "," << o._y << "]";
 		return stream;	
@@ -53,8 +56,8 @@ public:
 	{
 	}
 
-	std::pair<int, int> getPosition() const {
-		return p_.get();
+	Position getPosition() const {
+		return p_;
 	}
 	
 	int32_t getDimension() const {

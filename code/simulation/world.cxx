@@ -13,17 +13,13 @@
 #include "robot.h"
 
 
-static bool doesObjectFitIntoWorld(const Position& object, const int32_t sizeOfObject,
+static bool doesObjectFitIntoWorld(const Position& p, const int32_t sizeOfObject,
 	const uint32_t sizeOfWorld)
 {
-	auto p = object.get();
-	auto x = p.first;
-	auto y = p.second;
-	
 	/* the coordinate system starts in the middle of the round plate.
 	   abs() reflects the object on the X or Y axis. If that value plus the size of the
 	   object is bigger than the size of the world the object does not fit*/
-	if((abs(x) + sizeOfObject) > sizeOfWorld || (abs(y) + sizeOfObject) > sizeOfWorld)
+	if((abs(p._x) + sizeOfObject) > sizeOfWorld || (abs(p._y) + sizeOfObject) > sizeOfWorld)
 		return false;
 	
 	return true;
@@ -35,10 +31,10 @@ static bool doObjectsOverlap(const Object& a, const Object& b)
 	// if (RectA.Left < RectB.Right && RectA.Right > RectB.Left &&
 	//     RectA.Top > RectB.Bottom && RectA.Bottom < RectB.Top )
 	// adapted for the different coordinate system, so flip the comparsions on the Y-axis
-	bool t1 = (a.getPosition().first < (b.getPosition().first + b.getDimension()));
-	bool t2 = ((a.getPosition().first + a.getDimension()) > b.getPosition().first);
-	bool t3 = (a.getPosition().second < (b.getPosition().second + b.getDimension()));
-	bool t4 = ((a.getPosition().second + a.getDimension()) > b.getPosition().second);
+	bool t1 = (a.getPosition()._x < (b.getPosition()._x + b.getDimension()));
+	bool t2 = ((a.getPosition()._x + a.getDimension()) > b.getPosition()._x);
+	bool t3 = (a.getPosition()._y < (b.getPosition()._y + b.getDimension()));
+	bool t4 = ((a.getPosition()._y + a.getDimension()) > b.getPosition()._y);
 
 	return t1 && t2 && t3 && t4;
 }
@@ -90,14 +86,14 @@ std::pair<int32_t, int32_t> World::getWorldPressureVector() const {
 		vectorY = 0; // the sum of the y part of all forces -> for the front-back angle
 
 	for(auto&& r : robots_) {
-		vectorX += r.getPosition().first * r.getWeight();
-		vectorY += r.getPosition().second * r.getWeight();
+		vectorX += r.getPosition()._x * r.getWeight();
+		vectorY += r.getPosition()._y * r.getWeight();
 	}
 
 	if(getFuelSource()) {
 		auto f = *getFuelSource();
-		vectorX += f.getPosition().first * f.getWeight();
-		vectorY += f.getPosition().second * f.getWeight();
+		vectorX += f.getPosition()._x * f.getWeight();
+		vectorY += f.getPosition()._y * f.getWeight();
 	}
 
 	return {vectorX, vectorY};

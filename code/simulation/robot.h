@@ -21,8 +21,8 @@ protected:
 		/* calc new vector */
 		auto newmovement = movementVector_ + diff;
 		/* if it doesn't speed up too much, set the new speed */
-		if(abs(newmovement.get().first) <= 3 &&
-		   abs(newmovement.get().second) <= 3)
+		if(abs(newmovement._x) <= 3 &&
+		   abs(newmovement._y) <= 3)
 		{
 			movementVector_ = newmovement;
 		}

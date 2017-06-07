@@ -144,16 +144,39 @@ TEST_F(RobotTest, IdlingBurnsFuel) {
 	EXPECT_LT(fuelAfter, fuelBefore);
 }
 
-#if 0
-TEST_F(RobotTest, RotatesInRightDirection) {
-}
-
-TEST_F(RobotTest, CantRotateTooMuchPerTurn) {
-}
-
 TEST_F(RobotTest, MovesInRightDirection) {
+	auto id = getRandomRobot();
+	auto r = w->getRobot(id);
+	auto position = r->getPosition();
+
+	/* change position by moving the robot */
+	{
+		w->moveRobot(r->getID(), {0, 1});
+		w->update();
+		
+		/* compare with old position */
+		r = w->getRobot(id);
+		auto newPosition = r->getPosition();
+		ASSERT_EQ(position._y + 1, newPosition._y) << " for the y movement test";
+		ASSERT_EQ(position._x, newPosition._x) << " for the y movement test";
+	}	
+
+	position = r->getPosition(); // update pos after ovemetn
+
+	/* change position by moving the robot */
+	{
+		w->moveRobot(r->getID(), {-1, 0});
+		w->update();
+		
+		/* compare with old position */
+		r = w->getRobot(id);
+		auto newPosition = r->getPosition();
+		ASSERT_EQ(position._y + 1, newPosition._y) << " for the x movement test";
+		ASSERT_EQ(position._x - 1, newPosition._x) << " for the x movement test";
+	}
 }
 
+#if 0
 TEST_F(RobotTest, CantMoveTooMuchPerTurn) {
 }
 #endif
