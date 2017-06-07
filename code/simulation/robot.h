@@ -57,8 +57,7 @@ public:
 	}
 	
 	uint32_t getWeight() const {
-		// todo: somehow make this dependent on fuel status
-		return weight_;
+		return weight_ + floor(fuelStatus_ * 0.3);
 	}
 
 
