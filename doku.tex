@@ -123,7 +123,7 @@ der Objekte \footnote{dies beinhaltet nicht nur die Roboter und F{\"{u}}llstatio
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt.
 
-\subsection{Die Roboter}
+\subsection{Die Roboter}\lable{robot}
 In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
 \paragraph{Grafisches Modell} \todo{selbst designen? ball? }
 
@@ -147,7 +147,7 @@ aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
 $$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
 
-\subsection{Die F{\"{u}}llstation}
+\subsection{Die F{\"{u}}llstation}\label{fuelstation}
 Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
@@ -157,7 +157,7 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
 $$ e(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100)  $$
 
 
-\subsection{Die Platte}
+\subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
 Die Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, k{\"{o}}nnen in ihren X und Y Koordinaten getrennt betrachtet und in das Hebelgesetz eingesetzt werden. Der Druck
 der durch dieses berechnet wird kann dann benutzt werden um den Kippwinkel zu errechnen.
@@ -172,12 +172,12 @@ $$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|
 $$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
-\section{Netzwerk}
+\section{Netzwerk}\label{network}
 \todo{Einleitung}
 wer, in welchem drin ist. \todo{aufteilung im netzwerk als Bild}
 
 \clearpage
-\section{Interface f{\"{u}}r die Studenten}
+\section{Interface f{\"{u}}r die Studenten}\label{interface}
 Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Interfaces. \todo{umformulieren} 
 Im ganzen System gibt es drei Schnittstellen:
 \begin{itemize}
@@ -201,7 +201,7 @@ void update();
 
 \clearpage
 \section{Referenzimplementation}
-\subsection{Voter}
+\subsection{Voter}\label{voter}
 \subsection{Consensus algorithm}
 \paragraph{Schutzmassnahmen gegen omission failure}
 \paragraph{bla bla bla}
