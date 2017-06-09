@@ -97,8 +97,37 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 Die simulierte Welt besteht aus den Robotern die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation an der die Robter Energie tanken k{\"{o}}nnen und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
+Simuliert wird die Welt mit der Unity3D game engine \todo{cite}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
+Dabei stellt sie, unter anderem, eine Physikengine, eine Grafikengine und eine Schnitstelle zum scripten dieser bereit. 
+
+\subsection{Unity3D}
+\paragraph{Grafikengine}
+Die in Unity enthaltene Grafikengine ist eine vollwertige 3D-Grafikengine, die es erm{\"{o}}glicht professionelle Videospiele zu programmieren. In dieser Arbeit wird nur
+ein kleiner Teil der Funktionalit{\"{a}}t benutzt; komplexere Features wie die Anzeige von Rauch oder realistischem Wasser sind nicht in der Simulation enthalten.
+
+Notwendig ist es aber das die verschiedenen Objekte in der simulierten Welt in 3D zu sehen sind und sich die Kamera bewegen l{\"{a}}sst um das simulierte Geschehen zu
+verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra implementiert werden.
+
+\paragraph{Physikengine}
+Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity3D erm{\"{o}}glicht, die in dieser
+Arbeit wichtige Funktionalit{\"{a}}t ist
+\begin{itemize}
+\item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren und auch zur Erkennung des Kontaktes mit der F{\"{u}}llstation
+\item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von Gewicht und Geschwindigkeit
+\end{itemize}
+
+\paragraph{Scripting}
+Alle Elemente der Unity3D Engine k{\"{o}}nnen vom Programmierer gesteuert werden. Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
+der Objekte \footnote{dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern} auszulesen und zu manipulieren.
+
+Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
+den Roboter auftankt.
+
 \subsection{Die Roboter}
-In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen.
+In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
+\paragraph{Grafisches Modell} \todo{selbst designen? ball? }
+
+\paragraph{Physikalisches Modell}
 Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ und
 seinen Geschwindigkeitsvektor
@@ -124,8 +153,8 @@ Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
 Falls sich ein Roboter an die Platte heranbewegt, also gilt: 
 $$ |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)| $$
-wird dieser Roboter aufgeladen. Die Ladefunktion folgt dabei einer e-Kurve:
-$$ e(N_i, n{\"{a}}chste Runde) = 100 + (e(N_i, diese Runde) - 100) * exp{-1 \over 2}  $$
+wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
+$$ e(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100)  $$
 
 
 \subsection{Die Platte}
