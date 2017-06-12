@@ -4,49 +4,129 @@
  * as a guideline for developing your own functions.
  */
 
+#include <stdio.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <time.h>
+#include <sys/timerfd.h>
+#include <poll.h>
+#include <unistd.h>
+#include <assert.h>
 #include "../interface.h"
 
 
-void
-simulation_1(char *host)
+CLIENT* conntect_to_rpc(char *host)
 {
 	CLIENT *clnt;
-	void  *result_1;
-	MoveRequest moverobot_1_arg1;
 	WorldStatus  *result_2;
 
-#ifndef	DEBUG
 	clnt = clnt_create (host, SIMULATION, SIMULATION_VERSION, "udp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
-#endif	/* DEBUG */
-
-	result_1 = moverobot_1(moverobot_1_arg1, clnt);
-	if (result_1 == (void *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
+/*
+	
 	result_2 = getstatus_1(clnt);
 	if (result_2 == (WorldStatus *) NULL) {
 		clnt_perror (clnt, "call failed");
-	}
-#ifndef	DEBUG
-	clnt_destroy (clnt);
-#endif	 /* DEBUG */
+	}*/
 }
 
+/**
+ * @brief creates a timerfd
+ *
+ * Creates a timerfd, with the specified inital expiration and interval values.
+ * @param secs the second part of the inital expiration and interval value 
+ * @param secs the nanosecond partof the inital expiration and interval value
+ * @return a valid fd or something < 0
+ */
+static int create_timerfd(int secs, int nsecs) {
+     int tfd;
+     if ((tfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) == 1) {
+        perror("timerfd_create");
+        return tfd;
+    }
+    struct itimerspec timer = {secs, nsecs, secs, nsecs};
+    if (timerfd_settime(tfd, 0, &timer, NULL) == -1) {
+        perror("timerfd_set");
+        return tfd;
+    }
+	
+	return tfd;
+}
 
+/**
+ * Returns a (static) string that holds the current time
+ */
+static const char* get_time() {
+	static char buffer[32] = {0};
+
+	struct timespec spec;
+	clock_gettime(CLOCK_REALTIME, &spec);
+
+	time_t s = spec.tv_sec;
+	long ms = lround(spec.tv_nsec / 1.0e6); // todo: man math_error or c++11 std::lround
+
+	int ret = snprintf(buffer, sizeof(buffer), "[%" PRIdMAX ".%03ld]", (intmax_t)s, ms);
+	if(ret > sizeof(buffer) || ret < 0) {
+		perror("get_time(): snprintf");
+		exit(-1);
+	}
+	
+	return buffer;
+}
 int
 main (int argc, char *argv[])
 {
-	char *host;
+	CLIENT* clnt;
+	int tfd;
 
 	if (argc < 2) {
 		printf ("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}
-	host = argv[1];
-	simulation_1 (host);
-exit (0);
+	
+	if(!(clnt = conntect_to_rpc(argv[1]))) {
+		exit(1);
+	}
+	if((tfd = create_timerfd(0, 250000)) < 0) {
+		exit(1);
+	}
+	/* simulation loop */
+	struct pollfd pfd[] = {
+		{.fd = tfd, .events = POLLIN, 0},
+	};
+	int s;
+	while((s = poll(pfd, (sizeof(pfd) / sizeof(pfd[0])), -1)) > 0) {
+		void  *result_1;
+		MoveRequest moverobot_1_arg1;
+
+		/* re-arm timer */
+		if((pfd[0].revents & POLLIN) == POLLIN) {
+			uint64_t expired;
+
+			pfd[0].revents = 0;
+			read(pfd[0].fd, &expired, sizeof(uint64_t));
+			
+			printf("%s next simulation step\n", get_time());
+		}
+
+		/* collect all movement commands */
+
+		/* vote */
+
+		/* send movement */
+		moverobot_1_arg1.id = 0;
+		moverobot_1_arg1.diffX = 1;
+		moverobot_1_arg1.diffY = 0;
+
+		result_1 = moverobot_1(moverobot_1_arg1, clnt);
+		if (result_1 == (void *) NULL) {
+			clnt_perror (clnt, "call failed");
+	}
+	}
+
+	clnt_destroy (clnt);
+	exit (0);
 }

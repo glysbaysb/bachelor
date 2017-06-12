@@ -16,7 +16,7 @@ OBJECTS_CLNT = $(SOURCES_CLNT.c:%.c=%.o) $(TARGETS_CLNT.c:%.c=%.o)
 # Compiler flags 
 
 CFLAGS += -g 
-LDLIBS += -lnsl
+LDLIBS += -lnsl -lm
 RPCGENFLAGS = -N
 
 # Targets 
