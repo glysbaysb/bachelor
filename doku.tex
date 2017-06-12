@@ -195,6 +195,7 @@ Im ganzen System gibt es drei Schnittstellen:
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
 Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
 \begin{lstlisting}[frame=single, language=c++] 
+int32_t registerNewRobot();
 int moveRobot(const int32_t robot, const Position& diffVector);
 void update();
 \end{lstlisting}
