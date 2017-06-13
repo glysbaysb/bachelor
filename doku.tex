@@ -176,13 +176,25 @@ $$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|
 $$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
-\section{Netzwerk}\label{network}
-\todo{Einleitung}
-wer, in welchem drin ist. \todo{aufteilung im netzwerk als Bild}
+\section{Systemaufbau}
+\todo{einleitung}
+
+\subsection{Netzwerk}\label{network}
+Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}mliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
+f{\"{u}}r die Konsensbildung und um Informationen {\"{u}}ber den momentanen Status der Simulation zu bekommen.
+
+Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}st oder mehrfach sendet. 
+\todo{aufteilung im netzwerk als Bild}
+
+Der Voter jedes simulierten Roboters ist dabei, wie die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
+des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen das ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
+programmiert werden das sie mit value faults/message corruption\cite{richling-ass} umgehen k{\"{o}}nnen.
+
+\subsection{VMs}
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
-Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Interfaces. \todo{umformulieren} 
+Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Schnittstellen.
 Im ganzen System gibt es drei Schnittstellen:
 \begin{itemize}
 \item Die Schnittstelle zwischen Controller und Voter
