@@ -93,7 +93,7 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \paragraph{Evaluation}
 
 \clearpage
-\section{Vorherige Arbeite}
+\section{Vorherige Arbeiten}
 
 \clearpage
 \section{Unity}
@@ -119,7 +119,7 @@ Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 \end{itemize}
 
 \subsection{Scripting}
-Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden. Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
+Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, unterst{\"{u}}tzt werden dabei sie Skriptsprachen C\#, JavaScript und Boo.\cite{wiki:unity} Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
 der Objekte \footnote{dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern} auszulesen und zu manipulieren.
 
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
@@ -130,7 +130,7 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 Die simulierte Welt besteht aus den Robotern die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation an der die Robter Energie tanken k{\"{o}}nnen und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
-Simuliert wird die Welt mit der Unity game engine \todo{cite}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
+Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
 Dabei stellt sie, unter anderem, eine Physikengine, eine Grafikengine und eine Schnitstelle zum scripten dieser bereit. 
 
 \subsection{Die Roboter}\label{robot}
@@ -183,16 +183,17 @@ $$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
 \section{Systemaufbau}
-\todo{einleitung}
+\todo{alles neu}
+Das ganze System besteht aus verschiedenen Komponenten, die teilweise sogar in unterschiedlichen Netzwerken h{\"{a}}ngen. 
 
 \subsection{Netzwerk}\label{network}
-Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}mliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
+Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}umliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
 f{\"{u}}r die Konsensbildung und um Informationen {\"{u}}ber den momentanen Status der Simulation zu bekommen.
 
 Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}st oder mehrfach sendet. 
 \todo{aufteilung im netzwerk als Bild}
 
-Der Voter jedes simulierten Roboters ist dabei, wie die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
+Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
 des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen das ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
 programmiert werden das sie mit value faults/message corruption\cite{richling-ass} umgehen k{\"{o}}nnen.
 
@@ -208,9 +209,8 @@ geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
 Die Kamerabewegung kann {\"{u}}ber die Pfeiltasten und WASD gesteuert werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren da damit eventuell der Kippwinkel der
 Platte visuell ausgeglichen werden k{\"{o}}nnte.
 
-\paragraph{Lichtquelle}
+\paragraph{Lichtquelle} Um die Szene auszuleuchten gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX \textdegree Winkel nach unten.
 
-\paragraph{Rest Welt?}
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
@@ -237,11 +237,26 @@ void update();
 \section{Fehlerinjektion}
 
 \clearpage
-\section{Referenzimplementation}
-\subsection{Voter}\label{voter}
-\subsection{Consensus algorithm}
-\paragraph{Schutzmassnahmen gegen omission failure}
-\paragraph{bla bla bla}
+\section{Beispielimplementation}
+Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementiereung einer
+Beispielimplementation.
+
+\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. \todo{aeh damit ist es dann doch iwie wieder rundenbasiert?} Diese Informationen werden von allen Controllern empfangen, k{\"{o}}nnen
+aber potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
+jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
+
+\subsection{Voter}
+\label{voter}
+Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
+
+\subsection{Controller}
+\label{controller}
+\paragraph{Algorithmus zur Bestimmung der Bewegung} im buch war das mit vorbestimmten elipsen. ka obs was dolleres gibt.
+
+\subsection{Konsenzalgorithmus}
+bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
+b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
+
 
 
 \clearpage
