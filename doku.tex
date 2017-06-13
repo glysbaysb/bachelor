@@ -1,4 +1,4 @@
-﻿\documentclass[
+\documentclass[
     12pt,
     bibliography=totoc,
     ngerman
@@ -192,11 +192,19 @@ programmiert werden das sie mit value faults/message corruption\cite{richling-as
 
 \subsection{VMs}
 
-\subsection{Anzeige}
-Um den Status der Simulation zu verfolgen, wird mithilfe der Unity3D Engine die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mithilfe des gleichen Programmes das auch
-die tats{\"{a}}chlie Simulation durchf{\"{u}}hrt.
+\subsection{Anzeige}\label{graphics}
+Um den Status der Simulation zu verfolgen wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
+durchf{\"{u}}hrt, die Unity3D engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
 
-\paragraph{Simulierte Welt}
+\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity3D Objekt Camera. An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
+
+Die Kamerabewegung kann {\"{u}}ber die Pfeiltasten und WASD gesteuert werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren da damit eventuell der Kippwinkel der
+Platte visuell ausgeglichen werden k{\"{o}}nnte.
+
+\paragraph{Lichtquelle}
+
+\paragraph{Rest Welt?}
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
