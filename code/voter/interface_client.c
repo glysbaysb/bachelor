@@ -76,8 +76,50 @@ static const char* get_time() {
 	
 	return buffer;
 }
-int
-main (int argc, char *argv[])
+
+static int create_and_bind(const char *port) {
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    int s, sfd = -1;
+
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
+    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
+    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;     /* All interfaces */
+
+    s = getaddrinfo(NULL, port, &hints, &result);
+    if (s != 0) {
+        perror("getaddrinfo: ");
+        return -1;
+    }
+
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (sfd == -1)
+            continue;
+
+        s = bind(sfd, rp->ai_addr, rp->ai_addrlen);
+        if (s == 0) {
+            /* We managed to bind successfully! */
+            /* fixme: find some way to bind on ip4 and 6 - continue and pass array?*/
+            break;
+        }
+
+        close(sfd);
+    }
+
+    if (rp == NULL) {
+        fprintf(stderr, "Could not bind\n");
+        return -1;
+    }
+
+    freeaddrinfo(result);
+
+    return sfd;
+}
+
+
+int main (int argc, char *argv[])
 {
 	CLIENT* clnt;
 	int tfd;
@@ -124,7 +166,7 @@ main (int argc, char *argv[])
 		result_1 = moverobot_1(moverobot_1_arg1, clnt);
 		if (result_1 == (void *) NULL) {
 			clnt_perror (clnt, "call failed");
-	}
+		}
 	}
 
 	clnt_destroy (clnt);
