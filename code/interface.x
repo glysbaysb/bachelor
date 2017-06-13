@@ -1,10 +1,3 @@
-program SIMULATION {
-	version SIMULATION_VERSION {
-		void MoveRobot(MoveRequest) = 1;
-		WorldStatus GetStatus(void) = 2;
-	} = 1;
-} = 0x20000001;
-		
 enum ObjectType {
 	ROBOT = 0,
 	FUEL_SOURCE = 1
@@ -34,3 +27,10 @@ struct MoveRequest {
   int diffX;
   int diffY;
 };
+
+program SIMULATION {
+	version SIMULATION_VERSION {
+		void MoveRobot(MoveRequest) = 1;
+		WorldStatus GetStatus(void) = 2;
+	} = 1;
+} = 0x20000001;
