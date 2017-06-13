@@ -4,171 +4,49 @@
  * as a guideline for developing your own functions.
  */
 
-#include <stdio.h>
-#include <stdint.h>
-#include <inttypes.h>
-#include <time.h>
-#include <sys/timerfd.h>
-#include <poll.h>
-#include <unistd.h>
-#include <assert.h>
-#include "../interface.h"
+#include "interface.h"
 
 
-CLIENT* conntect_to_rpc(char *host)
+void
+simulation_1(char *host)
 {
 	CLIENT *clnt;
+	void  *result_1;
+	MoveRequest moverobot_1_arg1;
 	WorldStatus  *result_2;
 
+#ifndef	DEBUG
 	clnt = clnt_create (host, SIMULATION, SIMULATION_VERSION, "udp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
-/*
-	
+#endif	/* DEBUG */
+
+	result_1 = moverobot_1(moverobot_1_arg1, clnt);
+	if (result_1 == (void *) NULL) {
+		clnt_perror (clnt, "call failed");
+	}
 	result_2 = getstatus_1(clnt);
 	if (result_2 == (WorldStatus *) NULL) {
 		clnt_perror (clnt, "call failed");
-	}*/
-}
-
-/**
- * @brief creates a timerfd
- *
- * Creates a timerfd, with the specified inital expiration and interval values.
- * @param secs the second part of the inital expiration and interval value 
- * @param secs the nanosecond partof the inital expiration and interval value
- * @return a valid fd or something < 0
- */
-static int create_timerfd(int secs, int nsecs) {
-     int tfd;
-     if ((tfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK)) == 1) {
-        perror("timerfd_create");
-        return tfd;
-    }
-    struct itimerspec timer = {secs, nsecs, secs, nsecs};
-    if (timerfd_settime(tfd, 0, &timer, NULL) == -1) {
-        perror("timerfd_set");
-        return tfd;
-    }
-	
-	return tfd;
-}
-
-/**
- * Returns a (static) string that holds the current time
- */
-static const char* get_time() {
-	static char buffer[32] = {0};
-
-	struct timespec spec;
-	clock_gettime(CLOCK_REALTIME, &spec);
-
-	time_t s = spec.tv_sec;
-	long ms = lround(spec.tv_nsec / 1.0e6); // todo: man math_error or c++11 std::lround
-
-	int ret = snprintf(buffer, sizeof(buffer), "[%" PRIdMAX ".%03ld]", (intmax_t)s, ms);
-	if(ret > sizeof(buffer) || ret < 0) {
-		perror("get_time(): snprintf");
-		exit(-1);
 	}
-	
-	return buffer;
-}
-
-static int create_and_bind(const char *port) {
-    struct addrinfo hints;
-    struct addrinfo *result, *rp;
-    int s, sfd = -1;
-
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
-    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
-    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;     /* All interfaces */
-
-    s = getaddrinfo(NULL, port, &hints, &result);
-    if (s != 0) {
-        perror("getaddrinfo: ");
-        return -1;
-    }
-
-    for (rp = result; rp != NULL; rp = rp->ai_next) {
-        sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (sfd == -1)
-            continue;
-
-        s = bind(sfd, rp->ai_addr, rp->ai_addrlen);
-        if (s == 0) {
-            /* We managed to bind successfully! */
-            /* fixme: find some way to bind on ip4 and 6 - continue and pass array?*/
-            break;
-        }
-
-        close(sfd);
-    }
-
-    if (rp == NULL) {
-        fprintf(stderr, "Could not bind\n");
-        return -1;
-    }
-
-    freeaddrinfo(result);
-
-    return sfd;
+#ifndef	DEBUG
+	clnt_destroy (clnt);
+#endif	 /* DEBUG */
 }
 
 
-int main (int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
-	CLIENT* clnt;
-	int tfd;
+	char *host;
 
 	if (argc < 2) {
 		printf ("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}
-	
-	if(!(clnt = conntect_to_rpc(argv[1]))) {
-		exit(1);
-	}
-	if((tfd = create_timerfd(0, 250000)) < 0) {
-		exit(1);
-	}
-	/* simulation loop */
-	struct pollfd pfd[] = {
-		{.fd = tfd, .events = POLLIN, 0},
-	};
-	int s;
-	while((s = poll(pfd, (sizeof(pfd) / sizeof(pfd[0])), -1)) > 0) {
-		void  *result_1;
-		MoveRequest moverobot_1_arg1;
-
-		/* re-arm timer */
-		if((pfd[0].revents & POLLIN) == POLLIN) {
-			uint64_t expired;
-
-			pfd[0].revents = 0;
-			read(pfd[0].fd, &expired, sizeof(uint64_t));
-			
-			printf("%s next simulation step\n", get_time());
-		}
-
-		/* collect all movement commands */
-
-		/* vote */
-
-		/* send movement */
-		moverobot_1_arg1.id = 0;
-		moverobot_1_arg1.diffX = 1;
-		moverobot_1_arg1.diffY = 0;
-
-		result_1 = moverobot_1(moverobot_1_arg1, clnt);
-		if (result_1 == (void *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-	}
-
-	clnt_destroy (clnt);
-	exit (0);
+	host = argv[1];
+	simulation_1 (host);
+exit (0);
 }

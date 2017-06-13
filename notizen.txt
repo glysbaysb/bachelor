@@ -74,3 +74,5 @@ HIDE_SCOPE_NAMES
 
 http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/
 Und evt. google test als module beim CMAKE einbinden? Ist im gtest readme enthalten
+
+Beim voter drauf achten das jeder Controller nur einmal in die Mehrheitswertung einbezogen wird
