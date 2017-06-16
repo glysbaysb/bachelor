@@ -95,6 +95,13 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 \clearpage
 \section{Vorherige Arbeiten}
 
+
+\clearpage
+\section{nanomsg}
+
+\clearpage
+\section{MessagePack?}
+
 \clearpage
 \section{Unity}
 Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 f{\"{u}}r Machintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
@@ -232,6 +239,12 @@ int moveRobot(const int32_t robot, const Position& diffVector);
 void update();
 \end{lstlisting}
 
+\paragraph{Die Schnittstelle zwischen Controller und simulierter Welt} ist \textit{callback} basiert.
+\begin{lstlisting}[frame=single, language=c++] 
+void* connectToWorld(char* url);
+int registerCallback(void* world, TypeGetWorldStatus callback);
+// void (_cdecl* TypeGetWorldStatus)(struct WorldStatus w);
+\end{lstlisting}
 
 \clearpage
 \section{Fehlerinjektion}
