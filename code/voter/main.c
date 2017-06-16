@@ -47,7 +47,15 @@ int main(int argc, char** argv) {
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
-			// todo: msgpack unpack
+
+			msgpack_zone mempool;
+			msgpack_zone_init(&mempool, 2048);
+
+			msgpack_object deserialized;
+			msgpack_unpack(buf, len, NULL, &mempool, &deserialized);
+			msgpack_object_print(stdout, deserialized);
+			msgpack_zone_destroy(&mempool);
+
 		}
 
 		if(buf) {
