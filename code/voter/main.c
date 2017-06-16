@@ -4,6 +4,7 @@
 #include <nanomsg/reqrep.h>
 #include <nanomsg/pubsub.h>
 #include <assert.h>
+#include <msgpack.h>
 
 int createSuscriberSocketForWorldStatus(const char* url);
 
@@ -36,16 +37,20 @@ int main(int argc, char** argv) {
 		char* buf = NULL;
 		int len;
 
+		/* request - reply socket */
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
 			pfd[0].revents = 0;
-		} else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
+			printf("%.*s\n", len, buf);
+		}
+		/* publish - suscribe socket */
+		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
+			// todo: msgpack unpack
 		}
 
 		if(buf) {
-			printf("%.*s\n", len, buf);
 			nn_freemsg(buf);
 		}
 	}
