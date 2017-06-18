@@ -1,0 +1,12 @@
+enum Operation {
+	REQUEST = 0,
+	RESPONSE = 1,
+} : int
+
+ID : int
+Params : None | msgpack
+Procedure : String
+Request: [Operation, ID, Procedure, Params]
+
+Error : None | String
+Reply: [Operation, ID, Error, Params]
