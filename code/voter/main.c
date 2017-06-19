@@ -18,13 +18,13 @@ int recvNanaomsg(int sock, char** buf, int* len) {
 
 int main(int argc, char** argv) {
 	if(argc < 2) {
-		printf("%s url\n", argv[1]);
+		printf("%s url\n", argv[0]);
 		return 0;
 	}
 
 	int sock = nn_socket(AF_SP, NN_REQ);
 	if(nn_connect(sock, argv[1]) < 0) {
-		printf("can't connect: %s\n", nn_strerror(nn_errno()));
+		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 		return 1;
 	}
 
@@ -49,13 +49,20 @@ int main(int argc, char** argv) {
 			pfd[1].revents = 0;
 
 			msgpack_zone mempool;
-			msgpack_zone_init(&mempool, 2048);
+			if(msgpack_zone_init(&mempool, 2048) < 0) {
+				fprintf(stderr, "can't init msgpack zone\n");
+				continue;
+			}
 
 			msgpack_object deserialized;
-			msgpack_unpack(buf, len, NULL, &mempool, &deserialized);
+			if(msgpack_unpack(buf, len, NULL, &mempool, &deserialized) < 0) {
+				fprintf(stderr, "can't unpack\n");
+				msgpack_zone_destroy(&mempool);
+				continue;
+			}
+
 			msgpack_object_print(stdout, deserialized);
 			msgpack_zone_destroy(&mempool);
-
 		}
 
 		if(buf) {
@@ -72,14 +79,14 @@ int main(int argc, char** argv) {
 void synchronCall(int sock) {
 	const char* msg = "hello\n";
 	if(nn_send(sock, msg, strlen(msg)+1, 0) < 0) {
-		puts("can't send\n");
+		fprintf(stderr, "can't send\n");
 		return;
 	}
 
 	char* buf = NULL;
 	int len = nn_recv(sock, &buf, NN_MSG, 0);
 	if(len < 0) {
-		puts("can't recv\n");
+		fprintf(stderr, "can't recv\n");
 		return;
 	}
 	printf("got %d bytes. %.*s\n", len, len, buf);
@@ -89,13 +96,13 @@ void synchronCall(int sock) {
 int createSuscriberSocketForWorldStatus(const char* url) {
 	int sock = nn_socket(AF_SP, NN_SUB);
 	if(sock < 0) {
-		printf("can't create suscribersocket: %s\n", nn_strerror(nn_errno()));
+		fprintf(stderr, "can't create suscribersocket\n");
 		return sock;
 	}
 
 	int s = nn_connect(sock, url);
 	if(s < 0) {
-		printf("can't connect: %s\n", nn_strerror(nn_errno()));
+		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 		return s;
 	}
 
