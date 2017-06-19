@@ -6,7 +6,7 @@ set(SOURCE_FILES_LIB libworld.c)
 add_library(libworld STATIC
     ${SOURCE_FILES_LIB}
 )
-target_link_libraries(libworld nanomsg msgpackc)
+target_link_libraries(libworld nanomsg msgpackc pthread)
 # Specify the include directories exported by this library
 target_include_directories(libworld PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

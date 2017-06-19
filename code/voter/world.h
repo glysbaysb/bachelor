@@ -27,8 +27,10 @@ typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
  * @brief start processing events from the world
  *
  * @param ctx: The result rom connectToWorld()
+ * @param cb: your function
+ * @param optional: data that shall be passed to your function
  */
-int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb);
+int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
 
 /**
  * @brief moves that robot in the world

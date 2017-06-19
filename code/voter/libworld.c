@@ -5,6 +5,7 @@
 #include <nanomsg/pubsub.h>
 #include <assert.h>
 #include <msgpack.h>
+#include <pthread.h>
 
 #include "world.h"
 #include "rpc.h"
@@ -12,6 +13,10 @@
 typedef struct WorldContext_ {
 	int subSock;
 	int reqSock;
+
+	void* additional;
+	TypeGetWorldStatusCallback getWorldStatusCallback;
+	pthread_t thread;
 } WorldContext;
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
@@ -139,7 +144,7 @@ void detachFromWorld(void* ctx_) {
 	free(ctx_);
 }
 
-int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb) {
+static void* networkHandler(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	struct nn_pollfd pfd[] = {
@@ -173,6 +178,29 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb) {
 		}
 	}
 	
+
+	return NULL;
+}
+
+
+int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* additional) {
+	WorldContext* ctx = (WorldContext*)ctx_;
+
+	ctx->getWorldStatusCallback = cb;
+	ctx->additional = additional;
+
+	pthread_attr_t attr;
+	int s = pthread_attr_init(&attr);
+	if (s != 0) {
+		return -1;
+	}
+
+	if(pthread_create(&ctx->thread, &attr, &networkHandler, ctx_) < 0) {
+		pthread_attr_destroy(&attr);
+		return -2;
+	}
+
+	pthread_attr_destroy(&attr);
 
 	return 0;
 }
