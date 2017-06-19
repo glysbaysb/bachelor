@@ -222,29 +222,25 @@ Platte visuell ausgeglichen werden k{\"{o}}nnte.
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
 Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Schnittstellen.
-Im ganzen System gibt es drei Schnittstellen:
+Im ganzen System gibt es zwei Schnittstellen:
 \begin{itemize}
 \item Die Schnittstelle zwischen Controller und Voter
 \item Die Schnittstelle zwischen Voter und Roboter
-\item Die Schnittstelle zwischen Controller und simulierter Welt \todo{oder Voter und simulierter Welt und dann an Controller senden?}
 \end{itemize}
 
 \paragraph{Die Schnittstelle zwischen Controller und Voter} ist komplett den Studenten {\"{u}}berlassen.
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
 Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
-\begin{lstlisting}[frame=single, language=c++] 
-int32_t registerNewRobot();
-int moveRobot(const int32_t robot, const Position& diffVector);
-void update();
+\begin{lstlisting}[frame=single, language=c] 
+void* connectToWorld();
+void detachFromWorld(void* ctx);
+typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
+int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
+void MoveRobot(void* ctx, int id, int diffX, int diffY);
 \end{lstlisting}
 
-\paragraph{Die Schnittstelle zwischen Controller und simulierter Welt} ist \textit{callback} basiert.
-\begin{lstlisting}[frame=single, language=c++] 
-void* connectToWorld(char* url);
-int registerCallback(void* world, TypeGetWorldStatus callback);
-// void (_cdecl* TypeGetWorldStatus)(struct WorldStatus w);
-\end{lstlisting}
+Diese wird den Studierenden als kompilierte Library mit einem detailierten Headerfile zur Verf{\"{u}}gung gestellt.
 
 \clearpage
 \section{Fehlerinjektion}
