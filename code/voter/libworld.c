@@ -14,9 +14,7 @@ typedef struct WorldContext_ {
 	int reqSock;
 } WorldContext;
 
-int createSuscriberSocketForWorldStatus(const char* url);
-
-int recvNanaomsg(int sock, char** buf, int* len) {
+static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
 	assert(len);
 
@@ -24,7 +22,7 @@ int recvNanaomsg(int sock, char** buf, int* len) {
 	return *len;
 }
 
-void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
+static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 	msgpack_unpacker unp;
 	msgpack_unpacker_init(&unp, 100);
 
@@ -70,6 +68,45 @@ void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 	}
 
 	msgpack_unpacker_destroy(&unp);
+}
+
+static void synchronCall(int sock) {
+	const char* msg = "hello\n";
+	if(nn_send(sock, msg, strlen(msg)+1, 0) < 0) {
+		fprintf(stderr, "can't send\n");
+		return;
+	}
+
+	char* buf = NULL;
+	int len = nn_recv(sock, &buf, NN_MSG, 0);
+	if(len < 0) {
+		fprintf(stderr, "can't recv\n");
+		return;
+	}
+	printf("got %d bytes. %.*s\n", len, len, buf);
+	nn_freemsg(buf);
+}
+
+static int createSuscriberSocketForWorldStatus(const char* url) {
+	int sock = nn_socket(AF_SP, NN_SUB);
+	if(sock < 0) {
+		fprintf(stderr, "can't create suscribersocket\n");
+		return sock;
+	}
+
+	int s = nn_connect(sock, url);
+	if(s < 0) {
+		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
+		return s;
+	}
+
+	/* no filter */
+	if((s = nn_setsockopt (sock, NN_SUB, NN_SUB_SUBSCRIBE, "", 0)) < 0) {
+		printf("can't change socket state: %s\n", nn_strerror(nn_errno()));
+		return s;
+	}
+
+	return sock;
 }
 
 void* connectToWorld() {
@@ -142,43 +179,4 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb) {
 
 void MoveRobot(void* ctx, int id, int diffX, int diffY) {
 	fprintf(stderr, "MoveRobot not implemented yet\n");
-}
-
-void synchronCall(int sock) {
-	const char* msg = "hello\n";
-	if(nn_send(sock, msg, strlen(msg)+1, 0) < 0) {
-		fprintf(stderr, "can't send\n");
-		return;
-	}
-
-	char* buf = NULL;
-	int len = nn_recv(sock, &buf, NN_MSG, 0);
-	if(len < 0) {
-		fprintf(stderr, "can't recv\n");
-		return;
-	}
-	printf("got %d bytes. %.*s\n", len, len, buf);
-	nn_freemsg(buf);
-}
-
-int createSuscriberSocketForWorldStatus(const char* url) {
-	int sock = nn_socket(AF_SP, NN_SUB);
-	if(sock < 0) {
-		fprintf(stderr, "can't create suscribersocket\n");
-		return sock;
-	}
-
-	int s = nn_connect(sock, url);
-	if(s < 0) {
-		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
-		return s;
-	}
-
-	/* no filter */
-	if((s = nn_setsockopt (sock, NN_SUB, NN_SUB_SUBSCRIBE, "", 0)) < 0) {
-		printf("can't change socket state: %s\n", nn_strerror(nn_errno()));
-		return s;
-	}
-
-	return sock;
 }
