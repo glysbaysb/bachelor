@@ -140,6 +140,10 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb) {
 	return 0;
 }
 
+void MoveRobot(void* ctx, int id, int diffX, int diffY) {
+	fprintf(stderr, "MoveRobot not implemented yet\n");
+}
+
 void synchronCall(int sock) {
 	const char* msg = "hello\n";
 	if(nn_send(sock, msg, strlen(msg)+1, 0) < 0) {
