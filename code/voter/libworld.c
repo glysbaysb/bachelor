@@ -6,7 +6,13 @@
 #include <assert.h>
 #include <msgpack.h>
 
+#include "world.h"
 #include "rpc.h"
+
+typedef struct WorldContext_ {
+	int subSock;
+	int reqSock;
+} WorldContext;
 
 int createSuscriberSocketForWorldStatus(const char* url);
 
@@ -66,22 +72,42 @@ void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 	msgpack_unpacker_destroy(&unp);
 }
 
-int main(int argc, char** argv) {
-	if(argc < 2) {
-		printf("%s url\n", argv[0]);
-		return 0;
+void* connectToWorld() {
+	WorldContext* wc = NULL;
+
+	if(!(wc = malloc(sizeof(WorldContext)))) {
+		fprintf(stderr, "can't allocate WorldContext\n");
+		return NULL;
 	}
 
-	int sock = nn_socket(AF_SP, NN_REQ);
-	if(nn_connect(sock, argv[1]) < 0) {
+	wc->reqSock = nn_socket(AF_SP, NN_REQ);
+	if(nn_connect(wc->reqSock, "tcp://localhost:8000") < 0) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
-		return 1;
+
+		free(wc);
+
+		return NULL;
 	}
 
-	int susSock = createSuscriberSocketForWorldStatus("tcp://localhost:8001");
+	wc->subSock = createSuscriberSocketForWorldStatus("tcp://localhost:8001");
+
+	return wc;
+}
+
+void detachFromWorld(void* ctx_) {
+	WorldContext* ctx = (WorldContext*)ctx_;
+	nn_shutdown(ctx->reqSock, 0);
+	nn_shutdown(ctx->subSock, 0);
+
+	free(ctx_);
+}
+
+int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb) {
+	WorldContext* ctx = (WorldContext*)ctx_;
+
 	struct nn_pollfd pfd[] = {
-		{.fd = sock, .events = NN_POLLIN, 0},
-		{.fd = susSock, .events = NN_POLLIN, 0}
+		{.fd = ctx->reqSock, .events = NN_POLLIN, 0},
+		{.fd = ctx->subSock, .events = NN_POLLIN, 0}
 	};
 	while(nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1) > 0) {
 		char* buf = NULL;
@@ -110,8 +136,6 @@ int main(int argc, char** argv) {
 		}
 	}
 	
-	nn_shutdown(sock, 0);
-	nn_shutdown(susSock, 0);
 
 	return 0;
 }
