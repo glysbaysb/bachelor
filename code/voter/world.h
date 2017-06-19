@@ -9,14 +9,17 @@
  */
 void* connectToWorld();
 
+// todo
 typedef struct WorldStatus {
 	int dummy;
-	// todo
 } WorldStatus;
 
 /**
  * @brief this function is implemented by the students and gets called periodically
- * 	  with updates about the status of the world
+ * 	  with updates about the status of the world.
+ *
+ * This function gets called peridocally from another thread, so make sure that your
+ * functio is reentrant;
  *
  * @param ws: the new WorldStatus
  * @param optional: ca be used to pass along additional user-specific information
