@@ -22,3 +22,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(simulation)
 add_subdirectory(tests)
 add_subdirectory(voter)
+
+set(SOURCE_FILES_MSGPACK msgpack.c)
+add_executable(genmsgpack ${SOURCE_FILES_MSGPACK})
+target_link_libraries(genmsgpack msgpackc)
+
