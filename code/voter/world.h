@@ -45,5 +45,11 @@ int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* o
  */
 void MoveRobot(void* ctx, int id, int diffX, int diffY);
 
+/**
+ * @brief detach from the world and stop calling the callback
+ *
+ * @param ctx: the world context
+ */
+void detachFromWorld(void* ctx_);
 
 #endif

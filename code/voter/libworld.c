@@ -17,6 +17,7 @@ typedef struct WorldContext_ {
 	void* additional;
 	TypeGetWorldStatusCallback getWorldStatusCallback;
 	pthread_t thread;
+	int stopThread;
 } WorldContext;
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
@@ -117,7 +118,7 @@ static int createSuscriberSocketForWorldStatus(const char* url) {
 void* connectToWorld() {
 	WorldContext* wc = NULL;
 
-	if(!(wc = malloc(sizeof(WorldContext)))) {
+	if(!(wc = calloc(1, sizeof(WorldContext)))) {
 		fprintf(stderr, "can't allocate WorldContext\n");
 		return NULL;
 	}
@@ -138,6 +139,13 @@ void* connectToWorld() {
 
 void detachFromWorld(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
+
+	/* tell the other thread to exit and then wait for completion */
+	ctx->stopThread = 1;
+	if(pthread_join(ctx->thread, NULL) < 0) {
+		fprintf(stderr, "can't join thread\n");
+	}
+
 	nn_shutdown(ctx->reqSock, 0);
 	nn_shutdown(ctx->subSock, 0);
 
@@ -151,7 +159,7 @@ static void* networkHandler(void* ctx_) {
 		{.fd = ctx->reqSock, .events = NN_POLLIN, 0},
 		{.fd = ctx->subSock, .events = NN_POLLIN, 0}
 	};
-	while(nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1) > 0) {
+	while(nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1) > 0 && ctx->stopThread == 0) {
 		char* buf = NULL;
 		int len;
 
