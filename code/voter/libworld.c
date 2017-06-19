@@ -29,14 +29,13 @@ static int recvNanaomsg(int sock, char** buf, int* len) {
 }
 
 static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
-	msgpack_unpacker unp;
-	msgpack_unpacker_init(&unp, 100);
-
 	char unpacked_buffer[128];
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
-	size_t off;
+	const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
+					"float", "str", "array", "map", "bin", "ext"};
+	size_t off = 0;
 	int ret = msgpack_unpack_next(&result, buf, len, &off);
 	while (ret == MSGPACK_UNPACK_SUCCESS) {
 		msgpack_object obj = result.data;
@@ -49,6 +48,9 @@ static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 				break;
 			}
 
+			for(int i = 0; i < arr->size; i++) {
+				printf("arr elem %d is a %s\n", i, typeToStr[arr->ptr[i].type]);
+			}
 			reply->op = arr->ptr[0].via.i64;
 			reply->id = arr->ptr[1].via.i64;
 			reply->error = arr->ptr[2].via.i64;
@@ -72,8 +74,6 @@ static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
 		printf("The data in the buf is invalid format.\n");
 	}
-
-	msgpack_unpacker_destroy(&unp);
 }
 
 static void synchronCall(int sock) {
