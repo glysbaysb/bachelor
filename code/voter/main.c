@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <msgpack.h>
 
+#include "rpc.h"
+
 int createSuscriberSocketForWorldStatus(const char* url);
 
 int recvNanaomsg(int sock, char** buf, int* len) {
@@ -14,6 +16,54 @@ int recvNanaomsg(int sock, char** buf, int* len) {
 
 	*len = nn_recv(sock, buf, NN_MSG, 0);
 	return *len;
+}
+
+void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
+	msgpack_unpacker unp;
+	msgpack_unpacker_init(&unp, 100);
+
+	char unpacked_buffer[128];
+	msgpack_unpacked result;
+	msgpack_unpacked_init(&result);
+
+	size_t off;
+	int ret = msgpack_unpack_next(&result, buf, len, &off);
+	while (ret == MSGPACK_UNPACK_SUCCESS) {
+		msgpack_object obj = result.data;
+
+		switch(obj.type) {
+		case MSGPACK_OBJECT_ARRAY:{
+			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
+			if(arr->size < 4) {
+				fprintf(stderr, "array too small");
+				break;
+			}
+
+			reply->op = arr->ptr[0].via.i64;
+			reply->id = arr->ptr[1].via.i64;
+			reply->error = arr->ptr[2].via.i64;
+			// todo: params
+			break;
+		}
+		default:
+			fprintf(stderr, "unhandled msgpack type:");
+			msgpack_object_print(stdout, obj);
+			putc('\n', stdin);
+			break;
+		}
+
+		ret = msgpack_unpack_next(&result, buf, len, &off);
+	}
+	msgpack_unpacked_destroy(&result);
+
+	if (ret == MSGPACK_UNPACK_CONTINUE) {
+		printf("All msgpack_object in the buffer is consumed.\n");
+	}
+	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
+		printf("The data in the buf is invalid format.\n");
+	}
+
+	msgpack_unpacker_destroy(&unp);
 }
 
 int main(int argc, char** argv) {
@@ -48,21 +98,11 @@ int main(int argc, char** argv) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
 
-			msgpack_zone mempool;
-			if(msgpack_zone_init(&mempool, 2048) < 0) {
-				fprintf(stderr, "can't init msgpack zone\n");
-				continue;
-			}
+			printf("recvd: %d\n", len);
+			struct RPCReply reply;
+			parseRPCReply(buf, len, &reply);
 
-			msgpack_object deserialized;
-			if(msgpack_unpack(buf, len, NULL, &mempool, &deserialized) < 0) {
-				fprintf(stderr, "can't unpack\n");
-				msgpack_zone_destroy(&mempool);
-				continue;
-			}
-
-			msgpack_object_print(stdout, deserialized);
-			msgpack_zone_destroy(&mempool);
+			printf("rpcreply (%d): %d\n", reply.id, reply.error);
 		}
 
 		if(buf) {
