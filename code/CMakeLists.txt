@@ -19,7 +19,6 @@ set(C_WARNINGS "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(simulation)
 add_subdirectory(tests)
 add_subdirectory(voter)
 
