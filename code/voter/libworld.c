@@ -75,21 +75,22 @@ static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	}
 }
 
-static void synchronCall(int sock) {
-	const char* msg = "hello\n";
-	if(nn_send(sock, msg, strlen(msg)+1, 0) < 0) {
+static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* lenOut) {
+	assert(lenOut);
+
+	if(nn_send(sock, msg, lenIn, 0) < 0) {
 		fprintf(stderr, "can't send\n");
-		return;
+		return NULL;
 	}
 
 	char* buf = NULL;
-	int len = nn_recv(sock, &buf, NN_MSG, 0);
-	if(len < 0) {
+	*lenOut = nn_recv(sock, &buf, NN_MSG, 0);
+	if(*lenOut <= 0) {
 		fprintf(stderr, "can't recv\n");
-		return;
+		return NULL;
 	}
-	printf("got %d bytes. %.*s\n", len, len, buf);
-	nn_freemsg(buf);
+
+	return buf;
 }
 
 static int createSuscriberSocketForWorldStatus(const char* url) {
@@ -166,18 +167,24 @@ static void* networkHandler(void* ctx_) {
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
 			pfd[0].revents = 0;
-			printf("%.*s\n", len, buf);
-		}
-		/* publish - suscribe socket */
-		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
-			recvNanaomsg(pfd[1].fd, &buf, &len);
-			pfd[1].revents = 0;
 
 			printf("recvd: %d\n", len);
 			struct RPCReply reply;
 			parseRPCReply(buf, len, &reply);
 
 			printf("rpcreply (%d): %d\n", reply.id, reply.error);
+		}
+		/* publish - suscribe socket */
+		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
+			recvNanaomsg(pfd[1].fd, &buf, &len);
+			pfd[1].revents = 0;
+
+			printf("got a published event: ");
+			for(size_t i = 0; i < len; i++) {
+				printf("%02X ", (buf[i] & 0xFF));
+			}
+			putchar('\n');
+
 		}
 
 		if(buf) {
@@ -212,7 +219,35 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	return 0;
 }
 
-void MoveRobot(void* ctx, int id, int diffX, int diffY) {
-	(void) ctx; (void) id; (void) diffX; (void) diffY;
-	fprintf(stderr, "MoveRobot not implemented yet\n");
+void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
+	(void)id; (void)diffX; (void) diffY;
+
+	WorldContext* ctx = (WorldContext*)ctx_;
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	//msgpack_pack_array(&pk, 4);
+	msgpack_pack_int32(&pk, REQUEST); // operation
+	msgpack_pack_int32(&pk, 0x1234ABCD); // id
+	msgpack_pack_int8(&pk, 0x1A); // procedure
+	msgpack_pack_array(&pk, 3);
+
+	{
+		msgpack_pack_int32(&pk, id);
+		msgpack_pack_int32(&pk, diffX);
+		msgpack_pack_int32(&pk, diffY);
+	}
+
+	for(size_t i = 0; i < sbuf.size; i++) {
+		printf("%02X ", (sbuf.data[i] & 0xFF));
+	}
+	putchar('\n');
+
+	if(nn_send(ctx->reqSock, sbuf.data, sbuf.size, 0) < 0) {
+		fprintf(stderr, "can't send MoveRobot rpc request\n");
+	}
+	printf("moverobot finished\n");
 }

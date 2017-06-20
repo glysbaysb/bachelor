@@ -2,11 +2,10 @@
 #include <unistd.h>
 #include "world.h"
 
+void worldStatusCallback(WorldStatus ws, void* additional);
 void worldStatusCallback(WorldStatus ws, void* additional) {
+	(void) ws; (void) additional;
 	printf("worldStatusCallback\n");
-
-	/* bla bla */
-	MoveRobot(additional, 0, -1, 1);
 }
 
 int main() {
@@ -20,6 +19,7 @@ int main() {
 
 	while(1) {
 		sleep(1);
+		MoveRobot(worldCtx, 0, -1, 1);
 	}
 
 	detachFromWorld(worldCtx);
