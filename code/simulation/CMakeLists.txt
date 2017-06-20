@@ -4,6 +4,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(simulation)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARNINGS}")
+
 # Declare the library
 set(SOURCE_FILES_LIB
 	world.cxx world.h

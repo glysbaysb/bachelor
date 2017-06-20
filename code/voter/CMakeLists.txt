@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(voter)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS}")
+
 # Declare the library
 set(SOURCE_FILES_LIB libworld.c)
 add_library(libworld STATIC
