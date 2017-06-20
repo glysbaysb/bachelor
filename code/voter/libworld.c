@@ -28,8 +28,7 @@ static int recvNanaomsg(int sock, char** buf, int* len) {
 	return *len;
 }
 
-static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
-	char unpacked_buffer[128];
+static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
@@ -44,12 +43,12 @@ static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 		case MSGPACK_OBJECT_ARRAY:{
 			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
 			if(arr->size < 4) {
-				fprintf(stderr, "array too small");
+				fprintf(stdout, "array too small");
 				break;
 			}
 
-			for(int i = 0; i < arr->size; i++) {
-				printf("arr elem %d is a %s\n", i, typeToStr[arr->ptr[i].type]);
+			for(size_t i = 0; i < arr->size; i++) {
+				printf("arr elem %zu is a %s\n", i, typeToStr[arr->ptr[i].type]);
 			}
 			reply->op = arr->ptr[0].via.i64;
 			reply->id = arr->ptr[1].via.i64;
@@ -58,9 +57,9 @@ static void parseRPCReply(char* buf, int len, struct RPCReply* reply) {
 			break;
 		}
 		default:
-			fprintf(stderr, "unhandled msgpack type:");
+			fprintf(stdout, "unhandled msgpack type:");
 			msgpack_object_print(stdout, obj);
-			putc('\n', stdin);
+			putchar('\n');
 			break;
 		}
 
@@ -214,5 +213,6 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 }
 
 void MoveRobot(void* ctx, int id, int diffX, int diffY) {
+	(void) ctx; (void) id; (void) diffX; (void) diffY;
 	fprintf(stderr, "MoveRobot not implemented yet\n");
 }
