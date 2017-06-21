@@ -103,11 +103,13 @@ mit Daimler Benz, eine Simulation {\"{a}}hnlich dieser entwickelt. Zu dieser wur
 
 Im Gegensatz zu diesem System musste es, zus{\"{a}}tzlich zur nicht-funktionalen Eigenschaft Ausfallsicherheit, auch echtzeitf{\"{a}}hig sein.
 
-Die Simulation und die Controller l{\"{a}}ufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}, w{\"{a}}hrend
+\paragraph{Systemaufbau} Die Simulation und die Controller l{\"{a}}ufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}, w{\"{a}}hrend
 das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
 
-\todo{warum meins doller ist. Graphisch in die Jahre gekommen? Kein Mensch
-weiss was mehr CORBA ist? Einarbeitungszeit in CORBA?}
+\todo{mehr}
+
+\paragraph{Evaluation} \todo{warum meins doller ist. Nicht als Lernobjekt gedacht? Graphisch in die Jahre gekommen. Einarbeitungszeit in CORBA, nicht
+zumutbar?}
 
 \subsection{Die ausfallsichere Heizung}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
@@ -115,7 +117,7 @@ L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Hei
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, am dem Punkt an dem sich
 die Arme treffen ist eine Klappe die den Luftstrom, nach vorne hinaus, blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
-Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
+\paragraph{Systemaufbau} Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
 \begin{itemize}
 \item einem Rechner der die Heizk{\"{o}}rper steuert
 \item einem Rechner der die L{\"{u}}fter steuert
@@ -125,7 +127,9 @@ Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footno
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
 allerdings zu jedem Zeitpunkt ausfallen -- es ist also notwendig das System ausfallsicher zu designen.
 
-Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen die es sehr
+\todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
+
+\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
 ungeeignet machen. Dies wird noch dadurch verst{\"{a}}rkt das es keinerlei
 Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
@@ -134,9 +138,22 @@ Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
 
 \clearpage
 \section{nanomsg}
+dann und dann geschrieben, soll halt bestimmte oft gebrauchte Ubertragungsarten implementieren
+
+\paragraph{{\"{U}}bertragungsarten}
+\subparagraph{Request-Reply}
+\subparagraph{Publish-Suscribe}
+Kriterien: r{\"{a}}umlich, zeitlich getrennt, asynchron m{\"{o}}glich \cite{pubsub}
+\todo{bild}
 
 \clearpage
 \section{msgpack}
+dann und dann geschrieben, von wem, language bindings, soll sehr kleine Nachrichten erstellen
+
+\paragraph{Grundlegendes}
+\paragraph{Integer}
+\paragraph{Fixed Size Arrays}
+
 
 \clearpage
 \section{Unity}
@@ -292,6 +309,8 @@ jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird 
 
 \subsection{Fehlermodell}
 \label{error-model}
+\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, allerdings nur \todo{wie doll halt mein hammingcode ist}
 
 \subsection{Voter}
 \label{voter}
