@@ -94,7 +94,28 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \clearpage
 \section{Vorherige Arbeiten}
+Da das Ziel dieser Arbeit die Entwicklung einer Aufgabe zur Verdeutlichung der Prinzipen Ausfallsicherer Systeme ist, wird ein kurzer {\"{U}}berblick {\"{u}}ber
+bereits besthende Systeme dieser Arbeit gegeben.
 
+\subsection{Die balancierenden Roboter}
+
+\subsection{Die ausfallsichere Heizung}
+Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
+L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
+Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, am dem Punkt an dem sich
+die Arme treffen ist eine Klappe die den Luftstrom an einem Arm nach oben herausleiten kann.
+
+Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
+\begin{itemize}
+\item einem Rechner der die Heizk{\"{o}}rper steuert
+\item einem Rechner der die L{\"{u}}fter steuert
+\item einem Rechner der die Klappe steuert
+\end{itemize}
+
+Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP oder I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar der ganze Rechner, k{\"{o}}nnen
+allerdings zu jedem Zeitpunkt ausfallen -- es ist also notwendig das System ausfallsicher zu designen.
+
+\todo{warum ist meins doller? Man sieht schneller was, es ist interaktiv, man muss mit mehr als 3 Rechnern arbeiten?}
 
 \clearpage
 \section{nanomsg}
@@ -104,7 +125,7 @@ Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
 
 \clearpage
 \section{Unity}
-Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 f{\"{u}}r Machintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
+Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 f{\"{u}}r Macintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
 
 In dieser Arbeit wird es benutzt um die Welt und die Interkationen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
 abh{\"{a}}ngig von der Position und den Gewichten der Objekt gekippt werden oder die Kamera durch Tastatureingaben bewegt werden.
