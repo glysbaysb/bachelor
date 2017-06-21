@@ -115,7 +115,7 @@ static int createSuscriberSocketForWorldStatus(const char* url) {
 	return sock;
 }
 
-void* connectToWorld() {
+void* connectToWorld(void) {
 	WorldContext* wc = NULL;
 
 	if(!(wc = calloc(1, sizeof(WorldContext)))) {
