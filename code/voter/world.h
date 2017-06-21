@@ -9,9 +9,28 @@
  */
 void* connectToWorld();
 
-// todo
+/**
+ * All the information needed to describe a object in the simulation
+ */
+typedef struct SimulationObject {
+	char* type; //! Either "ROBOT" or "FUELSTATION"
+
+	float x; //! x position in the world
+	float y; //! y position
+	float m; //! mass of object
+
+	int id; //! id of this object. Use that for MoveRobot() calls
+
+	int fuel; //! how much fuel that robot has left. invalid for a
+		  //! fuel station
+} SimulationObject;
+
+/**
+ * The state of the whole simulation. E.g. all objects
+ */
 typedef struct WorldStatus {
-	int dummy;
+	size_t numOfObjects;
+	SimulationObject* objects;
 } WorldStatus;
 
 /**
@@ -24,7 +43,7 @@ typedef struct WorldStatus {
  * @param ws: the new WorldStatus
  * @param optional: ca be used to pass along additional user-specific information
  */
-typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
+typedef void (*TypeGetWorldStatusCallback)(const WorldStatus* ws, void* optional);
 
 /**
  * @brief start processing events from the world
