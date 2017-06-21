@@ -37,9 +37,9 @@ typedef struct WorldStatus {
  * @brief this function is implemented by the students and gets called periodically
  * 	  with updates about the status of the world.
  *
- * This function gets called peridocally from another thread, so make sure that your
- * function is reentrant; Furthermore as soon as your function returns ws gets freed,
- * so if you need the information provided there you should save it somewhere else.
+ * As soon as your function returns ws gets freed, so if you need the information
+ * provided there you should save it somewhere else. Using ws afterwards *will*
+ * fail!
  *
  * @param ws: the new WorldStatus
  * @param optional: ca be used to pass along additional user-specific information
