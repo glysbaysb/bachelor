@@ -27,7 +27,7 @@
 \usepackage{fancyhdr}
 \usepackage{rotating}
 \usepackage{subcaption}
-\usepackage{amssymb} % for \checkmark
+\usepackage{amssymb} % for \
 \usepackage{alltt}
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{todonotes}
@@ -39,6 +39,8 @@
 \lstset{frame=single,breaklines=true}
 %\setcounter{biburllcpenalty}{7000}
 %\setcounter{biburlucpenalty}{8000}
+
+\newcommand{\xmark}{\text{\sffamily X}} % gegensymbol zu \checkmark
 
 \newcommand{\includevisio}[2][]{\includegraphics[clip, trim=1cm 1cm 1cm 1cm, #1]{#2}}
 
@@ -145,9 +147,19 @@ Sehr high level, Bild vom Systemaufbau
 \subsection{Auswahl}
 broadcast, publish-suscribe
 
-grpc muss man sich selbst zusammenbasteln, dafuer hats schon RPC
-ZeroMQ ging nicht weil wegen C++
-nanomsg kein RPC, aber rein C
+\begin{table}[h]
+\centering
+\begin{tabu}{c | c | c | c | p{5cm}}
+	\toprule
+	Name & RPC & Publish-Suscribe & C++ Runtime & andere Sprachen \\
+	\midrule
+	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, Python, Java, ... \\
+	ZeroMQ\cite{zeromq} & \xmark & \checkmark & \xmark & C\#, Python, Java, ... \enquote{40+ languages} \\
+	nanomsg\cite{nanomsg} & \xmark & \checkmark & \checkmark & C\#, Python, Java, ... (25 Sprachen) \\
+	\bottomrule
+\end{tabu}
+\caption{Anforderungen an die Netwerkbibliothek}
+\end{table}
 
 \subsection{nanomsg}
 dann und dann geschrieben, soll halt bestimmte oft gebrauchte Ubertragungsarten implementieren
