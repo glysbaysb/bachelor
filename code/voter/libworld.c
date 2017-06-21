@@ -28,6 +28,48 @@ static int recvNanaomsg(int sock, char** buf, int* len) {
 	return *len;
 }
 
+static void parseWorldStatus(char* buf, size_t len) {
+	msgpack_unpacked result;
+	msgpack_unpacked_init(&result);
+
+	size_t off = 0;
+	int cont = 1;//used to break out of the while in case of an error
+	int ret = msgpack_unpack_next(&result, buf, len, &off);
+	while (ret == MSGPACK_UNPACK_SUCCESS && cont) {
+		msgpack_object obj = result.data;
+
+		switch(obj.type) {
+		case MSGPACK_OBJECT_ARRAY:{
+			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
+			WorldStatus ws = {.numOfObjects = arr->size,
+				.objects = calloc(arr->size, sizeof(SimulationObject),
+				0};
+			if(!ws.objects) {
+				cont = 0;
+				break;
+			}
+			
+			for(size_t i = 0; i < arr->size; i++) {
+				printf("arr elem %zu is a %s\n", i, typeToStr[arr->ptr[i].type]);
+			}
+		}
+		break;
+		default:
+		break;
+		}
+
+		ret = msgpack_unpack_next(&result, buf, len, &off);
+	}
+	msgpack_unpacked_destroy(&result);
+
+	if (ret == MSGPACK_UNPACK_CONTINUE) {
+		printf("ws:All msgpack_object in the buffer is consumed.\n");
+	}
+	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
+		printf("ws:The data in the buf is invalid format.\n");
+	}
+}
+
 static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
@@ -184,6 +226,7 @@ static void* networkHandler(void* ctx_) {
 				printf("%02X ", (buf[i] & 0xFF));
 			}
 			putchar('\n');
+			parseWorldStatus(buf, len);
 
 		}
 
