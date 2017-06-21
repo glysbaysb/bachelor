@@ -2,10 +2,10 @@
 #include <unistd.h>
 #include "world.h"
 
-void worldStatusCallback(WorldStatus ws, void* additional);
-void worldStatusCallback(WorldStatus ws, void* additional) {
+void worldStatusCallback(WorldStatus* ws, void* additional);
+void worldStatusCallback(WorldStatus* ws, void* additional) {
 	(void) ws; (void) additional;
-	printf("worldStatusCallback\n");
+	puts("worldStatusCallback");
 }
 
 int main() {
@@ -15,7 +15,7 @@ int main() {
 		return 1;
 	}
 
-	startProcessingWorldEvents(worldCtx, &worldStatusCallback, worldCtx);
+	startProcessingWorldEvents(worldCtx, &worldStatusCallback, NULL);
 
 	while(1) {
 		sleep(1);
