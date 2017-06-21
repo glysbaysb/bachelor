@@ -137,7 +137,19 @@ Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
 \todo{man muss mit mehr als 3 Rechnern arbeiten?}
 
 \clearpage
-\section{nanomsg}
+\section{Konzept}
+Sehr high level, Bild vom Systemaufbau
+
+\clearpage
+\section{Netzwerklibrary}
+\subsection{Auswahl}
+broadcast, publish-suscribe
+
+grpc muss man sich selbst zusammenbasteln, dafuer hats schon RPC
+ZeroMQ ging nicht weil wegen C++
+nanomsg kein RPC, aber rein C
+
+\subsection{nanomsg}
 dann und dann geschrieben, soll halt bestimmte oft gebrauchte Ubertragungsarten implementieren
 
 \paragraph{{\"{U}}bertragungsarten}
@@ -147,7 +159,11 @@ Kriterien: r{\"{a}}umlich, zeitlich getrennt, asynchron m{\"{o}}glich \cite{pubs
 \todo{bild}
 
 \clearpage
-\section{msgpack}
+\section{Serialisierung}
+Verschiedene Sprachen, binaerprotokoll ist dann tricky
+
+\subsection{Auswahl}
+\subsection{msgpack}
 dann und dann geschrieben, von wem, language bindings, soll sehr kleine Nachrichten erstellen
 
 \paragraph{Grundlegendes}
@@ -156,7 +172,11 @@ dann und dann geschrieben, von wem, language bindings, soll sehr kleine Nachrich
 
 
 \clearpage
-\section{Unity}
+\section{3D Engine}
+warum ueberhaupt noetig
+
+\subsection{Auswahl}
+\subsection{Unity}
 Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 f{\"{u}}r Macintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
 
 In dieser Arbeit wird es benutzt um die Welt und die Interkationen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
