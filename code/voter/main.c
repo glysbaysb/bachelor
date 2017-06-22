@@ -2,15 +2,21 @@
 #include <unistd.h>
 #include "world.h"
 
-void worldStatusCallback(WorldStatus* ws, void* additional);
-void worldStatusCallback(WorldStatus* ws, void* additional) {
+void worldStatusCallback(const WorldStatus* ws, void* additional);
+void worldStatusCallback(const WorldStatus* ws, void* additional) {
 	(void) ws; (void) additional;
 	puts("worldStatusCallback");
 }
 
-int main() {
+int main(int argc, char** argv) {
 	void* worldCtx = NULL;
-	if(!(worldCtx = connectToWorld())) {
+
+	if(argc < 2) {
+		printf("%s host\n", argv[0]);
+		return 0;
+	}
+
+	if(!(worldCtx = connectToWorld(argv[1]))) {
 		fprintf(stderr, "can't init world");
 		return 1;
 	}

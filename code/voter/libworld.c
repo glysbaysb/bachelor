@@ -42,7 +42,7 @@ static void parseWorldStatus(char* buf, size_t len) {
 		case MSGPACK_OBJECT_ARRAY:{
 			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
 			WorldStatus ws = {.numOfObjects = arr->size,
-				.objects = calloc(arr->size, sizeof(SimulationObject),
+				.objects = calloc(arr->size, sizeof(SimulationObject)),
 				0};
 			if(!ws.objects) {
 				cont = 0;
@@ -50,7 +50,7 @@ static void parseWorldStatus(char* buf, size_t len) {
 			}
 			
 			for(size_t i = 0; i < arr->size; i++) {
-				printf("arr elem %zu is a %s\n", i, typeToStr[arr->ptr[i].type]);
+				printf("arr elem %zu is a %d\n", i, arr->ptr[i].type);
 			}
 		}
 		break;
@@ -157,8 +157,16 @@ static int createSuscriberSocketForWorldStatus(const char* url) {
 	return sock;
 }
 
-void* connectToWorld(void) {
+void* connectToWorld(const char* host) {
+	char reqSockHost[128] = {0},
+		 subSockHost[128] = {0};
 	WorldContext* wc = NULL;
+
+	if(snprintf(reqSockHost, sizeof(reqSockHost), "tcp://%s:8000", host) < 0 ||
+		snprintf(subSockHost, sizeof(subSockHost), "tcp://%s:8001", host) < 0)
+	{
+		return NULL;
+	}
 
 	if(!(wc = calloc(1, sizeof(WorldContext)))) {
 		fprintf(stderr, "can't allocate WorldContext\n");
@@ -166,7 +174,7 @@ void* connectToWorld(void) {
 	}
 
 	wc->reqSock = nn_socket(AF_SP, NN_REQ);
-	if(nn_connect(wc->reqSock, "tcp://localhost:8000") < 0) {
+	if(nn_connect(wc->reqSock, reqSockHost) < 0) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 
 		free(wc);
@@ -174,7 +182,13 @@ void* connectToWorld(void) {
 		return NULL;
 	}
 
-	wc->subSock = createSuscriberSocketForWorldStatus("tcp://localhost:8001");
+	if((wc->subSock = createSuscriberSocketForWorldStatus(subSockHost)) < 0) {
+		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
+
+		free(wc);
+
+		return NULL;
+	}
 
 	return wc;
 }

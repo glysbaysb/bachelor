@@ -7,7 +7,7 @@
  *
  * @return: null on error
  */
-void* connectToWorld(void);
+void* connectToWorld(const char* host);
 
 /**
  * All the information needed to describe a object in the simulation
