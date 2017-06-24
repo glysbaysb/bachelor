@@ -28,7 +28,26 @@ static int recvNanaomsg(int sock, char** buf, int* len) {
 	return *len;
 }
 
-static void parseWorldStatus(char* buf, size_t len) {
+static int parseObject(SimulationObject* object, const msgpack_object_array* arr) {
+	if(arr->size < 6)
+		return -1;
+
+	object->type = arr->ptr[3].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
+
+	object->x = arr->ptr[4].via.f64;
+	object->y = arr->ptr[5].via.f64;
+	object->m = arr->ptr[2].via.f64;
+
+	object->id = arr->ptr[1].via.i64;
+
+	object->fuel = arr->ptr[0].via.i64;
+
+	return 0;
+}
+
+static WorldStatus* parseWorldStatus(char* buf, size_t len) {
+	WorldStatus* ws = NULL;
+
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
@@ -41,17 +60,24 @@ static void parseWorldStatus(char* buf, size_t len) {
 		switch(obj.type) {
 		case MSGPACK_OBJECT_ARRAY:{
 			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
-			WorldStatus ws = {.numOfObjects = arr->size,
-				.objects = calloc(arr->size, sizeof(SimulationObject)),
-				0};
-			if(!ws.objects) {
+			if(arr->ptr[0].type != MSGPACK_OBJECT_ARRAY)
+				continue;
+
+			msgpack_object_array* arrInner = (msgpack_object_array*)&arr->ptr[0].via;
+			ws = (WorldStatus*)calloc(1, sizeof(WorldStatus));
+			ws->numOfObjects = arrInner->size;
+			if(!(ws->objects = calloc(arrInner->size, sizeof(SimulationObject)))) {
 				cont = 0;
 				break;
 			}
 			
-			for(size_t i = 0; i < arr->size; i++) {
-				printf("arr elem %zu is a %d\n", i, arr->ptr[i].type);
+			for(size_t i = 0; i < arrInner->size; i++) {
+				assert(arr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
+
+				if(parseObject(&ws->objects[i], (msgpack_object_array*)&arrInner->ptr[i].via) < 0)
+					fprintf(stdout, "arr elem %d couldn't be parsed as Object\n", i);
 			}
+			cont = 0;
 		}
 		break;
 		default:
@@ -62,12 +88,7 @@ static void parseWorldStatus(char* buf, size_t len) {
 	}
 	msgpack_unpacked_destroy(&result);
 
-	if (ret == MSGPACK_UNPACK_CONTINUE) {
-		printf("ws:All msgpack_object in the buffer is consumed.\n");
-	}
-	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
-		printf("ws:The data in the buf is invalid format.\n");
-	}
+	return ws;
 }
 
 static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
@@ -165,6 +186,7 @@ void* connectToWorld(const char* host) {
 	if(snprintf(reqSockHost, sizeof(reqSockHost), "tcp://%s:8000", host) < 0 ||
 		snprintf(subSockHost, sizeof(subSockHost), "tcp://%s:8001", host) < 0)
 	{
+		fprintf(stderr, "can't create host strings\n");
 		return NULL;
 	}
 
@@ -215,7 +237,8 @@ static void* networkHandler(void* ctx_) {
 		{.fd = ctx->reqSock, .events = NN_POLLIN, 0},
 		{.fd = ctx->subSock, .events = NN_POLLIN, 0}
 	};
-	while(nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1) > 0 && ctx->stopThread == 0) {
+	int r = 0;
+	while(( r = nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1)) > 0 && ctx->stopThread == 0) {
 		char* buf = NULL;
 		int len;
 
@@ -235,18 +258,21 @@ static void* networkHandler(void* ctx_) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
 
-			printf("got a published event: ");
-			for(size_t i = 0; i < len; i++) {
-				printf("%02X ", (buf[i] & 0xFF));
+			WorldStatus* ws = parseWorldStatus(buf, len);
+			ctx->getWorldStatusCallback(ws, ctx->additional);
+			if(ws) {
+				free(ws);
 			}
-			putchar('\n');
-			parseWorldStatus(buf, len);
 
 		}
 
 		if(buf) {
 			nn_freemsg(buf);
 		}
+	}
+	if(r < 0) {
+		fprintf(stdout, nn_strerror(nn_errno()));
+		return NULL;
 	}
 	
 
@@ -263,10 +289,12 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	pthread_attr_t attr;
 	int s = pthread_attr_init(&attr);
 	if (s != 0) {
+		fprintf(stdout, "can't pthread_attr_init: %d\n", errno);
 		return -1;
 	}
 
 	if(pthread_create(&ctx->thread, &attr, &networkHandler, ctx_) < 0) {
+		fprintf(stdout, "can't pthread_create: %d\n", errno);
 		pthread_attr_destroy(&attr);
 		return -2;
 	}
@@ -277,8 +305,6 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 }
 
 void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
-	(void)id; (void)diffX; (void) diffY;
-
 	WorldContext* ctx = (WorldContext*)ctx_;
 	msgpack_packer pk;
 	msgpack_sbuffer sbuf;
@@ -289,7 +315,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	//msgpack_pack_array(&pk, 4);
 	msgpack_pack_int32(&pk, REQUEST); // operation
 	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int8(&pk, 0x1A); // procedure
+	msgpack_pack_int32(&pk, 0x10000000); // procedure
 	msgpack_pack_array(&pk, 3);
 
 	{

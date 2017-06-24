@@ -12,8 +12,12 @@ void* connectToWorld(const char* host);
 /**
  * All the information needed to describe a object in the simulation
  */
+enum SimulationObjectType {
+	ROBOT,
+	FUEL_STATION
+};
 typedef struct SimulationObject {
-	char* type; //! Either "ROBOT" or "FUELSTATION"
+	enum SimulationObjectType type; //! Either "ROBOT" or "FUELSTATION"
 
 	float x; //! x position in the world
 	float y; //! y position
