@@ -324,13 +324,14 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 		msgpack_pack_int32(&pk, diffY);
 	}
 
+#if 0
 	for(size_t i = 0; i < sbuf.size; i++) {
 		printf("%02X ", (sbuf.data[i] & 0xFF));
 	}
 	putchar('\n');
+#endif
 
 	if(nn_send(ctx->reqSock, sbuf.data, sbuf.size, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
 	}
-	printf("moverobot finished\n");
 }
