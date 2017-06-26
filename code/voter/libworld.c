@@ -312,7 +312,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	msgpack_sbuffer_init(&sbuf);
 	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
 
-	//msgpack_pack_array(&pk, 4);
+	msgpack_pack_array(&pk, 4);
 	msgpack_pack_int32(&pk, REQUEST); // operation
 	msgpack_pack_int32(&pk, 0x1234ABCD); // id
 	msgpack_pack_int32(&pk, 0x10000000); // procedure
