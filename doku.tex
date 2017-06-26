@@ -193,7 +193,6 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 
 \clearpage
 \section{Netzwerklibrary}
-\subsection{Auswahl}
 broadcast, publish-suscribe
 
 \begin{table}[h]
@@ -221,9 +220,14 @@ Kriterien: r{\"{a}}umlich, zeitlich getrennt, asynchron m{\"{o}}glich \cite{pubs
 
 \clearpage
 \section{Serialisierung}
-Verschiedene Sprachen, binaerprotokoll ist dann tricky
+Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben, der Rest der Arbeit soll in C geschreiben werden. Die Verwendung verschiedener Sprachen erschwert die Benutzung eines
+Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
-\subsection{Auswahl}
+Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C und eine C\# Version gibt. Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
+eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen nur wenig anf{\"{a}}llig zu sein.
+
+Dies schlie{\ss}t bekannte Serialisierungsformate wie JSON und XML aus. Zur Auswahl bleiben BSON, ProtoBuf und MsgPack. \todo{auswahl} 
+
 \subsection{msgpack}
 dann und dann geschrieben, von wem, language bindings, soll sehr kleine Nachrichten erstellen
 
