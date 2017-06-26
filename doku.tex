@@ -193,7 +193,16 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 
 \clearpage
 \section{Netzwerklibrary}
-broadcast, publish-suscribe
+Um verteilte Systeme zu programmieren bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
+Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern, die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
+der angemessen Weg um Voter und Simulation zu verbinden.
+Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
+sich verbinden k{\"{o}}nnen.
+Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet, da es einfach ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
+diese Funktionalit{\"{a}}t vorgezogen.
+
+Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
+geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Studenten die Sprachwahl nicht eingeschr{\"{a}}nkt wird.
 
 \begin{table}[h]
 \centering
@@ -215,7 +224,6 @@ dann und dann geschrieben, soll halt bestimmte oft gebrauchte Ubertragungsarten 
 \paragraph{{\"{U}}bertragungsarten}
 \subparagraph{Request-Reply}
 \subparagraph{Publish-Suscribe}
-Kriterien: r{\"{a}}umlich, zeitlich getrennt, asynchron m{\"{o}}glich \cite{pubsub}
 \todo{bild}
 
 \clearpage
