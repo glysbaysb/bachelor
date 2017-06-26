@@ -144,13 +144,16 @@ Sehr high level, Bild vom Systemaufbau
 
 \clearpage
 \section{3D Engine}
-warum ueberhaupt noetig
-
-\subsection{Auswahl}
+Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden. Auch wenn sich das Geschehen rein auf einer zweidimensionalen Ebene stattfindet, ist eine dreidimensionale
+Darstellung ansprechender. Eine \textit{3D Engine} bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
+Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen. Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
 
 \paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein, dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
 
 \paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf Windows und Linux ausf{\"{u}}hrbar sein. \todo{hoert sich an als wuerde ich gleichzeitig meinen. Und was ist mit extraplattformen?}
+
+\paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten, zus{\"{a}}tzlich zur reinen 3D Engine, auch eine Physikengine und eine Audioengine.
+Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, daher wird, in dieser Arbeit, jede gameengine einer reinen 3D Engine (wie Blender) vorgezogen.
 
 \paragraph{\todo{namen finden}} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also gibt es einen graphischen Leveleditor, wie kann die Interaktionen zwischen
@@ -165,14 +168,14 @@ Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 
 In dieser Arbeit wird es benutzt um die Welt und die Interkationen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
 abh{\"{a}}ngig von der Position und den Gewichten der Objekt gekippt werden oder die Kamera durch Tastatureingaben bewegt werden.
 
-\subsection{Grafikengine}
+\subsection{Unitys Grafikengine}
 Die in Unity enthaltene Grafikengine ist eine vollwertige 3D-Grafikengine, die es erm{\"{o}}glicht professionelle Videospiele zu programmieren. In dieser Arbeit wird nur
 ein kleiner Teil der Funktionalit{\"{a}}t benutzt; komplexere Features wie die Anzeige von Rauch oder realistischem Wasser sind nicht in der Simulation enthalten.
 
 Notwendig ist es aber das die verschiedenen Objekte in der simulierten Welt in 3D zu sehen sind und sich die Kamera bewegen l{\"{a}}sst um das simulierte Geschehen zu
 verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra implementiert werden.
 
-\subsection{Physikengine}
+\subsection{Unitys Physikengine}
 Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser
 Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 
@@ -181,7 +184,7 @@ Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 \item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von Gewicht und Geschwindigkeit
 \end{itemize}
 
-\subsection{Scripting}
+\subsection{Scripting bei Unity}
 Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, unterst{\"{u}}tzt werden dabei sie Skriptsprachen C\#, JavaScript und Boo.\cite{wiki:unity} Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
 der Objekte \footnote{dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern} auszulesen und zu manipulieren.
 
