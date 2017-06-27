@@ -6,10 +6,16 @@ enum Operation {
 	RESPONSE = 1,
 };
 
+enum Procedure {
+	NONE = 0,
+	MOVE_ROBOT = 0x10000000,
+	CREATE_ROBOT,
+};
+
 struct RPCRequest {
 	enum Operation op;
 	int id;
-	int procedure;
+	enum Procedure procedure;
 	void* params;
 };
 

@@ -315,7 +315,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	msgpack_pack_array(&pk, 4);
 	msgpack_pack_int32(&pk, REQUEST); // operation
 	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, 0x10000000); // procedure
+	msgpack_pack_int32(&pk, MOVE_ROBOT); // procedure
 	msgpack_pack_array(&pk, 3);
 
 	{
