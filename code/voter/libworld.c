@@ -253,6 +253,7 @@ int createRobot(void* ctx) {
 	putchar('\n');
 
 	nn_freemsg(reply);
+	msgpack_sbuffer_destroy(&sbuf);
 }
 
 static void* networkHandler(void* ctx_) {
@@ -359,4 +360,6 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	if(nn_send(ctx->reqSock, sbuf.data, sbuf.size, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
 	}
+
+	msgpack_sbuffer_destroy(&sbuf);
 }
