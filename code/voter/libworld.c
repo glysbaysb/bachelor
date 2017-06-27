@@ -75,7 +75,7 @@ static WorldStatus* parseWorldStatus(char* buf, size_t len) {
 				assert(arr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
 
 				if(parseObject(&ws->objects[i], (msgpack_object_array*)&arrInner->ptr[i].via) < 0)
-					fprintf(stdout, "arr elem %d couldn't be parsed as Object\n", i);
+					fprintf(stdout, "arr elem %zu couldn't be parsed as Object\n", i);
 			}
 			cont = 0;
 		}
@@ -230,7 +230,7 @@ void detachFromWorld(void* ctx_) {
 	free(ctx_);
 }
 
-int createRobot(void* ctx) {
+int createRobot(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 	msgpack_packer pk;
 	msgpack_sbuffer sbuf;
