@@ -10,6 +10,14 @@
 void* connectToWorld(const char* host);
 
 /**
+* @brief creates a new robot in the world specified by ctx
+*
+* @param ctx: the world, result of connectToWorld()
+* @return: 0 on error
+*/
+int createRobot(void* ctx);
+
+/**
  * All the information needed to describe a object in the simulation
  */
 enum SimulationObjectType {
