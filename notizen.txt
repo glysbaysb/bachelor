@@ -48,18 +48,7 @@ Fragen zur Doku
 
 Fragen zum Interface
 ====================
-Voter <-> Welt
---------------
-int rotate(RobotID r, Degree leftWheel, Degree rightWheel);
-int move(RobotID r, bool move); // true = moves, false = stops
-
-simulation -> Anzeige + Controller
-----------------------------------
-struct {
-	float degreeLeftRight,
-		  degreeeFrontBack;
-	Robot robots[numOfRobots];
-};
+wie garantiere ich das nur der richtige Voter den richtigen Roboter steuert?
 
 Blablabla
 =========
