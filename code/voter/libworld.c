@@ -230,32 +230,6 @@ void detachFromWorld(void* ctx_) {
 	free(ctx_);
 }
 
-int createRobot(void* ctx_) {
-	WorldContext* ctx = (WorldContext*)ctx_;
-	msgpack_packer pk;
-	msgpack_sbuffer sbuf;
-
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
-
-	msgpack_pack_array(&pk, 4);
-	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, CREATE_ROBOT); // procedure
-	msgpack_pack_array(&pk, 0);
-
-	int lenOut;
-	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
-
-	for(size_t i = 0; i < lenOut; i++) {
-		printf("%02X ", (reply[i] & 0xFF));
-	}
-	putchar('\n');
-
-	nn_freemsg(reply);
-	msgpack_sbuffer_destroy(&sbuf);
-}
-
 static void* networkHandler(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
@@ -361,5 +335,31 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
 	}
 
+	msgpack_sbuffer_destroy(&sbuf);
+}
+
+int createRobot(void* ctx_) {
+	WorldContext* ctx = (WorldContext*)ctx_;
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 4);
+	msgpack_pack_int32(&pk, REQUEST); // operation
+	msgpack_pack_int32(&pk, 0x1234ABCD); // id
+	msgpack_pack_int32(&pk, CREATE_ROBOT); // procedure
+	msgpack_pack_array(&pk, 0);
+
+	int lenOut;
+	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
+
+	for(size_t i = 0; i < lenOut; i++) {
+		printf("%02X ", (reply[i] & 0xFF));
+	}
+	putchar('\n');
+
+	nn_freemsg(reply);
 	msgpack_sbuffer_destroy(&sbuf);
 }
