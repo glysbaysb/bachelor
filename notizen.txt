@@ -1,13 +1,3 @@
-  Simulation--------------------------------> Anzeigeserver
-  ^       ^             Keine Verfälschung
-  V       V
-------------------------------------------------
- /  ^ ^  |  \
-|  /   \ |   |      Verfälschendes Netzwerk
-| C <--> C   |
-|  \   v_/   |
-+---\ C-</---+
-
 Rundenbasiert
 Controller kriegt alle Position+Neigungswinkel der Roboter <- Simulation macht broadcast
 1 zu 1 oder many C zu 1 R
@@ -32,9 +22,9 @@ Punktesystem mit ringen, rot->gelb->mitte grün. Tote Roboter geben Minuspunkte.
 beim anfahren nachwippen in den Neigungssensoren?
  "    "         "        an der Platte?
 
-Anzeige
-=======
-Platformübergreifend
+Controller
+=========
+berechnet jeder Controller fuer jeden Roboter? Oder nur fuer einen
 
 Fragen
 ======
@@ -49,6 +39,7 @@ Fragen zur Doku
 Fragen zum Interface
 ====================
 wie garantiere ich das nur der richtige Voter den richtigen Roboter steuert?
+kann nn_poll einen timerfd benutzen?
 
 Blablabla
 =========
