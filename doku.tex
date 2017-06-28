@@ -193,12 +193,18 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 
 \clearpage
 \section{Netzwerklibrary}
+Um die Kommunikation zwischen den einzelnen Netzwerkteilnehmern nicht komplett selbst zu implementieren, k{\"{o}}nnen bereits bestehende Netzwerklibraries genutzt werden.
+Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkteilnehmer Funktionen aufzurufen oder sich f{\"{u}}r Multicasts anzumelden, auch wenn man in einem anderen
+\textit{subnet} ist.
+
+\subsection{Anforderungen}
 Um verteilte Systeme zu programmieren bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
-Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern, die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
+
+Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern, die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
 der angemessen Weg um Voter und Simulation zu verbinden.
 Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
-sich verbinden k{\"{o}}nnen.
-Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet, da es einfach ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
+sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, ist im jeweiligen Kapitel.
+Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
 Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
@@ -210,6 +216,7 @@ geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Stud
 	\toprule
 	Name & RPC & Publish-Suscribe & C++ Runtime & andere Sprachen \\
 	\midrule
+	SunRPC & \checkmark & \xmark & \checkmark & C\#, Java, ... \\
 	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, Python, Java, ... \\
 	ZeroMQ\cite{zeromq} & \xmark & \checkmark & \xmark & C\#, Python, Java, ... \enquote{40+ languages} \\
 	nanomsg\cite{nanomsg} & \xmark & \checkmark & \checkmark & C\#, Python, Java, ... (25 Sprachen) \\
@@ -218,13 +225,29 @@ geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Stud
 \caption{Anforderungen an die Netwerkbibliothek}
 \end{table}
 
+Aus dieser vergleichenden Darstellung wird klar das nanomsg am besten geeignet ist; auf die speziellen Eigenschaften wird nun n{\"{a}}her eingegangen.
+
+\clearpage % make sure the table is, at least, in the right section
 \subsection{nanomsg}
-dann und dann geschrieben, soll halt bestimmte oft gebrauchte Ubertragungsarten implementieren
+nanomsg ist eine komplett in C geschrieben Netzwerkbibliothek, mit einer API die der POSIX Socket API gleicht (es wird sich also, zum Beispiel mit nn\_connect() verbunden oder mit nn\_send() gesendet).
+Der gro{\ss}e Vorteil von nanomsg sind die implementierten {\"{U}}bertragungsarten. Je nach gew{\"{u}}nschter {\"{U}}bertragungsart wird ein unterschiedlicher Socket erstellt, dieser erlaubt die
+Interaktion mit den anderen Netzwerkteilnehmern die auch diese {\"{U}}bertragunsart benutzen.
+
+Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 
 \paragraph{{\"{U}}bertragungsarten}
-\subparagraph{Request-Reply}
-\subparagraph{Publish-Suscribe}
-\todo{bild}
+\subparagraph{Request-Reply} Die intuitiv verst{\"{a}}ndlichste Art zu kommunizieren ist es eine Frage zu stellen, die dann vom Gegen{\"{u}}ber beantwortet wird. In nanomsg ist dies die request-reply
+{\"{U}}bertragungsart.
+
+\subparagraph{Publish-Suscribe} Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt
+das f{\"{u}}r mehrere andere (im folgenden \textit{suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte suscriber wichtig sind, kann die Filterung entweder auf Seiten des publisher oder des suscribers vorgenommen werden.
+Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen -- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
+\textit{subnet} befinden.
+
+Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht
+wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
+dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (crash error) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
+\todo{bild https://github.com/dysinger/blog/blob/master/img/2013-09-16-getting-started-with-nanomsg/pubsub.png}
 
 \clearpage
 \section{Serialisierung}
