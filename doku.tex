@@ -33,7 +33,7 @@
 \usepackage{todonotes}
 
 \setstretch{1.433} %entspricht 1,5 in Word 
-\graphicspath{{images/}}
+\graphicspath{{../images/}}
 \MakeOuterQuote{"}
 \pagestyle{fancy}
 \lstset{frame=single,breaklines=true}
@@ -247,7 +247,13 @@ Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}
 Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht
 wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
 dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (crash error) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
-\todo{bild https://github.com/dysinger/blog/blob/master/img/2013-09-16-getting-started-with-nanomsg/pubsub.png}
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{pubsub}
+	\caption{Publish-Suscribe}
+	\label{fig:pubsub}
+\end{figure}
+\todo{sieht kacke aus}
 
 \clearpage
 \section{Serialisierung}
