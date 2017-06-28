@@ -271,7 +271,7 @@ static void* networkHandler(void* ctx_) {
 		}
 	}
 	if(r < 0) {
-		fprintf(stdout, nn_strerror(nn_errno()));
+		fprintf(stdout, "%s", nn_strerror(nn_errno()));
 		return NULL;
 	}
 	
@@ -362,4 +362,6 @@ int createRobot(void* ctx_) {
 
 	nn_freemsg(reply);
 	msgpack_sbuffer_destroy(&sbuf);
+
+	return 0;
 }
