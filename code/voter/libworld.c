@@ -116,7 +116,17 @@ static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 			reply->op = arr->ptr[0].via.i64;
 			reply->id = arr->ptr[1].via.i64;
 			reply->error = arr->ptr[2].via.i64;
-			// todo: params
+
+			msgpack_object_array* paramArr = ((msgpack_object_array*)&arr->ptr[3].via);
+			size_t numOfParams = paramArr->size;
+			if(!(reply->params = calloc(numOfParams, sizeof(int)))) {
+				fprintf(stdout, "can't alloc for params");
+				break;
+			}
+			for(size_t i = 0; i < numOfParams; i++) {
+				reply->params[i] = paramArr->ptr[i].via.i64;
+			}
+
 			break;
 		}
 		default:

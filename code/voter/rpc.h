@@ -16,13 +16,13 @@ struct RPCRequest {
 	enum Operation op;
 	int id;
 	enum Procedure procedure;
-	void* params;
+	int* params;
 };
 
 struct RPCReply {
 	enum Operation op;
 	int id;
 	int error;
-	void* params;
+	int* params;
 };
 #endif
