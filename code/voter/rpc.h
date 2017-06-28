@@ -25,4 +25,6 @@ struct RPCReply {
 	int error;
 	int* params;
 };
+
+void parseRPCReply(char* buf, size_t len, struct RPCReply* reply);
 #endif

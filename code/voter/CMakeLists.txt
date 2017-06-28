@@ -4,7 +4,7 @@ project(voter)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS}")
 
 # Declare the library
-set(SOURCE_FILES_LIB libworld.c)
+set(SOURCE_FILES_LIB libworld.c rpc.c)
 add_library(libworld STATIC
     ${SOURCE_FILES_LIB}
 )
