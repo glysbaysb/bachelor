@@ -277,9 +277,17 @@ Dabei stellt sie, unter anderem, eine Physikengine, eine Grafikengine und eine S
 
 \subsection{Die Roboter}\label{robot}
 In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
-\paragraph{Grafisches Modell} \todo{selbst designen? ball? }
+Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
+gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
+
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt das auch den simulierten Eigenschaften des Roboters entspeicht. Die Grundform des Roboters ist
+ein Kegel, an dessen Seiten befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
+Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
+\todo{Bild}
+
 
 \paragraph{Physikalisches Modell}
+\todo{physisch?}
 Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ und
 seinen Geschwindigkeitsvektor
@@ -292,7 +300,6 @@ maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw.
 $ -3 \leq \Delta y \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
 Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
-
 
 Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
 aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
