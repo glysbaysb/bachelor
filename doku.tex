@@ -378,10 +378,9 @@ Im ganzen System gibt es zwei Schnittstellen:
 \item Die Schnittstelle zwischen Voter und Roboter
 \end{itemize}
 
-\paragraph{Die Schnittstelle zwischen Controller und Voter} ist komplett den Studenten {\"{u}}berlassen.
+\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll.
 
-\paragraph{Die Schnittstelle zwischen Voter und Roboter} wird {\"{u}}ber die Welt geroutet, damit die Welt kontrollieren kann das ein
-Roboter sich pro Runde nur einmal bewegt oder dreht. Die Schnittstelle selbst besteht aus den Funktionen:
+\paragraph{Die Schnittstelle zwischen Voter und Roboter} Diese Schnittstelle besteht aus den Funktionen:
 \begin{lstlisting}[frame=single, language=c] 
 void* connectToWorld();
 void detachFromWorld(void* ctx);
