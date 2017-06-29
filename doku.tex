@@ -144,6 +144,7 @@ Sehr high level, Bild vom Systemaufbau
 
 \clearpage
 \section{3D Engine}
+\subsection{Anforderungen}
 Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden. Auch wenn sich das Geschehen rein auf einer zweidimensionalen Ebene stattfindet, ist eine dreidimensionale
 Darstellung ansprechender. Eine \textit{3D Engine} bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
 Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen. Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
@@ -260,8 +261,9 @@ dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (crash error) oder
 Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben, der Rest der Arbeit soll in C geschreiben werden. Die Verwendung verschiedener Sprachen erschwert die Benutzung eines
 Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
+\subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C und eine C\# Version gibt. Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
-eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen nur wenig anf{\"{a}}llig zu sein.
+eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen anf{\"{a}}llig zu sein.
 
 Dies schlie{\ss}t bekannte Serialisierungsformate wie JSON und XML aus. Zur Auswahl bleiben BSON, ProtoBuf und MsgPack. \todo{auswahl} 
 
