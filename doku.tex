@@ -384,6 +384,7 @@ Im ganzen System gibt es zwei Schnittstellen:
 \begin{lstlisting}[frame=single, language=c] 
 void* connectToWorld();
 void detachFromWorld(void* ctx);
+int createRobot(void* ctx);
 typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
 int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
 void MoveRobot(void* ctx, int id, int diffX, int diffY);
