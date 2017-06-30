@@ -21,11 +21,12 @@ void* createRPCContext(void);
  * @param buf: the message
  * @param len: the length of the message
  *
- * @return < 0 on error
+ * @return < 0 on error.
+ * 	-1 == procedure not found
  */
-int handleRPCReply(void* rpc, char* buf, size_t len);
+int handleRPC(void* rpc, char* buf, size_t len);
 
-typedef void (_cdecl* TypeRPCProcedure)(int* params);
+typedef void (* TypeRPCProcedure)(int* params);
 /**
  * @brief adds a procedure to the rpc context, so it can be called remotely.
  *

@@ -201,10 +201,7 @@ static void* networkHandler(void* ctx_) {
 			pfd[0].revents = 0;
 
 			printf("recvd: %d\n", len);
-			struct RPCReply reply;
-			parseRPCReply(buf, len, &reply);
-
-			printf("rpcreply (%d): %d\n", reply.id, reply.error);
+			handleRPC(ctx->rpc, buf, len);
 		}
 		/* publish - suscribe socket */
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {

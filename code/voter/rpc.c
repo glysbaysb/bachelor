@@ -88,7 +88,25 @@ static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	}
 }
 
-int handleRPC(void* rpc, char* buf, size_t len) {
+int handleRPC(void* rpc_, char* buf, size_t len) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+	RPCReply reply;
+
+	int r;
+	if((r = handleRPC(buf, len, &reply)) < 0) {
+		return r;
+	}
+
+	r = -1;
+	for(int i = 0; i < rpc->numOfProcedures; i++) {
+		if(rpc->procedure[i].num != reply.)
+			continue;
+		rpc->procedure[i].proc(reply.);
+		r = 0;
+	}
+
+	free(reply->params);
+	return r;
 }
 
 void* createRPCContext(void) {
