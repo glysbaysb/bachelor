@@ -11,6 +11,8 @@
 #include "rpc.h"
 
 typedef struct WorldContext_ {
+	void* rpc;
+
 	int subSock;
 	int reqSock;
 
@@ -162,6 +164,13 @@ void* connectToWorld(const char* host) {
 
 		free(wc);
 
+		return NULL;
+	}
+
+	if(!(wc->rpc = createRPCContext())) {
+		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
+
+		free(wc);
 		return NULL;
 	}
 
