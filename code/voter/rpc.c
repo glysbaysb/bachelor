@@ -3,7 +3,31 @@
 
 #include "rpc.h"
 
-void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
+enum Operation {
+	REQUEST = 0,
+	RESPONSE = 1,
+};
+
+struct RPCRequest {
+	enum Operation op;
+	int id;
+	enum Procedure procedure;
+	int* params;
+};
+
+struct RPCReply {
+	enum Operation op;
+	int id;
+	int error;
+	int* params;
+};
+
+typedef struct RPCContext {
+	size_t numOfProcedures;
+	RPCProcedure* procedures;
+} RPCContext;
+
+static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
@@ -58,4 +82,12 @@ void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
 		printf("The data in the buf is invalid format.\n");
 	}
+}
+
+int handleRPC(void* rpc, char* buf, size_t len) {
+}
+
+void* createRPCContext(void) {
+	RPCContext* rpc = (RPCContext*)calloc(1, sizeof(RPCContext);
+	return rpc;
 }
