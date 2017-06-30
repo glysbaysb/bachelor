@@ -22,6 +22,10 @@ struct RPCReply {
 	int* params;
 };
 
+typedef struct RPCProcedure {
+	enum Procedure num;
+	TypeRPCProcedure proc;
+} RPCProcedure;
 typedef struct RPCContext {
 	size_t numOfProcedures;
 	RPCProcedure* procedures;
@@ -90,4 +94,10 @@ int handleRPC(void* rpc, char* buf, size_t len) {
 void* createRPCContext(void) {
 	RPCContext* rpc = (RPCContext*)calloc(1, sizeof(RPCContext);
 	return rpc;
+}
+
+int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc) {
+}
+
+int createRPCRequest(enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
 }
