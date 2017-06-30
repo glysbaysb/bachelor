@@ -265,62 +265,33 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 
 void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	WorldContext* ctx = (WorldContext*)ctx_;
-	msgpack_packer pk;
-	msgpack_sbuffer sbuf;
+	int params[3] = {id, diffX, diffY};
 
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
-
-	msgpack_pack_array(&pk, 4);
-	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, MOVE_ROBOT); // procedure
-	msgpack_pack_array(&pk, 3);
-
-	{
-		msgpack_pack_int32(&pk, id);
-		msgpack_pack_int32(&pk, diffX);
-		msgpack_pack_int32(&pk, diffY);
+	void* out; size_t outLen;
+	if((createRPCRequest(MOVE_ROBOT, &params, 3, out, &outLen) < 0)) {
+		return;
 	}
 
-#if 0
-	for(size_t i = 0; i < sbuf.size; i++) {
-		printf("%02X ", (sbuf.data[i] & 0xFF));
-	}
-	putchar('\n');
-#endif
-
-	if(nn_send(ctx->reqSock, sbuf.data, sbuf.size, 0) < 0) {
+	if(nn_send(ctx->reqSock, out, outLen, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
 	}
+	free(out);
 
-	msgpack_sbuffer_destroy(&sbuf);
+	return;
 }
 
 int createRobot(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
-	msgpack_packer pk;
-	msgpack_sbuffer sbuf;
-
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
-
-	msgpack_pack_array(&pk, 4);
-	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, CREATE_ROBOT); // procedure
-	msgpack_pack_array(&pk, 0);
+	
+	void* out; size_t outLen;
+	if((createRPCRequest(CREATE_ROBOT, NULL, 0, out, &outLen) < 0)) {
+		return -1;
+	}
 
 	int lenOut;
 	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
 
-	for(size_t i = 0; i < lenOut; i++) {
-		printf("%02X ", (reply[i] & 0xFF));
-	}
-	putchar('\n');
-
 	nn_freemsg(reply);
-	msgpack_sbuffer_destroy(&sbuf);
 
 	return 0;
 }

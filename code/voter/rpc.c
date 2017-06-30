@@ -118,4 +118,35 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc) {
 }
 
 int createRPCRequest(enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 4);
+	msgpack_pack_int32(&pk, REQUEST); // operation
+	msgpack_pack_int32(&pk, 0x1234ABCD); // id
+	msgpack_pack_int32(&pk, num); // procedure
+	msgpack_pack_array(&pk, paramsLen);
+
+	for(size_t i = 0; i < paramsLen; i++) {
+		msgpack_pack_int32(&pk, params[i]);
+	}
+
+#if 0
+	for(size_t i = 0; i < sbuf.size; i++) {
+		printf("%02X ", (sbuf.data[i] & 0xFF));
+	}
+	putchar('\n');
+#endif
+
+	if(!(outBuffer = calloc(1, sbuf.size))) {
+		return -1;
+	}
+	memcpy(outBuffer, sbuf.data, sbuf.size);
+	*outBufferLen = sbuf.size;
+
+	msgpack_sbuffer_destroy(&sbuf);
+	return 0;
 }
