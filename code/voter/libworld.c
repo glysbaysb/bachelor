@@ -160,6 +160,7 @@ void* connectToWorld(const char* host) {
 	if((wc->subSock = createSuscriberSocketForWorldStatus(subSockHost)) < 0) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 
+		nn_close(wc->reqSock);
 		free(wc);
 
 		return NULL;
