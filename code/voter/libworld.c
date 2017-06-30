@@ -268,7 +268,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	int params[3] = {id, diffX, diffY};
 
 	void* out; size_t outLen;
-	if((createRPCRequest(MOVE_ROBOT, &params, 3, out, &outLen) < 0)) {
+	if((createRPCRequest(MOVE_ROBOT, params, 3, out, &outLen) < 0)) {
 		return;
 	}
 
@@ -289,7 +289,10 @@ int createRobot(void* ctx_) {
 	}
 
 	int lenOut;
-	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
+	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
+	free(out);
+
+	// todo: parse out robot num
 
 	nn_freemsg(reply);
 

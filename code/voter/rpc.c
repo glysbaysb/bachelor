@@ -8,30 +8,37 @@ enum Operation {
 	RESPONSE = 1,
 };
 
-struct RPCRequest {
+typedef struct RPCRequest {
 	enum Operation op;
 	int id;
 	enum Procedure procedure;
 	int* params;
-};
+} RPCRequest;
 
-struct RPCReply {
+typedef struct RPCReply {
 	enum Operation op;
 	int id;
 	int error;
 	int* params;
-};
+} RPCReply;
 
 typedef struct RPCProcedure {
 	enum Procedure num;
 	TypeRPCProcedure proc;
 } RPCProcedure;
+typedef struct RPCInFlight {
+	int id;
+	RPCProcedure procedure;
+} RPCInFlight;
 typedef struct RPCContext {
 	size_t numOfProcedures;
 	RPCProcedure* procedures;
+
+	size_t numRPCsInFlight;
+	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
+static int parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
@@ -80,37 +87,30 @@ static void parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	}
 	msgpack_unpacked_destroy(&result);
 
-	if (ret == MSGPACK_UNPACK_CONTINUE) {
-		printf("All msgpack_object in the buffer is consumed.\n");
-	}
-	else if (ret == MSGPACK_UNPACK_PARSE_ERROR) {
-		printf("The data in the buf is invalid format.\n");
-	}
+	return ret != MSGPACK_UNPACK_PARSE_ERROR;
 }
 
 int handleRPC(void* rpc_, char* buf, size_t len) {
 	RPCContext* rpc = (RPCContext*)rpc_;
-	RPCReply reply;
+	struct RPCReply reply;
 
-	int r;
-	if((r = handleRPC(buf, len, &reply)) < 0) {
-		return r;
-	}
+	parseRPCReply(buf, len, &reply);
 
-	r = -1;
-	for(int i = 0; i < rpc->numOfProcedures; i++) {
-		if(rpc->procedure[i].num != reply.)
+	int r = -1;
+	for(int i = 0; i < rpc->numRPCsInFlight; i++) {
+		if(rpc->rpcsInFlight[i].id != reply.id)
 			continue;
-		rpc->procedure[i].proc(reply.);
+
+		rpc->rpcsInFlight[i].procedure.proc(reply.params);
 		r = 0;
 	}
 
-	free(reply->params);
+	free(reply.params);
 	return r;
 }
 
 void* createRPCContext(void) {
-	RPCContext* rpc = (RPCContext*)calloc(1, sizeof(RPCContext);
+	RPCContext* rpc = (RPCContext*)calloc(1, sizeof(RPCContext));
 	return rpc;
 }
 
