@@ -116,7 +116,21 @@ void* createRPCContext(void) {
 	return rpc;
 }
 
-int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc) {
+int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+
+	void* new = realloc(rpc->procedures, (rpc->numOfProcedures + 1) * sizeof(RPCProcedure));
+	if(!new)
+		return -1;
+  
+	rpc->procedures = new; 
+	RPCProcedure tmp = {.num = num,
+		.proc = proc
+	};
+	memcpy(&rpc->procedures[rpc->numOfProcedures + 1], &tmp, sizeof(tmp));
+	rpc->numOfProcedures++;
+
+	return 0;
 }
 
 int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
