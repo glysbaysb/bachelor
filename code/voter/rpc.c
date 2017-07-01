@@ -31,6 +31,8 @@ typedef struct RPCInFlight {
 	RPCProcedure procedure;
 } RPCInFlight;
 typedef struct RPCContext {
+	int id;
+
 	size_t numOfProcedures;
 	RPCProcedure* procedures;
 
@@ -117,7 +119,9 @@ void* createRPCContext(void) {
 int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc) {
 }
 
-int createRPCRequest(enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
+int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+
 	msgpack_packer pk;
 	msgpack_sbuffer sbuf;
 
@@ -126,7 +130,7 @@ int createRPCRequest(enum Procedure num, int* params, size_t paramsLen, void* ou
 
 	msgpack_pack_array(&pk, 4);
 	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
+	msgpack_pack_int32(&pk, rpc->id++); // id
 	msgpack_pack_int32(&pk, num); // procedure
 	msgpack_pack_array(&pk, paramsLen);
 

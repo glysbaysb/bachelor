@@ -268,7 +268,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	int params[3] = {id, diffX, diffY};
 
 	void* out; size_t outLen;
-	if((createRPCRequest(MOVE_ROBOT, params, 3, out, &outLen) < 0)) {
+	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, params, 3, out, &outLen) < 0)) {
 		return;
 	}
 
@@ -284,7 +284,7 @@ int createRobot(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 	
 	void* out; size_t outLen;
-	if((createRPCRequest(CREATE_ROBOT, NULL, 0, out, &outLen) < 0)) {
+	if((createRPCRequest(ctx->rpc, CREATE_ROBOT, NULL, 0, out, &outLen) < 0)) {
 		return -1;
 	}
 

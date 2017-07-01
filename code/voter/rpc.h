@@ -41,6 +41,7 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc);
 /**
  * @brief write a RPC message to outBuffer
  *
+ * @param rpc: the rpc context
  * @param num: the procedure to be called
  * @param params: the arguments for that call
  * @param paramsLen: how many arguments there are
@@ -49,5 +50,5 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc);
  *
  * @return <0 on error
  */
-int createRPCRequest(enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen);
+int createRPCRequest(void* rpc, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen);
 #endif
