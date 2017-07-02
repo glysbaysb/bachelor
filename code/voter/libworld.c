@@ -108,6 +108,11 @@ static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* le
 		return NULL;
 	}
 
+	for(size_t i = 0; i < *lenOut; i++) {
+		printf("%02X ", (buf[i] & 0xFF));
+	}
+	putchar('\n');
+
 	return buf;
 }
 
@@ -208,6 +213,11 @@ static void* networkHandler(void* ctx_) {
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
 			pfd[0].revents = 0;
+
+			for(size_t i = 0; i < len; i++) {
+				printf("%02X ", (buf[i] & 0xFF));
+			}
+			putchar('\n');
 
 			printf("recvd: %d\n", len);
 			handleRPC(ctx->rpc, buf, len);
