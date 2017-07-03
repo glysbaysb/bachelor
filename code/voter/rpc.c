@@ -129,7 +129,7 @@ int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc, void* op
 		.proc = proc,
 		.optional = optional
 	};
-	memcpy(&rpc->procedures[rpc->numOfProcedures + 1], &tmp, sizeof(tmp));
+	memcpy(&rpc->procedures[rpc->numOfProcedures], &tmp, sizeof(tmp));
 	rpc->numOfProcedures++;
 
 	return 0;
@@ -149,7 +149,7 @@ static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id)
 		RPCInFlight tmp = {.id = id,
 			.proc = rpc->procedures[i]
 		};
-		memcpy(&rpc->rpcsInFlight[rpc->numRPCsInFlight + 1], &tmp, sizeof(tmp));
+		memcpy(&rpc->rpcsInFlight[rpc->numRPCsInFlight], &tmp, sizeof(tmp));
 		rpc->numRPCsInFlight++;
 
 		found = true;
