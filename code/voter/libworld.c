@@ -167,6 +167,7 @@ void* connectToWorld(const char* host) {
 	if((wc->subSock = createSuscriberSocketForWorldStatus(subSockHost)) < 0) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 
+		nn_shutdown(wc->reqSock, 0);
 		free(wc);
 
 		return NULL;
@@ -175,6 +176,8 @@ void* connectToWorld(const char* host) {
 	if(!(wc->rpc = createRPCContext())) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 
+		nn_shutdown(wc->reqSock, 0);
+		nn_shutdown(wc->subSock, 0);
 		free(wc);
 		return NULL;
 	}
