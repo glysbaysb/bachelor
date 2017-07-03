@@ -181,7 +181,10 @@ int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsL
 		msgpack_pack_int32(&pk, params[i]);
 	}
 
-	
+	if(addRequestToInFlightList(rpc, num, rpc->id) < 0) {
+		msgpack_sbuffer_destroy(&sbuf);
+		return -1;
+	}
 
 #if 0
 	for(size_t i = 0; i < sbuf.size; i++) {
@@ -191,6 +194,7 @@ int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsL
 #endif
 
 	if(!(outBuffer = calloc(1, sbuf.size))) {
+		msgpack_sbuffer_destroy(&sbuf);
 		return -1;
 	}
 	memcpy(outBuffer, sbuf.data, sbuf.size);
