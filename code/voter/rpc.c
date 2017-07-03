@@ -28,7 +28,7 @@ typedef struct RPCProcedure {
 } RPCProcedure;
 typedef struct RPCInFlight {
 	int id;
-	RPCProcedure procedure;
+	TypeRPCProcedure proc;
 } RPCInFlight;
 typedef struct RPCContext {
 	int id;
@@ -103,7 +103,7 @@ int handleRPC(void* rpc_, char* buf, size_t len) {
 		if(rpc->rpcsInFlight[i].id != reply.id)
 			continue;
 
-		rpc->rpcsInFlight[i].procedure.proc(reply.params);
+		rpc->rpcsInFlight[i].proc(reply.params);
 		r = 0;
 	}
 
@@ -133,6 +133,35 @@ int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc) {
 	return 0;
 }
 
+static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id) {
+	bool found = false;
+	for(size_t i = 0; i < rpc->numOfProcedures; i++) {
+		if(rpc->procedures[i].num != num)
+			continue;
+
+		void* new = realloc(rpc->rpcsInFlight, (rpc->numRPCsInFlight + 1) * sizeof(RPCInFlight));
+		if(!new)
+			return -1;
+
+		rpc->rpcsInFlight = new;
+		RPCInFlight tmp = {.id = id,
+			.proc = rpc->procedures[i].proc
+		};
+		memcpy(&rpc->rpcsInFlight[rpc->numRPCsInFlight + 1], &tmp, sizeof(tmp));
+		rpc->numRPCsInFlight++;
+
+		found = true;
+		break;
+	}
+
+	if(!found) {
+		fprintf(stderr, "there was no procedure registered for %d\n", num);
+	}
+
+	return found ? 0 : -2;
+}
+
+
 int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
@@ -151,6 +180,8 @@ int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsL
 	for(size_t i = 0; i < paramsLen; i++) {
 		msgpack_pack_int32(&pk, params[i]);
 	}
+
+	
 
 #if 0
 	for(size_t i = 0; i < sbuf.size; i++) {
