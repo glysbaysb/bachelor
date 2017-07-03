@@ -26,17 +26,18 @@ void* createRPCContext(void);
  */
 int handleRPC(void* rpc, char* buf, size_t len);
 
-typedef void (* TypeRPCProcedure)(int* params);
+typedef void (* TypeRPCProcedure)(void* optional, int* params);
 /**
  * @brief adds a procedure to the rpc context, so it can be called remotely.
  *
  * @param rpc: the rpc context
  * @param num: the id identifiying the procedure
  * @param proc: the procedure itself
+ * @param optional: will be passed to the procedure.
  *
  * @return <0 on error
  */
-int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc);
+int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc, void* optional);
 
 /**
  * @brief write a RPC message to outBuffer

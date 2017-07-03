@@ -25,10 +25,11 @@ typedef struct RPCReply {
 typedef struct RPCProcedure {
 	enum Procedure num;
 	TypeRPCProcedure proc;
+	void* optional;
 } RPCProcedure;
 typedef struct RPCInFlight {
 	int id;
-	TypeRPCProcedure proc;
+	RPCProcedure proc;
 } RPCInFlight;
 typedef struct RPCContext {
 	int id;
@@ -103,7 +104,7 @@ int handleRPC(void* rpc_, char* buf, size_t len) {
 		if(rpc->rpcsInFlight[i].id != reply.id)
 			continue;
 
-		rpc->rpcsInFlight[i].proc(reply.params);
+		rpc->rpcsInFlight[i].proc.proc(rpc->rpcsInFlight[i].proc.optional, reply.params);
 		r = 0;
 	}
 
@@ -116,7 +117,7 @@ void* createRPCContext(void) {
 	return rpc;
 }
 
-int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc) {
+int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc, void* optional) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	void* new = realloc(rpc->procedures, (rpc->numOfProcedures + 1) * sizeof(RPCProcedure));
@@ -125,7 +126,8 @@ int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc) {
   
 	rpc->procedures = new; 
 	RPCProcedure tmp = {.num = num,
-		.proc = proc
+		.proc = proc,
+		.optional = optional
 	};
 	memcpy(&rpc->procedures[rpc->numOfProcedures + 1], &tmp, sizeof(tmp));
 	rpc->numOfProcedures++;
@@ -145,7 +147,7 @@ static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id)
 
 		rpc->rpcsInFlight = new;
 		RPCInFlight tmp = {.id = id,
-			.proc = rpc->procedures[i].proc
+			.proc = rpc->procedures[i]
 		};
 		memcpy(&rpc->rpcsInFlight[rpc->numRPCsInFlight + 1], &tmp, sizeof(tmp));
 		rpc->numRPCsInFlight++;
