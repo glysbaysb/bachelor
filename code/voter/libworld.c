@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <msgpack.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "world.h"
 #include "rpc.h"
@@ -20,7 +21,15 @@ typedef struct WorldContext_ {
 	TypeGetWorldStatusCallback getWorldStatusCallback;
 	pthread_t thread;
 	int stopThread;
+
+	struct {
+		int id;
+		// todo: mutex
+	} createRobot;
+
 } WorldContext;
+
+static void createRobotCallback(void* optional, int* params);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -97,7 +106,7 @@ static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* le
 	assert(lenOut);
 
 	if(nn_send(sock, msg, lenIn, 0) < 0) {
-		fprintf(stderr, "can't send\n");
+		fprintf(stderr, "can't send %s\n", nn_strerror(nn_errno()));
 		return NULL;
 	}
 
@@ -138,6 +147,18 @@ static int createSuscriberSocketForWorldStatus(const char* url) {
 	return sock;
 }
 
+static int initalizeRPC(WorldContext* wc) {
+	if(!(wc->rpc = createRPCContext())) {
+		return -1;
+	}
+
+	if(addProcedure(wc->rpc, CREATE_ROBOT, &createRobotCallback, wc) < 0) {
+		return -2;
+	}
+
+	return 0;
+}
+
 void* connectToWorld(const char* host) {
 	char reqSockHost[128] = {0},
 		 subSockHost[128] = {0};
@@ -173,8 +194,8 @@ void* connectToWorld(const char* host) {
 		return NULL;
 	}
 
-	if(!(wc->rpc = createRPCContext())) {
-		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
+	if(initalizeRPC(wc) < 0) {
+		fprintf(stderr, "can't init rpc\n");
 
 		nn_shutdown(wc->reqSock, 0);
 		nn_shutdown(wc->subSock, 0);
@@ -293,10 +314,17 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	return;
 }
 
+static void createRobotCallback(void* optional, int* params) {
+	WorldContext* ctx = (WorldContext*)optional;
+
+	ctx->createRobot.id = params[0];
+}
+
 int createRobot(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 	
-	void* out; size_t outLen;
+	void* out = NULL;
+	size_t outLen = 0;
 	if((createRPCRequest(ctx->rpc, CREATE_ROBOT, NULL, 0, out, &outLen) < 0)) {
 		return -1;
 	}
@@ -305,9 +333,14 @@ int createRobot(void* ctx_) {
 	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
 	free(out);
 
-	// todo: parse out robot num
+	handleRPC(ctx->rpc, reply, lenOut);
+
+	// todo: replace with mutex
+	while(ctx->createRobot.id == 0) {
+		usleep(100);
+	}
 
 	nn_freemsg(reply);
 
-	return 0;
+	return ctx->createRobot.id;
 }
