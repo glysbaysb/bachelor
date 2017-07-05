@@ -332,6 +332,9 @@ int createRobot(void* ctx_) {
 	int lenOut;
 	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
 	free(out);
+	if(!reply) {
+		return -2;
+	}
 
 	handleRPC(ctx->rpc, reply, lenOut);
 
