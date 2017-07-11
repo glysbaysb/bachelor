@@ -302,7 +302,7 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	int params[3] = {id, diffX, diffY};
 
 	void* out; size_t outLen;
-	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, params, 3, out, &outLen) < 0)) {
+	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, params, 3, &out, &outLen) < 0)) {
 		return;
 	}
 
@@ -325,9 +325,11 @@ int createRobot(void* ctx_) {
 	
 	void* out = NULL;
 	size_t outLen = 0;
-	if((createRPCRequest(ctx->rpc, CREATE_ROBOT, NULL, 0, out, &outLen) < 0)) {
+	if((createRPCRequest(ctx->rpc, CREATE_ROBOT, NULL, 0, &out, &outLen) < 0)) {
 		return -1;
 	}
+
+	printf("rpc request size: %d at %p\n", outLen, out);
 
 	int lenOut;
 	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);

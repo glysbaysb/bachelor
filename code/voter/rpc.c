@@ -164,7 +164,7 @@ static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id)
 }
 
 
-int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen) {
+int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	msgpack_packer pk;
@@ -195,11 +195,11 @@ int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsL
 	putchar('\n');
 #endif
 
-	if(!(outBuffer = calloc(1, sbuf.size))) {
+	if(!(*outBuffer = calloc(1, sbuf.size))) {
 		msgpack_sbuffer_destroy(&sbuf);
 		return -1;
 	}
-	memcpy(outBuffer, sbuf.data, sbuf.size);
+	memcpy(*outBuffer, sbuf.data, sbuf.size);
 	*outBufferLen = sbuf.size;
 
 	msgpack_sbuffer_destroy(&sbuf);

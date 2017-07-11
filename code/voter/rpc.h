@@ -51,5 +51,5 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc, void* opt
  *
  * @return <0 on error
  */
-int createRPCRequest(void* rpc, enum Procedure num, int* params, size_t paramsLen, void* outBuffer, size_t* outBufferLen);
+int createRPCRequest(void* rpc, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen);
 #endif
