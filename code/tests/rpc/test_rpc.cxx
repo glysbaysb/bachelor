@@ -21,8 +21,26 @@ protected:
 	void* rpc;
 public:
 	RPCTest() {
+		if((rpc = createRPCContext()) == NULL) {
+			throw "can't create RPC context";
+		}
 	}
 };
+
+void fake_callback(void* optional, int* params) {
+	(void)optional;
+	(void)params;
+}
+TEST_F(RPCTest, RegisterProcedure) {
+	ASSERT_EQ(addProcedure(rpc, (enum Procedure)1, &fake_callback, (void*)0xABCD9876), 0);
+
+	RPCProcedure procedures = {(enum Procedure)0, NULL, NULL};
+	ASSERT_EQ(getRegisteredProcedures(rpc, &procedures, sizeof(procedures)), 0);
+
+	ASSERT_EQ(procedures.num, 1);
+	ASSERT_EQ(procedures.optional, (void*)0xABCD9876);
+	ASSERT_EQ(procedures.proc, &fake_callback);
+}
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
