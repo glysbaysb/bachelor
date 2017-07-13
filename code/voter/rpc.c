@@ -22,15 +22,6 @@ typedef struct RPCReply {
 	int* params;
 } RPCReply;
 
-typedef struct RPCProcedure {
-	enum Procedure num;
-	TypeRPCProcedure proc;
-	void* optional;
-} RPCProcedure;
-typedef struct RPCInFlight {
-	int id;
-	RPCProcedure proc;
-} RPCInFlight;
 typedef struct RPCContext {
 	int id;
 
@@ -140,6 +131,16 @@ int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc, void* op
 	memcpy(&rpc->procedures[rpc->numOfProcedures], &tmp, sizeof(tmp));
 	rpc->numOfProcedures++;
 
+	return 0;
+}
+
+int getRegisteredProcedures(void* rpc_, RPCProcedure* arr, size_t sizeOfArr) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+
+	if(sizeOfArr < rpc->numOfProcedures)
+		return -1;
+
+	memcpy(arr, rpc->procedures, sizeof(RPCProcedure) * rpc->numOfProcedures);
 	return 0;
 }
 

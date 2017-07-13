@@ -52,4 +52,26 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc, void* opt
  * @return <0 on error
  */
 int createRPCRequest(void* rpc, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen);
+
+typedef struct RPCProcedure {
+	enum Procedure num;
+	TypeRPCProcedure proc;
+	void* optional;
+} RPCProcedure;
+/**
+ * @brief gets a list of the registered procedures
+ *
+ * @param rpc_: the RPC context
+ * @param arr: where the list shall be written
+ * @param sizeOfArr: how many elements may be written
+ *
+ * @return: -1 if the output param is too small, 0 on success
+ */
+int getRegisteredProcedures(void* rpc_, RPCProcedure* arr, size_t sizeOfArr);
+
+typedef struct RPCInFlight {
+	int id;
+	RPCProcedure proc;
+} RPCInFlight;
+
 #endif
