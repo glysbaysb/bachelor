@@ -1,6 +1,10 @@
 #ifndef RPC_H
 #define RPC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum Procedure {
 	NONE = 0,
 	MOVE_ROBOT = 0x10000000,
@@ -73,5 +77,9 @@ typedef struct RPCInFlight {
 	int id;
 	RPCProcedure proc;
 } RPCInFlight;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
-#include "world.h"
+#include <libworld/world.h>
 
 static int myRobot = 0;
 

@@ -13,7 +13,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-#include <voter/rpc.h>
+#include <librpc/rpc.h>
 
 class RPCTest: public ::testing::Test {
 private:
