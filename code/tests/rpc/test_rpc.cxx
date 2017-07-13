@@ -4,6 +4,11 @@
  * The unit tests for the RPC functionality are in this file
  *
  * The tests are:
+ * * adding a callback procedure
+ * * creating a rpc request and checking if it conforms to spec
+ * * creating a rpc request and checking if it is added to the in flight list
+ * * adding a procedure, creating a request and seeing if, as the response is
+ *   parsed, the procedure is called
  * 
  * All test functions are member functions of RPCTest.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
@@ -40,6 +45,18 @@ TEST_F(RPCTest, RegisterProcedure) {
 	ASSERT_EQ(procedures.num, 1);
 	ASSERT_EQ(procedures.optional, (void*)0xABCD9876);
 	ASSERT_EQ(procedures.proc, &fake_callback);
+}
+
+TEST_F(RPCTest, CreateRequest) {
+	int param = 1;
+	// create
+	// check msgpackd data
+}
+
+TEST_F(RPCTest, CheckInFlight) {
+	// create
+	// get in flights
+	// iterate & check
 }
 
 int main(int argc, char** argv) {
