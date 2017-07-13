@@ -201,12 +201,7 @@ static void* networkHandler(void* ctx_) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
 			pfd[0].revents = 0;
 
-			printf("req, rep\n");
-			for(size_t i = 0; i < len; i++) {
-				printf("%02X ", (buf[i] & 0xFF));
-			}
-			putchar('\n');
-
+			printf("recvd: %d\n", len);
 			struct RPCReply reply;
 			parseRPCReply(buf, len, &reply);
 
@@ -216,12 +211,6 @@ static void* networkHandler(void* ctx_) {
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
-
-			printf("pub, sub\n");
-			for(size_t i = 0; i < len; i++) {
-				printf("%02X ", (buf[i] & 0xFF));
-			}
-			putchar('\n');
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
 			ctx->getWorldStatusCallback(ws, ctx->additional);
@@ -320,7 +309,6 @@ int createRobot(void* ctx_) {
 	int lenOut;
 	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
 
-	printf("create robot\n");
 	for(size_t i = 0; i < lenOut; i++) {
 		printf("%02X ", (reply[i] & 0xFF));
 	}
