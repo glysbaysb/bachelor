@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #include "world.h"
-#include "rpc.h"
+#include <librpc/rpc.h>
 
 typedef struct WorldContext_ {
 	void* rpc;
@@ -188,7 +188,7 @@ void* connectToWorld(const char* host) {
 	if((wc->subSock = createSuscriberSocketForWorldStatus(subSockHost)) < 0) {
 		fprintf(stderr, "can't connect: %s\n", nn_strerror(nn_errno()));
 
-		nn_shutdown(wc->reqSock, 0);
+		nn_close(wc->reqSock);
 		free(wc);
 
 		return NULL;
@@ -243,13 +243,18 @@ static void* networkHandler(void* ctx_) {
 			}
 			putchar('\n');
 
-			printf("recvd: %d\n", len);
 			handleRPC(ctx->rpc, buf, len);
 		}
 		/* publish - suscribe socket */
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
+
+			printf("pub, sub\n");
+			for(size_t i = 0; i < len; i++) {
+				printf("%02X ", (buf[i] & 0xFF));
+			}
+			putchar('\n');
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
 			ctx->getWorldStatusCallback(ws, ctx->additional);
