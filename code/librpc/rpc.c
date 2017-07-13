@@ -172,6 +172,16 @@ static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id)
 	return found ? 0 : -2;
 }
 
+int getRPCsInFlight(void* rpc_, RPCInFlight* arr, size_t sizeOfArr) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+
+	if(sizeOfArr < rpc->numRPCsInFlight) {
+		return -1;
+	}
+
+	memcpy(arr, rpc->rpcsInFlight, sizeof(RPCInFlight) * rpc->numRPCsInFlight);
+	return 0;
+}
 
 int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen) {
 	RPCContext* rpc = (RPCContext*)rpc_;

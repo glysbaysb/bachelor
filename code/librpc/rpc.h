@@ -77,6 +77,17 @@ typedef struct RPCInFlight {
 	int id;
 	RPCProcedure proc;
 } RPCInFlight;
+/**
+ * @brief gets a list of the requests still in flight
+ * (i.e. handleRPC() has not been called for the reply)
+ *
+ * @param rpc_: the RPC context
+ * @param arr: where the list shall be written
+ * @param sizeOfArr: how many elements may be written
+ *
+ * @return: -1 if the output param is too small, 0 on success
+ */
+int getRPCsInFlight(void* rpc_, RPCInFlight* arr, size_t sizeOfArr);
 
 #ifdef __cplusplus
 }
