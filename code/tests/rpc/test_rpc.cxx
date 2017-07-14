@@ -101,7 +101,7 @@ void set_opt_to_params(void* optional, int* params) {
 
 TEST_F(RPCTest, CheckHandle) {
 	int changedByRPC = 0;
-	const uint8_t magic = 0xab;
+	const uint8_t magic = 42;
 
 	/* create */
 	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &set_opt_to_params, (void*)&changedByRPC), 0);
