@@ -60,7 +60,7 @@ TEST_F(RPCTest, CreateRequest) {
 	{
 		const unsigned char expected[] = {0x94, // arr with 4 elems
 			0x00, // operation == REQUEST
-			0x00, // ID
+			0x01, // ID
 			0x01, // procedure
 			0x91, // params arr with 1 elem
 			0x01 // the elem

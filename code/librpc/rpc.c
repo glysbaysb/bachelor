@@ -194,7 +194,7 @@ int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsL
 
 	msgpack_pack_array(&pk, 4);
 	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, rpc->id++); // id
+	msgpack_pack_int32(&pk, ++rpc->id); // id
 	msgpack_pack_int32(&pk, num); // procedure
 	msgpack_pack_array(&pk, paramsLen);
 
