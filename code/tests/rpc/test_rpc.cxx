@@ -94,6 +94,37 @@ TEST_F(RPCTest, CheckInFlight) {
 	ASSERT_EQ(inFlight.id, id);
 }
 
+void set_opt_to_params(void* optional, int* params) {
+	int* o = (int*)optional;
+	*o = params[0];
+}
+
+TEST_F(RPCTest, CheckHandle) {
+	int changedByRPC = 0;
+	/* create */
+	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &set_opt_to_params, (void*)&changedByRPC), 0);
+
+	int param = 1;
+	void* out; size_t outLen;
+	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
+
+	uint8_t id = *(int8_t*)(((unsigned char*)out) + 2);
+	free(out);
+
+	/* handle reply */
+	const uint8_t magic = 0xab;
+	const unsigned char reply[] = {0x94,
+		0x01, // Reply
+		id,
+		0x00, // err
+		0x91, // params arr
+		magic
+	};
+
+	ASSERT_EQ(handleRPC(rpc, (const char*)reply, sizeof(reply)), 0);
+	ASSERT_EQ(changedByRPC, magic);
+}
+
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();

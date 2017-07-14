@@ -28,7 +28,7 @@ void* createRPCContext(void);
  * @return < 0 on error.
  * 	-1 == procedure not found
  */
-int handleRPC(void* rpc, char* buf, size_t len);
+int handleRPC(void* rpc, const char* buf, const size_t len);
 
 typedef void (* TypeRPCProcedure)(void* optional, int* params);
 /**
@@ -41,7 +41,7 @@ typedef void (* TypeRPCProcedure)(void* optional, int* params);
  *
  * @return <0 on error
  */
-int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc, void* optional);
+int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure proc, const void* optional);
 
 /**
  * @brief write a RPC message to outBuffer
@@ -55,7 +55,7 @@ int addProcedure(void* rpc, enum Procedure num, TypeRPCProcedure proc, void* opt
  *
  * @return <0 on error
  */
-int createRPCRequest(void* rpc, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen);
+int createRPCRequest(void* rpc, const enum Procedure num, const int* params, const size_t paramsLen, void** outBuffer, size_t* outBufferLen);
 
 typedef struct RPCProcedure {
 	enum Procedure num;
@@ -71,7 +71,7 @@ typedef struct RPCProcedure {
  *
  * @return: -1 if the output param is too small, 0 on success
  */
-int getRegisteredProcedures(void* rpc_, RPCProcedure* arr, size_t sizeOfArr);
+int getRegisteredProcedures(const void* rpc_, RPCProcedure* arr, const size_t sizeOfArr);
 
 typedef struct RPCInFlight {
 	int id;
@@ -87,7 +87,7 @@ typedef struct RPCInFlight {
  *
  * @return: -1 if the output param is too small, 0 on success
  */
-int getRPCsInFlight(void* rpc_, RPCInFlight* arr, size_t sizeOfArr);
+int getRPCsInFlight(const void* rpc_, RPCInFlight* arr, const size_t sizeOfArr);
 
 #ifdef __cplusplus
 }

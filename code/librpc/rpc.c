@@ -32,7 +32,7 @@ typedef struct RPCContext {
 	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static int parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
+static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* reply) {
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
@@ -89,7 +89,7 @@ static int parseRPCReply(char* buf, size_t len, struct RPCReply* reply) {
 	return ret;
 }
 
-int handleRPC(void* rpc_, char* buf, size_t len) {
+int handleRPC(void* rpc_, const char* buf, const size_t len) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 	struct RPCReply reply;
 
@@ -116,7 +116,7 @@ void* createRPCContext(void) {
 	return rpc;
 }
 
-int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc, void* optional) {
+int addProcedure(void* rpc_, const enum Procedure num, const TypeRPCProcedure proc, const void* optional) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	void* new = realloc(rpc->procedures, (rpc->numOfProcedures + 1) * sizeof(RPCProcedure));
@@ -134,8 +134,8 @@ int addProcedure(void* rpc_, enum Procedure num, TypeRPCProcedure proc, void* op
 	return 0;
 }
 
-int getRegisteredProcedures(void* rpc_, RPCProcedure* arr, size_t sizeOfArr) {
-	RPCContext* rpc = (RPCContext*)rpc_;
+int getRegisteredProcedures(const void* rpc_, RPCProcedure* arr, const size_t sizeOfArr) {
+	const RPCContext* rpc = (const RPCContext*)rpc_;
 
 	if(sizeOfArr < rpc->numOfProcedures)
 		return -1;
@@ -144,7 +144,7 @@ int getRegisteredProcedures(void* rpc_, RPCProcedure* arr, size_t sizeOfArr) {
 	return 0;
 }
 
-static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id) {
+static int addRequestToInFlightList(RPCContext* rpc, const enum Procedure num, const int id) {
 	bool found = false;
 	for(size_t i = 0; i < rpc->numOfProcedures; i++) {
 		if(rpc->procedures[i].num != num)
@@ -172,8 +172,8 @@ static int addRequestToInFlightList(RPCContext* rpc, enum Procedure num, int id)
 	return found ? 0 : -2;
 }
 
-int getRPCsInFlight(void* rpc_, RPCInFlight* arr, size_t sizeOfArr) {
-	RPCContext* rpc = (RPCContext*)rpc_;
+int getRPCsInFlight(const void* rpc_, RPCInFlight* arr, const size_t sizeOfArr) {
+	const RPCContext* rpc = (const RPCContext*)rpc_;
 
 	if(sizeOfArr < rpc->numRPCsInFlight) {
 		return -1;
@@ -183,7 +183,7 @@ int getRPCsInFlight(void* rpc_, RPCInFlight* arr, size_t sizeOfArr) {
 	return 0;
 }
 
-int createRPCRequest(void* rpc_, enum Procedure num, int* params, size_t paramsLen, void** outBuffer, size_t* outBufferLen) {
+int createRPCRequest(void* rpc_, const enum Procedure num, const int* params, const size_t paramsLen, void** outBuffer, size_t* outBufferLen) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	msgpack_packer pk;
