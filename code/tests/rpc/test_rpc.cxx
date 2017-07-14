@@ -76,9 +76,22 @@ TEST_F(RPCTest, CreateRequest) {
 }
 
 TEST_F(RPCTest, CheckInFlight) {
-	// create
-	// get in flights
-	// iterate & check
+	/* create */
+	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &fake_callback, (void*)0xABCD9876), 0);
+
+	int param = 1;
+	void* out; size_t outLen;
+	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
+
+	int8_t id = *(int8_t*)(((unsigned char*)out) + 2);
+	free(out);
+
+	/* get in flights */
+	RPCInFlight inFlight = {0};
+	ASSERT_EQ(getRPCsInFlight(rpc, &inFlight, 1), 0);
+
+	/* iterate & check */
+	ASSERT_EQ(inFlight.id, id);
 }
 
 int main(int argc, char** argv) {
