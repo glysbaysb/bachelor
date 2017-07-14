@@ -48,9 +48,31 @@ TEST_F(RPCTest, RegisterProcedure) {
 }
 
 TEST_F(RPCTest, CreateRequest) {
+	addProcedure(rpc, (enum Procedure)1, &fake_callback, (void*)0xABCD9876);
+
 	int param = 1;
-	// create
-	// check msgpackd data
+	void* out; size_t outLen;
+	if((createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen) < 0)) {
+		FAIL() << "can't createRPCRequest()";
+		return;
+	}
+	/* check msgpackd data */
+	{
+		const unsigned char expected[] = {0x94, // arr with 4 elems
+			0x00, // operation == REQUEST
+			0x00, // ID
+			0x01, // procedure
+			0x91, // params arr with 1 elem
+			0x01 // the elem
+		};
+		auto data = (const unsigned char*)out;
+
+		ASSERT_TRUE(sizeof(expected) <= outLen);
+		// todo: actually parse the messagepack'd data
+		ASSERT_TRUE(memcmp(expected, data, sizeof(expected)) == 0)
+			<< "msgpacked data not as expected";	
+	}
+	free(out);
 }
 
 TEST_F(RPCTest, CheckInFlight) {
