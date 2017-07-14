@@ -106,7 +106,7 @@ TEST_F(RPCTest, CheckHandle) {
 	/* create */
 	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &set_opt_to_params, (void*)&changedByRPC), 0);
 
-	int param = magic;
+	int param = 1;
 	void* out; size_t outLen;
 	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
 

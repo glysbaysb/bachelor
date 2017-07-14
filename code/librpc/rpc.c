@@ -36,14 +36,16 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
+	const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
+					"float", "str", "array", "map", "bin", "ext"};
 	size_t off = 0;
-	if(msgpack_unpack_next(&result, buf, len, &off) < 0) {
+	int ret = msgpack_unpack_next(&result, buf, len, &off);
+	if (ret != MSGPACK_UNPACK_SUCCESS) {
 		msgpack_unpacked_destroy(&result);
 		return -1;
 	}
 	msgpack_object obj = result.data;
 
-	int ret;
 	switch(obj.type) {
 	case MSGPACK_OBJECT_ARRAY:{
 		msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
