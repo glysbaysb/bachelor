@@ -6,11 +6,14 @@
 #include <assert.h>
 #include <msgpack.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "world.h"
-#include "rpc.h"
+#include <librpc/rpc.h>
 
 typedef struct WorldContext_ {
+	void* rpc;
+
 	int subSock;
 	int reqSock;
 
@@ -18,7 +21,15 @@ typedef struct WorldContext_ {
 	TypeGetWorldStatusCallback getWorldStatusCallback;
 	pthread_t thread;
 	int stopThread;
+
+	struct {
+		int id;
+		// todo: mutex
+	} createRobot;
+
 } WorldContext;
+
+static void createRobotCallback(void* optional, int* params);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -95,7 +106,7 @@ static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* le
 	assert(lenOut);
 
 	if(nn_send(sock, msg, lenIn, 0) < 0) {
-		fprintf(stderr, "can't send\n");
+		fprintf(stderr, "can't send %s\n", nn_strerror(nn_errno()));
 		return NULL;
 	}
 
@@ -105,6 +116,11 @@ static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* le
 		fprintf(stderr, "can't recv\n");
 		return NULL;
 	}
+
+	for(size_t i = 0; i < *lenOut; i++) {
+		printf("%02X ", (buf[i] & 0xFF));
+	}
+	putchar('\n');
 
 	return buf;
 }
@@ -129,6 +145,18 @@ static int createSuscriberSocketForWorldStatus(const char* url) {
 	}
 
 	return sock;
+}
+
+static int initalizeRPC(WorldContext* wc) {
+	if(!(wc->rpc = createRPCContext())) {
+		return -1;
+	}
+
+	if(addProcedure(wc->rpc, CREATE_ROBOT, &createRobotCallback, wc) < 0) {
+		return -2;
+	}
+
+	return 0;
 }
 
 void* connectToWorld(const char* host) {
@@ -163,6 +191,15 @@ void* connectToWorld(const char* host) {
 		nn_close(wc->reqSock);
 		free(wc);
 
+		return NULL;
+	}
+
+	if(initalizeRPC(wc) < 0) {
+		fprintf(stderr, "can't init rpc\n");
+
+		nn_shutdown(wc->reqSock, 0);
+		nn_shutdown(wc->subSock, 0);
+		free(wc);
 		return NULL;
 	}
 
@@ -201,11 +238,12 @@ static void* networkHandler(void* ctx_) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
 			pfd[0].revents = 0;
 
-			printf("recvd: %d\n", len);
-			struct RPCReply reply;
-			parseRPCReply(buf, len, &reply);
+			for(size_t i = 0; i < len; i++) {
+				printf("%02X ", (buf[i] & 0xFF));
+			}
+			putchar('\n');
 
-			printf("rpcreply (%d): %d\n", reply.id, reply.error);
+			handleRPC(ctx->rpc, buf, len);
 		}
 		/* publish - suscribe socket */
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
@@ -260,62 +298,53 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 
 void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	WorldContext* ctx = (WorldContext*)ctx_;
-	msgpack_packer pk;
-	msgpack_sbuffer sbuf;
+	int params[3] = {id, diffX, diffY};
 
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
-
-	msgpack_pack_array(&pk, 4);
-	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, MOVE_ROBOT); // procedure
-	msgpack_pack_array(&pk, 3);
-
-	{
-		msgpack_pack_int32(&pk, id);
-		msgpack_pack_int32(&pk, diffX);
-		msgpack_pack_int32(&pk, diffY);
+	void* out; size_t outLen;
+	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, params, 3, &out, &outLen) < 0)) {
+		return;
 	}
 
-#if 0
-	for(size_t i = 0; i < sbuf.size; i++) {
-		printf("%02X ", (sbuf.data[i] & 0xFF));
-	}
-	putchar('\n');
-#endif
-
-	if(nn_send(ctx->reqSock, sbuf.data, sbuf.size, 0) < 0) {
+	if(nn_send(ctx->reqSock, out, outLen, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
 	}
+	free(out);
 
-	msgpack_sbuffer_destroy(&sbuf);
+	return;
+}
+
+static void createRobotCallback(void* optional, int* params) {
+	WorldContext* ctx = (WorldContext*)optional;
+
+	ctx->createRobot.id = params[0];
 }
 
 int createRobot(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
-	msgpack_packer pk;
-	msgpack_sbuffer sbuf;
+	
+	void* out = NULL;
+	size_t outLen = 0;
+	if((createRPCRequest(ctx->rpc, CREATE_ROBOT, NULL, 0, &out, &outLen) < 0)) {
+		return -1;
+	}
 
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
-
-	msgpack_pack_array(&pk, 4);
-	msgpack_pack_int32(&pk, REQUEST); // operation
-	msgpack_pack_int32(&pk, 0x1234ABCD); // id
-	msgpack_pack_int32(&pk, CREATE_ROBOT); // procedure
-	msgpack_pack_array(&pk, 0);
+	printf("rpc request size: %d at %p\n", outLen, out);
 
 	int lenOut;
-	char* reply = synchronCall(ctx->reqSock, sbuf.data, sbuf.size, &lenOut);
-
-	for(size_t i = 0; i < lenOut; i++) {
-		printf("%02X ", (reply[i] & 0xFF));
+	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
+	free(out);
+	if(!reply) {
+		return -2;
 	}
-	putchar('\n');
+
+	handleRPC(ctx->rpc, reply, lenOut);
+
+	// todo: replace with mutex
+	while(ctx->createRobot.id == 0) {
+		usleep(100);
+	}
 
 	nn_freemsg(reply);
-	msgpack_sbuffer_destroy(&sbuf);
 
-	return 0;
+	return ctx->createRobot.id;
 }

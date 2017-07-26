@@ -1,6 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @brief connects this voter to the simulated world
@@ -84,4 +86,7 @@ void MoveRobot(void* ctx, int id, int diffX, int diffY);
  */
 void detachFromWorld(void* ctx_);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
