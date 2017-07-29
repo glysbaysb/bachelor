@@ -42,7 +42,7 @@
 
 \newcommand{\xmark}{\text{\sffamily X}} % gegensymbol zu \checkmark
 
-\newcommand{\includevisio}[2][]{\includegraphics[clip, trim=1cm 1cm 1cm 1cm, #1]{#2}}
+\newcommand{\includevisio}[2][]{\includegraphics[#1]{#2}}
 
 \titlehead{{\large Fachhochschule S{\"{u}}dwestfalen} \\ Fachbereich f{\"{u}}r Elektrotechnik und Informationstechnik \\ Studiengang Technische Informatik}
 \subject{\vspace{2cm} Bachelorarbeit}
@@ -205,11 +205,10 @@ Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern
 der angemessen Weg um Voter und Simulation zu verbinden.
 Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
 sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, ist im jeweiligen Kapitel.
-Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
+Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
-Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
-geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Studenten die Sprachwahl nicht eingeschr{\"{a}}nkt wird.
+Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Studenten die Sprachwahl nicht eingeschr{\"{a}}nkt wird.
 
 \begin{table}[h]
 \centering
