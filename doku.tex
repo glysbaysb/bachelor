@@ -208,7 +208,7 @@ sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der I
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
-Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Studenten die Sprachwahl nicht eingeschr{\"{a}}nkt wird.
+Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
 
 \begin{table}[h]
 \centering
@@ -405,8 +405,14 @@ jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird 
 
 \subsection{Fehlermodell}
 \label{error-model}
+Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren welche Art von Fehlern
+{\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
+die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o}}st werden.
+
 \paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, allerdings nur \todo{wie doll halt mein hammingcode ist}
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{5}$ aller Bits verf{\"{a}}lscht werden. Durch die Benutzung des \todo{Auswahl: Kanal? Faltung?}code k{\"{o}}nnen
+$n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Byte erkannt werden. \todo{was wird gemacht wenn es
+zu viele waren?}
 
 \subsection{Voter}
 \label{voter}
