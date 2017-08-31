@@ -23,6 +23,7 @@ add_subdirectory(librpc)
 add_subdirectory(libworld)
 add_subdirectory(voter)
 add_subdirectory(tests)
+add_subdirectory(test_programms)
 
 set(SOURCE_FILES_MSGPACK msgpack.c)
 add_executable(genmsgpack ${SOURCE_FILES_MSGPACK})
