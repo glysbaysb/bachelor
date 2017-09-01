@@ -49,6 +49,8 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <assert.h>
 
 #define __in
 #define __out
@@ -326,8 +328,29 @@ void decode_bch(__in int recd[48], __in int alpha_to[64], __in int index_of[64])
 	}
 }
 
+static uint8_t get_bit(const uint8_t* data, const int pos) {
+	return ((data[pos / 8]) & (1 << (pos % 8))) > 0;
+}
 
-int main()
+static void pack(const int* data, const size_t len, uint8_t* out, const size_t outLen) {
+	assert(outLen >= len/8 && "pack(): output buffer not big enough\n");
+
+	for (size_t i = 0; i < len; i++) {
+		uint8_t* byte = (out + (i / 8));
+		uint8_t bit = data[i] << (i % 8);
+		*byte |= bit;
+	}
+}
+
+static void unpack(const uint8_t* data, const size_t len, int* out, const size_t outElems) {
+	assert(outElems && outElems >= len*8 && "unpack(): output buffer not big enough\n");
+
+	for (size_t i = 0; i < len; i++) {
+		out[i] = get_bit(data, i);
+	}
+}
+
+int main(int argc, char** argv)
 {
 	int             seed = 1;
 	int             alpha_to[64], index_of[64], g[13];
@@ -359,6 +382,12 @@ int main()
 			printf("\n");
 	}
 	printf("\n");
+
+	uint8_t packed[48/8] = {0};
+	size_t sizeofPacked = sizeof(packed);
+	pack(recd, sizeof(recd) / sizeof(recd[0]), packed, sizeofPacked);
+	size_t recdElems = sizeof(recd) / sizeof(recd[0]);
+	unpack(packed, sizeofPacked, recd, recdElems);
 
 	/* ERRORS */
 	int             numerr, errpos[64], decerror = 0;
@@ -397,6 +426,5 @@ int main()
 		printf("%d message decoding errors\n", decerror);
 	else
 		printf("Succesful decoding\n");
-
 	return 0;
 }
