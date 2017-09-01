@@ -50,13 +50,12 @@
 #include <math.h>
 #include <stdio.h>
 
+#define __in
+#define __out
+
 const int       m = 6, n = 63, k = 36, t = 2, d = 5;
 const int       length = 48;
 const int       p[7] = {1, 1, 0, 0, 0, 0, 1};		/* irreducible polynomial */
-int             alpha_to[64], index_of[64], g[13];
-int             recd[48], data[36], bb[13];
-int             numerr, errpos[64], decerror = 0;
-
 
 /*
  * generate GF(2**m) from the irreducible polynomial p(X) in p[0]..p[m]
@@ -64,7 +63,7 @@ int             numerr, errpos[64], decerror = 0;
  * polynomial form -> index form  index_of[j=alpha**i] = i alpha=2 is the
  * primitive element of GF(2**m) 
  */
-void generate_gf()
+void generate_gf(__out int alpha_to[64], __out int index_of[64])
 {
 	int mask = 1;
 
@@ -97,11 +96,11 @@ void generate_gf()
  * Compute generator polynomial of BCH code of length = 48, redundancy = 12
  * (OK, this is not very efficient, but we only do it once, right? :)
  */
-void gen_poly()
+void gen_poly(__in int g[13], __out int alpha_to[64], __out int index_of[64])
 {
 	int    ii, jj, ll, kaux;
-	int             test, aux, nocycles, root, noterms, rdncy;
-	int             cycle[13][7], size[13], min[13], zeros[13];
+	int    test, aux, nocycles, root, noterms, rdncy;
+	int    cycle[13][7], size[13], min[13], zeros[13];
 
 	/* Generate cycle sets modulo 63 */
 	cycle[0][0] = 0; size[0] = 1;
@@ -197,28 +196,25 @@ void gen_poly()
 /* 
  * Calculate redundant bits bb[], codeword is c(X) = data(X)*X**(n-k)+ bb(X)
  */
-void encode_bch()
+void encode_bch(__in int data[36], __in int g[13], __out int bb[])
 {
-	int    j;
-	int    feedback;
-
 	for (int i = 0; i < length - k; i++)
 		bb[i] = 0;
 
 	for (int i = k - 1; i >= 0; i--) {
-		feedback = data[i] ^ bb[length - k - 1];
+		int feedback = data[i] ^ bb[length - k - 1];
 
 		if (feedback != 0) {
-			for (j = length - k - 1; j > 0; j--) {
+			for (int j = length - k - 1; j > 0; j--) {
 				if (g[j] != 0) {
 					bb[j] = bb[j - 1] ^ feedback;
 				} else {
 					bb[j] = bb[j - 1];
 				}
 			}
-			bb[0] = g[0] && feedback;
+			bb[0] = g[0] & feedback;
 		} else {
-			for (j = length - k - 1; j > 0; j--) {
+			for (int j = length - k - 1; j > 0; j--) {
 				bb[j] = bb[j - 1];
 			}
 			bb[0] = 0;
@@ -231,9 +227,9 @@ void encode_bch()
  * We do not need the Berlekamp algorithm to decode.
  * We solve before hand two equations in two variables.
  */
-void decode_bch()
+void decode_bch(__in int recd[48], __in int alpha_to[64], __in int index_of[64])
 {
-	int    i, j, q;
+	int    q;
 	int             elp[3], s[5], s3;
 	int             count = 0, syn_error = 0;
 	int             loc[3], err[3], reg[3];
@@ -241,12 +237,13 @@ void decode_bch()
 
 	/* first form the syndromes */
 	printf("s[] = (");
-	for (i = 1; i <= 4; i++) {
+	for (int i = 1; i <= 4; i++) {
 		s[i] = 0;
-		for (j = 0; j < length; j++) {
+		for (int j = 0; j < length; j++) {
 			if (recd[j] != 0) {
 				s[i] ^= alpha_to[(i * j) % n];
 			}
+		}
 		if (s[i] != 0) {
 			syn_error = 1;	/* set flag if non-zero syndrome */
 		}
@@ -282,21 +279,21 @@ void decode_bch()
 
 				printf("sigma(x) = ");
 
-				for (i = 0; i <= 2; i++) {
+				for (int i = 0; i <= 2; i++) {
 					printf("%3d ", elp[i]);
 				}
 				printf("\n");
 				printf("Roots: ");
 
 				/* find roots of the error location polynomial */
-				for (i = 1; i <= 2; i++)
+				for (int i = 1; i <= 2; i++)
 					reg[i] = elp[i];
 				count = 0;
 
 				/* Chien search */
-				for (i = 1; i <= 63; i++) { 
+				for (int i = 1; i <= 63; i++) { 
 					q = 1;
-					for (j = 1; j <= 2; j++) {
+					for (int j = 1; j <= 2; j++) {
 						if (reg[j] != -1) {
 							reg[j] = (reg[j] + j) % n;
 							q ^= alpha_to[reg[j]];
@@ -314,7 +311,7 @@ void decode_bch()
 
 				/* no. roots = degree of elp hence 2 errors */
 				if (count == 2)	{
-					for (i = 0; i < 2; i++) {
+					for (int i = 0; i < 2; i++) {
 						recd[loc[i]] ^= 1;
 					}
 				}
@@ -332,26 +329,31 @@ void decode_bch()
 
 int main()
 {
-	int             i, seed = 1;
-	generate_gf();			/* generate the Galois Field GF(2**m) */
-	gen_poly();				/* Compute the generator polynomial of BCH code */
+	int             seed = 1;
+	int             alpha_to[64], index_of[64], g[13];
+
+	generate_gf(alpha_to, index_of); /* generate the Galois Field GF(2**m) */
+	gen_poly(g, alpha_to, index_of); /* Compute the generator polynomial of BCH code */
 
 	printf("This is a (%d, %d, %d) binary BCH code\n", length, k, d);
 
 	srandom(seed);
 	/* Randomly generate DATA */
-	for (i = 0; i < k; i++)
+	int data[36];
+	for (int i = 0; i < k; i++)
 		data[i] = (random() & 67108864) >> 26;
 
 	/* ENCODE */
-	encode_bch();			/* encode data */
+	int bb[13];
+	encode_bch(data, g, bb);			/* encode data */
  
-	for (i = 0; i < length - k; i++)
+	int recd[48];
+	for (int i = 0; i < length - k; i++)
 		recd[i] = bb[i];	/* first (length-k) bits are redundancy */
-	for (i = 0; i < k; i++)
+	for (int i = 0; i < k; i++)
 		recd[i + length - k] = data[i];	/* last k bits are data */
 	printf("c(x) = ");
-	for (i = 0; i < length; i++) {
+	for (int i = 0; i < length; i++) {
 		printf("%1d", recd[i]);
 		if (i && ((i % 70) == 0))
 			printf("\n");
@@ -359,37 +361,42 @@ int main()
 	printf("\n");
 
 	/* ERRORS */
+	int             numerr, errpos[64], decerror = 0;
     printf("Enter the number of errors and their positions: ");
     scanf("%d", &numerr);
-	for (i = 0; i < numerr; i++)
-		{
+	for (int i = 0; i < numerr; i++)
+	{
 		scanf("%d", &errpos[i]);
 		recd[errpos[i]] ^= 1;
-		}
+	}
 	printf("r(x) = ");
-	for (i = 0; i < length; i++)
+	for (int i = 0; i < length; i++)
 		printf("%1d", recd[i]);
 	printf("\n");
 
     /* DECODE */
-	decode_bch();
+	decode_bch(recd, alpha_to, index_of);
 	/*
 	 * print out original and decoded data
 	 */
 	printf("Results:\n");
 	printf("original data  = ");
-	for (i = 0; i < k; i++)
+	for (int i = 0; i < k; i++)
 		printf("%1d", data[i]);
 	printf("\nrecovered data = ");
-	for (i = length - k; i < length; i++)
+	for (int i = length - k; i < length; i++)
 		printf("%1d", recd[i]);
 	printf("\n");
 	/* decoding errors: we compare only the data portion */
-	for (i = length - k; i < length; i++)
-		if (data[i - length + k] != recd[i])
+	for (int i = length - k; i < length; i++) {
+		if (data[i - length + k] != recd[i]) {
 			decerror++;
+		}
+	}
 	if (decerror)
 		printf("%d message decoding errors\n", decerror);
 	else
 		printf("Succesful decoding\n");
+
+	return 0;
 }
