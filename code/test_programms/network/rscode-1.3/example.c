@@ -45,84 +45,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ecc.h"
- 
-unsigned char msg[] = "Nervously I loaded the twin ducks aboard the revolving pl\
-atform.";
-unsigned char codeword[256];
- 
-/* Some debugging routines to introduce errors or erasures
-   into a codeword. 
-   */
 
-/* Introduce a byte error at LOC */
-void
-byte_err (int err, int loc, unsigned char *dst)
-{
-  printf("Adding Error at loc %d, data %#x\n", loc, dst[loc-1]);
-  dst[loc-1] ^= err;
+#define MSG_LENGTH (255 - NPAR)
+#define RECVD_MSG_LENGTH (MSG_LENGTH + NPAR)
+
+static void _print(const unsigned char* msg, const size_t len) {
+	for(size_t i = 0; i < len; i++) {
+		putchar(*(msg + i));
+	}
 }
 
-/* Pass in location of error (first byte position is
-   labeled starting at 1, not 0), and the codeword.
-*/
-void
-byte_erasure (int loc, unsigned char dst[], int cwsize, int erasures[]) 
-{
-  printf("Erasure at loc %d, data %#x\n", loc, dst[loc-1]);
-  dst[loc-1] = 0;
-}
-
-
-int
-main (int argc, char *argv[])
-{
- 
-  int erasures[16];
-  int nerasures = 0;
-
-  /* Initialization the ECC library */
- 
-  initialize_ecc ();
- 
-  /* ************** */
- 
+static void _decode(void) {
   /* Encode data into codeword, adding NPAR parity bytes */
-  encode_data(msg, sizeof(msg), codeword);
- 
-  printf("Encoded data is: \"%s\"\n", codeword);
- 
-#define ML (sizeof (msg) + NPAR)
+  unsigned char codeword[RECVD_MSG_LENGTH];
+  int i = 0,
+	  c;
+  while((c = getchar()) != EOF) {
+    codeword[i % RECVD_MSG_LENGTH] = c;
+	i++;
+	if(!(i && i % RECVD_MSG_LENGTH == 0))
+	  continue;
 
-
-  /* Add one error and two erasures */
-  byte_err(0x35, 3, codeword);
-
-  byte_err(0x23, 17, codeword);
-  byte_err(0x34, 19, codeword);
-
-
-  printf("with some errors: \"%s\"\n", codeword);
-
-  /* We need to indicate the position of the erasures.  Eraseure
-     positions are indexed (1 based) from the end of the message... */
-
-  erasures[nerasures++] = ML-17;
-  erasures[nerasures++] = ML-19;
-
- 
-  /* Now decode -- encoded codeword size must be passed */
-  decode_data(codeword, ML);
-
-  /* check if syndrome is all zeros */
-  if (check_syndrome () != 0) {
-    correct_errors_erasures (codeword, 
-			     ML,
-			     nerasures, 
-			     erasures);
- 
-    printf("Corrected codeword: \"%s\"\n", codeword);
+    /* Now decode -- encoded codeword size must be passed */
+    decode_data(codeword, RECVD_MSG_LENGTH);
+    /* check if syndrome is all zeros */
+    if(check_syndrome () != 0) {
+      correct_errors_erasures (codeword, 
+	   	     RECVD_MSG_LENGTH,
+	   	     0, 
+		     NULL);
+    }
+	_print(codeword, MSG_LENGTH);
   }
+
+  /* encode & print rest */
+  decode_data(codeword, i % RECVD_MSG_LENGTH);
+  /* check if syndrome is all zeros */
+  if(check_syndrome () != 0) {
+    correct_errors_erasures (codeword, 
+  	     i % RECVD_MSG_LENGTH,
+   	     0, 
+	     NULL);
+  } 
+  _print(codeword, MSG_LENGTH);
+}
+
+static void _encode() {
+  unsigned char codeword[RECVD_MSG_LENGTH],
+                message[MSG_LENGTH] = {0};
+  int i = 0,
+	  c;
+  while((c = getchar()) != EOF) {
+    message[i % MSG_LENGTH] = c;
+	i++;
+	if(!(i && i % MSG_LENGTH == 0))
+		continue;
+
+    encode_data(message, MSG_LENGTH, codeword);
+    _print(codeword, RECVD_MSG_LENGTH);
+  }
+
+  /* decode & print rest */
+  encode_data(message, i % MSG_LENGTH, codeword);
+  _print(codeword, RECVD_MSG_LENGTH);
+}
+
+int main (int argc, char *argv[])
+{
+  if(argc < 1) {
+    printf("%s [enc|dec]", argv[0]);
+	return 0;
+  }
+
+  initialize_ecc();
+  
+  if(strcmp(argv[1], "enc") == 0) {
+    _encode();
+  } else {
+    _decode();
+  }
+
+#if 0 
+
+
+  
  
+  printf("Corrected codeword: \"%s\"\n", codeword);
+#endif 
   exit(0);
 }
 
