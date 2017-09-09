@@ -10,3 +10,8 @@ set(SOURCE_FILES_BCH bch4836.c)
 add_executable(bch ${SOURCE_FILES_BCH})
 target_link_libraries(bch
 )
+
+set(SOURCE_FILES_RS rs.c)
+add_executable(rs ${SOURCE_FILES_RS})
+target_link_libraries(rs
+)
