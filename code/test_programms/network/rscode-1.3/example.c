@@ -58,8 +58,8 @@ static void _print(const unsigned char* msg, const size_t len) {
 static void _decode(void) {
   /* Encode data into codeword, adding NPAR parity bytes */
   unsigned char codeword[RECVD_MSG_LENGTH];
-  int i = 0,
-	  c;
+  size_t i = 0;
+  int c;
   while((c = getchar()) != EOF) {
     codeword[i % RECVD_MSG_LENGTH] = c;
 	i++;
@@ -87,14 +87,14 @@ static void _decode(void) {
    	     0, 
 	     NULL);
   } 
-  _print(codeword, MSG_LENGTH);
+  _print(codeword, MSG_LENGTH); // mhm, lieber zu viel ausgeben als zu wenig
 }
 
 static void _encode() {
   unsigned char codeword[RECVD_MSG_LENGTH],
                 message[MSG_LENGTH] = {0};
-  int i = 0,
-	  c;
+  size_t i = 0;
+  int c;
   while((c = getchar()) != EOF) {
     message[i % MSG_LENGTH] = c;
 	i++;
@@ -125,13 +125,6 @@ int main (int argc, char *argv[])
     _decode();
   }
 
-#if 0 
-
-
-  
- 
-  printf("Corrected codeword: \"%s\"\n", codeword);
-#endif 
   exit(0);
 }
 
