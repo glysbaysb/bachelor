@@ -78,15 +78,15 @@ int main(int argc, char*argv[])
 		if(decode == 0) {
 			unsigned char msg_enc[n_enc];   // encoded data message
 			fec_encode(q, n, data, msg_enc);
-			for (i=0; i<n_enc; i++) {
-				printf("%c", (unsigned char) (msg_enc[i]));
+			for (int j=0; j<n_enc; j++) {
+				printf("%c", (unsigned char) (msg_enc[j]));
 			}
 		} else {
 			unsigned char msg_dec[n];       // decoded data message
 			memset(msg_dec, 0, n);
 			fec_decode(q, n, data, msg_dec);
-			for (i=0; i<n; i++)
-				printf("%c", (unsigned char) (msg_dec[i]));
+			for (int j=0; j<n; j++)
+				printf("%c", (unsigned char) (msg_dec[j]));
 		}
 	}
 
