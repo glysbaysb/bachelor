@@ -24,6 +24,9 @@ target_link_libraries(liquid_
 	liquid
 )
 
+set(SOURCE_FILES_VITERBI viterbi.cpp)
+add_executable(viterbi ${SOURCE_FILES_VITERBI})
+target_link_libraries(viterbi
+)
+
 add_subdirectory(rscode-1.3)
-
-

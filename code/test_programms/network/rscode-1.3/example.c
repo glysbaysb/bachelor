@@ -112,7 +112,7 @@ static void _encode() {
 
 int main (int argc, char *argv[])
 {
-  if(argc < 1) {
+  if(argc < 2) {
     printf("%s [enc|dec]", argv[0]);
 	return 0;
   }
