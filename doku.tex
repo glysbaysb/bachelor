@@ -300,7 +300,7 @@ $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ 
 seinen Geschwindigkeitsvektor
 $ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$.
 
-Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}status: $ w(N_i) = 1 + e(N_i) * 0.03 $.
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
 
 Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
 maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
@@ -393,6 +393,18 @@ Diese wird den Studierenden als kompilierte Library mit einem detailierten Heade
 
 \clearpage
 \section{Fehlerinjektion}
+Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt wird eine Fehlerinjektion benutzt um die Fehlertoleranz zu testen.
+In diesem Fall wird simuliert das dass Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
+unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie entladen hat.
+\todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
+
+\subsection{Netzwerk}
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelen Pakete werden dabei so manipuliert das, durchschnittlich, $ \frac{1}{X} $ aller bits kippen,
+das Betriebssystem diese Modifikation allerdings nicht erkennt.
+\todo{...}
+
+\subsection{Controller}
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
 
 \clearpage
 \section{Beispielimplementation}

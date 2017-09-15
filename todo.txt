@@ -1,0 +1,9 @@
+Deadline | Module		|	was
+---------+--------------+-----------------------------------------------------------
+09-15    | ecc			| auswerten & entscheiden was genommen wird ---> RS, weil funktioniert und man sieht den Inhalt noch
+09-16	 | unity		| testen ob roboter erscheinen
+09-16	 |              | skins
+09-17	 |				| roboter designen + lampe + rauch
+09-20    | controller   | modul/klassen ausdenken
+09-22	 | cont + voter | kommunikation
+09-22	 | controller   | main als geruest

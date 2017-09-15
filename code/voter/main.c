@@ -6,6 +6,7 @@ static int myRobot = 0;
 
 void worldStatusCallback(const WorldStatus* ws, void* additional);
 void worldStatusCallback(const WorldStatus* ws, void* additional) {
+	printf("(%f:%f)\n", ws->xTilt, ws->yTilt);
 	for(size_t i = 0; i < ws->numOfObjects; i++) {
 		printf("object %d is a %s\n", ws->objects[i].id, ws->objects[i].type == ROBOT ? "robot" : "fuel station");
 
