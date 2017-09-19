@@ -1,4 +1,4 @@
-\documentclass[
+documentclass[
     12pt,
     bibliography=totoc,
     ngerman
@@ -438,7 +438,16 @@ Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabe
 bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
 b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
 
+\subsection{Netzwerkkommunikation}
+Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
 
+Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
+\begin{itemize}
+\item tja funktioniert halt. ka, cih hab 3 getestet und bei keinem ist was vernuenftiges rausgekommen
+\item Es ist ein systematischer Code der es erlaubt w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
+	und sich die Daten anzugucken. Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
+\end{itemize}
 
 \clearpage
 \section{Evaluation}
