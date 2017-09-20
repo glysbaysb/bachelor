@@ -6,7 +6,7 @@
  *
  * The tests are:
  * * all single byte-errors
- * * a few multiple byte errors
+ * * NPAR burst errors in all possible positions
  *
  * All test functions are member functions of ECCTest.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
@@ -62,6 +62,34 @@ TEST_F(ECCTest, SingleByteErrorsTest) {
 	//EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &fake_callback, (void*)0xABCD9876), 0);
 
 //	FAIL() << "can't createRPCRequest()";
+}
+
+/*
+ * @brief corrupt the maximally allowed amount of bytes (NPAR / 2)
+ *        as a burst error.
+ *
+ *        So [0] to [NPAR/2], then [1] to [NPAR/2 + 1], ...
+ */
+TEST_F(ECCTest, BurstErrorsTest) {
+	const size_t ERRORS = NPAR / 2;
+	uint8_t  codeword[RECVD_MSG_LENGTH];
+	encode_data(message, MSG_LENGTH, codeword);
+
+	for(size_t i = 0; i < sizeof(codeword) - ERRORS; i++) {
+		uint8_t copy[sizeof(codeword)];
+		memcpy(copy, codeword, sizeof(copy));
+
+		for(size_t j = 0; j < ERRORS; j++) {
+			copy[i + j] ^= 0xA5;
+		}
+
+		decode_data(copy, RECVD_MSG_LENGTH);
+		EXPECT_GT(check_syndrome(), 0);
+		correct_errors_erasures (copy, RECVD_MSG_LENGTH, 0, NULL);
+
+		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
+			<< "decoding error when corrupting positions " << i << " to " << i+ERRORS;
+	}
 }
 
 int main(int argc, char** argv) {
