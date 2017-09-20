@@ -7,6 +7,7 @@
  * The tests are:
  * * all single byte-errors
  * * NPAR burst errors in all possible positions
+ * * striding error pattern
  *
  * All test functions are member functions of ECCTest.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
@@ -89,6 +90,33 @@ TEST_F(ECCTest, BurstErrorsTest) {
 
 		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
 			<< "decoding error when corrupting positions " << i << " to " << i+ERRORS;
+	}
+}
+
+/*
+ * @brief corrupt the maximally allowed amount of bytes (NPAR / 2)
+ *        as a striding error.
+ *
+ *        So [0], [2], ..., [NPAR]. Then [1], [3], ...
+ */
+TEST_F(ECCTest, StrideTest) {
+	uint8_t  codeword[RECVD_MSG_LENGTH];
+	encode_data(message, MSG_LENGTH, codeword);
+
+	for(size_t i = 0; i < sizeof(codeword) - NPAR; i++) {
+		uint8_t copy[sizeof(codeword)];
+		memcpy(copy, codeword, sizeof(copy));
+
+		for(size_t j = 0; j < NPAR; j += 2) {
+			copy[i + j] ^= 0xA5;
+		}
+
+		decode_data(copy, RECVD_MSG_LENGTH);
+		EXPECT_GT(check_syndrome(), 0);
+		correct_errors_erasures (copy, RECVD_MSG_LENGTH, 0, NULL);
+
+		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
+			<< "decoding error when corrupting positions " << i << " to " << i+NPAR;
 	}
 }
 
