@@ -21,6 +21,7 @@ set(C_WARNINGS "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(librpc)
 add_subdirectory(libworld)
+add_subdirectory(libecc)
 add_subdirectory(voter)
 add_subdirectory(tests)
 add_subdirectory(test_programms)

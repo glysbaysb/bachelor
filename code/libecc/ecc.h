@@ -23,7 +23,9 @@
  * contact author for details.
  *
  */
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /****************************************************************
   
   Below is NPAR, the only compile-time parameter you should have to
@@ -98,3 +100,7 @@ void mult_polys(int dst[], int p1[], int p2[]);
 
 void copy_poly(int dst[], int src[]);
 void zero_poly(int poly[]);
+#ifdef __cplusplus
+}
+#endif
+
