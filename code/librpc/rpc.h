@@ -19,6 +19,14 @@ enum Procedure {
 void* createRPCContext(void);
 
 /**
+ * @brief frees that context.
+ *
+ * DO NOT UNDER ANY CIRCUMSTANCE free an RPC context while it is still used.
+ * Or, to put it another way: this library is not threadsafe
+ */
+void destroyRPCContext(void*);
+
+/**
  * @brief parses an rpc message and calls the appropiate function
  *
  * @param rpc: the rpc context
