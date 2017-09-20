@@ -30,6 +30,10 @@ public:
 			throw "can't create RPC context";
 		}
 	}
+
+	~RPCTest() {
+		destroyRPCContext(rpc);
+	}
 };
 
 void fake_callback(void* optional, int* params) {

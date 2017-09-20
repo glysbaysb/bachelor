@@ -116,6 +116,14 @@ void* createRPCContext(void) {
 	return rpc;
 }
 
+void destroyRPCContext(void* rpc_) {
+	RPCContext* rpc = (RPCContext*)rpc_;
+
+	free(rpc->procedures);
+	free(rpc->rpcsInFlight);
+	free(rpc);
+}
+
 int addProcedure(void* rpc_, const enum Procedure num, const TypeRPCProcedure proc, const void* optional) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
