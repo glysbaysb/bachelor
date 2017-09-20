@@ -7,3 +7,12 @@ Deadline | Module		|	was
 09-20    | controller   | modul/klassen ausdenken
 09-22	 | cont + voter | kommunikation
 09-22	 | controller   | main als geruest
+
+
+die Daten die empfangen werden, vergleichen mit den selbst berechneten. Falls zu krasser
+Fehler (rundungsfehler, mem corruption, ...) -> software rejunivation
+
+Formalized plurality voting - divide results in partitions, choose  random member from the largest 
+ partition
+
+ median voting
