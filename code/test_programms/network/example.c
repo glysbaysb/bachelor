@@ -44,7 +44,7 @@
  
 #include <stdio.h>
 #include <stdlib.h>
-#include "ecc.h"
+#include <libecc/ecc.h>
 
 #define MSG_LENGTH (255 - NPAR)
 #define RECVD_MSG_LENGTH (MSG_LENGTH + NPAR)
