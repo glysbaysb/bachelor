@@ -7,6 +7,6 @@ target_link_libraries(test_rpc
 	gtest
 	gmock
 	pthread
-	librpc
-	libworld
+	rpc
+	world
 )

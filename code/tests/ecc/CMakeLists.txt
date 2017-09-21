@@ -7,5 +7,5 @@ target_link_libraries(test_ecc
 	gtest
 	gmock
 	pthread
-	libecc
+	ecc
 )

@@ -10,16 +10,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARNINGS}")
 set(SOURCE_FILES_LIB
 	world.cxx world.h
 	robot.cxx robot.h)
-add_library(libsim STATIC
+add_library(sim STATIC
     ${SOURCE_FILES_LIB}
 )
-target_link_libraries(libsim)
+target_link_libraries(sim)
 # Specify the include directories exported by this library
-target_include_directories(libsim PUBLIC
+target_include_directories(sim PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # and the actual program
 set(SOURCE_FILES_SIMULATION main.cxx)
 add_executable(simulation ${SOURCE_FILES_SIMULATION})
-target_link_libraries(simulation m libsim)
+target_link_libraries(simulation m sim)

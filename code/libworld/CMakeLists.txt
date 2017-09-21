@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(libworld)
+project(world)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS}")
 
@@ -7,7 +7,7 @@ set(SOURCE_FILES_LIBWORLD world.c)
 add_library(${PROJECT_NAME} STATIC
 	${SOURCE_FILES_LIBWORLD}
 )
-target_link_libraries(${PROJECT_NAME} nanomsg pthread librpc)
+target_link_libraries(${PROJECT_NAME} nanomsg pthread rpc)
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_DIRECTORY}
 )
