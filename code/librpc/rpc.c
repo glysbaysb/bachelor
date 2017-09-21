@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <msgpack.h>
+#include <msgpack/object.h>
 
 #include "rpc.h"
 
@@ -193,7 +194,46 @@ int getRPCsInFlight(const void* rpc_, RPCInFlight* arr, const size_t sizeOfArr) 
 	return 0;
 }
 
-int createRPCRequest(void* rpc_, const enum Procedure num, const int* params, const size_t paramsLen, void** outBuffer, size_t* outBufferLen) {
+#if 0
+static void pack_msgpack_array(msgpack_packer* pk, const msgpack_object_array* arr) {
+    if(!arr || !arr->size) {
+        msgpack_pack_array(&pk, 0);
+        return;
+    }
+
+    msgpack_pack_array(&pk, arr->size);
+    for(size_t i = 0; i < arr->size; i++) {
+        switch(arr->ptr[i].type) {
+        case MSGPACK_OBJECT_ARRAY:
+            pack_msgpack_array(pk, (const msgpack_object_array*) &arr->ptr[i].via);
+            break;
+
+        case MSGPACK_OBJECT_FLOAT32:
+        case MSGPACK_OBJECT_FLOAT64:
+            msgpack_pack_float(pk, arr->ptr[i].via.f64);
+            break;
+
+        case MSGPACK_OBJECT_NEGATIVE_INTEGER:
+            msgpack_pack_int64(pk, arr->ptr[i].via.i64);
+            break;
+
+        case MSGPACK_OBJECT_POSITIVE_INTEGER:
+            msgpack_pack_uint64(pk, arr->ptr[i].via.u64);
+            break;
+
+        case MSGPACK_OBJECT_STR:
+            msgpack_pack_str(pk, ((const msgpack_object_str*)&arr->ptr[i].via.str)->size);
+            msgpack_pack_str_body(pk, ((const msgpack_object_str*)&arr->ptr[i].via.str)->ptr,
+                                  ((const msgpack_object_str*)&arr->ptr[i].via.str)->size);
+            break;
+        }
+    }
+}
+#endif
+
+int createRPCRequest(void* rpc_, const enum Procedure num, const void* paramsBuffer, size_t paramsLen, void** outBuffer, size_t* outBufferLen)
+{
+	static const uint8_t EMPTY_MSGPACK_ARRAY[] = {0x90};
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	msgpack_packer pk;
@@ -206,10 +246,13 @@ int createRPCRequest(void* rpc_, const enum Procedure num, const int* params, co
 	msgpack_pack_int32(&pk, REQUEST); // operation
 	msgpack_pack_int32(&pk, ++rpc->id); // id
 	msgpack_pack_int32(&pk, num); // procedure
-	msgpack_pack_array(&pk, paramsLen);
 
-	for(size_t i = 0; i < paramsLen; i++) {
-		msgpack_pack_int32(&pk, params[i]);
+	/* while the caller can signify that this request has no parameters by passing a nullptr,
+	   the reciever always expects an parameter array.
+	   So, if neccassary, create that */
+	if(!paramsLen) {
+		paramsBuffer = EMPTY_MSGPACK_ARRAY;
+		paramsLen = sizeof(EMPTY_MSGPACK_ARRAY);
 	}
 
 	if(addRequestToInFlightList(rpc, num, rpc->id) < 0) {
@@ -224,12 +267,13 @@ int createRPCRequest(void* rpc_, const enum Procedure num, const int* params, co
 	putchar('\n');
 #endif
 
-	if(!(*outBuffer = calloc(1, sbuf.size))) {
+	if(!(*outBuffer = calloc(1, sbuf.size + paramsLen))) {
 		msgpack_sbuffer_destroy(&sbuf);
 		return -1;
 	}
 	memcpy(*outBuffer, sbuf.data, sbuf.size);
-	*outBufferLen = sbuf.size;
+	memcpy((void*)((uintptr_t)*outBuffer + sbuf.size), paramsBuffer, paramsLen);
+	*outBufferLen = sbuf.size + paramsLen;
 
 	msgpack_sbuffer_destroy(&sbuf);
 	return 0;

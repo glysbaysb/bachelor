@@ -331,12 +331,26 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 
 void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	WorldContext* ctx = (WorldContext*)ctx_;
-	int params[3] = {id, diffX, diffY};
 
+	/* create params */
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 3);
+	msgpack_pack_int32(&pk, id);
+	msgpack_pack_int32(&pk, diffX);
+	msgpack_pack_int32(&pk, diffY);
+
+	/* create request with params */
 	void* out; size_t outLen;
-	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, params, 3, &out, &outLen) < 0)) {
+	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, sbuf.data, sbuf.size, &out, &outLen) < 0)) {
+		msgpack_sbuffer_free(&sbuf);
 		return;
 	}
+	msgpack_sbuffer_free(&sbuf);
 
 	if(nn_send(ctx->reqSock, out, outLen, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");

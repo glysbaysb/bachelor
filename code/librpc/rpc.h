@@ -56,14 +56,14 @@ int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure pro
  *
  * @param rpc: the rpc context
  * @param num: the procedure to be called
- * @param params: the arguments for that call
- * @param paramsLen: how many arguments there are
+ * @param params: the arguments for that call. Maybe be NULL if no params shall be passed
+ * @param paramsLen: how long the arguments are
  * @param outBuffer: where the message shall be written. Don't forget to free() it!
  * @param outBufferLen: length of the message.
  *
  * @return <0 on error
  */
-int createRPCRequest(void* rpc, const enum Procedure num, const int* params, const size_t paramsLen, void** outBuffer, size_t* outBufferLen);
+int createRPCRequest(void* rpc, const enum Procedure num, const void* paramsBuffer, size_t paramsLen, void** outBuffer, size_t* outBufferLen);
 
 typedef struct RPCProcedure {
 	enum Procedure num;

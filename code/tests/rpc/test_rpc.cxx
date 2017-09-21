@@ -56,9 +56,8 @@ TEST_F(RPCTest, RegisterProcedure) {
 TEST_F(RPCTest, CreateRequest) {
 	addProcedure(rpc, (enum Procedure)1, &_fake_callback, (void*)0xABCD9876);
 
-	int param = 1;
 	void* out; size_t outLen;
-	if((createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen) < 0)) {
+	if((createRPCRequest(rpc, (enum Procedure)1, nullptr, 0, &out, &outLen) < 0)) {
 		FAIL() << "can't createRPCRequest()";
 		return;
 	}
@@ -68,8 +67,7 @@ TEST_F(RPCTest, CreateRequest) {
 			0x00, // operation == REQUEST
 			0x01, // ID
 			0x01, // procedure
-			0x91, // params arr with 1 elem
-			0x01 // the elem
+			0x90, // empty params arr
 		};
 		auto data = (const unsigned char*)out;
 
@@ -85,9 +83,8 @@ TEST_F(RPCTest, CheckInFlight) {
 	/* create */
 	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &_fake_callback, (void*)0xABCD9876), 0);
 
-	int param = 1;
 	void* out; size_t outLen;
-	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
+	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, nullptr, 0, &out, &outLen), 0);
 
 	int8_t id = *(int8_t*)(((unsigned char*)out) + 2);
 	free(out);
@@ -115,11 +112,10 @@ TEST_F(RPCTest, CheckHandleRPC) {
 	/* create */
 	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &_set_opt_to_params, (void*)&changedByRPC), 0);
 
-	int param = 1;
 	void* out; size_t outLen;
-	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
+	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, nullptr, 0, &out, &outLen), 0);
 
-	auto id = *(int8_t*)(((unsigned char*)out) + 2);//todo: that's a really fragile way to get the id
+	auto id = *(uint8_t*)(((unsigned char*)out) + 2);//todo: that's a really fragile way to get the id
 	free(out);
 
 	/* handle reply */
@@ -136,23 +132,20 @@ TEST_F(RPCTest, CheckHandleRPC) {
 }
 
 #if 0
-void set_opt_to_params(void* optional, int* params) {
-	int* o = (int*)optional;
-	*o = params[0];
+void echo(void* optional, msgpack_object_array* params) {
+	(void) optional;
+	(void) params;
 }
 
-TEST_F(RPCTest, CheckHandle) {
-	int changedByRPC = 0;
-	const uint8_t magic = 42;
-
+TEST_F(RPCTest, Echo) {
 	/* create */
-	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &set_opt_to_params, (void*)&changedByRPC), 0);
+	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &echo, ), 0);
 
 	int param = 1;
 	void* out; size_t outLen;
 	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
 
-	uint8_t id = *(int8_t*)(((unsigned char*)out) + 2);
+
 	free(out);
 
 	/* handle reply */
