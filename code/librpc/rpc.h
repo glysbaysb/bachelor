@@ -38,7 +38,7 @@ void destroyRPCContext(void*);
  */
 int handleRPC(void* rpc, const char* buf, const size_t len);
 
-typedef void (* TypeRPCProcedure)(void* optional, int* params);
+typedef void (* TypeRPCProcedure)(void* optional, msgpack_object_array* params);
 /**
  * @brief adds a procedure to the rpc context, so it can be called remotely.
  *
@@ -49,7 +49,7 @@ typedef void (* TypeRPCProcedure)(void* optional, int* params);
  *
  * @return <0 on error
  */
-int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure proc, const void* optional);
+int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure proc, void* optional);
 
 /**
  * @brief write a RPC message to outBuffer

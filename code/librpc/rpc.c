@@ -36,8 +36,8 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
-	const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
-					"float", "str", "array", "map", "bin", "ext"};
+	/*const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
+					"float", "str", "array", "map", "bin", "ext"};*/
 	size_t off = 0;
 	int ret = msgpack_unpack_next(&result, buf, len, &off);
 	if (ret != MSGPACK_UNPACK_SUCCESS) {
@@ -99,7 +99,7 @@ int handleRPC(void* rpc_, const char* buf, const size_t len) {
 		return -1;
 	}
 
-	for(int i = 0; i < rpc->numRPCsInFlight; i++) {
+	for(size_t i = 0; i < rpc->numRPCsInFlight; i++) {
 		if(rpc->rpcsInFlight[i].id != reply.id)
 			continue;
 
@@ -124,7 +124,7 @@ void destroyRPCContext(void* rpc_) {
 	free(rpc);
 }
 
-int addProcedure(void* rpc_, const enum Procedure num, const TypeRPCProcedure proc, const void* optional) {
+int addProcedure(void* rpc_, const enum Procedure num, const TypeRPCProcedure proc, void* optional) {
 	RPCContext* rpc = (RPCContext*)rpc_;
 
 	void* new = realloc(rpc->procedures, (rpc->numOfProcedures + 1) * sizeof(RPCProcedure));

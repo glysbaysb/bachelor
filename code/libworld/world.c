@@ -231,7 +231,7 @@ static void* networkHandler(void* ctx_) {
 	int r = 0;
 	while(( r = nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1)) > 0 && ctx->stopThread == 0) {
 		char* buf = NULL;
-		int len;
+		size_t len;
 
 		/* request - reply socket */
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
@@ -334,7 +334,7 @@ int createRobot(void* ctx_) {
 		return -1;
 	}
 
-	printf("rpc request size: %d at %p\n", outLen, out);
+	printf("rpc request size: %zu at %p\n", outLen, out);
 
 	int lenOut;
 	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
