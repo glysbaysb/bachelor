@@ -255,11 +255,6 @@ int createRPCRequest(void* rpc_, const enum Procedure num, const void* paramsBuf
 		paramsLen = sizeof(EMPTY_MSGPACK_ARRAY);
 	}
 
-	if(addRequestToInFlightList(rpc, num, rpc->id) < 0) {
-		msgpack_sbuffer_destroy(&sbuf);
-		return -1;
-	}
-
 #if 0
 	for(size_t i = 0; i < sbuf.size; i++) {
 		printf("%02X ", (sbuf.data[i] & 0xFF));
@@ -274,6 +269,11 @@ int createRPCRequest(void* rpc_, const enum Procedure num, const void* paramsBuf
 	memcpy(*outBuffer, sbuf.data, sbuf.size);
 	memcpy((void*)((uintptr_t)*outBuffer + sbuf.size), paramsBuffer, paramsLen);
 	*outBufferLen = sbuf.size + paramsLen;
+
+	if(addRequestToInFlightList(rpc, num, rpc->id) < 0) {
+		msgpack_sbuffer_destroy(&sbuf);
+		return -1;
+	}
 
 	msgpack_sbuffer_destroy(&sbuf);
 	return 0;
