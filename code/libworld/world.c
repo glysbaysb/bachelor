@@ -260,12 +260,12 @@ static void* networkHandler(void* ctx_) {
 	int r = 0;
 	while(( r = nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1)) > 0 && ctx->stopThread == 0) {
 		char* buf = NULL;
-		size_t len;
+		int len;
 
 		/* request - reply socket */
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
-			assert(len);
+			assert(len > 0);
 			pfd[0].revents = 0;
 
 #if 0
@@ -280,7 +280,7 @@ static void* networkHandler(void* ctx_) {
 		/* publish - suscribe socket */
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
-			assert(len);
+			assert(len > 0);
 			pfd[1].revents = 0;
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
