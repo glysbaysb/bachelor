@@ -9,6 +9,9 @@
  * * creating a rpc request and checking if it is added to the in flight list
  * * adding a procedure, creating a request and seeing if, as the response is
  *   parsed, the procedure is called
+ *   todo: wait, that test is weird. Where do the parameters go?
+ * * creating a RPC request with a complex parameter list and checking if that
+ *   is deserialized correctly
  * 
  * All test functions are member functions of RPCTest.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
@@ -131,36 +134,38 @@ TEST_F(RPCTest, CheckHandleRPC) {
 	ASSERT_EQ(changedByRPC, magic);
 }
 
-#if 0
 void echo(void* optional, msgpack_object_array* params) {
 	(void) optional;
-	(void) params;
+	ASSERT_EQ(params->size, 3);
+	ASSERT_EQ(params->ptr[0].via.u64, 0x01234567);
+	ASSERT_FLOAT_EQ(params->ptr[1].via.f64, 1234.56);
+	ASSERT_STREQ(params->ptr[2].via.str.ptr, "Hello");
 }
 
-TEST_F(RPCTest, Echo) {
+TEST_F(RPCTest, ComplexParams) {
 	/* create */
-	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &echo, ), 0);
+	EXPECT_EQ(addProcedure(rpc, (enum Procedure)1, &echo, nullptr), 0);
 
-	int param = 1;
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 3);
+	msgpack_pack_int(&pk, 0x01234567);
+	msgpack_pack_float(&pk, 1234.56);
+
+	msgpack_pack_str(&pk, 6);
+	msgpack_pack_str_body(&pk, "Hello", 6);
+
 	void* out; size_t outLen;
-	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
+	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, sbuf.data, sbuf.size, &out, &outLen), 0);
 
-
+	ASSERT_EQ(handleRPC(rpc, (const char*)out, outLen), 0);
 	free(out);
-
-	/* handle reply */
-	const unsigned char reply[] = {0x94,
-		0x01, // Reply
-		id,
-		0x00, // err
-		0x91, // params arr
-		magic
-	};
-
-	ASSERT_EQ(handleRPC(rpc, (const char*)reply, sizeof(reply)), 0);
-	ASSERT_EQ(changedByRPC, magic);
+	// todo: free sbuf
 }
-#endif
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
