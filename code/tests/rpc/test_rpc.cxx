@@ -27,7 +27,7 @@ protected:
 	void* rpc;
 public:
 	RPCTest() {
-		if((rpc = createRPCContext()) == NULL) {
+		if((rpc = createRPCContext()) == nullptr) {
 			throw "can't create RPC context";
 		}
 	}
@@ -45,7 +45,7 @@ static void _fake_callback(void* optional, msgpack_object_array* params) {
 TEST_F(RPCTest, RegisterProcedure) {
 	ASSERT_EQ(addProcedure(rpc, (enum Procedure)1, &_fake_callback, (void*)0xABCD9876), 0);
 
-	RPCProcedure procedures = {(enum Procedure)0, NULL, NULL};
+	RPCProcedure procedures = {(enum Procedure)0, nullptr, nullptr};
 	ASSERT_EQ(getRegisteredProcedures(rpc, &procedures, sizeof(procedures)), 0);
 
 	ASSERT_EQ(procedures.num, 1);
@@ -119,7 +119,7 @@ TEST_F(RPCTest, CheckHandleRPC) {
 	void* out; size_t outLen;
 	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, &param, 1, &out, &outLen), 0);
 
-	uint8_t id = *(int8_t*)(((unsigned char*)out) + 2);//todo: that's a really fragile way to get the id
+	auto id = *(int8_t*)(((unsigned char*)out) + 2);//todo: that's a really fragile way to get the id
 	free(out);
 
 	/* handle reply */
