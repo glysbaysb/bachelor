@@ -1,4 +1,4 @@
-\documentclass[
+documentclass[
     12pt,
     bibliography=totoc,
     ngerman
@@ -42,7 +42,7 @@
 
 \newcommand{\xmark}{\text{\sffamily X}} % gegensymbol zu \checkmark
 
-\newcommand{\includevisio}[2][]{\includegraphics[clip, trim=1cm 1cm 1cm 1cm, #1]{#2}}
+\newcommand{\includevisio}[2][]{\includegraphics[#1]{#2}}
 
 \titlehead{{\large Fachhochschule S{\"{u}}dwestfalen} \\ Fachbereich f{\"{u}}r Elektrotechnik und Informationstechnik \\ Studiengang Technische Informatik}
 \subject{\vspace{2cm} Bachelorarbeit}
@@ -205,11 +205,10 @@ Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern
 der angemessen Weg um Voter und Simulation zu verbinden.
 Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
 sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, ist im jeweiligen Kapitel.
-Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
+Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
 Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
-geschreibene Library tut dies nicht und ist deswegen vorzuziehen, damit den Studenten die Sprachwahl nicht eingeschr{\"{a}}nkt wird.
 
 \begin{table}[h]
 \centering
@@ -301,7 +300,7 @@ $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ 
 seinen Geschwindigkeitsvektor
 $ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$.
 
-Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}status: $ w(N_i) = 1 + e(N_i) * 0.03 $.
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
 
 Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
 maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
@@ -394,6 +393,18 @@ Diese wird den Studierenden als kompilierte Library mit einem detailierten Heade
 
 \clearpage
 \section{Fehlerinjektion}
+Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt wird eine Fehlerinjektion benutzt um die Fehlertoleranz zu testen.
+In diesem Fall wird simuliert das dass Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
+unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie entladen hat.
+\todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
+
+\subsection{Netzwerk}
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelen Pakete werden dabei so manipuliert das, durchschnittlich, $ \frac{1}{X} $ aller bits kippen,
+das Betriebssystem diese Modifikation allerdings nicht erkennt.
+\todo{...}
+
+\subsection{Controller}
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
 
 \clearpage
 \section{Beispielimplementation}
@@ -406,8 +417,14 @@ jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird 
 
 \subsection{Fehlermodell}
 \label{error-model}
+Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren welche Art von Fehlern
+{\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
+die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o}}st werden.
+
 \paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, allerdings nur \todo{wie doll halt mein hammingcode ist}
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{5}$ aller Bits verf{\"{a}}lscht werden. Durch die Benutzung des \todo{Auswahl: Kanal? Faltung?}code k{\"{o}}nnen
+$n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Byte erkannt werden. \todo{was wird gemacht wenn es
+zu viele waren?}
 
 \subsection{Voter}
 \label{voter}
@@ -421,7 +438,16 @@ Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabe
 bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
 b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
 
+\subsection{Netzwerkkommunikation}
+Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
 
+Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
+\begin{itemize}
+\item tja funktioniert halt. ka, cih hab 3 getestet und bei keinem ist was vernuenftiges rausgekommen
+\item Es ist ein systematischer Code der es erlaubt w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
+	und sich die Daten anzugucken. Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
+\end{itemize}
 
 \clearpage
 \section{Evaluation}

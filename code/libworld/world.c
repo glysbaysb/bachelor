@@ -71,21 +71,34 @@ static WorldStatus* parseWorldStatus(char* buf, size_t len) {
 		switch(obj.type) {
 		case MSGPACK_OBJECT_ARRAY:{
 			msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
-			if(arr->ptr[0].type != MSGPACK_OBJECT_ARRAY)
+			if(arr->ptr[0].type != MSGPACK_OBJECT_ARRAY ||
+				arr->ptr[1].type != MSGPACK_OBJECT_ARRAY)
+			{
 				continue;
+			}
 
-			msgpack_object_array* arrInner = (msgpack_object_array*)&arr->ptr[0].via;
+			msgpack_object_array* objectsArr = (msgpack_object_array*)&arr->ptr[1].via;
 			ws = (WorldStatus*)calloc(1, sizeof(WorldStatus));
-			ws->numOfObjects = arrInner->size;
-			if(!(ws->objects = calloc(arrInner->size, sizeof(SimulationObject)))) {
+			ws->numOfObjects = objectsArr->size;
+			if(!(ws->objects = calloc(objectsArr->size, sizeof(SimulationObject)))) {
 				cont = 0;
 				break;
 			}
 			
-			for(size_t i = 0; i < arrInner->size; i++) {
-				assert(arr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
+			/* parse world tilt degree */
+			if(arr->ptr[0].type != MSGPACK_OBJECT_ARRAY) {
+				cont = 0;
+				break;
+			}
+			ws->xTilt = ((msgpack_object_array*)&arr->ptr[0].via)->ptr[0].via.f64;
+			ws->yTilt = ((msgpack_object_array*)&arr->ptr[0].via)->ptr[1].via.f64;
 
-				if(parseObject(&ws->objects[i], (msgpack_object_array*)&arrInner->ptr[i].via) < 0)
+
+			/* parse objects */
+			for(size_t i = 0; i < objectsArr->size; i++) {
+				assert(objectsArr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
+
+				if(parseObject(&ws->objects[i], (msgpack_object_array*)&objectsArr->ptr[i].via) < 0)
 					fprintf(stderr, "arr elem %zu couldn't be parsed as Object\n", i);
 			}
 			cont = 0;
@@ -249,12 +262,6 @@ static void* networkHandler(void* ctx_) {
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
 			pfd[1].revents = 0;
-
-			printf("pub, sub\n");
-			for(size_t i = 0; i < len; i++) {
-				printf("%02X ", (buf[i] & 0xFF));
-			}
-			putchar('\n');
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
 			ctx->getWorldStatusCallback(ws, ctx->additional);

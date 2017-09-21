@@ -45,6 +45,9 @@ typedef struct SimulationObject {
 typedef struct WorldStatus {
 	size_t numOfObjects;
 	SimulationObject* objects;
+
+	float xTilt,
+		  yTilt;
 } WorldStatus;
 
 /**

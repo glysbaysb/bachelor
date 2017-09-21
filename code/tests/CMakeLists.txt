@@ -4,3 +4,5 @@ project(ft_robot_simulation_tests)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARNINGS}")
 
 add_subdirectory(rpc)
+add_subdirectory(ecc)
+add_subdirectory(simulation)
