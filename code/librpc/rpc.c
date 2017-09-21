@@ -19,7 +19,8 @@ typedef struct RPCReply {
 	enum Operation op;
 	int id;
 	int error;
-	int* params;
+	msgpack_object_array* params;
+	msgpack_unpacker* unpacker;
 } RPCReply;
 
 typedef struct RPCContext {
@@ -33,13 +34,24 @@ typedef struct RPCContext {
 } RPCContext;
 
 static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* reply) {
+	/* initalize a large enough buffer to unpack into */
+	reply->unpacker = msgpack_unpacker_new(len);
+	if(reply->unpacker == NULL)
+		return -1;
+	msgpack_unpacker_reserve_buffer(reply->unpacker, len); // really, really reserve that much.
+	assert(msgpack_unpacker_buffer_capacity(reply->unpacker) >= len);
+
+	/* prepare the buffer */
+	memcpy(msgpack_unpacker_buffer(reply->unpacker), buf, len);
+	msgpack_unpacker_buffer_consumed(reply->unpacker, len);
+
+	/* and finally unpack */
 	msgpack_unpacked result;
 	msgpack_unpacked_init(&result);
 
 	/*const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
 					"float", "str", "array", "map", "bin", "ext"};*/
-	size_t off = 0;
-	int ret = msgpack_unpack_next(&result, buf, len, &off);
+	int ret = msgpack_unpacker_next(reply->unpacker, &result);
 	if (ret != MSGPACK_UNPACK_SUCCESS) {
 		msgpack_unpacked_destroy(&result);
 		return -1;
@@ -54,24 +66,15 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 			break;
 		}
 
-		for(size_t i = 0; i < 3; i++) {
-			if(arr->ptr[i].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
-				ret = -2;
-				break;
-		}
-		reply->op = arr->ptr[0].via.i64;
-		reply->id = arr->ptr[1].via.i64;
-		reply->error = arr->ptr[2].via.i64;
+		assert(arr->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
+		reply->op = (int)(arr->ptr[0].via.i64 & INT32_MAX);
+		assert(arr->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
+		reply->id = (int)(arr->ptr[1].via.i64 & INT32_MAX);
+		assert(arr->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
+		reply->error = (int)(arr->ptr[2].via.i64 & INT32_MAX);
 
-		msgpack_object_array* paramArr = ((msgpack_object_array*)&arr->ptr[3].via);
-		size_t numOfParams = paramArr->size;
-		if(!(reply->params = calloc(numOfParams, sizeof(int)))) {
-			fprintf(stderr, "can't alloc for params");
-			break;
-		}
-		for(size_t i = 0; i < numOfParams; i++) {
-			reply->params[i] = paramArr->ptr[i].via.i64;
-		}
+		assert(arr->ptr[3].type == MSGPACK_OBJECT_ARRAY);
+		reply->params = ((msgpack_object_array*)&arr->ptr[3].via);
 
 		ret = 0;
 		break;
@@ -107,7 +110,7 @@ int handleRPC(void* rpc_, const char* buf, const size_t len) {
 		r = 0;
 	}
 
-	free(reply.params);
+	msgpack_unpacker_free(reply.unpacker);
 	return r;
 }
 
