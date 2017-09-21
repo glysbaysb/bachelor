@@ -50,7 +50,7 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 	case MSGPACK_OBJECT_ARRAY:{
 		msgpack_object_array* arr = (msgpack_object_array*)&obj.via;
 		if(arr->size < 4) {
-			fprintf(stdout, "array too small");
+			fprintf(stderr, "array too small");
 			break;
 		}
 
@@ -66,7 +66,7 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 		msgpack_object_array* paramArr = ((msgpack_object_array*)&arr->ptr[3].via);
 		size_t numOfParams = paramArr->size;
 		if(!(reply->params = calloc(numOfParams, sizeof(int)))) {
-			fprintf(stdout, "can't alloc for params");
+			fprintf(stderr, "can't alloc for params");
 			break;
 		}
 		for(size_t i = 0; i < numOfParams; i++) {
@@ -77,8 +77,8 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 		break;
 	}
 	default:
-		fprintf(stdout, "unhandled msgpack type:");
-		msgpack_object_print(stdout, obj);
+		fprintf(stderr, "unhandled msgpack type:");
+		msgpack_object_print(stderr, obj);
 		putchar('\n');
 		ret = -1;
 		break;

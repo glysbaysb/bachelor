@@ -86,7 +86,7 @@ static WorldStatus* parseWorldStatus(char* buf, size_t len) {
 				assert(arr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
 
 				if(parseObject(&ws->objects[i], (msgpack_object_array*)&arrInner->ptr[i].via) < 0)
-					fprintf(stdout, "arr elem %zu couldn't be parsed as Object\n", i);
+					fprintf(stderr, "arr elem %zu couldn't be parsed as Object\n", i);
 			}
 			cont = 0;
 		}
@@ -269,7 +269,7 @@ static void* networkHandler(void* ctx_) {
 		}
 	}
 	if(r < 0) {
-		fprintf(stdout, "%s", nn_strerror(nn_errno()));
+		fprintf(stderr, "%s", nn_strerror(nn_errno()));
 		return NULL;
 	}
 	
@@ -287,12 +287,12 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	pthread_attr_t attr;
 	int s = pthread_attr_init(&attr);
 	if (s != 0) {
-		fprintf(stdout, "can't pthread_attr_init: %d\n", errno);
+		fprintf(stderr, "can't pthread_attr_init: %d\n", errno);
 		return -1;
 	}
 
 	if(pthread_create(&ctx->thread, &attr, &networkHandler, ctx_) < 0) {
-		fprintf(stdout, "can't pthread_create: %d\n", errno);
+		fprintf(stderr, "can't pthread_create: %d\n", errno);
 		pthread_attr_destroy(&attr);
 		return -2;
 	}
