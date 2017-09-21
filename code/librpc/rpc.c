@@ -20,7 +20,6 @@ typedef struct RPCReply {
 	int id;
 	int error;
 	msgpack_object_array* params;
-	msgpack_unpacker* unpacker;
 } RPCReply;
 
 typedef struct RPCContext {
@@ -33,17 +32,10 @@ typedef struct RPCContext {
 	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* reply) {
-	/* initalize a large enough buffer to unpack into */
-	reply->unpacker = msgpack_unpacker_new(len);
-	if(reply->unpacker == NULL)
-		return -1;
-	msgpack_unpacker_reserve_buffer(reply->unpacker, len); // really, really reserve that much.
-	assert(msgpack_unpacker_buffer_capacity(reply->unpacker) >= len);
-
+static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* reply, struct msgpack_unpacker* unpacker) {
 	/* prepare the buffer */
-	memcpy(msgpack_unpacker_buffer(reply->unpacker), buf, len);
-	msgpack_unpacker_buffer_consumed(reply->unpacker, len);
+	memcpy(msgpack_unpacker_buffer(unpacker), buf, len);
+	msgpack_unpacker_buffer_consumed(unpacker, len);
 
 	/* and finally unpack */
 	msgpack_unpacked result;
@@ -51,7 +43,7 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 
 	/*const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
 					"float", "str", "array", "map", "bin", "ext"};*/
-	int ret = msgpack_unpacker_next(reply->unpacker, &result);
+	int ret = msgpack_unpacker_next(unpacker, &result);
 	if (ret != MSGPACK_UNPACK_SUCCESS) {
 		msgpack_unpacked_destroy(&result);
 		return -1;
@@ -93,11 +85,18 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 }
 
 int handleRPC(void* rpc_, const char* buf, const size_t len) {
+	int r = -1;
 	RPCContext* rpc = (RPCContext*)rpc_;
 	struct RPCReply reply;
 
-	int r = -1;
-	if((r = parseRPCReply(buf, len, &reply)) < 0) {
+	/* initalize a large enough buffer to unpack into */
+	msgpack_unpacker* unpacker = msgpack_unpacker_new(len);
+	if(unpacker == NULL)
+		return r;
+	msgpack_unpacker_reserve_buffer(unpacker, len); // really, really reserve that much.
+	assert(msgpack_unpacker_buffer_capacity(unpacker) >= len);
+
+	if((r = parseRPCReply(buf, len, &reply, unpacker)) < 0) {
 		fprintf(stderr, "can't parse rpc reply: %d\n", r);
 		return -1;
 	}
@@ -110,7 +109,7 @@ int handleRPC(void* rpc_, const char* buf, const size_t len) {
 		r = 0;
 	}
 
-	msgpack_unpacker_free(reply.unpacker);
+	msgpack_unpacker_free(unpacker);
 	return r;
 }
 
