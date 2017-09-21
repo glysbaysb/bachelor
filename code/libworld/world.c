@@ -29,7 +29,7 @@ typedef struct WorldContext_ {
 
 } WorldContext;
 
-static void createRobotCallback(void* optional, int* params);
+static void createRobotCallback(void* optional, msgpack_object_array* params);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -43,15 +43,22 @@ static int parseObject(SimulationObject* object, const msgpack_object_array* arr
 	if(arr->size < 6)
 		return -1;
 
-	object->type = arr->ptr[3].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
+	assert(arr->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || arr->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	object->fuel = arr->ptr[0].via.i64;
 
-	object->x = arr->ptr[4].via.f64;
-	object->y = arr->ptr[5].via.f64;
-	object->m = arr->ptr[2].via.f64;
-
+	assert(arr->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || arr->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
 	object->id = arr->ptr[1].via.i64;
 
-	object->fuel = arr->ptr[0].via.i64;
+	assert(arr->ptr[2].type == MSGPACK_OBJECT_FLOAT || arr->ptr[2].type == MSGPACK_OBJECT_FLOAT32);
+	object->m = arr->ptr[2].via.f64;
+
+	assert(arr->ptr[3].type == MSGPACK_OBJECT_STR);
+	object->type = arr->ptr[3].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
+
+	assert(arr->ptr[4].type == MSGPACK_OBJECT_FLOAT || arr->ptr[4].type == MSGPACK_OBJECT_FLOAT32);
+	object->x = arr->ptr[4].via.f64;
+	assert(arr->ptr[5].type == MSGPACK_OBJECT_FLOAT || arr->ptr[5].type == MSGPACK_OBJECT_FLOAT32);
+	object->y = arr->ptr[5].via.f64;
 
 	return 0;
 }
@@ -67,6 +74,13 @@ static WorldStatus* parseWorldStatus(char* buf, size_t len) {
 	int ret = msgpack_unpack_next(&result, buf, len, &off);
 	while (ret == MSGPACK_UNPACK_SUCCESS && cont) {
 		msgpack_object obj = result.data;
+
+		for(size_t i = 0; i < len; i++) {
+			printf("%02X ", (buf[i] & 0xFF));
+		}
+		putchar('\n');
+		msgpack_object_print(stdout, obj);
+		putchar('\n');
 
 		switch(obj.type) {
 		case MSGPACK_OBJECT_ARRAY:{
@@ -130,10 +144,12 @@ static char* synchronCall(int sock, const char* msg, const size_t lenIn, int* le
 		return NULL;
 	}
 
+#if 0
 	for(size_t i = 0; i < *lenOut; i++) {
 		printf("%02X ", (buf[i] & 0xFF));
 	}
 	putchar('\n');
+#endif
 
 	return buf;
 }
@@ -249,18 +265,22 @@ static void* networkHandler(void* ctx_) {
 		/* request - reply socket */
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[0].fd, &buf, &len);
+			assert(len);
 			pfd[0].revents = 0;
 
+#if 0
 			for(size_t i = 0; i < len; i++) {
 				printf("%02X ", (buf[i] & 0xFF));
 			}
 			putchar('\n');
+#endif
 
 			handleRPC(ctx->rpc, buf, len);
 		}
 		/* publish - suscribe socket */
 		else if((pfd[1].revents & NN_POLLIN) == NN_POLLIN) {
 			recvNanaomsg(pfd[1].fd, &buf, &len);
+			assert(len);
 			pfd[1].revents = 0;
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
@@ -326,10 +346,12 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	return;
 }
 
-static void createRobotCallback(void* optional, int* params) {
+static void createRobotCallback(void* optional, msgpack_object_array* params) {
 	WorldContext* ctx = (WorldContext*)optional;
 
-	ctx->createRobot.id = params[0];
+	assert(params->size == 1);
+	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	ctx->createRobot.id = params->ptr[0].via.i64;
 }
 
 int createRobot(void* ctx_) {
