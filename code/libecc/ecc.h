@@ -69,8 +69,6 @@ extern int pBytes[MAXDEG];
 /* Decoder syndrome bytes */
 extern int synBytes[MAXDEG];
 
-/* print debugging info */
-extern int DEBUG;
 
 /* Reed Solomon encode/decode routines */
 void initialize_ecc (void);
