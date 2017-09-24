@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include <libnetwork/network.h>
 
@@ -52,6 +53,29 @@ TEST_F(NetworkTest, EchoTest) {
 	/* compare */
 	ASSERT_EQ(packets.size(), 1);
 	ASSERT_EQ(data, packets.at(0));
+}
+
+TEST_F(NetworkTest, TimeoutTest)
+{
+	const auto TIMEOUT = 25;
+	const auto TIMES = 100;
+	auto totalTime = std::chrono::duration<float>();
+
+	auto packets = std::vector<Packet>();
+
+	for(auto i = 0; i < TIMES; i++) {
+		auto before = std::chrono::system_clock::now();
+		network.poll(TIMEOUT, packets);
+		auto after = std::chrono::system_clock::now();
+
+		totalTime += after - before;
+	}
+
+	ASSERT_EQ(packets.size(), 0);
+
+	auto measured = std::chrono::duration_cast<std::chrono::milliseconds>(totalTime / (double)TIMES);
+	auto timeout = std::chrono::milliseconds(TIMEOUT);
+	ASSERT_EQ(timeout, measured);
 }
 
 int main(int argc, char** argv) {
