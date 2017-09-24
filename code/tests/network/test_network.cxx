@@ -7,6 +7,7 @@
  * * does the timeout work?
  * * does it send messages?
  * * and recv them?
+ * * the echo test with multiple messages
  *
  * Maybe come up with a test about maximally allowed UDP packet sizes?
  *
@@ -39,21 +40,19 @@ TEST_F(NetworkTest, SendTest) {
 	ASSERT_EQ(network.send(data), 0);
 }
 
-#if 0
 TEST_F(NetworkTest, EchoTest) {
 	/* first send something */
 	std::vector<uint8_t> data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	EXPECT_EQ(network.send(data), 0);
 
 	/* try to receive it */
-	std::vector<Packet> packets;
+	auto packets = std::vector<Packet>();
 	network.poll(0, packets);
 
 	/* compare */
 	ASSERT_EQ(packets.size(), 1);
 	ASSERT_EQ(data, packets.at(0));
 }
-#endif
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
