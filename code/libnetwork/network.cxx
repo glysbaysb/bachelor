@@ -32,6 +32,45 @@ ECCUDP::~ECCUDP()
 	::close(_broadcastSocket);
 }
 
+int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
+{
+	auto pollfds = std::vector<pollfd>();
+
+	for(auto&& port : _bindSockets) {
+		pollfds.push_back(pollfd{port, POLLIN, 0});
+	}
+
+	/* as I always go through the whole array of pollfds, there's
+	   no point in saving it.
+	   todo: don't do that then: abort for loop, if all events have been consume */
+	if(::poll(pollfds.data(), pollfds.size(), timeout) < 0) {
+		return -1;
+	}
+
+	int ret = 0;
+	for(auto&& pollfd : pollfds) {
+		if((pollfd.revents & POLLIN) == POLLIN) {
+			auto packet = Packet(512);// todo: better size
+			struct sockaddr_storage addr; // should be recvable from both ipv6 and 6
+			socklen_t addrLen = sizeof(addr);
+
+			auto count = ::recvfrom(pollfd.fd, packet.data(), packet.capacity(), 0, (sockaddr*)(&addr), &addrLen);
+			if (count == 0 || count == -1) {
+				if (count == -1 && errno != EAGAIN) {
+					perror("recvfrom");
+				}
+			}
+
+			packet.resize(count);
+			packets.push_back(packet);
+		} else if((pollfd.revents & POLLIN) == POLLERR) {
+			ret = -1;
+		}
+	}
+
+	return ret;
+}
+
 int ECCUDP::send(const Packet& data)
 {
 	auto r = ::send(_broadcastSocket, data.data(), data.size(), 0);
