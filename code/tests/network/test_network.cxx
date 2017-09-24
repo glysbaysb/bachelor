@@ -1,33 +1,32 @@
 /**
  * @file
  * @section DESCRIPTION
- * The unit tests for the RPC functionality are in this file
+ * The unit tests for the network functionality are in this file
  *
  * The tests are:
- * * adding a callback procedure
- * * creating a rpc request and checking if it conforms to spec
- * * creating a rpc request and checking if it is added to the in flight list
- * * adding a procedure, creating a request and seeing if, as the response is
- *   parsed, the procedure is called
- *   todo: wait, that test is weird. Where do the parameters go?
- * * creating a RPC request with a complex parameter list and checking if that
- *   is deserialized correctly
- * 
- * All test functions are member functions of RPCTest.
+ * * does the timeout work?
+ * * does it send messages?
+ * * and recv them?
+ *
+ * Maybe come up with a test about maximally allowed UDP packet sizes?
+ *
+ * All test functions are member functions of NetworkTest.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
  * to succeed. Sometimes a unit test specifically tries something illegal to
  * test the error path. Those blocks of code are marked "F:" to improve clarity
  */
 #include <gtest/gtest.h>
 #include <iostream>
+#include <vector>
 
 #include <libnetwork/network.h>
 
 class NetworkTest: public ::testing::Test {
 private:
 protected:
+	ECCUDP network;
 public:
-	NetworkTest() {
+	NetworkTest() : network("7777", "7777") {
 	}
 
 	~NetworkTest() {
@@ -35,9 +34,26 @@ public:
 };
 
 
-TEST_F(NetworkTest, Fake) {
-	ASSERT_EQ(true, true);
+TEST_F(NetworkTest, SendTest) {
+	std::vector<uint8_t> data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	ASSERT_EQ(network.send(data), 0);
 }
+
+#if 0
+TEST_F(NetworkTest, EchoTest) {
+	/* first send something */
+	std::vector<uint8_t> data = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	EXPECT_EQ(network.send(data), 0);
+
+	/* try to receive it */
+	std::vector<Packet> packets;
+	network.poll(0, packets);
+
+	/* compare */
+	ASSERT_EQ(packets.size(), 1);
+	ASSERT_EQ(data, packets.at(0));
+}
+#endif
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
