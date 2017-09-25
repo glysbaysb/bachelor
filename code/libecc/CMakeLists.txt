@@ -3,7 +3,7 @@ project(ecc)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS}")
 
-set(SRC_LIBECC_FILES rs.c galois.c berlekamp.c crcgen.c)
+set(SRC_LIBECC_FILES rs.c galois.c berlekamp.c crcgen.c ecc.h)
 add_library(${PROJECT_NAME} STATIC
 	${SRC_LIBECC_FILES}
 )

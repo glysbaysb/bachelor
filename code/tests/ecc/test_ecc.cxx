@@ -51,14 +51,31 @@ TEST_F(ECCTest, SingleByteErrorsTest) {
 
 		decode_data(copy, RECVD_MSG_LENGTH);
 		if(check_syndrome () != 0) {
-			correct_errors_erasures (copy, 
+			correct_errors_erasures (copy,
 				 RECVD_MSG_LENGTH,
-				 0, 
+				 0,
 				 NULL);
 		}
 
 		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
 			<< "decoding error when corrupting position " << i;	
+	}
+}
+
+TEST_F(ECCTest, SingleByteErrorsCppTest) {
+	const auto message_ = std::vector<uint8_t>(message, message + sizeof(message));
+	auto v = message_;
+	auto codeword = ECC::encode(v);
+
+	for(size_t i = 0; i < codeword.size(); i++) {
+		auto copy = codeword;
+
+		copy[i] ^= 0xAA;
+
+		auto decoded = ECC::decode(copy);
+
+		ASSERT_EQ(decoded, message_)
+			<< "decoding error when corrupting position " << i;
 	}
 }
 
