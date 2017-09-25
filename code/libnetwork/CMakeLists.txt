@@ -9,7 +9,7 @@ set(SOURCE_FILES_LIBNETWORK
 add_library(network STATIC
 	${SOURCE_FILES_LIBNETWORK}
 )
-target_link_libraries(network)
+target_link_libraries(network ecc)
 # Specify the include directories exported by this library
 target_include_directories(network PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

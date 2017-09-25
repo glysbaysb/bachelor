@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <cassert>
 
+#include <vector>
+#include <libecc/ecc.h>
+
 #include "network.h"
 
 
@@ -62,7 +65,7 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 			}
 
 			packet.resize(count);
-			packets.push_back(packet);
+			packets.push_back(ECC::decode(packet));
 		} else if((pollfd.revents & POLLIN) == POLLERR) {
 			ret = -1;
 		}
@@ -73,8 +76,9 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 
 int ECCUDP::send(const Packet& data)
 {
-	auto r = ::send(_broadcastSocket, data.data(), data.size(), 0);
-	return r == data.size() ? 0 : (
+	const auto encoded = ECC::encode(data);
+	auto r = ::send(_broadcastSocket, encoded.data(), encoded.size(), 0);
+	return r == encoded.size() ? 0 : (
 				r < 0 ? r : // an error occured
 						-r // only parts of the packet were sent
 			);
