@@ -7,7 +7,11 @@
  * * does the timeout work?
  * * does it send messages?
  * * and recv them?
+ *
+ * Todo:
+ * * if nothing was sent, is nothing received?
  * * the echo test with multiple messages
+ * * a test that could corrupt the message while sending it would be cool
  *
  * Maybe come up with a test about maximally allowed UDP packet sizes?
  *
@@ -71,7 +75,7 @@ TEST_F(NetworkTest, TimeoutTest)
 		totalTime += after - before;
 	}
 
-	ASSERT_EQ(packets.size(), 0);
+	ASSERT_EQ(packets.size(), 0); // as no packets were sent, none should have been retrieved
 
 	auto measured = std::chrono::duration_cast<std::chrono::milliseconds>(totalTime / (double)TIMES);
 	auto timeout = std::chrono::milliseconds(TIMEOUT);

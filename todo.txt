@@ -17,3 +17,6 @@ Formalized plurality voting - divide results in partitions, choose  random membe
  median voting
 
 ECC library so aendern das es Nachrichten laenger als 255 byte machen kann
+
+Todo: ECCUDP ausplitten -> mindestens der broadcast socket kann auch gut eine einzelene Klasse sein
+	  Packet soll absender erhalten. aehh aber beim senden macht das ja keinen Sinn?
