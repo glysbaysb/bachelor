@@ -28,6 +28,12 @@ int correct_errors_erasures (unsigned char codeword[], int csize,int nerasures, 
  */
 namespace ECC
 {
+	// todo: what happens if this is called multiple times?
+	void initialize()
+	{
+		initialize_ecc();
+	}
+
 	std::vector<uint8_t> encode(const std::vector<uint8_t>& in)
 	{
 		assert(in.size() <= MAX_MESSAGE_LENGTH);

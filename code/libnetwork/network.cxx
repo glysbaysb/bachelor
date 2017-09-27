@@ -15,6 +15,8 @@
 
 ECCUDP::ECCUDP(const char* bindPort, const char* broadcastPort)
 {
+	ECC::initialize();
+
 	if(bind(bindPort) < 0) {
 		throw std::runtime_error("can't bind");
 	}
