@@ -59,7 +59,8 @@ int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure pro
  *
  * @param rpc: the rpc context
  * @param num: the procedure to be called
- * @param params: the arguments for that call. Maybe be NULL if no params shall be passed
+ * @param params: the arguments for that call. Maybe be NULL if no params shall be passed.
+ *                The library expects this to be a valid msgpack array
  * @param paramsLen: how long the arguments are
  * @param outBuffer: where the message shall be written. Don't forget to free() it!
  * @param outBufferLen: length of the message.
