@@ -1,6 +1,8 @@
 #ifndef RPC_H
 #define RPC_H
 
+#include <msgpack.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -9,6 +11,7 @@ enum Procedure {
 	NONE = 0,
 	MOVE_ROBOT = 0x10000000,
 	CREATE_ROBOT,
+	ECHO = 0x20000000,
 };
 
 /**
@@ -36,7 +39,7 @@ void destroyRPCContext(void*);
  * @return < 0 on error.
  * 	-1 == procedure not found
  */
-int handleRPC(void* rpc, const char* buf, const size_t len);
+int handleRPC(void* rpc, const unsigned char* buf, const size_t len);
 
 typedef void (* TypeRPCProcedure)(void* optional, msgpack_object_array* params);
 /**

@@ -33,7 +33,7 @@ typedef struct RPCContext {
 	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* reply, struct msgpack_unpacker* unpacker) {
+static int parseRPCReply(const unsigned char* buf, const size_t len, struct RPCReply* reply, struct msgpack_unpacker* unpacker) {
 	/* prepare the buffer */
 	memcpy(msgpack_unpacker_buffer(unpacker), buf, len);
 	msgpack_unpacker_buffer_consumed(unpacker, len);
@@ -85,7 +85,7 @@ static int parseRPCReply(const char* buf, const size_t len, struct RPCReply* rep
 	return ret;
 }
 
-int handleRPC(void* rpc_, const char* buf, const size_t len) {
+int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 	int r = -1;
 	RPCContext* rpc = (RPCContext*)rpc_;
 	struct RPCReply reply;
