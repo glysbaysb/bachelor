@@ -55,8 +55,15 @@ TEST_F(NetworkTest, EchoTest) {
 	network.poll(0, packets);
 
 	/* compare */
-	ASSERT_EQ(packets.size(), 1);
+	/* if the network library bound to multiple sockets, make sure that
+	   it recved the same thing on all of them */
+	ASSERT_GE(packets.size(), 1);
 	ASSERT_EQ(data, packets.at(0));
+	if(packets.size() > 1) {
+		for(auto i = 1; i < packets.size(); i++) {
+			ASSERT_EQ(packets.at(0), packets.at(i));
+		}
+	}
 }
 
 TEST_F(NetworkTest, TimeoutTest)

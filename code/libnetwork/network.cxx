@@ -64,6 +64,7 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 				if (count == -1 && errno != EAGAIN) {
 					perror("recvfrom");
 				}
+				continue;
 			}
 
 			packet.resize(count);
@@ -132,18 +133,14 @@ int ECCUDP::bind(const char *port)
 
         s = ::bind(sfd, rp->ai_addr, rp->ai_addrlen);
         if (s == 0) {
-			_bindSockets.push_back(s);
-            break;
+			_bindSockets.push_back(sfd);
+            continue;
         }
 
         ::close(sfd);
     }
 
-    if (rp == NULL) {
-        return -2;
-    }
-
     ::freeaddrinfo(result);
 
-    return sfd;
+    return 0;
 }
