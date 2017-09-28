@@ -191,7 +191,7 @@ int ECCUDP::bind(const int16_t port)
 			sockaddr_in6* sin = (sockaddr_in6*)i->ifa_addr;
 			sin->sin6_port = (in_port_t)htons(port);
 
-			s = ::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in6));
+			s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in6));
 		}
         if (s == 0) {
 			_bindSockets.push_back(sock);
