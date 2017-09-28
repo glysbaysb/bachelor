@@ -156,21 +156,32 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 
 int ECCUDP::bind(const char *port)
 {
-	int s = ::socket(AF_INET, SOCK_DGRAM, 0);
-	if(s < 0) {
-		return s;
-	}
+    struct addrinfo hints = {0};
+    struct addrinfo *result, *rp;
+    int s, sfd = -1;
 
-	sockaddr_in sin;
-	sin.sin_family = AF_INET;
-	sin.sin_port = (in_port_t)htons(std::stoi(port));
-	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
+    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
+    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV; /* All interfaces -- todo: */
 
-	if(::bind(s, (const struct sockaddr*)&sin, sizeof(sin)) != 0) {
-		return -1;
-	}
+    s = ::getaddrinfo(nullptr, port, &hints, &result);
+    if (s != 0) {
+        return -1;
+    }
 
-	_bindSockets.push_back(s);
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        sfd = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (sfd == -1)
+            continue;
 
-    return 0;
+        s = ::bind(sfd, rp->ai_addr, rp->ai_addrlen);
+        if (s == 0) {
+			_bindSockets.push_back(sfd);
+            continue;
+        }
+
+        ::close(sfd);
+    }
+
+    ::freeaddrinfo(result);
 }
