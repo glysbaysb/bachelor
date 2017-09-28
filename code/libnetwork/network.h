@@ -24,7 +24,7 @@ private:
 	 *
 	 * @return 0 on success, < 0 in case an error happend
 	 */
-	int bind(const char *port);
+	int bind(const int16_t port);
 
 	/**
 	 * @brief creates a socket, give it broadcast permissions and connect() it to that port
@@ -39,7 +39,7 @@ public:
 	 *
 	 * @throws May throw an exception, in case an error happend
 	 */
-	ECCUDP(const char* bindPort, const char* broadcastPort);
+	ECCUDP(int16_t bindPort, int16_t broadcastPort);
 
 	/**
 	 * @brief closes all sockets

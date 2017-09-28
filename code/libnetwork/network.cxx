@@ -15,7 +15,7 @@
 #include "network.h"
 
 
-ECCUDP::ECCUDP(const char* bindPort, const char* broadcastPort)
+ECCUDP::ECCUDP(int16_t bindPort, int16_t broadcastPort)
 {
 	ECC::initialize();
 
@@ -23,9 +23,7 @@ ECCUDP::ECCUDP(const char* bindPort, const char* broadcastPort)
 		throw std::runtime_error("can't bind");
 	}
 
-	auto iBroadcastPort = std::stoi(broadcastPort);
-	assert(iBroadcastPort > 0 && iBroadcastPort < INT16_MAX);
-	if(createBroadcastSockets(iBroadcastPort) < 0) {
+	if(createBroadcastSockets(broadcastPort) < 0) {
 		throw std::runtime_error("can't create broadcast socket");
 	}
 }
@@ -101,19 +99,20 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 	int s = -1;
 
 	ifaddrs* ifs = nullptr;
-	if((s = getifaddrs(&ifs)) < 0) {
+	if((s = ::getifaddrs(&ifs)) < 0) {
 		return s;
 	}
 
 	for(auto i = ifs; i; i = i->ifa_next) {
-		/* IPv4 / v6 only */
-		if(i->ifa_addr->sa_family != AF_INET && i->ifa_addr->sa_family != AF_INET6) {
+		/* IPv4 only */
+		if(i->ifa_addr->sa_family != AF_INET) {
 			continue;
 		}
 
 		/* todo: fixme: HACK / HACK / HACK */
 		if(std::string(i->ifa_name) != "eth1") {
 			std::cout << "skip: " << i->ifa_name << '\n';
+			continue;
 		}
 		/* HACK / HACK / HACK */
 
@@ -143,45 +142,68 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 			}
 		}
 
-#if DEBUG
+#ifdef DEBUG
 		std::cout << i->ifa_name << ':' << sock << '\n';
 #endif
 		_broadcastSockets.push_back(sock);
 	}
 
-	freeifaddrs(ifs);
+	::freeifaddrs(ifs);
 
 	return s;
 }
 
-int ECCUDP::bind(const char *port)
+int ECCUDP::bind(const int16_t port)
 {
-    struct addrinfo hints = {0};
-    struct addrinfo *result, *rp;
-    int s, sfd = -1;
+   	int s = -1;
 
-    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
-    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
-    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV; /* All interfaces -- todo: */
+	ifaddrs* ifs = nullptr;
+	if((s = ::getifaddrs(&ifs)) < 0) {
+		return s;
+	}
 
-    s = ::getaddrinfo(nullptr, port, &hints, &result);
-    if (s != 0) {
-        return -1;
-    }
+	for(auto i = ifs; i; i = i->ifa_next) {
+		/* IPv4 / v6 only */
+		if(i->ifa_addr->sa_family != AF_INET && i->ifa_addr->sa_family != AF_INET6) {
+			continue;
+		}
 
-    for (rp = result; rp != NULL; rp = rp->ai_next) {
-        sfd = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (sfd == -1)
-            continue;
+		/* todo: fixme: HACK / HACK / HACK */
+		if(std::string(i->ifa_name) != "eth1") {
+			std::cout << "skip: " << i->ifa_name << '\n';
+			continue;
+		}
+		/* HACK / HACK / HACK */
 
-        s = ::bind(sfd, rp->ai_addr, rp->ai_addrlen);
+		int sock = -1;
+		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+			s = -1;
+			continue;
+		}
+
+		assert(i->ifa_addr); 
+		if(i->ifa_addr->sa_family == AF_INET) {
+			sockaddr_in* sin = (sockaddr_in*)i->ifa_addr;
+			sin->sin_port = (in_port_t)htons(port);
+
+			s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in));
+		} else {
+			sockaddr_in6* sin = (sockaddr_in6*)i->ifa_addr;
+			sin->sin6_port = (in_port_t)htons(port);
+
+			s = ::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in6));
+		}
         if (s == 0) {
-			_bindSockets.push_back(sfd);
+			_bindSockets.push_back(sock);
             continue;
         }
 
-        ::close(sfd);
+        ::close(sock);
     }
 
-    ::freeaddrinfo(result);
+	::freeifaddrs(ifs);
+	return s < 0 ? 
+		_bindSockets.size() ? _bindSockets.size() : // maybe one bind() was successful
+			s
+		: s;
 }
