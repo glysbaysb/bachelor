@@ -111,6 +111,12 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 			continue;
 		}
 
+		/* todo: fixme: HACK / HACK / HACK */
+		if(std::string(i->ifa_name) != "eth1") {
+			std::cout << "skip: " << i->ifa_name << '\n';
+		}
+		/* HACK / HACK / HACK */
+
 		int sock = -1;
 		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 			s = -1;
