@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <nanomsg/nn.h>
-#include <nanomsg/reqrep.h>
-#include <nanomsg/pubsub.h>
+#include <nanomsg/src/nn.h>
+#include <nanomsg/src/reqrep.h>
+#include <nanomsg/src/pubsub.h>
 #include <assert.h>
 #include <msgpack.h>
 #include <pthread.h>
