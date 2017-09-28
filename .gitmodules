@@ -1,0 +1,9 @@
+[submodule "code/third_party/msgpack"]
+	path = code/third_party/msgpack
+	url = https://github.com/msgpack/msgpack-c.git
+[submodule "code/third_party/googletest"]
+	path = code/third_party/googletest
+	url = https://github.com/google/googletest
+[submodule "code/third_party/nanomsg"]
+	path = code/third_party/nanomsg
+	url = https://github.com/nanomsg/nanomsg.git
