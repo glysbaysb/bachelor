@@ -15,15 +15,15 @@
 #include "network.h"
 
 
-ECCUDP::ECCUDP(int16_t bindPort, int16_t broadcastPort)
+ECCUDP::ECCUDP(int16_t bindPort, int16_t broadcastPort, const char* interface)
 {
 	ECC::initialize();
 
-	if(bind(bindPort) < 0) {
+	if(bind(bindPort, interface) < 0) {
 		throw std::runtime_error("can't bind");
 	}
 
-	if(createBroadcastSockets(broadcastPort) < 0) {
+	if(createBroadcastSockets(broadcastPort, interface) < 0) {
 		throw std::runtime_error("can't create broadcast socket");
 	}
 }
@@ -94,7 +94,7 @@ int ECCUDP::send(const Packet& data)
 	return success;
 }
 
-int ECCUDP::createBroadcastSockets(std::int16_t port)
+int ECCUDP::createBroadcastSockets(std::int16_t port, const char* interface)
 {
 	int s = -1;
 
@@ -109,12 +109,10 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 			continue;
 		}
 
-		/* todo: fixme: HACK / HACK / HACK */
-		if(std::string(i->ifa_name) != "eth1") {
+		if(std::string(i->ifa_name) != interface) {
 			std::cout << "skip: " << i->ifa_name << '\n';
 			continue;
 		}
-		/* HACK / HACK / HACK */
 
 		int sock = -1;
 		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
@@ -153,7 +151,7 @@ int ECCUDP::createBroadcastSockets(std::int16_t port)
 	return s;
 }
 
-int ECCUDP::bind(const int16_t port)
+int ECCUDP::bind(const int16_t port, const char* interface)
 {
    	int s = -1;
 
@@ -168,12 +166,10 @@ int ECCUDP::bind(const int16_t port)
 			continue;
 		}
 
-		/* todo: fixme: HACK / HACK / HACK */
-		if(std::string(i->ifa_name) != "eth1") {
+		if(std::string(i->ifa_name) != interface) {
 			std::cout << "skip: " << i->ifa_name << '\n';
 			continue;
 		}
-		/* HACK / HACK / HACK */
 
 		int sock = -1;
 		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
