@@ -8,6 +8,8 @@
 #include <cassert>
 #include <stdexcept>
 #include <vector>
+#include <ifaddrs.h>
+
 #include <libecc/ecc.h>
 
 #include "network.h"
@@ -23,7 +25,7 @@ ECCUDP::ECCUDP(const char* bindPort, const char* broadcastPort)
 
 	auto iBroadcastPort = std::stoi(broadcastPort);
 	assert(iBroadcastPort > 0 && iBroadcastPort < INT16_MAX);
-	if((_broadcastSocket = createBroadcastSocket(iBroadcastPort)) < 0) {
+	if(createBroadcastSockets(iBroadcastPort) < 0) {
 		throw std::runtime_error("can't create broadcast socket");
 	}
 }
@@ -34,7 +36,9 @@ ECCUDP::~ECCUDP()
 		::close(socket);
 	}
 
-	::close(_broadcastSocket);
+	for(auto&& socket: _broadcastSockets) {
+		::close(socket);
+	}
 }
 
 int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
@@ -80,67 +84,87 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 int ECCUDP::send(const Packet& data)
 {
 	const auto encoded = ECC::encode(data);
-	auto r = ::send(_broadcastSocket, encoded.data(), encoded.size(), 0);
-	return r == encoded.size() ? 0 : (
-				r < 0 ? r : // an error occured
-						-r // only parts of the packet were sent
-			);
+
+	int success = true;
+	for(auto&& socket: _broadcastSockets) {
+		auto r = ::send(socket, encoded.data(), encoded.size(), 0);
+		if(r != encoded.size()) {
+			success = false;
+		}
+	}
+
+	return success;
 }
 
-int ECCUDP::createBroadcastSocket(std::int16_t port)
+int ECCUDP::createBroadcastSockets(std::int16_t port)
 {
 	int s = -1;
-	if((s = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-		return -1;
+
+	ifaddrs* ifs = nullptr;
+	if((s = getifaddrs(&ifs)) < 0) {
+		return s;
 	}
 
-	int broadcastEnable=1;
-	if(::setsockopt(s, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
-		return -2;
+	for(auto i = ifs; i; i = i->ifa_next) {
+		/* IPv4 / v6 only */
+		if(i->ifa_addr->sa_family != AF_INET && i->ifa_addr->sa_family != AF_INET6) {
+			continue;
+		}
+
+		int sock = -1;
+		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+			s = -1;
+		}
+
+		int broadcastEnable=1;
+		if(::setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
+			s = -2;
+		}
+
+		if(i->ifa_addr->sa_family == AF_INET) {
+			sockaddr_in* sin = (sockaddr_in*)i->ifa_broadaddr;
+			sin->sin_port = (in_port_t)htons(port);
+
+			if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in)) < 0) {
+				s = -3;
+			}
+		} else {
+			sockaddr_in6* sin = (sockaddr_in6*)i->ifa_broadaddr;
+			sin->sin6_port = (in_port_t)htons(port);
+
+			if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in6)) < 0) {
+				s = -3;
+			}
+		}
+
+#if DEBUG
+		std::cout << i->ifa_name << ':' << sock << '\n';
+#endif
+		_broadcastSockets.push_back(sock);
 	}
 
-	sockaddr_in sin;
-	sin.sin_family = AF_INET;
-	sin.sin_port = (in_port_t)htons(port);
-	sin.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-
-	if(::connect(s, (const sockaddr*)&sin, sizeof(sin)) < 0) {
-		return -3;
-	}
+	freeifaddrs(ifs);
 
 	return s;
 }
 
 int ECCUDP::bind(const char *port)
 {
-    struct addrinfo hints = {0};
-    struct addrinfo *result, *rp;
-    int s, sfd = -1;
+	int s = ::socket(AF_INET, SOCK_DGRAM, 0);
+	if(s < 0) {
+		return s;
+	}
 
-    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
-    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
-    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV; /* All interfaces -- todo: */
+	sockaddr_in sin;
+	sin.sin_family = AF_INET;
+	sin.sin_port = (in_port_t)htons(std::stoi(port));
+	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    s = ::getaddrinfo(nullptr, port, &hints, &result);
-    if (s != 0) {
-        return -1;
-    }
+	if(::bind(s, (const struct sockaddr*)&sin, sizeof(sin)) != 0) {
+		return -1;
+	}
 
-    for (rp = result; rp != NULL; rp = rp->ai_next) {
-        sfd = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (sfd == -1)
-            continue;
-
-        s = ::bind(sfd, rp->ai_addr, rp->ai_addrlen);
-        if (s == 0) {
-			_bindSockets.push_back(sfd);
-            continue;
-        }
-
-        ::close(sfd);
-    }
-
-    ::freeaddrinfo(result);
+	_bindSockets.push_back(s);
 
     return 0;
 }

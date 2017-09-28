@@ -13,7 +13,7 @@ class ECCUDP
 {
 private:
 	std::vector<int> _bindSockets; //! all sockets this class listens on. Maybe it's one for IPv4, another for IPv6
-	int _broadcastSocket; //! the socket this class uses to send broadcasts. It is connected(), because the destinaon port is always the same
+	std::vector<int> _broadcastSockets; //! the sockets used to send broadcasts. They're connected(), because the destinaon port is always the same
 
 	/**
 	 * @brief binds on all possible network interfaces, for all possible families.
@@ -32,7 +32,7 @@ private:
 	 *
 	 * @return 0 on success, < 0 in case an error happend
 	 */
-	int createBroadcastSocket(std::int16_t port);
+	int createBroadcastSockets(std::int16_t port);
 public:
 	/**
 	 * @brief bind to that port & create the broadcast socket
