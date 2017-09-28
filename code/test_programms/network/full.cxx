@@ -2,6 +2,8 @@
 #include <iterator>
 #include <cstdint>
 #include <unistd.h>
+#include <chrono>
+#include <future>
 
 #include <msgpack.h>
 #include <libnetwork/network.h>
@@ -35,6 +37,11 @@ public:
 		}
 		
 		for(auto&& i : packets) {
+			for(auto j = 0; j < i.size(); j++) {
+				std::cout << std::hex << i.at(j) << ' ';
+			}
+			std::cout << '\n';
+
 			handleRPC(rpc, i.data(), i.size());
 		}
 	}
@@ -61,6 +68,7 @@ public:
 
 void echo_callback(void* optional, msgpack_object_array* params)
 {
+	std::cout << "echo_callback: " << params << '\n';
     if(!params || !params->size) {
         return;
     }
@@ -97,17 +105,26 @@ int main(int argc, char** argv)
 	Network network;
 
 	network.addRPCHandler(Procedure::ECHO, echo_callback, nullptr);
+
+	auto read_line =[](){
+		std::string line;
+		std::getline(std::cin, line);
+		return line;
+	};
+	auto future = std::async(std::launch::async, read_line);
 	while(1) {
 		/* stdin data? */
-		if(std::cin.rdbuf()->in_avail()) {
-			std::string line;
-			std::getline(std::cin, line);
-
+		if(future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+			auto line = future.get();
+			future = std::async(std::launch::async, read_line);
+			
 			msgpack_sbuffer sbuf;
 			msgpack_sbuffer_init(&sbuf);
 
 			pack_msgpack(line, sbuf);
-			network.sendRPC(Procedure::ECHO, sbuf.data, sbuf.size);
+			if(network.sendRPC(Procedure::ECHO, sbuf.data, sbuf.size) < 0) {
+				std::cerr << "can't send rpc\n";
+			}
 			msgpack_sbuffer_destroy(&sbuf);
 		}
 

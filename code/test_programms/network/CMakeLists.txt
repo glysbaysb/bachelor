@@ -11,5 +11,5 @@ target_link_libraries(rs2
 
 set(SOURCE_FILES_FULL full.cxx)
 add_executable(rpc_echo ${SOURCE_FILES_FULL})
-target_link_libraries(rpc_echo rpc network)
+target_link_libraries(rpc_echo pthread rpc network)
 
