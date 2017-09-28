@@ -98,13 +98,23 @@ int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 		return -1;
 	}
 
-	printf("rpc: %s id: %d\n", parsed.op == RESPONSE ? "RESPONSE" : "REPLY", parsed.id);
+#ifdef DEBUG
+	printf("rpc: %s id: %d\n", parsed.op == RESPONSE ? "RESPONSE" : "REQUEST", parsed.id);
+#endif
 	if(parsed.op == RESPONSE) {
 		for(size_t i = 0; i < rpc->numRPCsInFlight; i++) {
 			if(rpc->rpcsInFlight[i].id != parsed.id)
 				continue;
 
 			rpc->rpcsInFlight[i].proc.proc(rpc->rpcsInFlight[i].proc.optional, parsed.params);
+			r = 0;
+		}
+	} else if(parsed.op == REQUEST) {
+		for(size_t i = 0; i < rpc->numOfProcedures; i++) {
+			if(rpc->procedures[i].num != parsed.procedure)
+				continue;
+
+			rpc->procedures[i].proc(rpc->procedures[i].optional, parsed.params);
 			r = 0;
 		}
 	}
