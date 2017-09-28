@@ -9,19 +9,15 @@ enum Operation {
 	RESPONSE = 1,
 };
 
-typedef struct RPCRequest {
+typedef struct RPC {
 	enum Operation op;
 	int id;
-	enum Procedure procedure;
-	int* params;
-} RPCRequest;
-
-typedef struct RPCReply {
-	enum Operation op;
-	int id;
-	int error;
+	union {
+		int error;
+		enum Procedure procedure;
+	};
 	msgpack_object_array* params;
-} RPCReply;
+} RPC;
 
 typedef struct RPCContext {
 	int id;
@@ -33,7 +29,7 @@ typedef struct RPCContext {
 	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static int parseRPCReply(const unsigned char* buf, const size_t len, struct RPCReply* reply, struct msgpack_unpacker* unpacker) {
+static int parseRPC(const unsigned char* buf, const size_t len, struct RPC* rpc, struct msgpack_unpacker* unpacker) {
 	/* prepare the buffer */
 	memcpy(msgpack_unpacker_buffer(unpacker), buf, len);
 	msgpack_unpacker_buffer_consumed(unpacker, len);
@@ -60,14 +56,14 @@ static int parseRPCReply(const unsigned char* buf, const size_t len, struct RPCR
 		}
 
 		assert(arr->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
-		reply->op = (int)(arr->ptr[0].via.i64 & INT32_MAX);
+		rpc->op = (int)(arr->ptr[0].via.i64 & INT32_MAX);
 		assert(arr->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
-		reply->id = (int)(arr->ptr[1].via.i64 & INT32_MAX);
+		rpc->id = (int)(arr->ptr[1].via.i64 & INT32_MAX);
 		assert(arr->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER);
-		reply->error = (int)(arr->ptr[2].via.i64 & INT32_MAX);
+		rpc->error = (int)(arr->ptr[2].via.i64 & INT32_MAX);
 
 		assert(arr->ptr[3].type == MSGPACK_OBJECT_ARRAY);
-		reply->params = ((msgpack_object_array*)&arr->ptr[3].via);
+		rpc->params = ((msgpack_object_array*)&arr->ptr[3].via);
 
 		ret = 0;
 		break;
@@ -88,7 +84,7 @@ static int parseRPCReply(const unsigned char* buf, const size_t len, struct RPCR
 int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 	int r = -1;
 	RPCContext* rpc = (RPCContext*)rpc_;
-	struct RPCReply reply;
+	struct RPC parsed;
 
 	/* initalize a large enough buffer to unpack into */
 	msgpack_unpacker* unpacker = msgpack_unpacker_new(len);
@@ -97,17 +93,20 @@ int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 	msgpack_unpacker_reserve_buffer(unpacker, len); // really, really reserve that much.
 	assert(msgpack_unpacker_buffer_capacity(unpacker) >= len);
 
-	if((r = parseRPCReply(buf, len, &reply, unpacker)) < 0) {
-		fprintf(stderr, "can't parse rpc reply: %d\n", r);
+	if((r = parseRPC(buf, len, &parsed, unpacker)) < 0) {
+		fprintf(stderr, "can't parse rpc parsed: %d\n", r);
 		return -1;
 	}
 
-	for(size_t i = 0; i < rpc->numRPCsInFlight; i++) {
-		if(rpc->rpcsInFlight[i].id != reply.id)
-			continue;
+	printf("rpc: %s id: %d\n", parsed.op == RESPONSE ? "RESPONSE" : "REPLY", parsed.id);
+	if(parsed.op == RESPONSE) {
+		for(size_t i = 0; i < rpc->numRPCsInFlight; i++) {
+			if(rpc->rpcsInFlight[i].id != parsed.id)
+				continue;
 
-		rpc->rpcsInFlight[i].proc.proc(rpc->rpcsInFlight[i].proc.optional, reply.params);
-		r = 0;
+			rpc->rpcsInFlight[i].proc.proc(rpc->rpcsInFlight[i].proc.optional, parsed.params);
+			r = 0;
+		}
 	}
 
 	msgpack_unpacker_free(unpacker);
@@ -193,43 +192,6 @@ int getRPCsInFlight(const void* rpc_, RPCInFlight* arr, const size_t sizeOfArr) 
 	memcpy(arr, rpc->rpcsInFlight, sizeof(RPCInFlight) * rpc->numRPCsInFlight);
 	return 0;
 }
-
-#if 0
-static void pack_msgpack_array(msgpack_packer* pk, const msgpack_object_array* arr) {
-    if(!arr || !arr->size) {
-        msgpack_pack_array(&pk, 0);
-        return;
-    }
-
-    msgpack_pack_array(&pk, arr->size);
-    for(size_t i = 0; i < arr->size; i++) {
-        switch(arr->ptr[i].type) {
-        case MSGPACK_OBJECT_ARRAY:
-            pack_msgpack_array(pk, (const msgpack_object_array*) &arr->ptr[i].via);
-            break;
-
-        case MSGPACK_OBJECT_FLOAT32:
-        case MSGPACK_OBJECT_FLOAT64:
-            msgpack_pack_float(pk, arr->ptr[i].via.f64);
-            break;
-
-        case MSGPACK_OBJECT_NEGATIVE_INTEGER:
-            msgpack_pack_int64(pk, arr->ptr[i].via.i64);
-            break;
-
-        case MSGPACK_OBJECT_POSITIVE_INTEGER:
-            msgpack_pack_uint64(pk, arr->ptr[i].via.u64);
-            break;
-
-        case MSGPACK_OBJECT_STR:
-            msgpack_pack_str(pk, ((const msgpack_object_str*)&arr->ptr[i].via.str)->size);
-            msgpack_pack_str_body(pk, ((const msgpack_object_str*)&arr->ptr[i].via.str)->ptr,
-                                  ((const msgpack_object_str*)&arr->ptr[i].via.str)->size);
-            break;
-        }
-    }
-}
-#endif
 
 int createRPCRequest(void* rpc_, const enum Procedure num, const void* paramsBuffer, size_t paramsLen, void** outBuffer, size_t* outBufferLen)
 {
