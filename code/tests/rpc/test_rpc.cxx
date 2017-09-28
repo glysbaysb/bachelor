@@ -130,7 +130,7 @@ TEST_F(RPCTest, CheckHandleRPC) {
 		magic
 	};
 
-	ASSERT_EQ(handleRPC(rpc, (const char*)reply, sizeof(reply)), 0);
+	ASSERT_EQ(handleRPC(rpc, reply, sizeof(reply)), 0);
 	ASSERT_EQ(changedByRPC, magic);
 }
 
@@ -162,7 +162,7 @@ TEST_F(RPCTest, ComplexParams) {
 	void* out; size_t outLen;
 	EXPECT_EQ(createRPCRequest(rpc, (enum Procedure)1, sbuf.data, sbuf.size, &out, &outLen), 0);
 
-	ASSERT_EQ(handleRPC(rpc, (const char*)out, outLen), 0);
+	ASSERT_EQ(handleRPC(rpc, (const unsigned char*)out, outLen), 0);
 	free(out);
 	// todo: free sbuf
 }

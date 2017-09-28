@@ -177,7 +177,7 @@ compute_genpoly (int nbytes, int genpoly[])
  */
 
 void
-encode_data (unsigned char msg[], int nbytes, unsigned char dst[])
+encode_data (const unsigned char msg[], int nbytes, unsigned char dst[])
 {
   int i, LFSR[NPAR+1],dbyte, j;
 	

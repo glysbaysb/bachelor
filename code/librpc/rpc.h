@@ -1,6 +1,8 @@
 #ifndef RPC_H
 #define RPC_H
 
+#include <msgpack.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -9,6 +11,7 @@ enum Procedure {
 	NONE = 0,
 	MOVE_ROBOT = 0x10000000,
 	CREATE_ROBOT,
+	ECHO = 0x20000000,
 };
 
 /**
@@ -36,7 +39,7 @@ void destroyRPCContext(void*);
  * @return < 0 on error.
  * 	-1 == procedure not found
  */
-int handleRPC(void* rpc, const char* buf, const size_t len);
+int handleRPC(void* rpc, const unsigned char* buf, const size_t len);
 
 typedef void (* TypeRPCProcedure)(void* optional, msgpack_object_array* params);
 /**
@@ -56,7 +59,8 @@ int addProcedure(void* rpc, const enum Procedure num, const TypeRPCProcedure pro
  *
  * @param rpc: the rpc context
  * @param num: the procedure to be called
- * @param params: the arguments for that call. Maybe be NULL if no params shall be passed
+ * @param params: the arguments for that call. Maybe be NULL if no params shall be passed.
+ *                The library expects this to be a valid msgpack array
  * @param paramsLen: how long the arguments are
  * @param outBuffer: where the message shall be written. Don't forget to free() it!
  * @param outBufferLen: length of the message.
