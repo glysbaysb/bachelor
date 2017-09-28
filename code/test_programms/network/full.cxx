@@ -9,7 +9,7 @@
 #include <libnetwork/network.h>
 #include <librpc/rpc.h>
 
-static void pack_msgpack(std::string str, msgpack_sbuffer sbuf);
+static void pack_msgpack(std::string str, msgpack_sbuffer& sbuf);
 
 class Network {
 protected:
@@ -37,11 +37,6 @@ public:
 		}
 		
 		for(auto&& i : packets) {
-			for(auto j = 0; j < i.size(); j++) {
-				std::cout << std::hex << i.at(j) << ' ';
-			}
-			std::cout << '\n';
-
 			handleRPC(rpc, i.data(), i.size());
 		}
 	}
@@ -68,7 +63,6 @@ public:
 
 void echo_callback(void* optional, msgpack_object_array* params)
 {
-	std::cout << "echo_callback: " << params << '\n';
     if(!params || !params->size) {
         return;
     }
@@ -137,7 +131,7 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-static void pack_msgpack(std::string str, msgpack_sbuffer sbuf)
+static void pack_msgpack(std::string str, msgpack_sbuffer& sbuf)
 {
     msgpack_packer pk;
 
