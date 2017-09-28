@@ -6,7 +6,7 @@
 #include <poll.h>
 #include <unistd.h>
 #include <cassert>
-
+#include <stdexcept>
 #include <vector>
 #include <libecc/ecc.h>
 
