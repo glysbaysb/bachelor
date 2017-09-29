@@ -177,6 +177,11 @@ int ECCUDP::bind(const int16_t port, const char* interface)
 		sockaddr_in* sin = (sockaddr_in*)i->ifa_addr;
 		sin->sin_port = (in_port_t)htons(port);
 
+		char buf[100];
+		if(inet_ntop(AF_INET, (const void*)&sin->sin_addr, buf, sizeof(buf)) != nullptr) {
+			printf("bind: %s\n", buf);
+		}
+
 		s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in));
         if (s == 0) {
 			_bindSockets.push_back(sock);

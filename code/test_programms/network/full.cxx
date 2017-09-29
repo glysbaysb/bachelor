@@ -16,7 +16,7 @@ protected:
 	void* rpc;
 	ECCUDP udp;
 public:
-	Network() : udp(7777, 7777)
+	Network() : udp(7777, 7777, "eth1")
 	{
 		if((rpc = createRPCContext()) == nullptr) {
 			throw "can't create RPC context";
@@ -37,6 +37,11 @@ public:
 		}
 		
 		for(auto&& i : packets) {
+			for(auto j = 0; j < i.size(); j++) {
+				printf("%d ", i.at(j));
+			}
+			putchar('\n');
+
 			handleRPC(rpc, i.data(), i.size());
 		}
 	}

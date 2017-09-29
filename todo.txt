@@ -29,4 +29,10 @@ $ nc -u 192.168.38.181 7777
 --> rpidev: test_programms/network/rpc_echo kommt was an
 
 momentan les ich immer nur ein packet bei jedem poll() aufruf...
-immer nur auf eth1 binden
+immer nur auf eth1 binden --> funzt nicht
+
+----
+broadcast test:
+qemudev: nc -ub 192.168.38.255 7777 -s 192.168.38.182
+	socat - UDP-DATAGRAM:192.168.38.255:7777,broadcast
+rpidev01: nc -ulp 7777 192.168.38.181
