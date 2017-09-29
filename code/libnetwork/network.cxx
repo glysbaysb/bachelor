@@ -124,20 +124,16 @@ int ECCUDP::createBroadcastSockets(std::int16_t port, const char* interface)
 			s = -2;
 		}
 
-		if(i->ifa_addr->sa_family == AF_INET) {
-			sockaddr_in* sin = (sockaddr_in*)i->ifa_broadaddr;
-			sin->sin_port = (in_port_t)htons(port);
+		sockaddr_in* sin = (sockaddr_in*)i->ifa_broadaddr;
+		sin->sin_port = (in_port_t)htons(port);
 
-			if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in)) < 0) {
-				s = -3;
-			}
-		} else {
-			sockaddr_in6* sin = (sockaddr_in6*)i->ifa_broadaddr;
-			sin->sin6_port = (in_port_t)htons(port);
+		char buf[100];
+		if(inet_ntop(AF_INET, (const void*)&sin->sin_addr, buf, sizeof(buf)) != nullptr) {
+			printf("broadcast: %s\n", buf);
+		}
 
-			if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in6)) < 0) {
-				s = -3;
-			}
+		if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in)) < 0) {
+			s = -3;
 		}
 
 #ifdef DEBUG
@@ -161,8 +157,8 @@ int ECCUDP::bind(const int16_t port, const char* interface)
 	}
 
 	for(auto i = ifs; i; i = i->ifa_next) {
-		/* IPv4 / v6 only */
-		if(i->ifa_addr->sa_family != AF_INET && i->ifa_addr->sa_family != AF_INET6) {
+		/* IPv4 only */
+		if(i->ifa_addr->sa_family != AF_INET) {
 			continue;
 		}
 
@@ -178,17 +174,10 @@ int ECCUDP::bind(const int16_t port, const char* interface)
 		}
 
 		assert(i->ifa_addr); 
-		if(i->ifa_addr->sa_family == AF_INET) {
-			sockaddr_in* sin = (sockaddr_in*)i->ifa_addr;
-			sin->sin_port = (in_port_t)htons(port);
+		sockaddr_in* sin = (sockaddr_in*)i->ifa_addr;
+		sin->sin_port = (in_port_t)htons(port);
 
-			s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in));
-		} else {
-			sockaddr_in6* sin = (sockaddr_in6*)i->ifa_addr;
-			sin->sin6_port = (in_port_t)htons(port);
-
-			s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in6));
-		}
+		s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in));
         if (s == 0) {
 			_bindSockets.push_back(sock);
             continue;
