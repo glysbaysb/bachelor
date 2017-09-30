@@ -16,7 +16,7 @@ protected:
 	void* rpc;
 	ECCUDP udp;
 public:
-	Network() : udp(7777, 7777, "eth1")
+	Network(const char* interface) : udp(7777, 7777, interface)
 	{
 		if((rpc = createRPCContext()) == nullptr) {
 			throw "can't create RPC context";
@@ -101,7 +101,12 @@ void echo_callback(void* optional, msgpack_object_array* params)
 
 int main(int argc, char** argv)
 {
-	Network network;
+	if(argc < 2) {
+		std::cout << argv[0] << " interface" << std::endl;
+		return 0;
+	}
+
+	Network network(argv[1]);
 
 	network.addRPCHandler(Procedure::ECHO, echo_callback, nullptr);
 
