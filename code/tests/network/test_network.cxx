@@ -32,7 +32,7 @@ private:
 protected:
 	ECCUDP network;
 public:
-	NetworkTest() : network(7777, 7777) {
+	NetworkTest() : network(7777, 7777, "eth1") {
 	}
 
 	~NetworkTest() {

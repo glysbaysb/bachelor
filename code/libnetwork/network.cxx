@@ -83,11 +83,11 @@ int ECCUDP::send(const Packet& data)
 {
 	const auto encoded = ECC::encode(data);
 
-	int success = true;
+	int success = 0;
 	for(auto&& socket: _broadcastSockets) {
 		auto r = ::send(socket, encoded.data(), encoded.size(), 0);
 		if(r != encoded.size()) {
-			success = false;
+			success = -1;
 		}
 	}
 
