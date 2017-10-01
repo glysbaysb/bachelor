@@ -17,7 +17,7 @@ include_directories(third_party/googletest/googletest/include)
 
 # build my own stuff
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -D_POSIX_C_SOURCE=200112L -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_POSIX_C_SOURCE=200112L -g")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -D_POSIX_C_SOURCE=200112L -g")
 set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
 set(CMAKE_C_FLAGS_DEBUG "-DDEBUG")
@@ -37,10 +37,11 @@ add_subdirectory(librpc)
 add_subdirectory(libworld)
 add_subdirectory(libecc)
 add_subdirectory(libnetwork)
-#add_subdirectory(simulation)
+add_subdirectory(simulation)
 add_subdirectory(voter)
 add_subdirectory(tests)
 add_subdirectory(test_programms)
+add_subdirectory(libalgo)
 
 set(SOURCE_FILES_MSGPACK msgpack.c)
 add_executable(genmsgpack ${SOURCE_FILES_MSGPACK})
