@@ -244,7 +244,7 @@ int createRPCRequest(void* rpc_, const enum Procedure num, const void* paramsBuf
 
 	if(addRequestToInFlightList(rpc, num, rpc->id) < 0) {
 		msgpack_sbuffer_destroy(&sbuf);
-		return -1;
+		return -2;
 	}
 
 	msgpack_sbuffer_destroy(&sbuf);

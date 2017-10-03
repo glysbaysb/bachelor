@@ -30,6 +30,7 @@ typedef struct WorldContext_ {
 } WorldContext;
 
 static void createRobotCallback(void* optional, msgpack_object_array* params);
+static void moveRobotCallback(void* optional, msgpack_object_array* params);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -185,6 +186,10 @@ static int initalizeRPC(WorldContext* wc) {
 		return -2;
 	}
 
+	if(addProcedure(wc->rpc, MOVE_ROBOT, &moveRobotCallback, wc) < 0) {
+		return -3;
+	}
+
 	return 0;
 }
 
@@ -259,8 +264,8 @@ static void* networkHandler(void* ctx_) {
 	};
 	int r = 0;
 	while(( r = nn_poll(pfd, sizeof(pfd)/sizeof(pfd[0]), -1)) > 0 && ctx->stopThread == 0) {
-		char* buf = NULL;
-		int len;
+		unsigned char* buf = NULL;
+		size_t len;
 
 		/* request - reply socket */
 		if((pfd[0].revents & NN_POLLIN) == NN_POLLIN) {
@@ -329,7 +334,7 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	return 0;
 }
 
-void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
+int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	/* create params */
@@ -345,19 +350,25 @@ void MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	msgpack_pack_int32(&pk, diffY);
 
 	/* create request with params */
-	void* out; size_t outLen;
+	void* out = NULL; size_t outLen = 0;
 	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, sbuf.data, sbuf.size, &out, &outLen) < 0)) {
 		msgpack_sbuffer_free(&sbuf);
-		return;
+		return -1;
 	}
 	msgpack_sbuffer_free(&sbuf);
 
 	if(nn_send(ctx->reqSock, out, outLen, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
+		free(out);
+		return -2;
 	}
 	free(out);
 
-	return;
+	return 0;
+}
+
+static void moveRobotCallback(void* optional, msgpack_object_array* params) {
+	puts("moveRobotCallback");
 }
 
 static void createRobotCallback(void* optional, msgpack_object_array* params) {
@@ -380,7 +391,7 @@ int createRobot(void* ctx_) {
 	printf("rpc request size: %zu at %p\n", outLen, out);
 
 	int lenOut;
-	char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
+	unsigned char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
 	free(out);
 	if(!reply) {
 		return -2;
