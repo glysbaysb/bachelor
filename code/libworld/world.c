@@ -352,10 +352,8 @@ int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 	/* create request with params */
 	void* out = NULL; size_t outLen = 0;
 	if((createRPCRequest(ctx->rpc, MOVE_ROBOT, sbuf.data, sbuf.size, &out, &outLen) < 0)) {
-		msgpack_sbuffer_free(&sbuf);
 		return -1;
 	}
-	msgpack_sbuffer_free(&sbuf);
 
 	if(nn_send(ctx->reqSock, out, outLen, 0) < 0) {
 		fprintf(stderr, "can't send MoveRobot rpc request\n");
