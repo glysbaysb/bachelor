@@ -117,7 +117,7 @@ zumutbar?}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, am dem Punkt an dem sich
-die Arme treffen ist eine Klappe die den Luftstrom, nach vorne hinaus, blockieren kann (diese Luft wird dann nach oben abgeleitet).
+die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
 \paragraph{Systemaufbau} Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
 \begin{itemize}
@@ -127,16 +127,13 @@ die Arme treffen ist eine Klappe die den Luftstrom, nach vorne hinaus, blockiere
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen -- es ist also notwendig das System ausfallsicher zu designen.
+allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren, die Heizungen oder die L{\"{u}}fter k{\"{o}}nnen ausfallen -- es ist also notwendig das System ausfallsicher zu planen.
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
 \paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
-ungeeignet machen. Dies wird noch dadurch verst{\"{a}}rkt das es keinerlei
-Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
-
-\todo{man muss mit mehr als 3 Rechnern arbeiten?}
+ungeeignet machen. Dies wird noch dadurch verst{\"{a}}rkt das es wenig Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
 
 \clearpage
 \section{Konzept}
@@ -208,13 +205,14 @@ sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der I
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
-Netzwerklibraries die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C
+Netzwerkbibliotheken die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
+dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Bibliothek ist daher vorzuziehen.
 
 \begin{table}[h]
 \centering
 \begin{tabu}{c | c | c | c | p{5cm}}
 	\toprule
-	Name & RPC & Publish-Suscribe & C++ Runtime & andere Sprachen \\
+	Name & RPC & Publish-Suscribe & C++ Runtimeabh{\"{a}}ngigkeit & andere Sprachen \\
 	\midrule
 	SunRPC & \checkmark & \xmark & \checkmark & C\#, Java, ... \\
 	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, Python, Java, ... \\
@@ -246,7 +244,7 @@ Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}
 
 Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht
 wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
-dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (crash error) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
+dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash error}) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{pubsub}
@@ -261,10 +259,30 @@ Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben
 Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \subsection{Anforderungen}
-Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C und eine C\# Version gibt. Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
+Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (F{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}} Unity) gibt.
+Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
 eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen anf{\"{a}}llig zu sein.
 
-Dies schlie{\ss}t bekannte Serialisierungsformate wie JSON und XML aus. Zur Auswahl bleiben BSON, ProtoBuf und MsgPack. \todo{auswahl} 
+\begin{table}[h]
+\centering
+\begin{tabu}{c | c | c | c | p{5cm}}
+	\toprule
+	Name & Wenig Redudanz? & C Version & C\# Version \\
+	\midrule
+	JSON & \xmark & \checkmark & \checkmark \\
+	XML & \xmark & \checkmark & \checkmark \\
+	ProtoBuf & \checkmark & \xmark\footnotemark & \checkmark \\
+	Msgpack\cite{msgpack} & \checkmark & \checkmark & \checkmark \\
+	BSON & \checkmark & \checkmark & \checkmark \\
+	\bottomrule
+\end{tabu}
+\caption{Anforderungen an die Serialisierungsbibliothek}
+\end{table}
+\footnotetext{Es existieren unoffizielle, nicht mehr weiterentwickelte Implementation} 
+
+Bekannte Serialisierungsformate wie JSON und XML enthalten zu viel Redudanzen und k{\"{o}}nnen ausgeschlio{\ss}en werden. Zur Auswahl bleiben damit beispielsweise BSON und MsgPack.
+Bei BSON werden die Daten an sich effizient serialisiert, allerdings wird immer der Feldname mitgesendet. Dies erleichtert zwar die Versionierbarkeit, vergr{\"{o}}ssert
+die Nachricht allerdings. Aus diesem Grund wird MsgPack als Serialisierungsformat genutzt.
 
 \subsection{msgpack}
 MsgPack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsframework, dessen Nachrichten besonders wenig Redudanzen enthalten sollen. Beispielhaft wird hier auf die Serialisierung von
@@ -399,12 +417,12 @@ unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie
 \todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
 
 \subsection{Netzwerk}
-Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelen Pakete werden dabei so manipuliert das, durchschnittlich, $ \frac{1}{X} $ aller bits kippen,
-das Betriebssystem diese Modifikation allerdings nicht erkennt.
-\todo{...}
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelen Pakete werden dabei so manipuliert das, durchschnittlich, in $ \frac{1}{20} $ aller Pakete
+ein Byte verf{\"{a}}lscht wird, das Betriebssystem diese Modifikation allerdings nicht erkennt.
 
 \subsection{Controller}
 Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
+Dadurch wird ein crash failure simuliert.
 
 \clearpage
 \section{Beispielimplementation}
@@ -421,10 +439,11 @@ Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu defini
 {\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
 die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o}}st werden.
 
-\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{5}$ aller Bits verf{\"{a}}lscht werden. Durch die Benutzung des \todo{Auswahl: Kanal? Faltung?}code k{\"{o}}nnen
-$n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Byte erkannt werden. \todo{was wird gemacht wenn es
-zu viele waren?}
+\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Es k{\"{o}}nnen bis zu \todo{...} aller Controller ausfallen.
+Die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
+
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{X}$ aller Bits verf{\"{a}}lscht werden.
+Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \it{silent failure}; \todo{auswirkungen}
 
 \subsection{Voter}
 \label{voter}
@@ -434,18 +453,24 @@ Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabe
 \label{controller}
 \paragraph{Algorithmus zur Bestimmung der Bewegung} im buch war das mit vorbestimmten elipsen. ka obs was dolleres gibt.
 
+\subsubsection{Elipsen}
+\subsubsection{Zweipunktregler}
+\subsubsection{was anderes}
+
 \subsection{Konsenzalgorithmus}
 bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
 b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
 
 \subsection{Netzwerkkommunikation}
 Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
-
+Durch die Benutzung eines
+(255, 240) RS Codes k{\"{o}}nnen $n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Nachricht erkannt werden. 
 Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \begin{itemize}
-\item tja funktioniert halt. ka, cih hab 3 getestet und bei keinem ist was vernuenftiges rausgekommen
+\item Durch expermientelle Verifikation wurde klar das im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
+	10 gr{\"{o}}ser ist, ist nicht erforderlich eine sehr kompakte Kodierung zu benutzen, es ist ausreichend die Redudanz zu reduzieren. 
 \item Es ist ein systematischer Code der es erlaubt w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
-	und sich die Daten anzugucken. Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche. Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
 	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
 \end{itemize}
 
