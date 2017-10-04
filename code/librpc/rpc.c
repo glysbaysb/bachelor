@@ -29,23 +29,14 @@ typedef struct RPCContext {
 	RPCInFlight* rpcsInFlight;
 } RPCContext;
 
-static int parseRPC(const unsigned char* buf, const size_t len, struct RPC* rpc, struct msgpack_unpacker* unpacker) {
-	/* prepare the buffer */
-	memcpy(msgpack_unpacker_buffer(unpacker), buf, len);
-	msgpack_unpacker_buffer_consumed(unpacker, len);
-
-	/* and finally unpack */
-	msgpack_unpacked result;
-	msgpack_unpacked_init(&result);
-
+static int parseRPC(struct RPC* rpc, struct msgpack_unpacker* unpacker, msgpack_unpacked* result) {
 	/*const char* typeToStr[] = {"nil", "boolean", "pos int", "neg int",
 					"float", "str", "array", "map", "bin", "ext"};*/
-	int ret = msgpack_unpacker_next(unpacker, &result);
+	int ret = msgpack_unpacker_next(unpacker, result);
 	if (ret != MSGPACK_UNPACK_SUCCESS) {
-		msgpack_unpacked_destroy(&result);
 		return -1;
 	}
-	msgpack_object obj = result.data;
+	msgpack_object obj = result->data;
 
 	switch(obj.type) {
 	case MSGPACK_OBJECT_ARRAY:{
@@ -76,7 +67,6 @@ static int parseRPC(const unsigned char* buf, const size_t len, struct RPC* rpc,
 		break;
 	}
 
-	msgpack_unpacked_destroy(&result);
 
 	return ret;
 }
@@ -93,8 +83,20 @@ int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 	msgpack_unpacker_reserve_buffer(unpacker, len); // really, really reserve that much.
 	assert(msgpack_unpacker_buffer_capacity(unpacker) >= len);
 
-	if((r = parseRPC(buf, len, &parsed, unpacker)) < 0) {
+	/* prepare the buffer */
+	memcpy(msgpack_unpacker_buffer(unpacker), buf, len);
+	msgpack_unpacker_buffer_consumed(unpacker, len);
+
+	/* and finally unpack */
+	msgpack_unpacked result;
+	msgpack_unpacked_init(&result);
+
+	if((r = parseRPC(&parsed, unpacker, &result)) < 0) {
 		fprintf(stderr, "can't parse rpc parsed: %d\n", r);
+
+		msgpack_unpacked_destroy(&result);
+		msgpack_unpacker_free(unpacker);
+
 		return -1;
 	}
 
@@ -119,6 +121,7 @@ int handleRPC(void* rpc_, const unsigned char* buf, const size_t len) {
 		}
 	}
 
+	msgpack_unpacked_destroy(&result);
 	msgpack_unpacker_free(unpacker);
 	return r;
 }
