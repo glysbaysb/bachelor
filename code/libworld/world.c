@@ -76,12 +76,14 @@ static WorldStatus* parseWorldStatus(char* buf, size_t len) {
 	while (ret == MSGPACK_UNPACK_SUCCESS && cont) {
 		msgpack_object obj = result.data;
 
+#if 0
 		for(size_t i = 0; i < len; i++) {
 			printf("%02X ", (buf[i] & 0xFF));
 		}
 		putchar('\n');
 		msgpack_object_print(stdout, obj);
 		putchar('\n');
+#endif
 
 		switch(obj.type) {
 		case MSGPACK_OBJECT_ARRAY:{
