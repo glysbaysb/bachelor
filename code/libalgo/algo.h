@@ -6,10 +6,10 @@
 
 struct Vector
 {
-	float x_,
+	double x_,
 		  y_;
 
-	Vector(float x, float y) :
+	Vector(double x, double y) :
 		x_(x), y_(y)
 	{
 	}
@@ -29,7 +29,7 @@ class Object
 {
 protected:
 	Vector pos_;
-	float m_;
+	double m_;
 	int id_;
 	//todo: Vector velocity_;
 
@@ -48,9 +48,9 @@ public:
 class Robot : public Object
 {
 private:
-	float fuel_;
+	double fuel_;
 public:
-	float crit() const
+	double crit() const
 	{
 		return fuel_ / (sqrt(pos().x_ * pos().x_ + pos().y_ * pos().y_));
 	}
@@ -78,7 +78,7 @@ public:
 	}
 };
 
-std::vector<Action> calc_movement(std::pair<float, float>& angle, std::vector<Robot>& objects,
-		FuelStation& fuel);
+std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::vector<Robot>& objects,
+		const FuelStation& fuel);
 
 #endif // ALGO_H

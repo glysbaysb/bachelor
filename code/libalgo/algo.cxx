@@ -11,7 +11,7 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 	return squareDistance <= squareRadius;
 }
 
-std::vector<Action> calc_movement(const std::pair<float, float>& angle, std::vector<Robot>& objects,
+std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::vector<Robot>& objects,
 		const FuelStation& fuel)
 {
 	/* sort the robots by how "critical" their status is - i.e.
