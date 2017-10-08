@@ -11,61 +11,6 @@
 
 static void pack_msgpack(std::string str, msgpack_sbuffer& sbuf);
 
-class Network {
-protected:
-	void* rpc;
-	ECCUDP udp;
-public:
-	Network(const char* interface) : udp(7777, 7777, interface)
-	{
-		if((rpc = createRPCContext()) == nullptr) {
-			throw "can't create RPC context";
-		}
-	}
-
-	int addRPCHandler(Procedure num, TypeRPCProcedure handler, void* optional)
-	{
-		return addProcedure(rpc, num, handler, optional);
-	}
-
-	/* todo: find a better name */
-	void step()
-	{
-		auto packets = std::vector<Packet>();
-		if(udp.poll(0, packets) < 0) {
-			return;
-		}
-		
-		for(auto&& i : packets) {
-			for(auto j = 0; j < i.size(); j++) {
-				printf("%d ", i.at(j));
-			}
-			putchar('\n');
-
-			handleRPC(rpc, i.data(), i.size());
-		}
-	}
-
-	int sendRPC(Procedure num, const void* paramsBuffer, size_t paramsLen)
-	{
-		uint8_t* buffer;
-		size_t bufferLen;
-		int r;
-		if((r = createRPCRequest(rpc, num, paramsBuffer, paramsLen, (void**)&buffer, &bufferLen)) < 0) {
-			return r;
-		}
-
-		auto p = Packet{buffer, buffer + bufferLen};
-		free(buffer);
-		return udp.send(p);
-	}
-
-	~Network()
-	{
-		destroyRPCContext(rpc);
-	}
-};
-
 void echo_callback(void* optional, msgpack_object_array* params)
 {
     if(!params || !params->size) {
