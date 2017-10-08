@@ -11,6 +11,7 @@ enum Procedure {
 	NONE = 0,
 	MOVE_ROBOT = 0x10000000,
 	CREATE_ROBOT,
+	VOTE_MOVE_ROBOT,
 	ECHO = 0x20000000,
 };
 

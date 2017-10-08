@@ -1,10 +1,14 @@
-#include <stdio.h>
+#include <iostream>
+#include <iterator>
+#include <cstdio>
 #include <unistd.h>
 #include <libworld/world.h>
+#include <libnetwork/network.h>
 
 typedef struct {
 	int robot;
 	void* worldCtx;
+	Network* network;
 } Info;
 
 void worldStatusCallback(const WorldStatus* ws, void* additional);
@@ -30,14 +34,50 @@ void worldStatusCallback(const WorldStatus* ws, void* additional)
 	}
 }
 
+void voteCallback(void* optional, msgpack_object_array* params)
+{
+    if(!params || !params->size) {
+        return;
+    }
+
+    for(size_t i = 0; i < params->size; i++) {
+        switch(params->ptr[i].type) {
+        case MSGPACK_OBJECT_ARRAY:
+            voteCallback(optional, (msgpack_object_array*) &params->ptr[i].via);
+            break;
+
+        case MSGPACK_OBJECT_FLOAT32:
+        case MSGPACK_OBJECT_FLOAT64:
+			std::cout << params->ptr[i].via.f64;
+            break;
+
+        case MSGPACK_OBJECT_NEGATIVE_INTEGER:
+			std::cout << params->ptr[i].via.u64;
+            break;
+
+        case MSGPACK_OBJECT_POSITIVE_INTEGER:
+			std::cout << params->ptr[i].via.i64;
+            break;
+
+        case MSGPACK_OBJECT_STR:
+			auto str = ((const msgpack_object_str*)&params->ptr[i].via.str);
+			std::copy(str->ptr, str->ptr + str->size, std::ostream_iterator<char>(std::cout));
+            break;
+        }
+    }
+}
+
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
 
-	if(argc < 2) {
-		printf("%s host\n", argv[0]);
+	if(argc < 3) {
+		printf("%s host interface\n", argv[0]);
 		return 0;
 	}
+
+	callbackInfo.network = new Network(argv[2]);
+	callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, voteCallback, (void*)&callbackInfo);
 
 	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
 		fprintf(stderr, "can't init world");
