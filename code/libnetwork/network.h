@@ -58,6 +58,14 @@ public:
 	 */
 	int send(const Packet& data);
 
+	/**
+	 * @brief poll() for @timeout and return the results
+	 *
+	 * @param timeout timeout in milliseconds
+	 * @param packets output parameter
+	 *
+	 * @return negative value if there was an error
+	 */
 	int poll(int timeout, std::vector<Packet>& packets);
 };
 
@@ -94,6 +102,13 @@ public:
 
 			handleRPC(rpc, i.data(), i.size());
 		}
+	}
+
+	void poll(int timeout)
+	{
+		usleep(timeout * 1000);
+
+		step();
 	}
 
 	int sendRPC(Procedure num, const void* paramsBuffer, size_t paramsLen)
