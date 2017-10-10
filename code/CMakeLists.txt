@@ -8,7 +8,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(third_party/nanomsg)
 include_directories(third_party/)
 add_subdirectory(third_party/msgpack)
-include_directories(third_party/msgpack/include)
 
 #set(GTEST_ROOT third_party/googletest)
 #find_package(GTest REQUIRED)
@@ -22,12 +21,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -D_POSIX_C_SOURCE=200112L -g")
 set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
 set(CMAKE_C_FLAGS_DEBUG "-DDEBUG")
 
-set(CXX_WARNINGS "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
+set(CXX_WARNINGS_PRIV "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
 -Wswitch-default -Wuninitialized -Wfloat-equal -Wundef -Wshadow -Wcast-qual \
 -Wcast-align -Wconversion -Wlogical-op \
 -Wmissing-declarations -Wredundant-decls -Winline -Wdisabled-optimization \
 -Wnarrowing ")
-set(C_WARNINGS "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
+set(C_WARNINGS_PRIV "-Wall -Wextra -Wpedantic -Wformat=2 -Wmissing-include-dirs \
 -Wswitch-default -Wuninitialized -Wfloat-equal -Wundef -Wshadow -Wcast-qual \
 -Wcast-align -Wconversion -Wjump-misses-init -Wlogical-op -Wmissing-prototypes \
 -Wmissing-declarations -Wredundant-decls -Winline -Wdisabled-optimization \

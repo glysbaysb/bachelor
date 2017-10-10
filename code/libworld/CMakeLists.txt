@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(world)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS_PRIV}")
 
 set(SOURCE_FILES_LIBWORLD world.c)
 add_library(${PROJECT_NAME} STATIC

@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(simulation)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARNINGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_WARNINGS_PRIV}")
 
 # Declare the library
 set(SOURCE_FILES_LIB
