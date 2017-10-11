@@ -2,9 +2,29 @@
 
 int main(int argc, char** argv)
 {
-	(void) argc; (void) argv;
+	if(argc < 2) {
+		printf("%s interface\n", argv[0]);
+		return 0;
+	}
+
+	auto network = Network(argv[1]);
+	network.addRPCHandler(WORLD_STATUS, &worldStatus);
+
+	while(1)
+	{
+	}
 
 	return 0;
+}
+
+void worldStatus()
+{
+	/* */
+
+	/* run algo */
+
+	/* send out actions */
+	/* or: send to main? Then from there do consensus */
 }
 
 /**
