@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <vector>
 #include <ifaddrs.h>
+#include <string>
 
 #include <libecc/ecc.h>
 
@@ -151,59 +152,43 @@ int ECCUDP::createBroadcastSockets(std::int16_t port, const char* interface)
 
 int ECCUDP::bind(const int16_t port, const char* interface)
 {
-   	int s = -1;
+    addrinfo hints;
+    addrinfo *result, *rp;
+    int s, sfd = -1;
 
-	ifaddrs* ifs = nullptr;
-	if((s = ::getifaddrs(&ifs)) < 0) {
-		return s;
-	}
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_UNSPEC;     /* Return IPv4 and IPv6 choices */
+    hints.ai_socktype = SOCK_DGRAM; /* We want a UDP socket */
+    hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;     /* All interfaces */
 
-	for(auto i = ifs; i; i = i->ifa_next) {
-		/* IPv4 only */
-		if(i->ifa_addr->sa_family != AF_INET) {
-			continue;
-		}
-
-		if(std::string(i->ifa_name) != interface) {
-			std::cout << "skip: " << i->ifa_name << '\n';
-			continue;
-		}
-
-		int sock = -1;
-		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-			s = -1;
-			continue;
-		}
-
-		ifreq tmp = {0};
-		strncpy(tmp.ifr_name, interface, strlen(interface)+1);
-		if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (char*)&tmp, sizeof(tmp)) < 0) {
-			perror("can't setsockop(): ");
-			close(sock);
-			return -3;
-		}
-
-		assert(i->ifa_addr); 
-		sockaddr_in* sin = (sockaddr_in*)i->ifa_addr;
-		sin->sin_port = (in_port_t)htons(port);
-
-		char buf[100];
-		if(inet_ntop(AF_INET, (const void*)&sin->sin_addr, buf, sizeof(buf)) != nullptr) {
-			printf("bind: %s\n", buf);
-		}
-
-		s = ::bind(sock, (const sockaddr*)sin, sizeof(sockaddr_in));
-        if (s == 0) {
-			_bindSockets.push_back(sock);
-            continue;
-        }
-
-        ::close(sock);
+    s = ::getaddrinfo(NULL, std::to_string(port).c_str(), &hints, &result);
+    if (s != 0) {
+        perror("getaddrinfo: ");
+        return -1;
     }
 
-	::freeifaddrs(ifs);
-	return s < 0 ? 
-		_bindSockets.size() ? _bindSockets.size() : // maybe one bind() was successful
-			s
-		: s;
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        sfd = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (sfd == -1)
+            continue;
+
+        s = ::bind(sfd, rp->ai_addr, rp->ai_addrlen);
+        if (s == 0) {
+			_bindSockets.push_back(sfd);
+            /* We managed to bind successfully! */
+            /* fixme: find some way to bind on ip4 and 6 - continue and pass array?*/
+            break;
+        }
+
+        close(sfd);
+    }
+
+    if (rp == NULL) {
+        fprintf(stderr, "Could not bind\n");
+        return -1;
+    }
+
+    ::freeaddrinfo(result);
+
+    return sfd;
 }
