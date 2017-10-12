@@ -8,6 +8,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(third_party/nanomsg)
 include_directories(third_party/)
 add_subdirectory(third_party/msgpack)
+include_directories(third_party/msgpack/include)
 
 #set(GTEST_ROOT third_party/googletest)
 #find_package(GTest REQUIRED)
