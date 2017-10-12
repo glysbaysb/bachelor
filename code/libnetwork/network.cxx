@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <poll.h>
@@ -171,6 +173,14 @@ int ECCUDP::bind(const int16_t port, const char* interface)
 		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 			s = -1;
 			continue;
+		}
+
+		ifreq tmp = {0};
+		strncpy(tmp.ifr_name, interface, strlen(interface)+1);
+		if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (char*)&tmp, sizeof(tmp)) < 0) {
+			perror("can't setsockop(): ");
+			close(sock);
+			return -3;
 		}
 
 		assert(i->ifa_addr); 
