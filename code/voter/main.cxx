@@ -5,14 +5,80 @@
 #include <libworld/world.h>
 #include <libnetwork/network.h>
 
+#include "voter.h"
+
 typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
 } Info;
 
-void worldStatusCallback(const WorldStatus* ws, void* additional);
-void worldStatusCallback(const WorldStatus* ws, void* additional)
+static int sendWorldStatus(const WorldStatus* ws, Network* network);
+static void voteCallback(void* optional, msgpack_object_array* params);
+static void worldStatusCallback(const WorldStatus* ws, void* additional);
+
+int main(int argc, char** argv)
+{
+	Info callbackInfo = {0};
+
+	if(argc < 3) {
+		printf("%s host interface\n", argv[0]);
+		return 0;
+	}
+
+	callbackInfo.network = new Network(argv[2]);
+	callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&callbackInfo);
+
+	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
+		fprintf(stderr, "can't init world");
+		return 1;
+	}
+
+	callbackInfo.robot = createRobot(callbackInfo.worldCtx);
+	printf("Created robot %d\n", callbackInfo.robot);
+	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
+
+	while(1) {
+		sleep(1);
+	}
+
+	detachFromWorld(callbackInfo.worldCtx);
+}
+
+static int sendWorldStatus(const WorldStatus* ws, Network* network)
+{
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 3);
+	msgpack_pack_float(&pk, ws->xTilt);
+	msgpack_pack_float(&pk, ws->yTilt);
+
+	msgpack_pack_array(&pk, ws->numOfObjects);
+	for(auto i = 0; i < ws->numOfObjects; i++) {
+		msgpack_pack_array(&pk, 6);
+
+		msgpack_pack_int32(&pk, ws->objects[i].id);
+		msgpack_pack_int32(&pk, ws->objects[i].type);
+
+		msgpack_pack_float(&pk, ws->objects[i].x);
+		msgpack_pack_float(&pk, ws->objects[i].y);
+
+		msgpack_pack_float(&pk, ws->objects[i].m);
+		msgpack_pack_float(&pk, ws->objects[i].fuel);
+	}
+
+	if(network->sendRPC(Procedure::VOTE_MOVE_ROBOT, sbuf.data, sbuf.size) < 0) {
+		return -1;
+	}
+
+	return 0;
+}
+
+static void worldStatusCallback(const WorldStatus* ws, void* additional)
 {
 	Info* info = (Info*)additional;
 
@@ -32,9 +98,11 @@ void worldStatusCallback(const WorldStatus* ws, void* additional)
 			}
 		}
 	}
+
+	sendWorldStatus(ws, info->network);
 }
 
-void voteCallback(void* optional, msgpack_object_array* params)
+static void voteCallback(void* optional, msgpack_object_array* params)
 {
     if(!params || !params->size) {
         return;
@@ -67,30 +135,3 @@ void voteCallback(void* optional, msgpack_object_array* params)
     }
 }
 
-int main(int argc, char** argv)
-{
-	Info callbackInfo = {0};
-
-	if(argc < 3) {
-		printf("%s host interface\n", argv[0]);
-		return 0;
-	}
-
-	callbackInfo.network = new Network(argv[2]);
-	callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, voteCallback, (void*)&callbackInfo);
-
-	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
-		fprintf(stderr, "can't init world");
-		return 1;
-	}
-
-	callbackInfo.robot = createRobot(callbackInfo.worldCtx);
-	printf("Created robot %d\n", callbackInfo.robot);
-	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
-
-	while(1) {
-		sleep(1);
-	}
-
-	detachFromWorld(callbackInfo.worldCtx);
-}

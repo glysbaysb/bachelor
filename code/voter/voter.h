@@ -8,4 +8,17 @@
  * - dY (float)
  */
 
+/**
+ * WorldStatus is
+ * - Angle (float, float)
+ * - Array of Object
+ *
+ * Object is:
+ * - ID (int)
+ * - type (int)
+ * - x, y (float)
+ * - m (float)
+ * - fuel (int)
+ */
+
 #endif // VOTER_H
