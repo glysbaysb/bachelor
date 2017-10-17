@@ -73,6 +73,14 @@ class Network {
 protected:
 	void* rpc;
 	ECCUDP udp;
+
+	void _handlePackets(const std::vector<Packet>& packets)
+	{
+		for(auto&& i : packets) {
+			handleRPC(rpc, i.data(), i.size());
+		}
+	}
+
 public:
 	Network(const char* interface) : udp(7777, 7777, interface)
 	{
@@ -91,24 +99,22 @@ public:
 	{
 		auto packets = std::vector<Packet>();
 		if(udp.poll(0, packets) < 0) {
+			puts("err udp.poll()");
 			return;
 		}
 		
-		for(auto&& i : packets) {
-			for(auto j = 0; j < i.size(); j++) {
-				printf("%d ", i.at(j));
-			}
-			putchar('\n');
-
-			handleRPC(rpc, i.data(), i.size());
-		}
+		_handlePackets(packets);
 	}
 
 	void poll(int timeout)
 	{
-		usleep(timeout * 1000);
-
-		step();
+		auto packets = std::vector<Packet>();
+		if(udp.poll(timeout, packets) < 0) {
+			puts("err udp.poll()");
+			return;
+		}
+		
+		_handlePackets(packets);
 	}
 
 	int sendRPC(Procedure num, const void* paramsBuffer, size_t paramsLen)
