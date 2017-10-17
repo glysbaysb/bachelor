@@ -160,6 +160,43 @@ TEST_F(ECCTest, FailBurstErrorsTest) {
 	}
 }
 
+TEST_F(ECCTest, CPPInterfaceTest) {
+	auto x = std::vector<uint8_t>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+	auto enc = ECC::encode(x);
+	auto dec = ECC::decode(enc);
+
+	ASSERT_EQ(x, dec);
+}
+
+TEST_F(ECCTest, SizeTest) {
+	/* size < MAX_MESSAGE_LENGTH is already tested by CPPInterfaceTest */
+
+	/* two chunks */
+	{
+		auto x = std::vector<uint8_t>();
+		for(auto i = 0; i < 300; i++) {
+			x.push_back(i);
+		}
+
+		auto enc = ECC::encode(x);
+		auto dec = ECC::decode(enc);
+
+		ASSERT_EQ(x, dec);
+	}
+
+	/* three chunks */
+	{
+		auto x = std::vector<uint8_t>();
+		for(auto i = 0; i < 600; i++) {
+			x.push_back(i);
+		}
+
+		auto enc = ECC::encode(x);
+		auto dec = ECC::decode(enc);
+
+		ASSERT_EQ(x, dec);
+	}
+}
 
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
