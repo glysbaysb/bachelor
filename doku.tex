@@ -65,10 +65,13 @@
 \section{Einf{\"{u}}hrung}
 \todo{Renderbild, Bild von der Ausgabe?}
 
-\paragraph{Motivation} \todo{...}
+\paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. \todo{bla bla verdeutlichen, vertiefen bla bla}
+Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt nutzbar sein.
+Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln, da diese visuell ansprechend sind und vielf{\"{a}}tige
+Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
 
 \paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
-platziert werden. Die Summe ihrer Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
+platziert werden. Die Summe alle Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
 die Platte und die Simulation endet.
 
 Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
@@ -83,21 +86,19 @@ so dass:
 \item die Platte nicht kippt
 \end{itemize}
 
-Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
-Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00}) Teil dieser Bachelorarbeit ist eine
-Beispielimplementation, die auch mithilfe eines Fehlerinjektors getestet wurde.
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so das auch beim Ausfall eines (oder mehrerer) Kontroller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+Teil dieser Bachelorarbeit ist eine
+Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}lt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
 
-\todo{anforderungen?}
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden, die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Kontrollern und die Ansteuerung der Roboter.
+Daher ist es notwendig ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
-\paragraph{Nutzung durch die Studenten} \todo{Einleitung}
-\todo{interface}
-
-\paragraph{Evaluation}
+\paragraph{Evaluation} 
 
 \clearpage
 \section{Vorherige Arbeiten}
-Da das Ziel dieser Arbeit die Entwicklung einer Aufgabe zur Verdeutlichung der Prinzipen Ausfallsicherer Systeme ist, wird ein kurzer {\"{U}}berblick {\"{u}}ber
-bereits bestehende Systeme dieser Arbeit gegeben.
+Da das Ziel dieser Arbeit die Entwicklung einer Aufgabe zur Verdeutlichung der Prinzipen Ausfallsicherer Systeme ist, wird ein kurzer {\"{U}}berblick {\"{u}}ber bereits bestehende Systeme dieser Art gegeben.
 
 \subsection{Die balancierenden Roboter}
 Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde, an der Humboldt Universit{\"{a}}t Berlin, in Zusammenarbeit
@@ -110,8 +111,10 @@ das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen ka
 
 \todo{mehr}
 
-\paragraph{Evaluation} \todo{warum meins doller ist. Nicht als Lernobjekt gedacht? Graphisch in die Jahre gekommen. Einarbeitungszeit in CORBA, nicht
-zumutbar?}
+\paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll diese bestehende Arbeit weiterzuverwenden.
+Die damals noch akzeptable graphische Darstellung wirkt heute antiquiert, was gerade bei einem Vorf{\"{u}}hrobjekt hinderlich
+ist. Auch als reine {\"{U}}bungsaufgabe ist es nicht gut geeignet, da die Einarbeitung in COBRA und die Implementierung der
+Echtzeitanforderungen vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\{o}}tig verkomplizieren w{\"{u}}rde.
 
 \subsection{Die ausfallsichere Heizung}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
@@ -133,7 +136,8 @@ allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren, die Heizungen oder d
 
 \paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
-ungeeignet machen. Dies wird noch dadurch verst{\"{a}}rkt das es wenig Interaktionsm{\"{o}}glichkeiten mit dem System gibt.
+ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System - es ist schwer etwas auszuprobieren und
+mit dem System zu spielen.
 
 \clearpage
 \section{Konzept}
@@ -143,20 +147,20 @@ Sehr high level, Bild vom Systemaufbau
 \section{3D Engine}
 \subsection{Anforderungen}
 Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden. Auch wenn sich das Geschehen rein auf einer zweidimensionalen Ebene stattfindet, ist eine dreidimensionale
-Darstellung ansprechender. Eine \textit{3D Engine} bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
+Darstellung ansprechender und wird deshalb vorgezogen. Diese Darstellung geschieht mithilfe einer \textit{3D Engine}; sie bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
 Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen. Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
 
-\paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein, dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
+\paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein; dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
 
-\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf Windows und Linux ausf{\"{u}}hrbar sein. \todo{hoert sich an als wuerde ich gleichzeitig meinen. Und was ist mit extraplattformen?}
+\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
 
 \paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten, zus{\"{a}}tzlich zur reinen 3D Engine, auch eine Physikengine und eine Audioengine.
-Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, daher wird, in dieser Arbeit, jede gameengine einer reinen 3D Engine (wie Blender) vorgezogen.
+Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden gameengines reinen 3D Engines (wie Blender) vorgezogen.
 
 \paragraph{\todo{namen finden}} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
-tats{\"{a}}chliche Nutzung (also gibt es einen graphischen Leveleditor, wie kann die Interaktionen zwischen
-Objekten gesteuert werden) und zum anderen die Qualit{\"{a}}t der Dokumentation und wie verbreitet diese
-\textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu kriegen.
+tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
+Objekten gesteuert werden?) zum anderen die Qualit{\"{a}}t der Dokumentation und schließlich wie verbreitet diese
+\textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
 Gerade in diesem Punkt stach Unity hervor und wurde deshalb als Basis f{\"{u}}r diese Arbeit ausgew{\"{a}}hlt.
 
@@ -174,12 +178,11 @@ Notwendig ist es aber das die verschiedenen Objekte in der simulierten Welt in 3
 verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra implementiert werden.
 
 \subsection{Unitys Physikengine}
-Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser
-Arbeit wichtigen Funktionalit{\"{a}}ten sind:
+Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 
 \begin{itemize}
 \item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren und auch zur Erkennung des Kontaktes mit der F{\"{u}}llstation
-\item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von Gewicht und Geschwindigkeit
+\item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von ihrem Gewicht und ihrer Geschwindigkeit
 \end{itemize}
 
 \subsection{Scripting bei Unity}
@@ -198,10 +201,10 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 \subsection{Anforderungen}
 Um verteilte Systeme zu programmieren bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
 
-Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern, die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
+Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
 der angemessen Weg um Voter und Simulation zu verbinden.
 Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
-sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, ist im jeweiligen Kapitel.
+sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
@@ -321,7 +324,7 @@ $ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smal
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
 
-Der Robot kann sich nur in "Fahrrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
+Der Robot kann sich nur in "Fahrtrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
 Maximalgeschwindigkeit zwischen $ -3 \leq \Delta x \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
 Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern. \todo{nochmal nachdenken}
@@ -409,7 +412,7 @@ int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* o
 void MoveRobot(void* ctx, int id, int diffX, int diffY);
 \end{lstlisting}
 
-Diese wird den Studierenden als kompilierte Library mit einem detailierten Headerfile zur Verf{\"{u}}gung gestellt.
+Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt.
 
 \clearpage
 \section{Fehlerinjektion}
@@ -418,17 +421,18 @@ In diesem Fall wird simuliert das dass Netzwerk Daten fehlerhaft weiterleitet (w
 unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie entladen hat.
 \todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
 
+\todo{bild?}
+
 \subsection{Netzwerk}
-Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelen Pakete werden dabei so manipuliert das, durchschnittlich, in $ \frac{1}{20} $ aller Pakete
-ein Byte verf{\"{a}}lscht wird, das Betriebssystem diese Modifikation allerdings nicht erkennt.
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert das, durchschnittlich, in $ \frac{1}{20} $ aller Pakete
+ein Byte verf{\"{a}}lscht wird ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also selbst implementiert werden.
 
 \subsection{Controller}
-Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
-Dadurch wird ein crash failure simuliert.
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen crash failure.
 
 \clearpage
 \section{Beispielimplementation}
-Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementiereung einer
+Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementierung einer
 Beispielimplementation.
 
 \paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. \todo{aeh damit ist es dann doch iwie wieder rundenbasiert?} Diese Informationen werden von allen Controllern empfangen, k{\"{o}}nnen
@@ -465,14 +469,13 @@ b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig rei
 
 \subsection{Netzwerkkommunikation}
 Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
-Durch die Benutzung eines
-(255, 240) RS Codes k{\"{o}}nnen $n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Nachricht erkannt werden. 
+Durch die Benutzung dieser Kodierung k{\"{o}}nnen $n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Nachricht erkannt werden. 
 Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \begin{itemize}
 \item Durch expermientelle Verifikation wurde klar das im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
-	10 gr{\"{o}}ser ist, ist nicht erforderlich eine sehr kompakte Kodierung zu benutzen, es ist ausreichend die Redudanz zu reduzieren. 
+	100 gr{\"{o}}ser ist, ist nicht erforderlich eine sehr kompakte Kodierung zu benutzen, es ist ausreichend die Redudanz zu reduzieren. 
 \item Es ist ein systematischer Code der es erlaubt w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
-	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche. Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
 	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
 \end{itemize}
 
