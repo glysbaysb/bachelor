@@ -1,37 +1,47 @@
+Zeitplan
+--------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-09-15    | ecc			| auswerten & entscheiden was genommen wird ---> RS, weil funktioniert und man sieht den Inhalt noch
-09-16	 | unity		| testen ob roboter erscheinen
-09-16	 |              | skins
-09-17	 |				| roboter designen + lampe + rauch
-09-20    | controller   | modul/klassen ausdenken
+09-17	 | unity		| roboter designen + lampe + rauch
 09-22	 | cont + voter | kommunikation
 09-22	 | controller   | main als geruest
+         |fehlerinjektor|
+		 | unity		| roboter die runterfallen sind raus
+		 |				| wenn der roboter ausgewhlt ist darf der nicht anders bewegt werden können
+		 |				| mglichkeit geben keinen roboter auszuwählen
+		 |				| gewhlten roboter anleuchten
+		 |				| Scheißbewegung wieder richtig machen
+		 | ecc			| pakete > 255
+		 | voter		| alles halt
+		 | algo			| vlt noch einen?
 
+fixe ideen
+----------
 die Daten die empfangen werden, vergleichen mit den selbst berechneten. Falls zu krasser
 Fehler (rundungsfehler, mem corruption, ...) -> software rejunivation
 
+momentan les ich immer nur ein packet bei jedem poll() aufruf...
+
+voter
+-----
 Formalized plurality voting - divide results in partitions, choose  random member from the largest
  partition
 
- median voting
+median voting
 
-ECC library so aendern das es Nachrichten laenger als 255 byte machen kann
-
+refactoring
+-----------
 Todo: ECCUDP ausplitten -> mindestens der broadcast socket kann auch gut eine einzelene Klasse sein
 	  Packet soll absender erhalten. aehh aber beim senden macht das ja keinen Sinn?
 
+Zusammenhanglose Notizen
+------------------------
 recv rpidev01
 $ nc -ulp 7777 -s 192.168.38.181
 
 send qemudev
 $ nc -u 192.168.38.181 7777
---> rpidev: test_programms/network/rpc_echo kommt was an
 
-momentan les ich immer nur ein packet bei jedem poll() aufruf...
-immer nur auf eth1 binden --> funzt nicht
-
-----
 broadcast test:
 qemudev: nc -ub 192.168.38.255 7777 -s 192.168.38.182
 	socat - UDP-DATAGRAM:192.168.38.255:7777,broadcast
