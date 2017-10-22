@@ -313,18 +313,18 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 
 \paragraph{Physikalisches Modell}
 \todo{physisch?}
-Ein Roboter wird dabei beschrieben durch seine Position und Gewicht
-$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$ und
-seinen Geschwindigkeitsvektor
-$ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$.
+Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
+$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, einen
+Geschwindigkeitsvektor
+$ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$ und einen Rotationsquaternion
+$ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
 
-Dabei kann der Roboter sich frei in alle Richtungen bewegen, erreicht aber
-maximal eine Geschwindigkeit $ -3 \leq \Delta x \leq 3$, bzw. 
-$ -3 \leq \Delta y \leq 3$.
+Der Robot kann sich nur in "Fahrrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
+Maximalgeschwindigkeit zwischen $ -3 \leq \Delta x \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
-Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern.
+Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern. \todo{nochmal nachdenken}
 
 Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
 aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
@@ -345,14 +345,16 @@ $$ e(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100)  $$
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
 Die Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, k{\"{o}}nnen in ihren X und Y Koordinaten getrennt betrachtet und in das Hebelgesetz eingesetzt werden. Der Druck
 der durch dieses berechnet wird kann dann benutzt werden um den Kippwinkel zu errechnen.
-\todo{herleitung?}
 
 F{\"{u}}r den Vektor der die in Links-Rechts wirkende Kr{\"{a}}fte beschreibt, gilt:
 $$ V_{LinksRechts} = \begin{pmatrix}x(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} x(N_i) \\ w(N_i) \end{pmatrix} $$
-$$ cos(V_{LinksRechts}) = \beta = W_{LinksRechts} $$
 
 Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach Vorne-Hinten gekippt wird:
 $$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} y(N_i) \\ w(N_i) \end{pmatrix} $$
+
+\todo{herleitung?}
+Hier muss irgendwie auch das Plattengewict rein
+$$ cos(V_{LinksRechts}) = \beta = W_{LinksRechts} $$
 $$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
 
 \clearpage
@@ -443,7 +445,7 @@ die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o
 Die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 
 \paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{X}$ aller Bits verf{\"{a}}lscht werden.
-Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \it{silent failure}; \todo{auswirkungen}
+Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsection{Voter}
 \label{voter}
