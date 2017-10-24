@@ -6,12 +6,11 @@ Deadline | Module		|	was
 09-22	 | cont + voter | kommunikation
 09-22	 | controller   | main als geruest
          |fehlerinjektor|
-		 | unity		| roboter die runterfallen sind raus
-		 |				| wenn der roboter ausgewhlt ist darf der nicht anders bewegt werden können
+		 | unity		| 
 		 |				| mglichkeit geben keinen roboter auszuwählen
 		 |				| gewhlten roboter anleuchten
-		 |				| Scheißbewegung wieder richtig machen
-		 | ecc			| pakete > 255
+		 |				| Scheißbewegung wieder richtig machen? vlt fertig
+		 | ecc			| pakete > 255b
 		 | voter		| alles halt
 		 | algo			| vlt noch einen?
 
