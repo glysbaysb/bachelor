@@ -53,6 +53,7 @@
 \begin{document}
 
 \maketitle
+\todo{Bilder: Systemaufbau, von der Simulation selbst, vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?}
 \thispagestyle{empty}
 
 \clearpage
@@ -94,7 +95,7 @@ Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}
 \paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden, die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Kontrollern und die Ansteuerung der Roboter.
 Daher ist es notwendig ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
-\paragraph{Evaluation} 
+\paragraph{Evaluation} \todo{...}
 
 \clearpage
 \section{Vorherige Arbeiten}
@@ -114,7 +115,7 @@ das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen ka
 \paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll diese bestehende Arbeit weiterzuverwenden.
 Die damals noch akzeptable graphische Darstellung wirkt heute antiquiert, was gerade bei einem Vorf{\"{u}}hrobjekt hinderlich
 ist. Auch als reine {\"{U}}bungsaufgabe ist es nicht gut geeignet, da die Einarbeitung in COBRA und die Implementierung der
-Echtzeitanforderungen vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\{o}}tig verkomplizieren w{\"{u}}rde.
+Echtzeitanforderungen vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren w{\"{u}}rde.
 
 \subsection{Die ausfallsichere Heizung}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
@@ -317,9 +318,8 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \paragraph{Physikalisches Modell}
 \todo{physisch?}
 Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
-$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, einen
-Geschwindigkeitsvektor
-$ V_i = \bigl(\begin{smallmatrix} \Delta x \\ \Delta y \end{smallmatrix}\bigr)$ und einen Rotationsquaternion
+$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
+Geschwindigkeit $ V_i = \Delta v $ und einen Rotationsquaternion
 $ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
@@ -333,6 +333,10 @@ Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
 aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
 $$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
+
+\paragraph{Bewegung} Die Bewegung des Roboters wird vorgegeben durch $V_i$ und $ R_i$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unitys Physikengine verarbeitet. Der zum Roboter geh{\"{o}}rende
+Rigidbody wird dann entsprechend manipuliert: die Rotation wird zwischen dem momentanen und dem gew{\"{u}}nschten Winkel
+interpoliert und \todo{bewegung ist noch kacke}.
 
 \subsection{Die F{\"{u}}llstation}\label{fuelstation}
 Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
@@ -419,9 +423,8 @@ Diese wird den Studierenden als kompilierte Library mit einem detailliert kommen
 Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt wird eine Fehlerinjektion benutzt um die Fehlertoleranz zu testen.
 In diesem Fall wird simuliert das dass Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
 unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie entladen hat.
-\todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
 
-\todo{bild?}
+\todo{bild? wovon wollte ich hier ein bid haben?}
 
 \subsection{Netzwerk}
 Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert das, durchschnittlich, in $ \frac{1}{20} $ aller Pakete
@@ -429,14 +432,24 @@ ein Byte verf{\"{a}}lscht wird ohne dass das Betriebssystem diese Modifikation e
 
 \subsection{Controller}
 Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen crash failure.
+\todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
+
+\subsection{Simulation}
+Der Benutzer kann einen Roboter fernsteuern und hat damit direkten Einfluss auf die simulierte Welt. W{\"{a}}hrend ein Roboter
+ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht, es gelten die gleichen Einschr{\"{a}}nkungen bei
+Geschwindigkeit und Rotation, und so weiter.
+
+Die Roboter werden {\"{u}}ber die Pfeiltasten gesteuert (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter). Um
+anzuzeigen welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
+Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter aufgehoben.
 
 \clearpage
 \section{Beispielimplementation}
 Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementierung einer
 Beispielimplementation.
 
-\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. \todo{aeh damit ist es dann doch iwie wieder rundenbasiert?} Diese Informationen werden von allen Controllern empfangen, k{\"{o}}nnen
-aber potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
+\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. \todo{aeh damit ist es dann doch iwie wieder rundenbasiert?} Diese Informationen werden von den Votern empfangen, k{\"{o}}nnen
+aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
 jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
 
 \subsection{Fehlermodell}
