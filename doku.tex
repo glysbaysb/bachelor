@@ -297,6 +297,12 @@ Integern und Arrays mit fester Gr{\"{o}}{\ss}e eingegangen.
 \paragraph{Fixed Size Arrays}
 
 \clearpage
+\section{RPC?}
+
+\clearpage
+\section{Quaternions? Vektorrechnung?}
+
+\clearpage
 \section{Die Welt}
 Die simulierte Welt besteht aus den Robotern die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation an der die Robter Energie tanken k{\"{o}}nnen und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
@@ -452,8 +458,7 @@ Beispielimplementation.
 aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
 jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
 
-\subsection{Fehlermodell}
-\label{error-model}
+\subsection{Fehlermodell} \label{error-model}
 Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren welche Art von Fehlern
 {\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
 die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o}}st werden.
@@ -464,25 +469,18 @@ Die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 \paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{X}$ aller Bits verf{\"{a}}lscht werden.
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
-\subsection{Voter}
-\label{voter}
-Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
+\subsubsection{R{\"{a}}umliche Redudanz}
+Es wird davon ausgegangen das die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
+Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
+sind kann eine ordnungsgem{\"{a}}sse Steuerung nicht mehr garantiert werden.
 
-\subsection{Controller}
-\label{controller}
-\paragraph{Algorithmus zur Bestimmung der Bewegung} im buch war das mit vorbestimmten elipsen. ka obs was dolleres gibt.
+Wenn ein Roboter erstellt wird werden auch $Y$ Controller gestartet. Die Ausf{\"{u}}hrung der Controller wird durch ein Skript
+{\"{u}}berwacht das ausgefallene Controller neu startet. \todo{ist das sinnvoll? dann muss man ja auch das skript killen um dann
+irgendwann mal zu wenig controller zu haben}
 
-\subsubsection{Elipsen}
-\subsubsection{Zweipunktregler}
-\subsubsection{was anderes}
-
-\subsection{Konsenzalgorithmus}
-bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
-b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
-
-\subsection{Netzwerkkommunikation}
+\subsubsection{Netzwerkkommunikation}
 Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
-Durch die Benutzung dieser Kodierung k{\"{o}}nnen $n$ aus $m$ Einzelfehler und bis zu $x$ Doppelfehler pro Nachricht erkannt werden. 
+Durch die Benutzung dieser Kodierung k{\"{o}}nnen alle Einzelfehler und Doppelfehler erkannt und korrigiert werden. Erst ab 7 Fehlern ist eine Korrektur nicht mehr m{\"{o}}glich, ab 15 Fehlern versagt auch eine Fehlererkennung.
 Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \begin{itemize}
 \item Durch expermientelle Verifikation wurde klar das im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
@@ -491,6 +489,23 @@ Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
 	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
 \end{itemize}
+
+\subsection{Voter}
+\label{voter}
+Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
+
+\subsection{Controller}
+\label{controller}
+\paragraph{Algorithmus zur Bestimmung der Bewegung} hauptproblem? ziel? bla bla
+
+
+\subsubsection{Elipsen}
+\subsubsection{Zweipunktregler}
+\subsubsection{was anderes}
+
+\subsection{Konsenzalgorithmus}
+bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
+b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
 
 \clearpage
 \section{Evaluation}
