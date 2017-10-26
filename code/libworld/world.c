@@ -336,7 +336,20 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	return 0;
 }
 
-int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
+static int clamp(int v, int min, int max)
+{
+	assert(max > min);
+
+	if(v < min) {
+		v = min;
+	} else if(v > max) {
+		v = max;
+	}
+
+	return v;
+}
+
+int moveRobot(void* ctx_, int id, int speed, int angle) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	/* create params */
@@ -348,8 +361,8 @@ int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 
 	msgpack_pack_array(&pk, 3);
 	msgpack_pack_int32(&pk, id);
-	msgpack_pack_int32(&pk, diffX);
-	msgpack_pack_int32(&pk, diffY);
+	msgpack_pack_int32(&pk, clamp(speed, 0, 100));
+	msgpack_pack_int32(&pk, clamp(angle, -30, 30));
 
 	/* create request with params */
 	void* out = NULL; size_t outLen = 0;

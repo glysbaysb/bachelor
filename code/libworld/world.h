@@ -77,12 +77,12 @@ int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* o
  *
  * @param ctx: the world
  * @param id: the robot to be moved
- * @param diffX: speedup in X difection
- * @param diffY: speedup in Y difrection
+ * @param speed: 0 <= speed <= 100
+ * @param angle: -30 <= angle <= 30
  *
  * @return: 0 on success. -1 for allocation errors, -2 for network errs
  */
-int MoveRobot(void* ctx, int id, int diffX, int diffY);
+int moveRobot(void* ctx, int id, int speed, int angle);
 
 /**
  * @brief detach from the world and stop calling the callback
