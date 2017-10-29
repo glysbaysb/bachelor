@@ -19,9 +19,6 @@
 
 #include <libecc/ecc.h>
 
-#define MSG_LENGTH (255 - NPAR)
-#define RECVD_MSG_LENGTH (MSG_LENGTH + NPAR)
-
 class ECCTest: public ::testing::Test {
 private:
 	void generate_data(uint8_t* buff, size_t cnt) {
@@ -31,7 +28,7 @@ private:
 	}
 
 protected:
-	uint8_t message[MSG_LENGTH];
+	uint8_t message[MAX_MESSAGE_LENGTH];
 public:
 	ECCTest() {
 		initialize_ecc();
@@ -40,8 +37,8 @@ public:
 };
 
 TEST_F(ECCTest, SingleByteErrorsTest) {
-	uint8_t  codeword[RECVD_MSG_LENGTH];
-	encode_data(message, MSG_LENGTH, codeword);
+	uint8_t  codeword[OUTPUT_LENGTH];
+	encode_data(message, MAX_MESSAGE_LENGTH, codeword);
 
 	for(size_t i = 0; i < sizeof(codeword); i++) {
 		uint8_t copy[sizeof(codeword)];
@@ -49,10 +46,10 @@ TEST_F(ECCTest, SingleByteErrorsTest) {
 
 		copy[i] ^= 0xAA;
 
-		decode_data(copy, RECVD_MSG_LENGTH);
+		decode_data(copy, OUTPUT_LENGTH);
 		if(check_syndrome () != 0) {
 			correct_errors_erasures (copy,
-				 RECVD_MSG_LENGTH,
+				 OUTPUT_LENGTH,
 				 0,
 				 NULL);
 		}
@@ -87,8 +84,8 @@ TEST_F(ECCTest, SingleByteErrorsCppTest) {
  */
 TEST_F(ECCTest, BurstErrorsTest) {
 	const size_t ERRORS = NPAR / 2;
-	uint8_t  codeword[RECVD_MSG_LENGTH];
-	encode_data(message, MSG_LENGTH, codeword);
+	uint8_t  codeword[OUTPUT_LENGTH];
+	encode_data(message, MAX_MESSAGE_LENGTH, codeword);
 
 	for(size_t i = 0; i < sizeof(codeword) - ERRORS; i++) {
 		uint8_t copy[sizeof(codeword)];
@@ -98,9 +95,9 @@ TEST_F(ECCTest, BurstErrorsTest) {
 			copy[i + j] ^= 0xA5;
 		}
 
-		decode_data(copy, RECVD_MSG_LENGTH);
+		decode_data(copy, OUTPUT_LENGTH);
 		EXPECT_GT(check_syndrome(), 0);
-		correct_errors_erasures (copy, RECVD_MSG_LENGTH, 0, NULL);
+		correct_errors_erasures (copy, OUTPUT_LENGTH, 0, NULL);
 
 		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
 			<< "decoding error when corrupting positions " << i << " to " << i+ERRORS;
@@ -114,8 +111,8 @@ TEST_F(ECCTest, BurstErrorsTest) {
  *        So [0], [2], ..., [NPAR]. Then [1], [3], ...
  */
 TEST_F(ECCTest, StrideTest) {
-	uint8_t  codeword[RECVD_MSG_LENGTH];
-	encode_data(message, MSG_LENGTH, codeword);
+	uint8_t  codeword[OUTPUT_LENGTH];
+	encode_data(message, MAX_MESSAGE_LENGTH, codeword);
 
 	for(size_t i = 0; i < sizeof(codeword) - NPAR; i++) {
 		uint8_t copy[sizeof(codeword)];
@@ -125,9 +122,9 @@ TEST_F(ECCTest, StrideTest) {
 			copy[i + j] ^= 0xA5;
 		}
 
-		decode_data(copy, RECVD_MSG_LENGTH);
+		decode_data(copy, OUTPUT_LENGTH);
 		EXPECT_GT(check_syndrome(), 0);
-		correct_errors_erasures (copy, RECVD_MSG_LENGTH, 0, NULL);
+		correct_errors_erasures (copy, OUTPUT_LENGTH, 0, NULL);
 
 		ASSERT_TRUE(memcmp(copy, message, sizeof(message)) == 0)
 			<< "decoding error when corrupting positions " << i << " to " << i+NPAR;
@@ -140,8 +137,8 @@ TEST_F(ECCTest, StrideTest) {
  */
 TEST_F(ECCTest, FailBurstErrorsTest) {
 	const size_t ERRORS = NPAR / 2 + 1;
-	uint8_t  codeword[RECVD_MSG_LENGTH];
-	encode_data(message, MSG_LENGTH, codeword);
+	uint8_t  codeword[OUTPUT_LENGTH];
+	encode_data(message, MAX_MESSAGE_LENGTH, codeword);
 
 	for(size_t i = 0; i < sizeof(codeword) - ERRORS; i++) {
 		uint8_t copy[sizeof(codeword)];
@@ -151,9 +148,9 @@ TEST_F(ECCTest, FailBurstErrorsTest) {
 			copy[i + j] ^= 0xA5;
 		}
 
-		decode_data(copy, RECVD_MSG_LENGTH);
+		decode_data(copy, OUTPUT_LENGTH);
 		EXPECT_GT(check_syndrome(), 0);
-		correct_errors_erasures (copy, RECVD_MSG_LENGTH, 0, NULL);
+		correct_errors_erasures (copy, OUTPUT_LENGTH, 0, NULL);
 
 		//ASSERT_FALSE(memcmp(copy, message, sizeof(message)) == 0)
 		//	<< "decoding error when corrupting positions " << i << " to " << i+ERRORS;
