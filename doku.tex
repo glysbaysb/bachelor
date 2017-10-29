@@ -59,7 +59,7 @@
 \clearpage
 \tableofcontents
 \listoffigures
-%\addcontentsline{toc}{section}{\listfigurename}
+\addcontentsline{toc}{section}{\listfigurename}
 \listoftables
 
 \clearpage
@@ -142,14 +142,20 @@ mit dem System zu spielen.
 
 \clearpage
 \section{Konzept}
-Sehr high level, Bild vom Systemaufbau
+Sehr high level, Bild vom Systemaufbau\todo{was soll hier nochmal rein? das was ich mir auf den Kalendar aufgemalt hab, mit den
+Kontrollern, Votern, Simulation und den 2 Netzwerken?}
+
 
 \clearpage
 \section{3D Engine}
 \subsection{Anforderungen}
 Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden. Auch wenn sich das Geschehen rein auf einer zweidimensionalen Ebene stattfindet, ist eine dreidimensionale
-Darstellung ansprechender und wird deshalb vorgezogen. Diese Darstellung geschieht mithilfe einer \textit{3D Engine}; sie bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
-Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen. Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
+Darstellung ansprechender und wird deshalb vorgezogen.
+
+Diese Darstellung geschieht mithilfe einer \textit{3D Engine}; sie bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
+Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen.
+
+Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
 
 \paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein; dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
 
@@ -263,7 +269,7 @@ Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben
 Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \subsection{Anforderungen}
-Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (F{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}} Unity) gibt.
+Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (F{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
 Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
 eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen anf{\"{a}}llig zu sein.
 
@@ -290,11 +296,14 @@ die Nachricht allerdings. Aus diesem Grund wird MsgPack als Serialisierungsforma
 
 \subsection{msgpack}
 MsgPack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsframework, dessen Nachrichten besonders wenig Redudanzen enthalten sollen. Beispielhaft wird hier auf die Serialisierung von
-Integern und Arrays mit fester Gr{\"{o}}{\ss}e eingegangen.
+Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
-\todo{sicher? ist nicht so spannend ehrlich gesagt}
-\paragraph{Integer}
-\paragraph{Fixed Size Arrays}
+Die Grundpidee von msgpack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
+\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite - zum Beispiel 64bit - Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
+\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an - also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
+
+L{\"{a}}ngere Zeichenketten
+werden mit anderen Signalzeichen kodiert - beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^(32))-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
 
 \clearpage
 \section{RPC?}
@@ -384,7 +393,7 @@ Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine F
 
 Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
 des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen das ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
-programmiert werden das sie mit value faults/message corruption\cite{richling-ass} umgehen k{\"{o}}nnen.
+programmiert werden das sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
 
 \subsection{VMs}
 
@@ -466,7 +475,7 @@ die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o
 \paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Es k{\"{o}}nnen bis zu \todo{...} aller Controller ausfallen.
 Die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bis zu $\frac{1}{X}$ aller Bits verf{\"{a}}lscht werden.
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bei bis zu $\frac{1}{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsubsection{R{\"{a}}umliche Redudanz}
@@ -512,7 +521,7 @@ b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig rei
 
 
 \clearpage
-%\nocite{*} % alle unbenutzen Literatureintr{\"{a}}ge trotzdem anzeigen
+\nocite{*} % alle unbenutzen Literatureintr{\"{a}}ge trotzdem anzeigen
 \bibliographystyle{plain}
 %\addbibresource{lit.bib}
 \bibliography{lit}
