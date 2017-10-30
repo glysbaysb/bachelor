@@ -68,7 +68,7 @@
 
 \paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. \todo{bla bla verdeutlichen, vertiefen bla bla}
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt nutzbar sein.
-Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln, da diese visuell ansprechend sind und vielf{\"{a}}tige
+Dies f{\"{u}}hrte zur Idee, eine Computersimulation zu entwickeln, da diese visuell ansprechend ist und vielf{\"{a}}tige
 Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
 
 \paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
@@ -79,7 +79,7 @@ Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei abe
 an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
 schnell).
 
-Kontrolliert werden die Roboter von bis zu $M$ $(M \geq N)$ Kontrollern. Einer oder mehr Kontroller stimmen sich ab,
+Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
 so dass:
 \begin{itemize}
 \item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
@@ -87,13 +87,13 @@ so dass:
 \item die Platte nicht kippt
 \end{itemize}
 
-Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so das auch beim Ausfall eines (oder mehrerer) Kontroller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Kontroller zur
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
 Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
 Teil dieser Bachelorarbeit ist eine
-Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}lt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
+Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
 
-\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden, die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Kontrollern und die Ansteuerung der Roboter.
-Daher ist es notwendig ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
+Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
 \paragraph{Evaluation} \todo{...}
 
@@ -102,17 +102,17 @@ Daher ist es notwendig ein Interface ins "innere" der Simulation bereitzustellen
 Da das Ziel dieser Arbeit die Entwicklung einer Aufgabe zur Verdeutlichung der Prinzipen Ausfallsicherer Systeme ist, wird ein kurzer {\"{U}}berblick {\"{u}}ber bereits bestehende Systeme dieser Art gegeben.
 
 \subsection{Die balancierenden Roboter}
-Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde, an der Humboldt Universit{\"{a}}t Berlin, in Zusammenarbeit
+Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde an der Humboldt Universit{\"{a}}t Berlin in Zusammenarbeit
 mit Daimler Benz, eine Simulation {\"{a}}hnlich dieser entwickelt. Zu dieser wurde dann sp{\"{a}}ter ein echter physikalischer Roboter hinzugef{\"{u}}gt.
 
 Im Gegensatz zu diesem System musste es, zus{\"{a}}tzlich zur nicht-funktionalen Eigenschaft Ausfallsicherheit, auch echtzeitf{\"{a}}hig sein.
 
-\paragraph{Systemaufbau} Die Simulation und die Controller l{\"{a}}ufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}, w{\"{a}}hrend
+\paragraph{Systemaufbau} Die Simulation und die Controller laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}, w{\"{a}}hrend
 das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
 
 \todo{mehr}
 
-\paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll diese bestehende Arbeit weiterzuverwenden.
+\paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll, diese bestehende Arbeit weiterzuverwenden.
 Die damals noch akzeptable graphische Darstellung wirkt heute antiquiert, was gerade bei einem Vorf{\"{u}}hrobjekt hinderlich
 ist. Auch als reine {\"{U}}bungsaufgabe ist es nicht gut geeignet, da die Einarbeitung in COBRA und die Implementierung der
 Echtzeitanforderungen vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren w{\"{u}}rde.
@@ -120,14 +120,14 @@ Echtzeitanforderungen vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze u
 \subsection{Die ausfallsichere Heizung}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
-Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, am dem Punkt an dem sich
+Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
 die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
 \paragraph{Systemaufbau} Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
 \begin{itemize}
-\item einem Rechner der die Heizk{\"{o}}rper steuert
-\item einem Rechner der die L{\"{u}}fter steuert
-\item einem Rechner der die Klappe steuert
+\item einem Rechner, der die Heizk{\"{o}}rper steuert
+\item einem Rechner, der die L{\"{u}}fter steuert
+\item einem Rechner, der die Klappe steuert
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
@@ -135,7 +135,7 @@ allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren, die Heizungen oder d
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
-\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen die es sehr
+\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
 ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System - es ist schwer etwas auszuprobieren und
 mit dem System zu spielen.
@@ -143,8 +143,8 @@ mit dem System zu spielen.
 \clearpage
 \section{Konzept}
 Sehr high level, Bild vom Systemaufbau\todo{was soll hier nochmal rein? das was ich mir auf den Kalendar aufgemalt hab, mit den
-Kontrollern, Votern, Simulation und den 2 Netzwerken?}
-
+Controllern, Votern, Simulation und den 2 Netzwerken?}
+Auch iwie eine Beschreibung das der ausfallsichere teil bei den kontrollern ist. hier auch begriff voter einführen
 
 \clearpage
 \section{3D Engine}
@@ -152,36 +152,36 @@ Kontrollern, Votern, Simulation und den 2 Netzwerken?}
 Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden. Auch wenn sich das Geschehen rein auf einer zweidimensionalen Ebene stattfindet, ist eine dreidimensionale
 Darstellung ansprechender und wird deshalb vorgezogen.
 
-Diese Darstellung geschieht mithilfe einer \textit{3D Engine}; sie bietet die M{\"{o}}glichkeit Objekte und, oft auch, Lichtquellen und Schattenspiel darzustellen.
-Anstatt solch eine Engine selbst zu implementieren wird eine vorhandene genommen.
+Diese Darstellung geschieht mithilfe einer \textit{3D Engine}; sie bietet die M{\"{o}}glichkeit Objekte und oft auch Lichtquellen und Schattenspiel darzustellen.
+Anstatt solch eine Engine selbst zu implementieren, wird eine vorhandene genommen.
 
-Um die, sehr grosse, Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
+Um die sehr gro{\ss}e Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Kriterien benutzt.
 
 \paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein; dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
 
 \paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
 
 \paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten, zus{\"{a}}tzlich zur reinen 3D Engine, auch eine Physikengine und eine Audioengine.
-Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden gameengines reinen 3D Engines (wie Blender) vorgezogen.
+Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden\textit{game engines} reinen 3D Engines (wie Blender) vorgezogen.
 
 \paragraph{\todo{namen finden}} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
-Objekten gesteuert werden?) zum anderen die Qualit{\"{a}}t der Dokumentation und schließlich wie verbreitet diese
+Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation und schließlich wie verbreitet diese
 \textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
 Gerade in diesem Punkt stach Unity hervor und wurde deshalb als Basis f{\"{u}}r diese Arbeit ausgew{\"{a}}hlt.
 
 \subsection{Unity}
-Unity ist eine von Unity Technologies entwickelte \textit{game engine} die 2005 f{\"{u}}r Macintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
+Unity ist eine von Unity Technologies entwickelte \textit{game engine}, die 2005 f{\"{u}}r Macintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
 
-In dieser Arbeit wird es benutzt um die Welt und die Interkationen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
+In dieser Arbeit wird es benutzt, um die Welt und die Interaktionen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
 abh{\"{a}}ngig von der Position und den Gewichten der Objekt gekippt werden oder die Kamera durch Tastatureingaben bewegt werden.
 
 \subsection{Unitys Grafikengine}
 Die in Unity enthaltene Grafikengine ist eine vollwertige 3D-Grafikengine, die es erm{\"{o}}glicht professionelle Videospiele zu programmieren. In dieser Arbeit wird nur
 ein kleiner Teil der Funktionalit{\"{a}}t benutzt; komplexere Features wie die Anzeige von Rauch oder realistischem Wasser sind nicht in der Simulation enthalten.
 
-Notwendig ist es aber das die verschiedenen Objekte in der simulierten Welt in 3D zu sehen sind und sich die Kamera bewegen l{\"{a}}sst um das simulierte Geschehen zu
+Notwendig ist es aber, dass die verschiedenen Objekte in der simulierten Welt in 3D zu sehen sind und sich die Kamera bewegen l{\"{a}}sst, um das simulierte Geschehen zu
 verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra implementiert werden.
 
 \subsection{Unitys Physikengine}
@@ -194,7 +194,7 @@ Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umg
 
 \subsection{Scripting bei Unity}
 Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, unterst{\"{u}}tzt werden dabei sie Skriptsprachen C\#, JavaScript und Boo.\cite{wiki:unity} Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
-der Objekte \footnote{dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern} auszulesen und zu manipulieren.
+der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
@@ -206,18 +206,19 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 \textit{subnet} ist.
 
 \subsection{Anforderungen}
-Um verteilte Systeme zu programmieren bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
+Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
 
-Da die Simulation mit einer, nicht vorher bestimmten, Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
-der angemessen Weg um Voter und Simulation zu verbinden.
-Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller -- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
+Da die Simulation mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
+der angemessen Weg, um Voter und Simulation zu verbinden.
+Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --\todo{gucken wie emdash geht} Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
 sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
-Netzwerkbibliotheken die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
+Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
 dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Bibliothek ist daher vorzuziehen.
 
+\clearpage % make sure the table is, at least, in the right section
 \begin{table}[h]
 \centering
 \begin{tabu}{c | c | c | c | p{5cm}}
@@ -233,9 +234,8 @@ dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Biblioth
 \caption{Anforderungen an die Netwerkbibliothek}
 \end{table}
 
-Aus dieser vergleichenden Darstellung wird klar das nanomsg am besten geeignet ist; auf die speziellen Eigenschaften wird nun n{\"{a}}her eingegangen.
+Aus dieser vergleichenden Darstellung wird klar, dass nanomsg am besten geeignet ist; auf dessen speziellen Eigenschaften wird nun n{\"{a}}her eingegangen.
 
-\clearpage % make sure the table is, at least, in the right section
 \subsection{nanomsg}
 nanomsg ist eine komplett in C geschrieben Netzwerkbibliothek, mit einer API die der POSIX Socket API gleicht (es wird sich also, zum Beispiel mit nn\_connect() verbunden oder mit nn\_send() gesendet).
 Der gro{\ss}e Vorteil von nanomsg sind die implementierten {\"{U}}bertragungsarten. Je nach gew{\"{u}}nschter {\"{U}}bertragungsart wird ein unterschiedlicher Socket erstellt, dieser erlaubt die
@@ -247,12 +247,12 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 \subparagraph{Request-Reply} Die intuitiv verst{\"{a}}ndlichste Art zu kommunizieren ist es eine Frage zu stellen, die dann vom Gegen{\"{u}}ber beantwortet wird. In nanomsg ist dies die request-reply
 {\"{U}}bertragungsart.
 
-\subparagraph{Publish-Suscribe} Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt
-das f{\"{u}}r mehrere andere (im folgenden \textit{suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte suscriber wichtig sind, kann die Filterung entweder auf Seiten des publisher oder des suscribers vorgenommen werden.
+\subparagraph{Publish-Suscribe} Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{Publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt,
+dass f{\"{u}}r mehrere andere (im folgenden \textit{Suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte Suscriber wichtig sind, kann die Filterung entweder auf Seiten des Publisher oder des Suscribers vorgenommen werden.
 Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen -- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
 \textit{subnet} befinden.
 
-Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht
+Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht,
 wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
 dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash error}) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
 \begin{figure}
@@ -261,7 +261,7 @@ dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash err
 	\caption{Publish-Suscribe}
 	\label{fig:pubsub}
 \end{figure}
-\todo{sieht kacke aus}
+\todo{sieht kacke aus. kleiner und andere Auflösung?}
 
 \clearpage
 \section{Serialisierung}
@@ -269,8 +269,8 @@ Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben
 Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \subsection{Anforderungen}
-Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (F{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
-Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um, auch nach der Anwendung
+Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
+Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um auch nach der Anwendung
 eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen anf{\"{a}}llig zu sein.
 
 \begin{table}[h]
@@ -290,15 +290,15 @@ eines fehlerkorrigierenden Codes, so wenig Redudanz wie m{\"{o}}glich aufzuweise
 \end{table}
 \footnotetext{Es existieren unoffizielle, nicht mehr weiterentwickelte Implementation} 
 
-Bekannte Serialisierungsformate wie JSON und XML enthalten zu viel Redudanzen und k{\"{o}}nnen ausgeschlio{\ss}en werden. Zur Auswahl bleiben damit beispielsweise BSON und MsgPack.
-Bei BSON werden die Daten an sich effizient serialisiert, allerdings wird immer der Feldname mitgesendet. Dies erleichtert zwar die Versionierbarkeit, vergr{\"{o}}ssert
+Bekannte Serialisierungsformate wie JSON und XML enthalten zu viel Redudanzen und k{\"{o}}nnen ausgeschio{\ss}en werden. Zur Auswahl bleiben damit beispielsweise BSON und MsgPack.
+Bei BSON werden die Daten an sich effizient serialisiert, allerdings wird immer der Feldname mitgesendet. Dies erleichtert zwar die Versionierbarkeit, vergr{\"{o}}{\ss}ert
 die Nachricht allerdings. Aus diesem Grund wird MsgPack als Serialisierungsformat genutzt.
 
-\subsection{msgpack}
-MsgPack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsframework, dessen Nachrichten besonders wenig Redudanzen enthalten sollen. Beispielhaft wird hier auf die Serialisierung von
+\subsection{MessagePack}
+MessagePack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsframework, dessen Nachrichten besonders wenig Redudanzen enthalten sollen. Beispielhaft wird hier auf die Serialisierung von
 Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
-Die Grundpidee von msgpack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
+Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
 \paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite - zum Beispiel 64bit - Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
 \paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an - also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
 
@@ -313,7 +313,7 @@ werden mit anderen Signalzeichen kodiert - beispielsweise 0xDB f{\"{u}}r eine Ze
 
 \clearpage
 \section{Die Welt}
-Die simulierte Welt besteht aus den Robotern die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation an der die Robter Energie tanken k{\"{o}}nnen und
+Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation, an der die Robter Energie tanken k{\"{o}}nnen, und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
 Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
@@ -324,8 +324,8 @@ In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewe
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
-\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt das auch den simulierten Eigenschaften des Roboters entspeicht. Die Grundform des Roboters ist
-ein Kegel, an dessen Seiten befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das auch den simulierten Eigenschaften des Roboters entspricht. Die Grundform des Roboters ist
+ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
 Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{Bild}
 
@@ -337,15 +337,16 @@ $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$,
 Geschwindigkeit $ V_i = \Delta v $ und einen Rotationsquaternion
 $ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
 
-Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: $ w(N_i) = 1 + e(N_i) * 0.03 $.
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
+$$ w(N_i) = 1 + e(N_i) * 0.03 $$.
 
 Der Robot kann sich nur in "Fahrtrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
 Maximalgeschwindigkeit zwischen $ -3 \leq \Delta x \leq 3$.
 Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
 Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern. \todo{nochmal nachdenken}
 
-Die Roboter haben einen Energiespeicher der mit maximal 100 Energieeinheiten
-aufgeladen werden kann und verbrauchen diese Energie, ob beim Fahren oder
+Die Roboter haben einen Energiespeicher, der mit maximal 100 Energieeinheiten
+aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
 $$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
 
@@ -371,7 +372,7 @@ der durch dieses berechnet wird kann dann benutzt werden um den Kippwinkel zu er
 F{\"{u}}r den Vektor der die in Links-Rechts wirkende Kr{\"{a}}fte beschreibt, gilt:
 $$ V_{LinksRechts} = \begin{pmatrix}x(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} x(N_i) \\ w(N_i) \end{pmatrix} $$
 
-Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach Vorne-Hinten gekippt wird:
+Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt wird:
 $$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} y(N_i) \\ w(N_i) \end{pmatrix} $$
 
 \todo{herleitung?}
@@ -388,31 +389,31 @@ Das ganze System besteht aus verschiedenen Komponenten, die teilweise sogar in u
 Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}umliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
 f{\"{u}}r die Konsensbildung und um Informationen {\"{u}}ber den momentanen Status der Simulation zu bekommen.
 
-Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}st oder mehrfach sendet. 
+Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}sst oder mehrfach sendet. 
 \todo{aufteilung im netzwerk als Bild}
 
 Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
-des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen das ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
-programmiert werden das sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
+des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen, dass ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
+programmiert werden dass sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
 
 \subsection{VMs}
 
 \subsection{Anzeige}\label{graphics}
-Um den Status der Simulation zu verfolgen wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
+Um den Status der Simulation zu verfolgen, wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
 durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
 
-\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt Camera. An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
 geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
 
-Die Kamerabewegung kann {\"{u}}ber die Pfeiltasten und WASD gesteuert werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren da damit eventuell der Kippwinkel der
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
 Platte visuell ausgeglichen werden k{\"{o}}nnte.
 
-\paragraph{Lichtquelle} Um die Szene auszuleuchten gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX \textdegree Winkel nach unten.
+\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
 
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
-Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen gibt es Schnittstellen.
+Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen, gibt es Schnittstellen.
 Im ganzen System gibt es zwei Schnittstellen:
 \begin{itemize}
 \item Die Schnittstelle zwischen Controller und Voter
@@ -435,18 +436,18 @@ Diese wird den Studierenden als kompilierte Library mit einem detailliert kommen
 
 \clearpage
 \section{Fehlerinjektion}
-Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt wird eine Fehlerinjektion benutzt um die Fehlertoleranz zu testen.
-In diesem Fall wird simuliert das dass Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
-unvorhersehbar ausfallen - was nachbildet das z.B. der Controller seine Batterie entladen hat.
+Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt, wird eine Fehlerinjektion benutzt, um die Fehlertoleranz zu testen.
+In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
+unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
 
 \todo{bild? wovon wollte ich hier ein bid haben?}
 
 \subsection{Netzwerk}
-Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert das, durchschnittlich, in $ \frac{1}{20} $ aller Pakete
-ein Byte verf{\"{a}}lscht wird ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also selbst implementiert werden.
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ \frac{1}{20} $ aller Pakete
+ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also selbst implementiert werden.
 
 \subsection{Controller}
-Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen crash failure.
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}.
 \todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
 
 \subsection{Simulation}
@@ -468,33 +469,32 @@ aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht wor
 jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
 
 \subsection{Fehlermodell} \label{error-model}
-Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren welche Art von Fehlern
+Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren, welche Art von Fehlern
 {\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
-die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie, sie gel{\"{o}}st werden.
+die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}}st werden.
 
-\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Es k{\"{o}}nnen bis zu \todo{...} aller Controller ausfallen.
-Die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
+\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Im Extremfall k{\"{o}}nen alle Controller ausfallen, die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen das bei bis zu $\frac{1}{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu $\frac{1}{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsubsection{R{\"{a}}umliche Redudanz}
-Es wird davon ausgegangen das die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
+Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
 Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
-sind kann eine ordnungsgem{\"{a}}sse Steuerung nicht mehr garantiert werden.
+sind kann eine ordnungsgem{\"{a}}{\ss}e Steuerung nicht mehr garantiert werden.
 
-Wenn ein Roboter erstellt wird werden auch $Y$ Controller gestartet. Die Ausf{\"{u}}hrung der Controller wird durch ein Skript
+Wenn ein Roboter erstellt wird, werden auch $Y$ Controller gestartet. Die Ausf{\"{u}}hrung der Controller wird durch ein Skript
 {\"{u}}berwacht das ausgefallene Controller neu startet. \todo{ist das sinnvoll? dann muss man ja auch das skript killen um dann
 irgendwann mal zu wenig controller zu haben}
 
 \subsubsection{Netzwerkkommunikation}
-Da, durch die Fehlerinjektion, das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code der 15 parity bits pro 240 Datenbits benutzt.
+Da durch die Fehlerinjektion das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code, der 15 parity bits pro 240 Datenbits benutzt.
 Durch die Benutzung dieser Kodierung k{\"{o}}nnen alle Einzelfehler und Doppelfehler erkannt und korrigiert werden. Erst ab 7 Fehlern ist eine Korrektur nicht mehr m{\"{o}}glich, ab 15 Fehlern versagt auch eine Fehlererkennung.
 Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \begin{itemize}
-\item Durch expermientelle Verifikation wurde klar das im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
-	100 gr{\"{o}}ser ist, ist nicht erforderlich eine sehr kompakte Kodierung zu benutzen, es ist ausreichend die Redudanz zu reduzieren. 
-\item Es ist ein systematischer Code der es erlaubt w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
+\item Durch expermientelle Verifikation wurde klar, dass im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
+	100 gr{\"{o}}{\ss}er ist, ist nicht erforderlich, eine sehr kompakte Kodierung zu benutzen, es ist ausreichend, die Redudanz zu reduzieren. 
+\item Es ist ein systematischer Code, der es erlaubt, w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
 	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
 	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
 \end{itemize}
