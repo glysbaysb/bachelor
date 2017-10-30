@@ -66,7 +66,8 @@
 \section{Einf{\"{u}}hrung}
 \todo{Renderbild, Bild von der Ausgabe?}
 
-\paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. \todo{bla bla verdeutlichen, vertiefen bla bla}
+\paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. Dies geschieht im Rahmen einer {\"{U}}bungsaufgabe. In dieser sollen die gelernten Konzepte angewandt werden, wodurch das frisch erworbene Wissen vertieft und die M{\"{o}}glichkeiten und Grenzen dessen verdeutlicht werden.
+
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt nutzbar sein.
 Dies f{\"{u}}hrte zur Idee, eine Computersimulation zu entwickeln, da diese visuell ansprechend ist und vielf{\"{a}}tige
 Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
@@ -96,6 +97,8 @@ Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}
 Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
 \paragraph{Evaluation} \todo{...}
+
+\todo{Aufabau dieser Arbeit?}
 
 \clearpage
 \section{Vorherige Arbeiten}
@@ -131,7 +134,7 @@ die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweis
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren, die Heizungen oder die L{\"{u}}fter k{\"{o}}nnen ausfallen -- es ist also notwendig das System ausfallsicher zu planen.
+allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen -- es ist also notwendig das System ausfallsicher zu planen.
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
@@ -144,7 +147,15 @@ mit dem System zu spielen.
 \section{Konzept}
 Sehr high level, Bild vom Systemaufbau\todo{was soll hier nochmal rein? das was ich mir auf den Kalendar aufgemalt hab, mit den
 Controllern, Votern, Simulation und den 2 Netzwerken?}
-Auch iwie eine Beschreibung das der ausfallsichere teil bei den kontrollern ist. hier auch begriff voter einführen
+
+\begin{itemize}
+\item Simulation berechnet bewegungen und so. per definition ausfallsicher gegen ALLES! (... als ob). grafische ausgabe
+\item Voter sammelt steuerkommandos. per definition ausfallsicher ggü crash failure
+\item Controller generiert steuerkommandos, kann jederzeit ausfallen
+\end{itemize}
+
+Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht - dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
+Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
 
 \clearpage
 \section{3D Engine}
@@ -338,7 +349,10 @@ Geschwindigkeit $ V_i = \Delta v $ und einen Rotationsquaternion
 $ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
-$$ w(N_i) = 1 + e(N_i) * 0.03 $$.
+\begin{equation}
+    \label{eq:w}
+ w(N_i) = 1 + e(N_i) * 0.03
+\end{equation}
 
 Der Robot kann sich nur in "Fahrtrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
 Maximalgeschwindigkeit zwischen $ -3 \leq \Delta x \leq 3$.
@@ -348,8 +362,10 @@ Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern. \todo{nochmal nachdenke
 Die Roboter haben einen Energiespeicher, der mit maximal 100 Energieeinheiten
 aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
-$$ e(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i| $$
-
+\begin{equation}
+    \label{eq:entladen}
+ e_entladen(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i|
+\end{equation}
 \paragraph{Bewegung} Die Bewegung des Roboters wird vorgegeben durch $V_i$ und $ R_i$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unitys Physikengine verarbeitet. Der zum Roboter geh{\"{o}}rende
 Rigidbody wird dann entsprechend manipuliert: die Rotation wird zwischen dem momentanen und dem gew{\"{u}}nschten Winkel
 interpoliert und \todo{bewegung ist noch kacke}.
@@ -359,10 +375,15 @@ Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter 
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
 Falls sich ein Roboter an die Platte heranbewegt, also gilt: 
-$$ |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)| $$
+\begin{equation}
+    \label{eq:dist}
+ |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
+\end{equation}
 wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
-$$ e(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100)  $$
-
+\begin{equation}
+    \label{eq:laden}
+ e_laden(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100) 
+\end{equation}
 
 \subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
