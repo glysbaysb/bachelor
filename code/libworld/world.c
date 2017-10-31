@@ -381,7 +381,7 @@ int moveRobot(void* ctx_, int id, int speed, int angle) {
 }
 
 static void moveRobotCallback(void* optional, msgpack_object_array* params) {
-	puts("moveRobotCallback");
+	(void) optional; (void) params;
 }
 
 static void createRobotCallback(void* optional, msgpack_object_array* params) {

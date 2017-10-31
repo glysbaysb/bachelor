@@ -93,7 +93,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
 			int r = 0;
-			if((r = MoveRobot(info->worldCtx, ws->objects[i].id, 1, 1)) < 0) {
+			if((r = moveRobot(info->worldCtx, ws->objects[i].id, 1, 45)) < 0) {
 				fprintf(stderr, "can't move robot: %d", r);
 			}
 		}
