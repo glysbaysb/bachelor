@@ -33,7 +33,7 @@
 \usepackage{todonotes}
 
 \setstretch{1.433} %entspricht 1,5 in Word 
-\graphicspath{{images/}}
+\graphicspath{{../images/}}
 \MakeOuterQuote{"}
 \pagestyle{fancy}
 \lstset{frame=single,breaklines=true}
@@ -374,7 +374,7 @@ interpoliert und \todo{bewegung ist noch kacke}.
 Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
-Falls sich ein Roboter an die Platte heranbewegt, also gilt: 
+Falls sich ein Roboter an die F{\"{u}}llstation heranbewegt, also gilt: 
 \begin{equation}
     \label{eq:dist}
  |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
@@ -386,20 +386,23 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
 \end{equation}
 
 \subsection{Die Platte}\label{plate}
-Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die sich, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
-Die Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, k{\"{o}}nnen in ihren X und Y Koordinaten getrennt betrachtet und in das Hebelgesetz eingesetzt werden. Der Druck
-der durch dieses berechnet wird kann dann benutzt werden um den Kippwinkel zu errechnen.
+Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
+Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
 
-F{\"{u}}r den Vektor der die in Links-Rechts wirkende Kr{\"{a}}fte beschreibt, gilt:
-$$ V_{LinksRechts} = \begin{pmatrix}x(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} x(N_i) \\ w(N_i) \end{pmatrix} $$
+Um das Kippen der Platte auf der Links-Rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+
+F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt:
+$$ V(x) = x(F) * w(F) + \sum_{i=0}^{|N|} ( x(N_i) * w(N_i) ) $$
 
 Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt wird:
-$$ V_{VorneHinten} = \begin{pmatrix}y(F) \\ w(F) \end{pmatrix} + \sum_{i=0}^{|N|} \begin{pmatrix} y(N_i) \\ w(N_i) \end{pmatrix} $$
+$$ V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) $$
 
-\todo{herleitung?}
-Hier muss irgendwie auch das Plattengewict rein
-$$ cos(V_{LinksRechts}) = \beta = W_{LinksRechts} $$
-$$ cos(V_{VorneHinten}) = \alpha = W_{VorneHinten} $$
+Das Ziel ist es die Platte auszubalancieren, also soll gelten:
+$$ V(x) = V(y) = 0 $$
+
+\todo{bild, wie im code die dolle ascii art}
+Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hyptothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
+$$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
 
 \clearpage
 \section{Systemaufbau}
@@ -478,7 +481,7 @@ Geschwindigkeit und Rotation, und so weiter.
 
 Die Roboter werden {\"{u}}ber die Pfeiltasten gesteuert (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter). Um
 anzuzeigen welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
-Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter aufgehoben.
+Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter aufgehoben; falls die Fernsteuerung gerade nicht aktiv ist, wird dies in der Simulation angezeigt.
 
 \clearpage
 \section{Beispielimplementation}
@@ -545,6 +548,6 @@ b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig rei
 \nocite{*} % alle unbenutzen Literatureintr{\"{a}}ge trotzdem anzeigen
 \bibliographystyle{plain}
 %\addbibresource{lit.bib}
-\bibliography{lit}
+\bibliography{../lit}
 
 \end{document}
