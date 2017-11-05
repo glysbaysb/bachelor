@@ -53,7 +53,7 @@
 \begin{document}
 
 \maketitle
-\todo{Bilder: Systemaufbau, von der Simulation selbst, vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?}
+\todo{Bilder: vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?}
 \thispagestyle{empty}
 
 \clearpage
@@ -64,7 +64,12 @@
 
 \clearpage
 \section{Einf{\"{u}}hrung}
-\todo{Renderbild, Bild von der Ausgabe?}
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{simulation}
+	\caption{Screenshot der Simulation}
+	\label{fig:simulation}
+\end{figure}
 
 \paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. Dies geschieht im Rahmen einer {\"{U}}bungsaufgabe. In dieser sollen die gelernten Konzepte angewandt werden, wodurch das frisch erworbene Wissen vertieft und die M{\"{o}}glichkeiten und Grenzen dessen verdeutlicht werden.
 
@@ -173,7 +178,7 @@ Um die sehr gro{\ss}e Auswahl einzuschr{\"{a}}nken wurden die nachfolgenden Krit
 \paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
 
 \paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten, zus{\"{a}}tzlich zur reinen 3D Engine, auch eine Physikengine und eine Audioengine.
-Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden\textit{game engines} reinen 3D Engines (wie Blender) vorgezogen.
+Durch die Art der Simulation ist ersichtlich das eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden \textit{game engines} reinen 3D Engines (wie Blender) vorgezogen.
 
 \paragraph{\todo{namen finden}} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
@@ -419,6 +424,13 @@ Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine F
 Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
 des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen, dass ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
 programmiert werden dass sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Netzwerk}
+	\caption{Aufteilung der Netzwerkteilnehmer}
+	\label{fig:network}
+\end{figure}
 
 \subsection{VMs}
 
