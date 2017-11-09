@@ -11,9 +11,6 @@ Deadline | Module		|	was
 		 | voter		| alles halt
 		 | algo			| vlt noch einen?
 ---------+--------------+----------------
-		 |				| mglichkeit geben keinen roboter auszuwählen
-		 |				| gewhlten roboter anleuchten -> directional light Y=4, X°=90, Range = 50, Spot Angle = 60
-		 |				|	hauptlicht die intensität runter
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
 fixe ideen
