@@ -93,8 +93,6 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 		if(ws->objects[i].type == ROBOT && info->robot == ws->objects[i].id) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
-
-			
 		}
 	}
 
@@ -105,44 +103,28 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 }
 
 /**
- * todo: int r = 0;
-		if((r = moveRobot(info->worldCtx, ws->objects[i].id, 1, 45)) < 0) {
-			fprintf(stderr, "can't move robot: %d", r);
-		}
+ * todo: well vote
  */
 static void voteCallback(void* optional, msgpack_object_array* params)
 {
-	std::cout << __FUNCTION__ << '\n';
+	Info* info = (Info*)optional;
 
-    if(!params || !params->size) {
-        return;
-    }
+	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	auto id = params->ptr[0].via.i64;
 
-    for(size_t i = 0; i < params->size; i++) {
-        switch(params->ptr[i].type) {
-        case MSGPACK_OBJECT_ARRAY:
-            voteCallback(optional, (msgpack_object_array*) &params->ptr[i].via);
-            break;
+	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	auto x = params->ptr[1].via.i64;
+	// todo: clamp
 
-        case MSGPACK_OBJECT_FLOAT32:
-        case MSGPACK_OBJECT_FLOAT64:
-			std::cout << params->ptr[i].via.f64;
-            break;
+	assert(params->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[2].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	auto y = params->ptr[2].via.i64;
+	// todo: clamp
 
-        case MSGPACK_OBJECT_NEGATIVE_INTEGER:
-			std::cout << params->ptr[i].via.u64;
-            break;
-
-        case MSGPACK_OBJECT_POSITIVE_INTEGER:
-			std::cout << params->ptr[i].via.i64;
-            break;
-
-        case MSGPACK_OBJECT_STR:
-			auto str = ((const msgpack_object_str*)&params->ptr[i].via.str);
-			std::copy(str->ptr, str->ptr + str->size, std::ostream_iterator<char>(std::cout));
-            break;
-        }
-    }
+	std::cout << "Move " << id << ' ' << x << ';' << y << '\n';
+	int r = 0;
+	if((r = moveRobot(info->worldCtx, id, x, y)) < 0) {
+		fprintf(stderr, "can't move robot: %d", r);
+	}
 }
 
 static void worldStatusRPCCallback(void* optional, msgpack_object_array* params)
