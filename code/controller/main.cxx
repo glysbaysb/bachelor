@@ -4,57 +4,14 @@
 #include <experimental/optional>
 
 #include <libnetwork/network.h>
-
-struct Position {
-	float x_,
-		  y_;
-
-	Position(float x, float y) :
-		x_(x), y_(y)
-	{
-	}
-
-	friend std::ostream& operator<<(std::ostream& os, const Position& p) {
-		return os << '(' << p.x_ << ';' << p.y_ << ')';
-	}
-};
-
-struct Object {
-	int id_;
-	Position pos_;
-
-	// fixme: rest
-	Object(int id, const Position& pos) :
-		id_(id), pos_(pos)
-	{
-	}
-
-	friend std::ostream& operator<<(std::ostream& os, const Object& o) {
-		return os << '#' << o.id_ << '\n' <<
-			'\t' << o.pos_ << '\n';
-	}
-};
-
-struct WorldStatus
-{
-	float xTilt_,
-		  yTilt_;
-	std::vector<Object> objects;
-
-	friend std::ostream& operator<<(std::ostream& os, const WorldStatus& ws) {
-		os << ws.xTilt_ << ';' << ws.yTilt_ << '\n';
-		for(auto&& i : ws.objects) {
-			os << i;
-		}
-
-		return os;
-	}
-
-};
+#include <libalgo/algo.h>
+#include "structs.h"
 
 static WorldStatus unpackWorldStatus(msgpack_object_array* params);
+static void voteCallback(void* optional, msgpack_object_array* params);
+static int sendVote(Network* network);
 
-void worldStatusCallback(void* optional, msgpack_object_array* params)
+static void worldStatusCallback(void* optional, msgpack_object_array* params)
 {
 	Network* network = (Network*)optional;
 
@@ -64,6 +21,9 @@ void worldStatusCallback(void* optional, msgpack_object_array* params)
 	/* algo */
 
 	/* weg senden */
+	if(sendVote(network) < 0) {
+		std::cerr << "can't vote\n";
+	}
 }
 
 int main(int argc, char** argv)
@@ -74,7 +34,8 @@ int main(int argc, char** argv)
 	}
 
 	auto network = Network(argv[1]);
-	network.addRPCHandler(WORLD_STATUS, &worldStatusCallback, &network);
+	network.addRPCHandler(Procedure::WORLD_STATUS, &worldStatusCallback, &network);
+	network.addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&network);
 
 	while(1)
 	{
@@ -134,3 +95,37 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 
 	return ws;
 }
+
+
+static void voteCallback(void* optional, msgpack_object_array* params)
+{
+	(void) optional; (void) params;
+}
+
+static int sendVote(Network* network)
+{
+	msgpack_packer pk;
+	msgpack_sbuffer sbuf;
+
+	msgpack_sbuffer_init(&sbuf);
+	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
+
+	msgpack_pack_array(&pk, 3);
+	msgpack_pack_int(&pk, 12345);
+	msgpack_pack_float(&pk, 67.89);
+
+	msgpack_pack_array(&pk, 2);
+	for(auto i = 0; i < 2; i++) {
+		msgpack_pack_array(&pk, 1);
+
+		msgpack_pack_int32(&pk, 0xEBFE);
+	}
+
+	if(network->sendRPC(Procedure::VOTE_MOVE_ROBOT, sbuf.data, sbuf.size) < 0) {
+		return -1;
+	}
+
+	return 0;
+}
+
+

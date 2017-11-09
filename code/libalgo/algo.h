@@ -23,6 +23,10 @@ struct Vector
 	{
 		return Vector(x_ - a.x_, y_ - a.y_);
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Vector& p) {
+		return os << '(' << p.x_ << ';' << p.y_ << ')';
+	}
 };
 
 class Object
@@ -34,6 +38,11 @@ protected:
 	//todo: Vector velocity_;
 
 public:
+	Object(int id, Vector pos) :
+		id_(id), pos_(pos)
+	{
+	}
+
 	Vector pos() const
 	{
 		return pos_;
@@ -42,6 +51,11 @@ public:
 	int id() const
 	{
 		return id_;
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Object& o) {
+		return os << '#' << o.id_ << '\n' <<
+			'\t' << o.pos_ << '\n';
 	}
 };
 
