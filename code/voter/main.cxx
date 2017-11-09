@@ -15,6 +15,7 @@ typedef struct {
 
 static int sendWorldStatus(const WorldStatus* ws, Network* network);
 static void voteCallback(void* optional, msgpack_object_array* params);
+static void worldStatusRPCCallback(void* optional, msgpack_object_array* params);
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
 
 int main(int argc, char** argv)
@@ -28,6 +29,7 @@ int main(int argc, char** argv)
 
 	callbackInfo.network = new Network(argv[2]);
 	callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&callbackInfo);
+	callbackInfo.network->addRPCHandler(Procedure::WORLD_STATUS, &worldStatusRPCCallback, (void*)&callbackInfo);
 
 	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
 		fprintf(stderr, "can't init world");
@@ -71,7 +73,7 @@ static int sendWorldStatus(const WorldStatus* ws, Network* network)
 		msgpack_pack_float(&pk, ws->objects[i].fuel);
 	}
 
-	if(network->sendRPC(Procedure::VOTE_MOVE_ROBOT, sbuf.data, sbuf.size) < 0) {
+	if(network->sendRPC(Procedure::WORLD_STATUS, sbuf.data, sbuf.size) < 0) {
 		return -1;
 	}
 
@@ -99,7 +101,10 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		}
 	}
 
-	sendWorldStatus(ws, info->network);
+	if(sendWorldStatus(ws, info->network) < 0) {
+		fprintf(stderr, "can't send world status\n");
+		return;
+	}
 }
 
 static void voteCallback(void* optional, msgpack_object_array* params)
@@ -133,5 +138,9 @@ static void voteCallback(void* optional, msgpack_object_array* params)
             break;
         }
     }
+}
+
+static void worldStatusRPCCallback(void* optional, msgpack_object_array* params)
+{
 }
 
