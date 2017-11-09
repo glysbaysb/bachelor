@@ -13,6 +13,10 @@ struct Position {
 		x_(x), y_(y)
 	{
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Position& p) {
+		return os << '(' << p.x_ << ';' << p.y_ << ')';
+	}
 };
 
 struct Object {
@@ -24,6 +28,11 @@ struct Object {
 		id_(id), pos_(pos)
 	{
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Object& o) {
+		return os << '#' << o.id_ << '\n' <<
+			'\t' << o.pos_ << '\n';
+	}
 };
 
 struct WorldStatus
@@ -31,6 +40,16 @@ struct WorldStatus
 	float xTilt_,
 		  yTilt_;
 	std::vector<Object> objects;
+
+	friend std::ostream& operator<<(std::ostream& os, const WorldStatus& ws) {
+		os << ws.xTilt_ << ';' << ws.yTilt_ << '\n';
+		for(auto&& i : ws.objects) {
+			os << i;
+		}
+
+		return os;
+	}
+
 };
 
 static WorldStatus unpackWorldStatus(msgpack_object_array* params);
@@ -40,7 +59,7 @@ void worldStatusCallback(void* optional, msgpack_object_array* params)
 	Network* network = (Network*)optional;
 
 	auto ws = unpackWorldStatus(params);
-	std::cout << '(' << ws.xTilt_ << ';' << ws.yTilt_ << ')' << '\n';
+	std::cout << ws << '\n';
 
 	/* algo */
 
@@ -84,7 +103,7 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 	auto objectArr = (msgpack_object_array*)&params->ptr[2].via;
 	for(auto i = 0u; i < objectArr->size; i++) {
 		assert(objectArr->ptr[i].type == MSGPACK_OBJECT_ARRAY);
-		auto object = (msgpack_object_array*)&objectArr->ptr[0].via;
+		auto object = (msgpack_object_array*)&objectArr->ptr[i].via;
 
 		/* Object is:
 		* - ID (int)
