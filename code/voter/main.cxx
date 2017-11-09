@@ -64,7 +64,7 @@ static int sendWorldStatus(const WorldStatus* ws, Network* network)
 		msgpack_pack_array(&pk, 6);
 
 		msgpack_pack_int32(&pk, ws->objects[i].id);
-		msgpack_pack_int32(&pk, ws->objects[i].type);
+		msgpack_pack_int32(&pk, ws->objects[i].type == ROBOT ? 'R' : 'F');
 
 		msgpack_pack_float(&pk, ws->objects[i].x);
 		msgpack_pack_float(&pk, ws->objects[i].y);

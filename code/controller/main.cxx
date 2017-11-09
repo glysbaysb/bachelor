@@ -9,7 +9,7 @@
 
 static WorldStatus unpackWorldStatus(msgpack_object_array* params);
 static void voteCallback(void* optional, msgpack_object_array* params);
-static int sendVote(Network* network);
+static int sendVote(Network* network, const Action& a);
 
 static void worldStatusCallback(void* optional, msgpack_object_array* params)
 {
@@ -19,9 +19,11 @@ static void worldStatusCallback(void* optional, msgpack_object_array* params)
 	std::cout << ws << '\n';
 
 	/* algo */
+	auto actions = calc_movement({ws.xTilt_, ws.yTilt_}, ws.robots, *ws.fuelStation);
+	assert(actions.size());
 
 	/* weg senden */
-	if(sendVote(network) < 0) {
+	if(sendVote(network, actions[0]) < 0) {
 		std::cerr << "can't vote\n";
 	}
 }
@@ -90,7 +92,11 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 		assert(object->ptr[5].type == MSGPACK_OBJECT_FLOAT || object->ptr[5].type == MSGPACK_OBJECT_FLOAT32);
 		auto fuel = object->ptr[5].via.f64;
 
-		ws.objects.emplace_back(Object(ID, {x, y}));
+		if(type == 'R') {
+			ws.robots.emplace_back(Robot(ID, {x, y}, fuel));
+		} else {
+			ws.fuelStation = new FuelStation(ID, Vector(x, y));
+		}
 	}
 
 	return ws;
@@ -102,7 +108,7 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 	(void) optional; (void) params;
 }
 
-static int sendVote(Network* network)
+static int sendVote(Network* network, const Action& a)
 {
 	msgpack_packer pk;
 	msgpack_sbuffer sbuf;
@@ -111,15 +117,9 @@ static int sendVote(Network* network)
 	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
 
 	msgpack_pack_array(&pk, 3);
-	msgpack_pack_int(&pk, 12345);
-	msgpack_pack_float(&pk, 67.89);
-
-	msgpack_pack_array(&pk, 2);
-	for(auto i = 0; i < 2; i++) {
-		msgpack_pack_array(&pk, 1);
-
-		msgpack_pack_int32(&pk, 0xEBFE);
-	}
+	msgpack_pack_int(&pk, a.id());
+	msgpack_pack_int(&pk, a.acceleration().x_);
+	msgpack_pack_int(&pk, a.acceleration().y_);
 
 	if(network->sendRPC(Procedure::VOTE_MOVE_ROBOT, sbuf.data, sbuf.size) < 0) {
 		return -1;

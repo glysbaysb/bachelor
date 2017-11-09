@@ -73,10 +73,27 @@ public:
 	{
 		return crit() < a.crit();
 	}
+
+	Robot(int id, Vector pos, double fuel) :
+		Object(id, pos), fuel_(fuel)
+	{
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Robot& o) {
+		return os << '#' << o.id_ << '\n' <<
+			'\t' << o.pos_ << '\n' <<
+			'\t' << o.fuel_ << '\n' <<
+			'\t' << o.crit() << '\n';
+	}
 };
 
 class FuelStation: public Object
 {
+public:
+	FuelStation(int id, Vector pos) :
+		Object(id, pos)
+	{
+	}
 };
 
 class Action
@@ -90,6 +107,9 @@ public:
 		id_(id), acceleration_(acceleration)
 	{
 	}
+
+	int id() const { return id_; }
+	Vector acceleration() const { return acceleration_; }
 };
 
 std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::vector<Robot>& objects,
