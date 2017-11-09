@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
 
 	while(1) {
-		sleep(1);
+		callbackInfo.network->poll(1);
 	}
 
 	detachFromWorld(callbackInfo.worldCtx);
@@ -94,10 +94,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		if(ws->objects[i].type == ROBOT && info->robot == ws->objects[i].id) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
-			int r = 0;
-			if((r = moveRobot(info->worldCtx, ws->objects[i].id, 1, 45)) < 0) {
-				fprintf(stderr, "can't move robot: %d", r);
-			}
+			
 		}
 	}
 
@@ -107,8 +104,16 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 	}
 }
 
+/**
+ * todo: int r = 0;
+		if((r = moveRobot(info->worldCtx, ws->objects[i].id, 1, 45)) < 0) {
+			fprintf(stderr, "can't move robot: %d", r);
+		}
+ */
 static void voteCallback(void* optional, msgpack_object_array* params)
 {
+	std::cout << __FUNCTION__ << '\n';
+
     if(!params || !params->size) {
         return;
     }
@@ -142,5 +147,6 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 
 static void worldStatusRPCCallback(void* optional, msgpack_object_array* params)
 {
+	(void) optional; (void) params;
 }
 
