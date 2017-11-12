@@ -113,12 +113,12 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
 	auto id = params->ptr[0].via.i64;
 
-	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	auto x = params->ptr[1].via.i64;
+	assert(params->ptr[1].type == MSGPACK_OBJECT_FLOAT || params->ptr[1].type == MSGPACK_OBJECT_FLOAT32);
+	auto x = params->ptr[1].via.f64;
 	// todo: clamp
 
-	assert(params->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[2].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	auto y = params->ptr[2].via.i64;
+	assert(params->ptr[2].type == MSGPACK_OBJECT_FLOAT || params->ptr[2].type == MSGPACK_OBJECT_FLOAT32);
+	auto y = params->ptr[2].via.f64;
 	// todo: clamp
 
 	std::cout << "Move " << id << ' ' << x << ';' << y << '\n';

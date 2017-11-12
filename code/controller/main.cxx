@@ -20,7 +20,6 @@ static void worldStatusCallback(void* optional, msgpack_object_array* params)
 
 	/* algo */
 	auto actions = calc_movement({ws.xTilt_, ws.yTilt_}, ws.robots, *ws.fuelStation);
-	assert(actions.size());
 
 	/* weg senden */
 	for(auto&& i : actions) {
@@ -124,8 +123,8 @@ static int sendVote(Network* network, const Action& a)
 
 	msgpack_pack_array(&pk, 3);
 	msgpack_pack_int(&pk, a.id());
-	msgpack_pack_int(&pk, a.acceleration().x_);
-	msgpack_pack_int(&pk, a.acceleration().y_);
+	msgpack_pack_float(&pk, a.acceleration().x_);
+	msgpack_pack_float(&pk, a.acceleration().y_);
 
 	if(network->sendRPC(Procedure::VOTE_MOVE_ROBOT, sbuf.data, sbuf.size) < 0) {
 		return -1;
