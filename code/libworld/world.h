@@ -31,6 +31,7 @@ typedef struct SimulationObject {
 
 	float x; //! x position in the world
 	float y; //! y position
+	float rotation; //! rotation. 0 < rotation < 360
 	float m; //! mass of object
 
 	int id; //! id of this object. Use that for MoveRobot() calls

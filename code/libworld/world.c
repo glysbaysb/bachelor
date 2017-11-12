@@ -44,6 +44,8 @@ static int parseObject(SimulationObject* object, const msgpack_object_array* arr
 	if(arr->size < 6)
 		return -1;
 
+	/* reply is: [1000, -471718, 31.000000, 0.605107, "ROBOT", -0.044753, -14.968350] */
+
 	assert(arr->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || arr->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
 	object->fuel = arr->ptr[0].via.i64;
 
@@ -53,13 +55,16 @@ static int parseObject(SimulationObject* object, const msgpack_object_array* arr
 	assert(arr->ptr[2].type == MSGPACK_OBJECT_FLOAT || arr->ptr[2].type == MSGPACK_OBJECT_FLOAT32);
 	object->m = arr->ptr[2].via.f64;
 
-	assert(arr->ptr[3].type == MSGPACK_OBJECT_STR);
-	object->type = arr->ptr[3].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
+	assert(arr->ptr[4].type == MSGPACK_OBJECT_STR);
+	object->type = arr->ptr[4].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
 
-	assert(arr->ptr[4].type == MSGPACK_OBJECT_FLOAT || arr->ptr[4].type == MSGPACK_OBJECT_FLOAT32);
-	object->x = arr->ptr[4].via.f64;
 	assert(arr->ptr[5].type == MSGPACK_OBJECT_FLOAT || arr->ptr[5].type == MSGPACK_OBJECT_FLOAT32);
-	object->y = arr->ptr[5].via.f64;
+	object->x = arr->ptr[5].via.f64;
+	assert(arr->ptr[6].type == MSGPACK_OBJECT_FLOAT || arr->ptr[6].type == MSGPACK_OBJECT_FLOAT32);
+	object->y = arr->ptr[6].via.f64;
+
+	assert(arr->ptr[3].type == MSGPACK_OBJECT_FLOAT || arr->ptr[3].type == MSGPACK_OBJECT_FLOAT32);
+	object->rotation = arr->ptr[3].via.f64;
 
 	return 0;
 }

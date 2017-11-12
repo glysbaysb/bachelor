@@ -23,8 +23,10 @@ static void worldStatusCallback(void* optional, msgpack_object_array* params)
 	assert(actions.size());
 
 	/* weg senden */
-	if(sendVote(network, actions[0]) < 0) {
-		std::cerr << "can't vote\n";
+	for(auto&& i : actions) {
+		if(sendVote(network, i) < 0) {
+			std::cerr << "can't send " << i << '\n';
+		}
 	}
 }
 
@@ -72,6 +74,7 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 		* - ID (int)
 		* - type (int)
 		* - x, y (float)
+		* - rotation (float)
 		* - m (float)
 		* - fuel (int)
 		*/
@@ -87,15 +90,18 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 		auto y = object->ptr[3].via.f64;
 
 		assert(object->ptr[4].type == MSGPACK_OBJECT_FLOAT || object->ptr[4].type == MSGPACK_OBJECT_FLOAT32);
-		auto m = object->ptr[4].via.f64;
+		auto rotation = object->ptr[4].via.f64;
 
 		assert(object->ptr[5].type == MSGPACK_OBJECT_FLOAT || object->ptr[5].type == MSGPACK_OBJECT_FLOAT32);
-		auto fuel = object->ptr[5].via.f64;
+		auto m = object->ptr[5].via.f64;
+
+		assert(object->ptr[6].type == MSGPACK_OBJECT_FLOAT || object->ptr[6].type == MSGPACK_OBJECT_FLOAT32);
+		auto fuel = object->ptr[6].via.f64;
 
 		if(type == 'R') {
-			ws.robots.emplace_back(Robot(ID, {x, y}, fuel));
+			ws.robots.emplace_back(Robot(ID, {x, y}, rotation, fuel));
 		} else {
-			ws.fuelStation = new FuelStation(ID, Vector(x, y));
+			ws.fuelStation = new FuelStation(ID, Vector(x, y), rotation);
 		}
 	}
 
