@@ -64,6 +64,11 @@ public:
 			'\t' << o.pos_ << '\n' <<
 			'\t' << o.rotation_ << '\n';
 	}
+
+	double rotation() const
+	{
+		return rotation_;
+	}
 };
 
 class Robot : public Object
