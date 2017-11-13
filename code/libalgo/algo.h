@@ -24,6 +24,11 @@ struct Vector
 		return Vector(x_ - a.x_, y_ - a.y_);
 	}
 
+	double length() const
+	{
+		return sqrt(x_ * x_ + y_ * y_);
+	}
+
 	friend std::ostream& operator<<(std::ostream& os, const Vector& p) {
 		return os << '(' << p.x_ << ';' << p.y_ << ')';
 	}
@@ -68,7 +73,7 @@ private:
 public:
 	double crit() const
 	{
-		return fuel_ / (sqrt(pos().x_ * pos().x_ + pos().y_ * pos().y_));
+		return fuel_ / pos().length();
 	}
 
 	bool operator<(const Robot& a) const
