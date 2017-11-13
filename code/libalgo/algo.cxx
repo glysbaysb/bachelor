@@ -12,23 +12,32 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 	return squareDistance <= squareRadius;
 }
 
-static Action calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
+static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
+{
+	auto d = a - b;
+	auto len = d.length();
+	d.x_ /= len;
+	d.y_ /= len;
+
+	auto facing = Vector(cos(rotation/ 180 * M_PI), sin(rotation/ 180 * M_PI));
+	return 30;
+}
+
+static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
 {
 	Vector accelleration(0., 0.);
 
 	/* if this robot might run out of fuel, move towards fuel station */
 	if(robot->crit() < CRIT_THRESHHOLD) {
-		auto dist = fuel.pos() - robot->pos();
-		accelleration = Vector(dist.x_ > 0 ? -1. : 1.,
-									dist.y_ > 0 ? -1. : 1.);
+		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
 	}
 	/* if it's */
 	else if(robot->crit() > CRIT_THRESHHOLD && robot->crit() < SAFE_THRESHHOLD) {
 	}
 	/* if it's completly safe, balance agressively */
 	else {
-		accelleration = Vector(angle.first > 0 ? -1. : 1.,
+		accelleration = Vector(1.,
 									angle.second > 0 ? -1. : 1.);
 	}
 
@@ -42,7 +51,7 @@ static Action calc_movement(const std::pair<double, double>& angle, const std::v
 	}
 }
 
-static std::vector<Action> calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
+static std::vector<Action> _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
 		const FuelStation& fuel, const std::vector<Robot>::reverse_iterator& robot)
 {
 	if(robot == objects.rend()) {
@@ -50,11 +59,11 @@ static std::vector<Action> calc_movement(const std::pair<double, double>& angle,
 	}
 
 	auto actions = std::vector<Action>();
-	actions.push_back(calc_movement(angle, robot, fuel));
+	actions.push_back(_calc_movement(angle, robot, fuel));
 
 	/* todo: update angle */
 	
-	auto otherActions = calc_movement(angle, objects, fuel, robot + 1);
+	auto otherActions = _calc_movement(angle, objects, fuel, robot + 1);
 	actions.insert(std::end(actions), std::begin(otherActions), std::end(otherActions));
 	return actions;
 }
@@ -68,5 +77,5 @@ std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::v
 
 	/* ... so start the recursion with the last element -> move the robot with
 	   the most critical condition first */
-	return calc_movement(angle, objects, fuel, objects.rbegin());
+	return _calc_movement(angle, objects, fuel, objects.rbegin());
 }
