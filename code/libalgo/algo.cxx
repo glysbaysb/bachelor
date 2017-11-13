@@ -15,11 +15,13 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
 {
 	auto d = a - b;
-	auto len = d.length();
-	d.x_ /= len;
-	d.y_ /= len;
-
 	auto facing = Vector(cos(rotation/ 180 * M_PI), sin(rotation/ 180 * M_PI));
+
+	/* cos(angle) = |d*facing| / (|d| * |facing|) */
+	auto tmp = (d.x_* facing.y_ + d.y_ * facing.x_);
+	auto angle = acos(tmp / (d.length() * facing.length()));
+	std::cout << angle << '\n';
+
 	return 30;
 }
 
