@@ -138,6 +138,11 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Action& o) {
 		return os << '#' << o.id_ << '+' << o.acceleration_ << '\n';
 	}
+
+	friend bool operator<(const Action& a, const Action& b) {
+		return a.id_ < b.id_ &&
+			a.acceleration_.length() < b.acceleration_.length();
+	}
 };
 
 std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::vector<Robot>& objects,

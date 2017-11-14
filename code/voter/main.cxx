@@ -2,8 +2,12 @@
 #include <iterator>
 #include <cstdio>
 #include <unistd.h>
+#include <mutex>
+#include <cmath>
+#include <algorithm>
 #include <libworld/world.h>
 #include <libnetwork/network.h>
+#include <libalgo/algo.h>
 
 #include "voter.h"
 
@@ -11,6 +15,11 @@ typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
+
+	struct {
+		std::vector<Action> res;
+		std::mutex m;
+	} vote;
 } Info;
 
 static int sendWorldStatus(const WorldStatus* ws, Network* network);
@@ -101,6 +110,24 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		fprintf(stderr, "can't send world status\n");
 		return;
 	}
+
+	{
+		info->vote.m.lock();
+		/* vote */
+		std::sort(std::begin(info->vote.res), std::end(info->vote.res));
+		auto x = info->vote.res[info->vote.res.size() / 2];
+
+		/* send */
+		std::cout << "Move " << x.id() << ' ' << x.acceleration().x_ << ';' << x.acceleration().y_ << '\n';
+		int r = 0;
+		if((r = moveRobot(info->worldCtx, x.id(), x.acceleration().x_, x.acceleration().y_)) < 0) {
+			fprintf(stderr, "can't move robot: %d", r);
+		}
+
+		/* prepare for next vote */
+		info->vote.res.clear();
+		info->vote.m.unlock();
+	}
 }
 
 /**
@@ -121,10 +148,10 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 	auto y = params->ptr[2].via.f64;
 	// todo: clamp
 
-	std::cout << "Move " << id << ' ' << x << ';' << y << '\n';
-	int r = 0;
-	if((r = moveRobot(info->worldCtx, id, x, y)) < 0) {
-		fprintf(stderr, "can't move robot: %d", r);
+	{
+		info->vote.m.lock();
+		info->vote.res.push_back(Action{id, {x, y}});
+		info->vote.m.unlock();
 	}
 }
 
