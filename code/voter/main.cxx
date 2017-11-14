@@ -113,19 +113,21 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 	{
 		info->vote.m.lock();
-		/* vote */
-		std::sort(std::begin(info->vote.res), std::end(info->vote.res));
-		auto x = info->vote.res[info->vote.res.size() / 2];
+		if(info->vote.res.size()) {
+			/* vote */
+			std::sort(std::begin(info->vote.res), std::end(info->vote.res));
+			auto x = info->vote.res[info->vote.res.size() / 2];
 
-		/* send */
-		std::cout << "Move " << x.id() << ' ' << x.acceleration().x_ << ';' << x.acceleration().y_ << '\n';
-		int r = 0;
-		if((r = moveRobot(info->worldCtx, x.id(), x.acceleration().x_, x.acceleration().y_)) < 0) {
-			fprintf(stderr, "can't move robot: %d", r);
+			/* send */
+			std::cout << "Move " << x.id() << ' ' << x.acceleration().x_ << ';' << x.acceleration().y_ << '\n';
+			int r = 0;
+			if((r = moveRobot(info->worldCtx, x.id(), x.acceleration().x_, x.acceleration().y_)) < 0) {
+				fprintf(stderr, "can't move robot: %d", r);
+			}
+
+			/* prepare for next vote */
+			info->vote.res.clear();
 		}
-
-		/* prepare for next vote */
-		info->vote.res.clear();
 		info->vote.m.unlock();
 	}
 }
