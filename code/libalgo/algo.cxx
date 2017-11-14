@@ -26,7 +26,7 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	Vector accelleration(0., 0.);
 
 	/* if this robot might run out of fuel, move towards fuel station */
-	if(robot->crit() < CRIT_THRESHHOLD) {
+	if(*robot->crit() < CRIT_THRESHHOLD) {
 		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
 	}
 	/* if it's */
@@ -38,14 +38,8 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 									angle.second > 0 ? -1. : 1.);
 	}
 
-	/* would the robot fall? todo: current acceleration */
-	auto expectedPosition = robot->pos() + accelleration;
-
-	if(_isInsideCircle(expectedPosition, 50.)) {
-		return Action{robot->id(), accelleration};
-	} else {
-		return Action{robot->id(), {0., 0.}};
-	}
+	/* todo: would the robot fall? todo: current acceleration */
+	return Action{robot->id(), accelleration};
 }
 
 static std::vector<Action> _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
