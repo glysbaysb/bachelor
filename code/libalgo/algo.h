@@ -1,6 +1,8 @@
 #ifndef ALGO_H
 #define ALGO_H
 
+#include <cfloat>
+
 #define CRIT_THRESHHOLD 20
 #define SAFE_THRESHHOLD 80
 
@@ -32,6 +34,15 @@ struct Vector
 	friend std::ostream& operator<<(std::ostream& os, const Vector& p) {
 		return os << '(' << p.x_ << ';' << p.y_ << ')';
 	}
+
+	friend bool operator==(const Vector& a, const Vector& b) {
+		return ((a.x_ - b.x_) < FLT_EPSILON) && ((a.y_ - b.y_) < FLT_EPSILON);
+	}
+
+	friend double angle(const Vector& a, const Vector& b) {
+		auto tmp = (a.x_* b.x_ + a.y_ * b.y_);
+		return acos(tmp / (a.length() * b.length())) * 180 / M_PI;
+	}
 };
 
 class Object
@@ -44,8 +55,8 @@ protected:
 	//todo: Vector velocity_;
 
 public:
-	Object(int id, Vector pos, double rotation) :
-		id_(id), pos_(pos), rotation_(rotation)
+	Object(int id, Vector pos, double rot) :
+		id_(id), pos_(pos), rotation_(rot)
 	{
 	}
 

@@ -8,3 +8,11 @@ target_link_libraries(test_algo
     gmock
 	pthread
 )
+
+set(SOURCE_FILES_VECTOR test_vector.cxx)
+add_executable(test_vector ${SOURCE_FILES_VECTOR})
+target_link_libraries(test_vector
+	gtest
+	gmock
+	pthread
+)

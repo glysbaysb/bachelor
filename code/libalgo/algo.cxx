@@ -17,12 +17,7 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 	auto d = a - b;
 	auto facing = Vector(cos(rotation/ 180 * M_PI), sin(rotation/ 180 * M_PI));
 
-	/* cos(angle) = |d*facing| / (|d| * |facing|) */
-	auto tmp = (d.x_* facing.y_ + d.y_ * facing.x_);
-	auto angle = acos(tmp / (d.length() * facing.length()));
-	std::cout << angle << '\n';
-
-	return 30;
+	return angle(d, facing);
 }
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
