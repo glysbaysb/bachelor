@@ -44,6 +44,8 @@ static int parseObject(SimulationObject* object, const msgpack_object_array* arr
 	if(arr->size < 6)
 		return -1;
 
+	/* reply is: [1000, -471718, 31.000000, 0.605107, "ROBOT", -0.044753, -14.968350] */
+
 	assert(arr->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || arr->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
 	object->fuel = arr->ptr[0].via.i64;
 
@@ -53,13 +55,16 @@ static int parseObject(SimulationObject* object, const msgpack_object_array* arr
 	assert(arr->ptr[2].type == MSGPACK_OBJECT_FLOAT || arr->ptr[2].type == MSGPACK_OBJECT_FLOAT32);
 	object->m = arr->ptr[2].via.f64;
 
-	assert(arr->ptr[3].type == MSGPACK_OBJECT_STR);
-	object->type = arr->ptr[3].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
+	assert(arr->ptr[4].type == MSGPACK_OBJECT_STR);
+	object->type = arr->ptr[4].via.str.ptr[0] == 'R' ? ROBOT : FUEL_STATION; // todo, is a string
 
-	assert(arr->ptr[4].type == MSGPACK_OBJECT_FLOAT || arr->ptr[4].type == MSGPACK_OBJECT_FLOAT32);
-	object->x = arr->ptr[4].via.f64;
 	assert(arr->ptr[5].type == MSGPACK_OBJECT_FLOAT || arr->ptr[5].type == MSGPACK_OBJECT_FLOAT32);
-	object->y = arr->ptr[5].via.f64;
+	object->x = arr->ptr[5].via.f64;
+	assert(arr->ptr[6].type == MSGPACK_OBJECT_FLOAT || arr->ptr[6].type == MSGPACK_OBJECT_FLOAT32);
+	object->y = arr->ptr[6].via.f64;
+
+	assert(arr->ptr[3].type == MSGPACK_OBJECT_FLOAT || arr->ptr[3].type == MSGPACK_OBJECT_FLOAT32);
+	object->rotation = arr->ptr[3].via.f64;
 
 	return 0;
 }
@@ -336,7 +341,20 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	return 0;
 }
 
-int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
+static int clamp(int v, int min, int max)
+{
+	assert(max > min);
+
+	if(v < min) {
+		v = min;
+	} else if(v > max) {
+		v = max;
+	}
+
+	return v;
+}
+
+int moveRobot(void* ctx_, int id, int speed, int angle) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	/* create params */
@@ -348,8 +366,8 @@ int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 
 	msgpack_pack_array(&pk, 3);
 	msgpack_pack_int32(&pk, id);
-	msgpack_pack_int32(&pk, diffX);
-	msgpack_pack_int32(&pk, diffY);
+	msgpack_pack_int32(&pk, clamp(speed, 0, 100));
+	msgpack_pack_int32(&pk, clamp(angle, -30, 30));
 
 	/* create request with params */
 	void* out = NULL; size_t outLen = 0;
@@ -368,7 +386,7 @@ int MoveRobot(void* ctx_, int id, int diffX, int diffY) {
 }
 
 static void moveRobotCallback(void* optional, msgpack_object_array* params) {
-	puts("moveRobotCallback");
+	(void) optional; (void) params;
 }
 
 static void createRobotCallback(void* optional, msgpack_object_array* params) {

@@ -23,17 +23,32 @@ struct Vector
 	{
 		return Vector(x_ - a.x_, y_ - a.y_);
 	}
+
+	double length() const
+	{
+		return sqrt(x_ * x_ + y_ * y_);
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Vector& p) {
+		return os << '(' << p.x_ << ';' << p.y_ << ')';
+	}
 };
 
 class Object
 {
 protected:
 	Vector pos_;
+	double rotation_;
 	double m_;
 	int id_;
 	//todo: Vector velocity_;
 
 public:
+	Object(int id, Vector pos, double rotation) :
+		id_(id), pos_(pos), rotation_(rotation)
+	{
+	}
+
 	Vector pos() const
 	{
 		return pos_;
@@ -42,6 +57,17 @@ public:
 	int id() const
 	{
 		return id_;
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Object& o) {
+		return os << '#' << o.id_ << '\n' <<
+			'\t' << o.pos_ << '\n' <<
+			'\t' << o.rotation_ << '\n';
+	}
+
+	double rotation() const
+	{
+		return rotation_;
 	}
 };
 
@@ -52,17 +78,35 @@ private:
 public:
 	double crit() const
 	{
-		return fuel_ / (sqrt(pos().x_ * pos().x_ + pos().y_ * pos().y_));
+		return fuel_ / pos().length();
 	}
 
 	bool operator<(const Robot& a) const
 	{
 		return crit() < a.crit();
 	}
+
+	Robot(int id, Vector pos, double rotation, double fuel) :
+		Object(id, pos, rotation), fuel_(fuel)
+	{
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Robot& o) {
+		return os << '#' << o.id_ << '\n' <<
+			'\t' << o.pos_ << '\n' <<
+			'\t' << o.rotation_ << '\n' <<
+			'\t' << o.fuel_ << '\n' <<
+			'\t' << o.crit() << '\n';
+	}
 };
 
 class FuelStation: public Object
 {
+public:
+	FuelStation(int id, Vector pos, double rotation) :
+		Object(id, pos, rotation)
+	{
+	}
 };
 
 class Action
@@ -75,6 +119,13 @@ public:
 	Action(int id, Vector acceleration) :
 		id_(id), acceleration_(acceleration)
 	{
+	}
+
+	int id() const { return id_; }
+	Vector acceleration() const { return acceleration_; }
+
+	friend std::ostream& operator<<(std::ostream& os, const Action& o) {
+		return os << '#' << o.id_ << '+' << o.acceleration_ << '\n';
 	}
 };
 
