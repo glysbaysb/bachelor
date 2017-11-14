@@ -452,10 +452,10 @@ Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentriere
 Im ganzen System gibt es zwei Schnittstellen:
 \begin{itemize}
 \item Die Schnittstelle zwischen Controller und Voter
-\item Die Schnittstelle zwischen Voter und Roboter
+\item Die Schnittstelle zwischen Voter und Roboter/Simulation
 \end{itemize}
 
-\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll.
+\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll - denn gerade hier soll ja die Fehlertoleranz implementiert werden.
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} Diese Schnittstelle besteht aus den Funktionen:
 \begin{lstlisting}[frame=single, language=c] 
@@ -464,10 +464,11 @@ void detachFromWorld(void* ctx);
 int createRobot(void* ctx);
 typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
 int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
-void MoveRobot(void* ctx, int id, int diffX, int diffY);
+void moveRobot(void* ctx, int id, float speed, float angle);
 \end{lstlisting}
 
-Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt.
+Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
+dann vom Studentencode einfach aufgerufen werden.
 
 \clearpage
 \section{Fehlerinjektion}
@@ -484,6 +485,7 @@ ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation 
 \subsection{Controller}
 Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}.
 \todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
+\lstinputlisting{../fault_injector.sh}
 
 \subsection{Simulation}
 Der Benutzer kann einen Roboter fernsteuern und hat damit direkten Einfluss auf die simulierte Welt. W{\"{a}}hrend ein Roboter
@@ -544,25 +546,28 @@ Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert
 exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt
 werden.
 
-\subsection{Controller}
-\label{controller}
-\paragraph{Algorithmus zur Bestimmung der Bewegung} hauptproblem? ziel? bla bla
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{seqvoter}
+	\caption{Ablaufdiagramm Voter}
+	\label{fig:sequence-voter}
+\end{figure}
 
+\subsection{Controller}\label{controller}
+\paragraph{Algorithmus zur Bestimmung der Bewegung} Die Roboter m{\"{u}}ssen sich so bewegen das die Platte m{\"{o}}glichst gut ausbalanciert
+ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
+kollidieren.
 
-\subsubsection{Elipsen}
-\subsubsection{Zweipunktregler}
-\subsubsection{was anderes}
-
-\subsection{Konsenzalgorithmus}
-bla \cite{efficent-consens}. a) nimmt fehlerfreies Netzwerk an -- reicht checksum und nochmal schicken bis geklappt hat? Was ist dann mit omission failure
-b) wie man auf mehrere Werte generalisiert ist mir auch noch nicht klar. Eig reichen ja {-1, 0, 1} jeweils f{\"{u}}r x und y
+Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch, unkritisch oder dazwischen?
+Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur F{\"{u}}llstation. Roboter mit fast leerem Tank
+versuchen also sich aufzuf{\"{u}}llen, Roboter mit fast vollem Tank versuchen auszubalancieren.
 
 \clearpage
 \section{Evaluation}
 
 
 \clearpage
-\nocite{*} % alle unbenutzen Literatureintr{\"{a}}ge trotzdem anzeigen
+\nocite{*} % alle unbenutzen Literatureintraege trotzdem anzeigen
 \bibliographystyle{plain}
 %\addbibresource{lit.bib}
 \bibliography{../lit}
