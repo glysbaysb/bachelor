@@ -53,7 +53,7 @@
 \begin{document}
 
 \maketitle
-\todo{Bilder: vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?}
+\todo{Bilder: vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?, Voter?}
 \thispagestyle{empty}
 
 \clearpage
@@ -537,6 +537,12 @@ Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \subsection{Voter}
 \label{voter}
 Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
+Da nicht klar ist wie viele Controller momentan {\"{u}}berhaupt Steuerkommandos senden k{\"{o}}nnten, kann nicht gewartet werden bis eine bestimmte Anzahl von Kommandos empfangen wurde. Deswegen wird beim empfangen
+eines neuen Weltstatus das Steuerergebniss gebildet, weggesendet und der Vorgang wird neu gestartet.
+
+Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos Flie{\ss}kommazahlen enthalten ist keine
+exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt
+werden.
 
 \subsection{Controller}
 \label{controller}
