@@ -480,11 +480,11 @@ unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batter
 
 \subsection{Netzwerk}
 Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ \frac{1}{20} $ aller Pakete
-ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also selbst implementiert werden.
+ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
 
 \subsection{Controller}
-Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}.
-\todo{vlt. noch mit ulimit o.ae. irgendwelche Resourcen stark begrenzen?}
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}. Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
+offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 \lstinputlisting{../fault_injector.sh}
 
 \subsection{Simulation}
