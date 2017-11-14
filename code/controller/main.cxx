@@ -1,7 +1,6 @@
 #include <iostream>
 #include <math.h>
 #include <memory>
-#include <experimental/optional>
 
 #include <libnetwork/network.h>
 #include <libalgo/algo.h>
