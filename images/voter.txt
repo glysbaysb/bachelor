@@ -1,0 +1,13 @@
+# https://www.websequencediagrams.com/
+title Ablaufdiagram Voter
+
+Simulation->Voter: Weltstatus
+Voter->Controller A: Weltstatus
+Voter->Controller B: Weltstatus
+
+loop Steuerkommandos sammeln
+    Controller A->Voter: Steuerkommando
+    Controller B->Voter: Steuerkommando
+end
+
+Voter->Simulation: Steuerkommando
