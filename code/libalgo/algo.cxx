@@ -15,19 +15,24 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
 {
 	auto d = a - b;
-	auto facing = Vector(cos(rotation/ 180 * M_PI), sin(rotation/ 180 * M_PI));
+	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
 
-	return angle(d, facing);
+	std::cout << "D: " << d << ":" << facing << '\n';
+	auto x = angle(d, facing);
+	std::cout << "winke: " << x << '\n';
+	return x;
 }
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
 {
 	Vector accelleration(0., 0.);
-
+#if 0
 	/* if this robot might run out of fuel, move towards fuel station */
-	if(*robot->crit() < CRIT_THRESHHOLD) {
+	if(robot->crit() < CRIT_THRESHHOLD) {
+#endif
 		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
+#if 0
 	}
 	/* if it's */
 	else if(robot->crit() > CRIT_THRESHHOLD && robot->crit() < SAFE_THRESHHOLD) {
@@ -37,7 +42,7 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 		accelleration = Vector(1.,
 									angle.second > 0 ? -1. : 1.);
 	}
-
+#endif
 	/* todo: would the robot fall? todo: current acceleration */
 	return Action{robot->id(), accelleration};
 }

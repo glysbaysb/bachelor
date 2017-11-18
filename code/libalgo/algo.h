@@ -43,6 +43,10 @@ struct Vector
 		auto tmp = (a.x_* b.x_ + a.y_ * b.y_);
 		return acos(tmp / (a.length() * b.length())) * 180 / M_PI;
 	}
+
+	friend bool operator<(const Vector& a, const Vector& b) {
+		return a.length() < b.length();
+	}
 };
 
 class Object

@@ -22,6 +22,7 @@ static void worldStatusCallback(void* optional, msgpack_object_array* params)
 
 	/* weg senden */
 	for(auto&& i : actions) {
+		std::cout << i << '\n';
 		if(sendVote(network, i) < 0) {
 			std::cerr << "can't send " << i << '\n';
 		}
