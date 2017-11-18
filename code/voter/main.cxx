@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <mutex>
+#include <map>
 #include <cmath>
 #include <algorithm>
 #include <libworld/world.h>
@@ -17,7 +18,7 @@ typedef struct {
 	Network* network;
 
 	struct {
-		std::vector<Action> res;
+		std::map<int, std::vector<Vector>> res;
 		std::mutex m;
 	} vote;
 } Info;
@@ -69,7 +70,7 @@ static int sendWorldStatus(const WorldStatus* ws, Network* network)
 	msgpack_pack_float(&pk, ws->yTilt);
 
 	msgpack_pack_array(&pk, ws->numOfObjects);
-	for(auto i = 0; i < ws->numOfObjects; i++) {
+	for(auto i = 0u; i < ws->numOfObjects; i++) {
 		msgpack_pack_array(&pk, 7);
 
 		msgpack_pack_int32(&pk, ws->objects[i].id);
@@ -113,21 +114,21 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 	{
 		info->vote.m.lock();
-		if(info->vote.res.size()) {
+		for(auto&& votes : info->vote.res) {
 			/* vote */
-			std::sort(std::begin(info->vote.res), std::end(info->vote.res));
-			auto x = info->vote.res[info->vote.res.size() / 2];
+			std::sort(std::begin(votes.second), std::end(votes.second));
+			auto x = votes.second[votes.second.size() / 2];
 
 			/* send */
-			std::cout << "Move " << x.id() << ' ' << x.acceleration().x_ << ';' << x.acceleration().y_ << '\n';
+			std::cout << "Move " << votes.first << ' ' << x.x_ << ';' << x.y_ << '\n';
 			int r = 0;
-			if((r = moveRobot(info->worldCtx, x.id(), x.acceleration().x_, x.acceleration().y_)) < 0) {
+			if((r = moveRobot(info->worldCtx, votes.first, x.x_, x.y_)) < 0) {
 				fprintf(stderr, "can't move robot: %d", r);
 			}
 
-			/* prepare for next vote */
-			info->vote.res.clear();
 		}
+		/* prepare for next vote */
+		info->vote.res.clear();
 		info->vote.m.unlock();
 	}
 }
@@ -152,7 +153,7 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 
 	{
 		info->vote.m.lock();
-		info->vote.res.push_back(Action{id, {x, y}});
+		info->vote.res[id].push_back(Vector{x, y});
 		info->vote.m.unlock();
 	}
 }
