@@ -14,11 +14,14 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 
 static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
 {
-	auto d = a - b;
+	auto d = (a - b).norm();
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
+	std::cout << "d: " << d << " facing: " << facing << '\n';
 
-	std::cout << "D: " << d << ":" << facing << '\n';
-	auto x = angle(d, facing);
+	auto x = angle(facing, d);
+	if(facing.x_ < d.x_ || facing.y_ < d.y_) {
+		x = -x;
+	}
 	std::cout << "winke: " << x << '\n';
 	return x;
 }

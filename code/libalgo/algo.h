@@ -2,6 +2,7 @@
 #define ALGO_H
 
 #include <cfloat>
+#include <cmath>
 
 #define CRIT_THRESHHOLD 20
 #define SAFE_THRESHHOLD 80
@@ -46,6 +47,11 @@ struct Vector
 
 	friend bool operator<(const Vector& a, const Vector& b) {
 		return a.length() < b.length();
+	}
+
+	Vector norm() {
+		auto len = length();
+		return Vector{x_ / len, y_ / len};
 	}
 };
 
