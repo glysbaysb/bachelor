@@ -16,13 +16,20 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 {
 	auto d = (a - b).norm();
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
-	std::cout << "d: " << d << " facing: " << facing << '\n';
 
-	auto x = angle(facing, d);
-	if(facing.x_ < d.x_ || facing.y_ < d.y_) {
+	auto x = 180 - angle(facing, d);
+	std::cout << " x: " << x << '\n';
+
+	/* correct the angle, if it's on the left */
+	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
+	std::cout << d.y_ << "*" << facing.x_ << "-" << d.x_ << "*" << facing.y_ << "=" << dotZ << '\n';
+	if(dotZ < 0) {
 		x = -x;
 	}
-	std::cout << "winke: " << x << '\n';
+	if(abs(x) < 1.) {
+		x = 0.;
+	}
+	std::cout << "- x: " << x << '\n';
 	return x;
 }
 
