@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <map>
 
 #include "algo.h"
 
@@ -18,19 +19,31 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
 
 	auto x = 180 - angle(facing, d);
-	std::cout << " x: " << x << '\n';
 
 	/* correct the angle, if it's on the left */
 	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
-	std::cout << d.y_ << "*" << facing.x_ << "-" << d.x_ << "*" << facing.y_ << "=" << dotZ << '\n';
 	if(dotZ < 0) {
 		x = -x;
 	}
-	if(abs(x) < 1.) {
-		x = 0.;
-	}
-	std::cout << "- x: " << x << '\n';
+	
+	std::cout << "winkel: " << x << '\n';
 	return x;
+}
+
+double pi(int id, double e) {
+	const auto P = 0.1;
+	const auto I = 0.0001;
+	static std::map<int, double> iStateRotation;
+
+	std::cout << '#' << id << ": " << iStateRotation[id] << '\n';
+	iStateRotation[id] += e;
+	if(iStateRotation[id] > 1000) {
+		iStateRotation[id] = 1000;
+	} else if(iStateRotation[id] < -1000) {
+		iStateRotation[id] = -1000;
+	}
+
+	return P * e + iStateRotation[id] * I;
 }
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
@@ -42,6 +55,7 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	if(robot->crit() < CRIT_THRESHHOLD) {
 #endif
 		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
+		accelleration.y_ = pi(robot->id(), accelleration.y_);
 #if 0
 	}
 	/* if it's */
