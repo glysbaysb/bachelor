@@ -158,8 +158,8 @@ Controllern, Votern, Simulation und den 2 Netzwerken?}
 \item Controller generiert steuerkommandos, kann jederzeit ausfallen
 \end{itemize}
 
-Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht - dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
-Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
+Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht - dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
+Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
 
 \clearpage
 \section{3D Engine}
@@ -542,9 +542,30 @@ Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabe
 Da nicht klar ist wie viele Controller momentan {\"{u}}berhaupt Steuerkommandos senden k{\"{o}}nnten, kann nicht gewartet werden bis eine bestimmte Anzahl von Kommandos empfangen wurde. Deswegen wird beim empfangen
 eines neuen Weltstatus das Steuerergebniss gebildet, weggesendet und der Vorgang wird neu gestartet.
 
-Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos Flie{\ss}kommazahlen enthalten ist keine
-exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt
-werden.
+Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos
+Flie{\ss}kommazahlen enthalten ist keine exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt werden.
+\noindent\begin{minipage}{.30\textwidth}
+\begin{lstlisting}[caption=Sammeln, frame=tlrb, language=c++]
+votes.res[id].push_back(Vector{x, y});
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}{.60\textwidth}
+\begin{lstlisting}[caption=Auswahl, frame=tlrb, language=c++]
+/* go through all robots */
+for(auto&& votes : votes.res) {
+  /* vote */
+  std::sort(std::begin(votes.second), std::end(votes.second));
+  auto x = votes.second[votes.second.size() / 2];
+
+  /* send */
+  int r = 0;
+  if((r = moveRobot(info->worldCtx, votes.first, x.x_, x.y_)) < 0) {
+  	fprintf(stderr, "can't move robot: %d", r);
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
 
 \begin{figure}
 	\centering
@@ -552,15 +573,34 @@ werden.
 	\caption{Ablaufdiagramm Voter}
 	\label{fig:sequence-voter}
 \end{figure}
+\clearpage % make sure the table is, at least, in the right section
 
 \subsection{Controller}\label{controller}
-\paragraph{Algorithmus zur Bestimmung der Bewegung} Die Roboter m{\"{u}}ssen sich so bewegen das die Platte m{\"{o}}glichst gut ausbalanciert
+Die Roboter m{\"{u}}ssen sich so bewegen das die Platte m{\"{o}}glichst gut ausbalanciert
 ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
 kollidieren.
 
-Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch, unkritisch oder dazwischen?
-Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur F{\"{u}}llstation. Roboter mit fast leerem Tank
+\paragraph{Algorithmus zur Bestimmung der Bewegung} Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch,
+unkritisch oder dazwischen? Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur F{\"{u}}llstation. Roboter mit fast leerem Tank
 versuchen also sich aufzuf{\"{u}}llen, Roboter mit fast vollem Tank versuchen auszubalancieren.
+
+Jeder Controller berechnet f{\"{u}}r jeden Roboter wie dieser sich bewegen soll. Dabei wird mit dem Roboter im kritischtesten Zustand anfangen, denn dieser muss ja 
+unbedingt Richtung F{\"{u}}llstation und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen dann ausgleichen. Nachdem eine Roboterbewegung berechnet wurde, werden die Weltkippwinkel
+dementsprechend neu berechnet - so dass die letzten Roboter die Bewegungen der vorher berechneten mit in ihre Entscheidung einbeziehen.
+
+\paragraph{Bewegung} Um zu einem bestimmten Punkt hinzufahren (z.B. zur F{\"{u}}llstation) wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation
+wird immer in Bezug auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigeometrische Funktionen bestimmt werden:
+$$ M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)$$
+Desweiteren gibt es einen Distanzvektor zum Ziel:
+$$ D_i = F - P_i $$
+
+Der Winkel zwischen diesen beiden Vektoren gibt an wie weit der Roboter sich drehen muss um gerade zu dem Ziel fahren zu k{\"{o}}nnen. Dabei muss beachtet werden das nur der Wert des
+Winkels berechnet wird, das Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer nach rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die
+falsche Richtung drehen. Das Vorzeichen kann allerdings berechnet werden in dem man die Bewegungsvektoren in drei Dimensionen betrachtet und das Keuzprodukt bildet. In dem resultierenden
+Vektor gibt das Vorzeichen der Z Kompenente das Vorzeichen des Winkels an.
+
+\paragraph{Ausbalancieren} Um auszubalancieren wird 
+
 
 \clearpage
 \section{Evaluation}
