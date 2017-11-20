@@ -42,7 +42,7 @@ ECCUDP::~ECCUDP()
 	}
 }
 
-int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
+int ECCUDP::poll(int timeout, std::vector<RecvPacket>& packets)
 {
 	auto pollfds = std::vector<pollfd>();
 
@@ -60,11 +60,9 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 	int ret = 0;
 	for(auto&& pollfd : pollfds) {
 		if((pollfd.revents & POLLIN) == POLLIN) {
-			auto packet = Packet(512);// todo: better size
-			struct sockaddr_storage addr; // should be recvable from both ipv6 and 6
-			socklen_t addrLen = sizeof(addr);
+			auto packet = RecvPacket(512);// todo: better size
 
-			auto count = ::recvfrom(pollfd.fd, packet.data(), packet.capacity(), 0, (sockaddr*)(&addr), &addrLen);
+			auto count = ::recvfrom(pollfd.fd, packet.p.data(), packet.p.capacity(), 0, (sockaddr*)(&packet.addr), &packet.addrLen);
 			if (count == 0 || count == -1) {
 				if (count == -1 && errno != EAGAIN) {
 					perror("recvfrom");
@@ -72,8 +70,9 @@ int ECCUDP::poll(int timeout, std::vector<Packet>& packets)
 				continue;
 			}
 
-			packet.resize(count);
-			packets.push_back(ECC::decode(packet));
+			packet.p.resize(count);
+			packet.p = ECC::decode(packet.p);
+			packets.push_back(packet);
 		} else if((pollfd.revents & POLLIN) == POLLERR) {
 			ret = -1;
 		}

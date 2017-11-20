@@ -10,6 +10,16 @@
  * @brief A helper class to abstract away implementation details
  */
 typedef std::vector<std::uint8_t> Packet;
+struct RecvPacket {
+	Packet p;
+	struct {
+			struct sockaddr_storage addr;
+			socklen_t addrLen;
+	};
+
+	RecvPacket(size_t len) : p(len), addrLen(sizeof(addr)) {
+	}
+};
 
 class ECCUDP
 {
@@ -66,7 +76,7 @@ public:
 	 *
 	 * @return negative value if there was an error
 	 */
-	int poll(int timeout, std::vector<Packet>& packets);
+	int poll(int timeout, std::vector<RecvPacket>& packets);
 };
 
 class Network {
@@ -74,10 +84,10 @@ protected:
 	void* rpc;
 	ECCUDP udp;
 
-	void _handlePackets(const std::vector<Packet>& packets)
+	void _handlePackets(const std::vector<RecvPacket>& packets)
 	{
 		for(auto&& i : packets) {
-			handleRPC(rpc, i.data(), i.size());
+			handleRPC(rpc, i.p.data(), i.p.size());
 		}
 	}
 
@@ -97,7 +107,7 @@ public:
 	/* todo: find a better name */
 	void step()
 	{
-		auto packets = std::vector<Packet>();
+		auto packets = std::vector<RecvPacket>();
 		if(udp.poll(0, packets) < 0) {
 			puts("err udp.poll()");
 			return;
@@ -108,7 +118,7 @@ public:
 
 	void poll(int timeout)
 	{
-		auto packets = std::vector<Packet>();
+		auto packets = std::vector<RecvPacket>();
 		if(udp.poll(timeout, packets) < 0) {
 			puts("err udp.poll()");
 			return;

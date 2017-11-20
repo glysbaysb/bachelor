@@ -51,17 +51,17 @@ TEST_F(NetworkTest, EchoTest) {
 	EXPECT_EQ(network.send(data), 0);
 
 	/* try to receive it */
-	auto packets = std::vector<Packet>();
+	auto packets = std::vector<RecvPacket>();
 	network.poll(0, packets);
 
 	/* compare */
 	/* if the network library bound to multiple sockets, make sure that
 	   it recved the same thing on all of them */
 	ASSERT_GE(packets.size(), 1);
-	ASSERT_EQ(data, packets.at(0));
+	ASSERT_EQ(data, packets.at(0).p);
 	if(packets.size() > 1) {
 		for(auto i = 1; i < packets.size(); i++) {
-			ASSERT_EQ(packets.at(0), packets.at(i));
+			ASSERT_EQ(packets.at(0).p, packets.at(i).p);
 		}
 	}
 }
@@ -72,7 +72,7 @@ TEST_F(NetworkTest, TimeoutTest)
 	const auto TIMES = 100;
 	auto totalTime = std::chrono::duration<float>();
 
-	auto packets = std::vector<Packet>();
+	auto packets = std::vector<RecvPacket>();
 
 	for(auto i = 0; i < TIMES; i++) {
 		auto before = std::chrono::system_clock::now();
