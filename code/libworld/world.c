@@ -357,6 +357,11 @@ static int clamp(int v, int min, int max)
 int moveRobot(void* ctx_, int id, int speed, int angle) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
+	/* is this request for a robot that this voter is allowed to control? */
+	if(ctx->createRobot.id != id) {
+		return -3;
+	}
+
 	/* create params */
 	msgpack_packer pk;
 	msgpack_sbuffer sbuf;

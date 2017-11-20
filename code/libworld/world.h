@@ -81,7 +81,8 @@ int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* o
  * @param speed: 0 <= speed <= 100
  * @param angle: -30 <= angle <= 30
  *
- * @return: 0 on success. -1 for allocation errors, -2 for network errs
+ * @return: 0 on success. -1 for allocation errors, -2 for network errs,
+ *   -3 request for the wrong robot
  */
 int moveRobot(void* ctx, int id, int speed, int angle);
 
