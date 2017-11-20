@@ -38,7 +38,6 @@ Fragen zur Doku
 
 Fragen zum Interface
 ====================
-wie garantiere ich das nur der richtige Voter den richtigen Roboter steuert?
 kann nn_poll einen timerfd benutzen?
 
 Blablabla

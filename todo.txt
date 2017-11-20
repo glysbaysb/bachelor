@@ -3,13 +3,13 @@ Zeitplan
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
 09-17	 | unity		| roboter designen + lampe + rauch
-09-22	 | cont + voter | kommunikation
-09-22	 | controller   | main als geruest
          |fehlerinjektor|
 		 | unity		| 
 		 | ecc			| pakete > 255b
 		 | voter		| alles halt
 		 | algo			| vlt noch einen?
+		 |				| scheiÃbewegung (das ruckeln in unity &
+		 wegfindung)
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
@@ -19,13 +19,6 @@ die Daten die empfangen werden, vergleichen mit den selbst berechneten. Falls zu
 Fehler (rundungsfehler, mem corruption, ...) -> software rejunivation
 
 momentan les ich immer nur ein packet bei jedem poll() aufruf...
-
-voter
------
-Formalized plurality voting - divide results in partitions, choose  random member from the largest
- partition
-
-median voting
 
 refactoring
 -----------
