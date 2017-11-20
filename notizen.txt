@@ -1,3 +1,20 @@
+2 motoren.
+-> jeden in vektor umrechnen, addieren
+
+Fault injector parametisibar:
+* roboter geht kaputt
+* bauteile gehen kaputt
+--> ganz kapuut, stuck at
+* weltstatus kommt manchmal nicht, verfaelscht, letzter nochmal (in libworld)
+
+formelzeichen & quellcodeverzeichniss
+
+rpc und vektor kurz anreissen
+
+bspimplemantation muss nur irgendwie bewegen
+s/Fuell/Lade. Ist ein elektrischer Roboter
+----
+
 Rundenbasiert
 Controller kriegt alle Position+Neigungswinkel der Roboter <- Simulation macht broadcast
 1 zu 1 oder many C zu 1 R
