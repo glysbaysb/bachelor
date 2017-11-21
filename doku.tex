@@ -34,6 +34,7 @@
 \usepackage{alltt}
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{todonotes}
+\usepackage[toc]{glossaries}
 
 \setstretch{1.433} %entspricht 1,5 in Word 
 \graphicspath{{../images/}}
@@ -53,6 +54,10 @@
 \author{Geert Martin Ijewski}
 \publishers{\vfill Betreuer: Prof. Dr.-Ing. habil. Jan Richling}
 
+\loadglsentries{../glossary}
+\makeglossaries
+\glsaddall
+
 \begin{document}
 
 \maketitle
@@ -63,6 +68,7 @@
 \tableofcontents
 \listoffigures
 \listoftables
+\printglossaries
 
 \clearpage
 \section{Einf{\"{u}}hrung}
@@ -610,5 +616,6 @@ Vektor gibt das Vorzeichen der Z Kompenente das Vorzeichen des Winkels an.
 
 
 \clearpage
+\printbibliography
 
 \end{document}
