@@ -1,7 +1,8 @@
 \documentclass[
     12pt,
     bibliography=totoc,
-    ngerman
+    ngerman,
+	enabledeprecatedfontcommands
 ]{scrartcl}
 
 \usepackage[utf8]{inputenc}
@@ -10,7 +11,9 @@
 \usepackage[ngerman]{babel}
 %\usepackage[decimalsymbol=comma]{siunitx}
 
-%\usepackage[style=ieee]{biblatex}
+\usepackage[style=ieee, backend=biber]{biblatex}
+\nocite{*} % alle unbenutzen Literatureintraege trotzdem anzeigen
+\addbibresource{../lit.bib}
 \usepackage{setspace}
 \PassOptionsToPackage{hyphens}{url}
 \usepackage[hidelinks,linktoc=all,pdfusetitle]{hyperref}
@@ -31,16 +34,14 @@
 \usepackage{alltt}
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{todonotes}
-\usepackage[toc]{glossaries}
-
 
 \setstretch{1.433} %entspricht 1,5 in Word 
 \graphicspath{{../images/}}
 \MakeOuterQuote{"}
 \pagestyle{fancy}
 \lstset{frame=single,breaklines=true}
-%\setcounter{biburllcpenalty}{7000}
-%\setcounter{biburlucpenalty}{8000}
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
 
 \newcommand{\xmark}{\text{\sffamily X}} % gegensymbol zu \checkmark
 
@@ -52,35 +53,6 @@
 \author{Geert Martin Ijewski}
 \publishers{\vfill Betreuer: Prof. Dr.-Ing. habil. Jan Richling}
 
-% Glossary start
-\newglossaryentry{N}
-{
-	name={N},
-	description={Anzahl der Voter}
-	% sort = hiertextderfuerssortierengenommenwird
-}
-\newglossaryentry{M}
-{
-	name={M},
-	description={Anzahl der Controller}
-}
-\newglossaryentry{Ni}
-{
-	name={\ensuremath{N_i}},
-	description={Der i-te Roboter}
-}
-\newglossaryentry{veci}
-{
-	name={\ensuremath{x_i}, \ensuremath{y_i}, \ensuremath{w_i}},
-	description={X-, Y-Position und Gewicht des i-ten Roboters oder der Ladestation}
-}
-\newglossaryentry{F}
-{
-	name={\ensuremath{F}},
-	description={Die Ladestation}
-}
-% Glossary end
-
 \begin{document}
 
 \maketitle
@@ -91,10 +63,8 @@
 \tableofcontents
 \listoffigures
 \listoftables
-\makeglossaries
 
 \clearpage
-
 \section{Einf{\"{u}}hrung}
 \begin{figure}
 	\centering
@@ -109,18 +79,18 @@ Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranst
 Dies f{\"{u}}hrte zur Idee, eine Computersimulation zu entwickeln, da diese visuell ansprechend ist und vielf{\"{a}}tige
 Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
 
-\paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N} Roboter und $1$ Ladestation
-platziert werden. Die Summe alle Gewichte kippt die Platte --- sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
+\paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+platziert werden. Die Summe alle Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
 die Platte und die Simulation endet.
 
 Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
-an der Ladestation aufLadeen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
 schnell).
 
-Gesteuert werden die Roboter von bis zu \gls{M} $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
+Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
 so dass:
 \begin{itemize}
-\item die Roboter ihre Energie immer rechtzeitig aufLadeen
+\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
 \item die Roboter nicht kollidieren
 \item die Platte nicht kippt
 \end{itemize}
@@ -128,7 +98,7 @@ so dass:
 Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
 Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
 Teil dieser Bachelorarbeit ist eine
-Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llen. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
+Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
 
 \paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
 Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
@@ -171,13 +141,13 @@ die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweis
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig das System ausfallsicher zu planen.
+allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen -- es ist also notwendig das System ausfallsicher zu planen.
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
 \paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
-ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System, dadurch ist es schwer etwas auszuprobieren und
+ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System - es ist schwer etwas auszuprobieren und
 mit dem System zu spielen.
 
 \clearpage
@@ -191,7 +161,7 @@ Controllern, Votern, Simulation und den 2 Netzwerken?}
 \item Controller generiert steuerkommandos, kann jederzeit ausfallen
 \end{itemize}
 
-Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht -- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
+Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht - dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
 Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
 
 \clearpage
@@ -236,16 +206,16 @@ verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra 
 Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 
 \begin{itemize}
-\item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren und auch zur Erkennung des Kontaktes mit der Ladestation
+\item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren und auch zur Erkennung des Kontaktes mit der F{\"{u}}llstation
 \item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von ihrem Gewicht und ihrer Geschwindigkeit
 \end{itemize}
 
 \subsection{Scripting bei Unity}
 Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, unterst{\"{u}}tzt werden dabei sie Skriptsprachen C\#, JavaScript und Boo.\cite{wiki:unity} Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
-der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und Ladestationen sondern auch die Kamera oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
+der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 
-Beispielsweise wurde der Ladestation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
-den Roboter aufladen. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
+Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein Objekt mit dieser kollidiert testet ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
+den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
 \clearpage
 \section{Netzwerklibrary}
@@ -258,13 +228,13 @@ Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem au
 
 Da die Simulation mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
 der angemessen Weg, um Voter und Simulation zu verbinden.
-Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
+Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --\todo{gucken wie emdash geht} Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
 sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
 Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
-dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Bibliothek ist daher vorzuziehen. \todo{bla bla exceptions}
+dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Bibliothek ist daher vorzuziehen.
 
 \clearpage % make sure the table is, at least, in the right section
 \begin{table}[h]
@@ -347,12 +317,11 @@ MessagePack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsf
 Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
 Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
-\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite --- zum Beispiel 64bit --- Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
-\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an, wodurch diese auf $2^5 - 1 = 31$ Zeichen begrenzt werden. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
+\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite - zum Beispiel 64bit - Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
+\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an - also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
 
 L{\"{a}}ngere Zeichenketten
-werden mit anderen Signalzeichen kodiert --- beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^32)-1$ Zeichen.
-\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
+werden mit anderen Signalzeichen kodiert - beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^(32))-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
 
 \clearpage
 \section{RPC?}
@@ -362,7 +331,7 @@ werden mit anderen Signalzeichen kodiert --- beispielsweise 0xDB f{\"{u}}r eine 
 
 \clearpage
 \section{Die Welt}
-Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer Ladestation, an der die Robter Energie laden k{\"{o}}nnen, und
+Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation, an der die Robter Energie tanken k{\"{o}}nnen, und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
 Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
@@ -374,7 +343,7 @@ Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell be
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
 \paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das auch den simulierten Eigenschaften des Roboters entspricht. Die Grundform des Roboters ist
-ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der Ladestand wird {\"{u}}ber eine Lampe angezeigt, die ihre
+ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
 Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{Bild}
 
@@ -386,7 +355,7 @@ $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$,
 Geschwindigkeit $ V_i = \Delta v $ und einen Rotationsquaternion
 $ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
 
-Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen Ladestatus: 
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
 \begin{equation}
     \label{eq:w}
  w(N_i) = 1 + e(N_i) * 0.03
@@ -408,11 +377,11 @@ Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinh
 Rigidbody wird dann entsprechend manipuliert: die Rotation wird zwischen dem momentanen und dem gew{\"{u}}nschten Winkel
 interpoliert und \todo{bewegung ist noch kacke}.
 
-\subsection{Die Ladestation}\label{fuelstation}
-Innerhalb der Welt muss eine Ladestation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine Ladestation hat dabei ein festes Gewicht: $ w(F) = 5 $.
+\subsection{Die F{\"{u}}llstation}\label{fuelstation}
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
-Falls sich ein Roboter an die Ladestation heranbewegt, also gilt: 
+Falls sich ein Roboter an die F{\"{u}}llstation heranbewegt, also gilt: 
 \begin{equation}
     \label{eq:dist}
  |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
@@ -425,7 +394,7 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
 
 \subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
-Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der Ladestation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
+Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
 
 Um das Kippen der Platte auf der Links-Rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
 
@@ -474,7 +443,7 @@ durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}
 \paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
 geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
 
-Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert; dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
 Platte visuell ausgeglichen werden k{\"{o}}nnte.
 
 \paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
@@ -489,7 +458,7 @@ Im ganzen System gibt es zwei Schnittstellen:
 \item Die Schnittstelle zwischen Voter und Roboter/Simulation
 \end{itemize}
 
-\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll --- denn gerade hier soll ja die Fehlertoleranz implementiert werden.
+\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll - denn gerade hier soll ja die Fehlertoleranz implementiert werden.
 
 \paragraph{Die Schnittstelle zwischen Voter und Roboter} Diese Schnittstelle besteht aus den Funktionen:
 \begin{lstlisting}[frame=single, language=c] 
@@ -508,7 +477,7 @@ dann vom Studentencode einfach aufgerufen werden.
 \section{Fehlerinjektion}
 Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt, wird eine Fehlerinjektion benutzt, um die Fehlertoleranz zu testen.
 In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
-unvorhersehbar ausfallen --- was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
+unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
 
 \todo{bild? wovon wollte ich hier ein bid haben?}
 
@@ -517,7 +486,7 @@ Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werde
 ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
 
 \subsection{Controller}
-Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet. Dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}. Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}. Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
 offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 \lstinputlisting{../fault_injector.sh}
 
@@ -550,7 +519,7 @@ die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsubsection{R{\"{a}}umliche Redudanz}
-Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen --- daraus folgt das eine gro{\ss}e
+Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
 Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
 sind kann eine ordnungsgem{\"{a}}{\ss}e Steuerung nicht mehr garantiert werden.
 
@@ -566,8 +535,8 @@ Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \item Durch expermientelle Verifikation wurde klar, dass im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
 	100 gr{\"{o}}{\ss}er ist, ist nicht erforderlich, eine sehr kompakte Kodierung zu benutzen, es ist ausreichend, die Redudanz zu reduzieren. 
 \item Es ist ein systematischer Code, der es erlaubt, w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
-	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche (Beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
-		sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.)
+	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
 \end{itemize}
 
 \subsection{Voter}
@@ -611,18 +580,18 @@ for(auto&& votes : votes.res) {
 
 \subsection{Controller}\label{controller}
 Die Roboter m{\"{u}}ssen sich so bewegen das die Platte m{\"{o}}glichst gut ausbalanciert
-ist und gleichzeitig die Roboter nicht ihre ganze Energie verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
+ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
 kollidieren.
 
 \paragraph{Algorithmus zur Bestimmung der Bewegung} Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch,
-unkritisch oder dazwischen? Dabei ist das Kriterium die momentane Ladeung geteilt durch die Entfernung zur Ladestation. Roboter mit nur wenig Energiereserve
-versuchen also sich aufzuLadeen, fast volle Roboter versuchen auszubalancieren.
+unkritisch oder dazwischen? Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur F{\"{u}}llstation. Roboter mit fast leerem Tank
+versuchen also sich aufzuf{\"{u}}llen, Roboter mit fast vollem Tank versuchen auszubalancieren.
 
 Jeder Controller berechnet f{\"{u}}r jeden Roboter wie dieser sich bewegen soll. Dabei wird mit dem Roboter im kritischtesten Zustand anfangen, denn dieser muss ja 
-unbedingt Richtung Ladestation und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen dann ausgleichen. Nachdem eine Roboterbewegung berechnet wurde, werden die Weltkippwinkel
-dementsprechend neu berechnet --- so dass die letzten Roboter die Bewegungen der vorher berechneten mit in ihre Entscheidung einbeziehen.
+unbedingt Richtung F{\"{u}}llstation und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen dann ausgleichen. Nachdem eine Roboterbewegung berechnet wurde, werden die Weltkippwinkel
+dementsprechend neu berechnet - so dass die letzten Roboter die Bewegungen der vorher berechneten mit in ihre Entscheidung einbeziehen.
 
-\paragraph{Bewegung} Um zu einem bestimmten Punkt hinzufahren (z.B. zur Ladestation) wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation
+\paragraph{Bewegung} Um zu einem bestimmten Punkt hinzufahren (z.B. zur F{\"{u}}llstation) wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation
 wird immer in Bezug auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigeometrische Funktionen bestimmt werden:
 $$ M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)$$
 Desweiteren gibt es einen Distanzvektor zum Ziel:
@@ -641,9 +610,5 @@ Vektor gibt das Vorzeichen der Z Kompenente das Vorzeichen des Winkels an.
 
 
 \clearpage
-\nocite{*} % alle unbenutzen Literatureintraege trotzdem anzeigen
-\bibliographystyle{plain}
-%\addbibresource{lit.bib}
-\bibliography{../lit}
 
 \end{document}
