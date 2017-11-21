@@ -2,7 +2,7 @@
     12pt,
     bibliography=totoc,
     ngerman,
-	enabledeprecatedfontcommands
+    enabledeprecatedfontcommands
 ]{scrartcl}
 
 \usepackage[utf8]{inputenc}
@@ -79,38 +79,19 @@
 	\label{fig:simulation}
 \end{figure}
 
+Da fehlt noch sehr, sehr viel. ErzÃ¤hlen Sie eine "Geschichte": Beginnen
+Sie mit einer Welt, die jeder kennt, und beschreiben diese immer weiter,
+bis Sie beim Thema angekommen sind (das wÃ¤re hier die Ausbildung in
+Ausfallsicheren Systemen, die Welt davor sind die ausfallsicheren
+Systeme selbst). Damit haben Sie eine umfassende Motivation fÃ¼r das
+Problem aufgebaut, das dann kurz und knackig erklÃ¤rt wird: Eine weitere
+Aufgabe. Alles andere kommt dann spÃ¤ter..
+
 \paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. Dies geschieht im Rahmen einer {\"{U}}bungsaufgabe. In dieser sollen die gelernten Konzepte angewandt werden, wodurch das frisch erworbene Wissen vertieft und die M{\"{o}}glichkeiten und Grenzen dessen verdeutlicht werden.
 
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt nutzbar sein.
 Dies f{\"{u}}hrte zur Idee, eine Computersimulation zu entwickeln, da diese visuell ansprechend ist und vielf{\"{a}}tige
 Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
-
-\paragraph{Simulation} Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
-platziert werden. Die Summe alle Gewichte kippt die Platte - sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
-die Platte und die Simulation endet.
-
-Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
-an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
-schnell).
-
-Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
-so dass:
-\begin{itemize}
-\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
-\item die Roboter nicht kollidieren
-\item die Platte nicht kippt
-\end{itemize}
-
-Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
-Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
-Teil dieser Bachelorarbeit ist eine
-Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
-
-\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
-Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
-
-\paragraph{Evaluation} \todo{...}
-
 \todo{Aufabau dieser Arbeit?}
 
 \clearpage
@@ -147,19 +128,42 @@ die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweis
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen -- es ist also notwendig das System ausfallsicher zu planen.
+allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig das System ausfallsicher zu planen.
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
 \paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr
 tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
-ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System - es ist schwer etwas auszuprobieren und
+ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System, es ist also schwer etwas auszuprobieren und
 mit dem System zu spielen.
 
 \clearpage
 \section{Konzept}
-Sehr high level, Bild vom Systemaufbau\todo{was soll hier nochmal rein? das was ich mir auf den Kalendar aufgemalt hab, mit den
-Controllern, Votern, Simulation und den 2 Netzwerken?}
+bla bla\todo{}
+
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+platziert werden. Die Summe alle Gewichte kippt die Platte; sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
+die Platte und die Simulation endet.
+
+Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
+schnell).
+
+Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
+so dass:
+\begin{itemize}
+\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
+\item die Roboter nicht kollidieren
+\item die Platte nicht kippt
+\end{itemize}
+
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+Teil dieser Bachelorarbeit ist eine
+Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
+
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
+Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
 \begin{itemize}
 \item Simulation berechnet bewegungen und so. per definition ausfallsicher gegen ALLES! (... als ob). grafische ausgabe
@@ -167,7 +171,7 @@ Controllern, Votern, Simulation und den 2 Netzwerken?}
 \item Controller generiert steuerkommandos, kann jederzeit ausfallen
 \end{itemize}
 
-Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht - dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
+Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
 Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
 
 \clearpage
@@ -234,7 +238,7 @@ Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem au
 
 Da die Simulation mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
 der angemessen Weg, um Voter und Simulation zu verbinden.
-Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --\todo{gucken wie emdash geht} Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
+Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
 sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
@@ -273,7 +277,7 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 
 \subparagraph{Publish-Suscribe} Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{Publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt,
 dass f{\"{u}}r mehrere andere (im folgenden \textit{Suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte Suscriber wichtig sind, kann die Filterung entweder auf Seiten des Publisher oder des Suscribers vorgenommen werden.
-Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen -- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
+Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen --- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
 \textit{subnet} befinden.
 
 Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht,
@@ -290,7 +294,7 @@ dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash err
 \clearpage
 \section{Serialisierung}
 Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben, der Rest der Arbeit soll in C geschreiben werden. Die Verwendung verschiedener Sprachen erschwert die Benutzung eines
-Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
+Bin{\"{a}}rprotokoll --- aus diesem Grund werden die Daten serialisiert.
 
 \subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist das es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
@@ -323,11 +327,11 @@ MessagePack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsf
 Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
 Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
-\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite - zum Beispiel 64bit - Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
-\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an - also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
+\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite (zum Beispiel 64bit) Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
+\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
 
 L{\"{a}}ngere Zeichenketten
-werden mit anderen Signalzeichen kodiert - beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^(32))-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
+werden mit anderen Signalzeichen kodiert; beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^(32))-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
 
 \clearpage
 \section{RPC?}
