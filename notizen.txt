@@ -1,3 +1,5 @@
+nachwippen...
+
 2 motoren.
 -> jeden in vektor umrechnen, addieren
 
@@ -12,7 +14,7 @@ formelzeichen & quellcodeverzeichniss
 rpc und vektor kurz anreissen
 
 bspimplemantation muss nur irgendwie bewegen
-s/Fuell/Lade. Ist ein elektrischer Roboter
+emdash & 2^32
 ----
 
 Rundenbasiert
