@@ -1,8 +1,5 @@
 nachwippen...
 
-2 motoren.
--> jeden in vektor umrechnen, addieren
-
 Fault injector parametisibar:
 * roboter geht kaputt
 * bauteile gehen kaputt
@@ -14,7 +11,6 @@ formelzeichen & quellcodeverzeichniss
 rpc und vektor kurz anreissen
 
 bspimplemantation muss nur irgendwie bewegen
-emdash & 2^32
 ----
 
 Rundenbasiert

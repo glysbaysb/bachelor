@@ -228,6 +228,30 @@ Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
 \clearpage
+\section{Publish-Suscribe}
+Da die Simulation mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
+der angemessen Weg, um Voter und Simulation zu verbinden.
+Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
+sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
+
+Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{Publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt,
+dass f{\"{u}}r mehrere andere (im folgenden \textit{Suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte Suscriber wichtig sind, kann die Filterung entweder auf Seiten des Publisher oder des Suscribers vorgenommen werden.
+Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen --- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
+\textit{subnet} befinden.
+
+Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht,
+wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
+dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash error}) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
+\begin{figure}
+	\centering
+	\includevisio{pubsub}
+	\caption{Publish-Suscribe}
+	\label{fig:pubsub}
+\end{figure}
+\todo{sieht kacke aus. kleiner und andere Auflösung?}
+
+
+\clearpage
 \section{Netzwerklibrary}
 Um die Kommunikation zwischen den einzelnen Netzwerkteilnehmern nicht komplett selbst zu implementieren, k{\"{o}}nnen bereits bestehende Netzwerklibraries genutzt werden.
 Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkteilnehmer Funktionen aufzurufen oder sich f{\"{u}}r Multicasts anzumelden, auch wenn man in einem anderen
@@ -236,10 +260,6 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 \subsection{Anforderungen}
 Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
 
-Da die Simulation mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern (die nicht unbedingt im gleichen \textit{subnet} sein m{\"{u}}ssen) arbeitet, ist das Publish-Suscribe Kommunikationspattern\cite{pubsub}
-der angemessen Weg, um Voter und Simulation zu verbinden.
-Desweiteren erlaubt dieses Pattern auch eine zeitliche Trennung und asynchrone Kommunikation, dies entspricht dem Verhalten der Controller --- Kommunikationspartner die zu jedem Zeitpunkt ausfallen oder
-sich verbinden k{\"{o}}nnen. Eine n{\"{a}}here Erl{\"{a}}uterung, speziell der Implementation in nanomsg, befindet sich im jeweiligen Kapitel.
 Es gibt allerdings keine Netzwerklibrary die dieses Pattern und RPC anbietet; da es einfacher ist auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
@@ -274,22 +294,6 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 \paragraph{{\"{U}}bertragungsarten}
 \subparagraph{Request-Reply} Die intuitiv verst{\"{a}}ndlichste Art zu kommunizieren ist es eine Frage zu stellen, die dann vom Gegen{\"{u}}ber beantwortet wird. In nanomsg ist dies die request-reply
 {\"{U}}bertragungsart.
-
-\subparagraph{Publish-Suscribe} Oft gibt es ein Kommunikationsverhalten in dem eine Person (im folgenden \textit{Publisher} genannt), ob periodisch oder zu nicht vorhersagbaren Zeiten, etwas sagt,
-dass f{\"{u}}r mehrere andere (im folgenden \textit{Suscriber} genannt) wichtig ist. Falls bestimmte Informationen nur f{\"{u}}r bestimmte Suscriber wichtig sind, kann die Filterung entweder auf Seiten des Publisher oder des Suscribers vorgenommen werden.
-Eine M{\"{o}}glichkeit diese Kommunikation zu implementieren ist es die M{\"{o}}glichkeiten des UDP broadcasts zu nutzen --- allerdings funktioniert dies nur wenn sich alle Netzwerkteilnehmer im gleichen
-\textit{subnet} befinden.
-
-Eine Alternative ist es sich bei dem Publisher, entweder nur f{\"{u}}r eine bestimmte Art von Informationen (genannt \textit{topic}) oder f{\"{u}}r alle, anzumelden. Solange eine Verbindung besteht,
-wird der Publisher allen Suscribern die Informationen mitteilen; durch die Benutzung von nanomsg wird eine zeitliche Trennung und asynchrone Kommunikation zwischen die Netzwerkteilnehmer aufgebaut,
-dies f{\"{u}}hrt dazu das, falls ein Suscriber ausf{\"{a}}llt (\textit{crash error}) oder neu hinzukommt, die Kommunikation mit den anderen Teilnehmern nicht beeinflusst wird (auch nicht im Zeitverhalten).
-\begin{figure}
-	\centering
-	\includevisio[width=\textwidth]{pubsub}
-	\caption{Publish-Suscribe}
-	\label{fig:pubsub}
-\end{figure}
-\todo{sieht kacke aus. kleiner und andere Auflösung?}
 
 \clearpage
 \section{Serialisierung}
@@ -331,13 +335,17 @@ Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern
 \paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
 
 L{\"{a}}ngere Zeichenketten
-werden mit anderen Signalzeichen kodiert; beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^(32))-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^32-1}{2}} = 0.00000004\% $.
+werden mit anderen Signalzeichen kodiert; beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
 
 \clearpage
 \section{RPC?}
 
 \clearpage
 \section{Quaternions? Vektorrechnung?}
+
+\clearpage
+\section{Bewegungen}
+\subsection{Differential Drive}
 
 \clearpage
 \section{Die Welt}
