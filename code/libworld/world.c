@@ -10,6 +10,7 @@
 
 #include "world.h"
 #include <librpc/rpc.h>
+#include <libficfg/ficfg.h>
 
 typedef struct WorldContext_ {
 	void* rpc;
@@ -27,6 +28,7 @@ typedef struct WorldContext_ {
 		// todo: mutex
 	} createRobot;
 
+	struct FiCfg cfg;
 } WorldContext;
 
 static void createRobotCallback(void* optional, msgpack_object_array* params);
@@ -196,6 +198,8 @@ static int initalizeRPC(WorldContext* wc) {
 	if(addProcedure(wc->rpc, MOVE_ROBOT, &moveRobotCallback, wc) < 0) {
 		return -3;
 	}
+
+	wc->cfg = ficfg_parse("../fault_injector.json");
 
 	return 0;
 }
