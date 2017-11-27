@@ -381,6 +381,7 @@ Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B.
 
 Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t angibt, w{\"{a}}hrend $V_l(t)$ den
 linken Motor beschreibt. $R$ ist der Radius eines Rades, und $L$ die Distanz zwischen den R{\"{a}}dern.
+Aus \cite{Dudek2010}:
 \begin{subequations}\label{eq:diffs}
 \begin{align}
 	\Theta(t) &= \Theta(0) + \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{eq:diffs-theta}\\
@@ -393,8 +394,31 @@ linken Motor beschreibt. $R$ ist der Radius eines Rades, und $L$ die Distanz zwi
 \end{align}
 \end{subequations}
 
+\subsection{Wegfindung}
+
 \clearpage
 \section{Die Gleichgewichte?}
+Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
+
+Um das Kippen der Platte auf der Links-Rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+
+F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt gilt Gleichung ~\ref{eq:forces:y}.
+\begin{subequations}\label{eq:forces}
+\begin{align}
+	V(x) = x(F) * w(F) + \sum_{i=0}^{|N|} ( x(N_i) * w(N_i) ) \label{eq:forces:x}\\
+	V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) \label{eq:forces:y}\\
+\end{align}
+\end{subequations}
+
+Das Ziel ist es die Platte auszubalancieren, also soll gelten:
+\begin{equation}\label{eq:gleichgewicht}
+	V(x) = V(y) = 0
+\end{equation}
+
+\todo{bild, wie im code die dolle ascii art}
+Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hyptothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
+$$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
+
 
 \clearpage
 \section{Die Welt}
@@ -409,7 +433,7 @@ In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewe
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
-\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter entspricht. Die Grundform des Roboters ist
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\ref{khepera} entspricht. Die Grundform des Roboters ist
 ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
 Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{Bild}
@@ -459,26 +483,7 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 
 \subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
-Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
-
-Um das Kippen der Platte auf der Links-Rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
-
-F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt gilt Gleichung ~\ref{eq:forces:y}.
-\begin{subequations}\label{eq:forces}
-\begin{align}
-	V(x) = x(F) * w(F) + \sum_{i=0}^{|N|} ( x(N_i) * w(N_i) ) \label{eq:forces:x}\\
-	V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) \label{eq:forces:y}\\
-\end{align}
-\end{subequations}
-
-Das Ziel ist es die Platte auszubalancieren, also soll gelten:
-\begin{equation}\label{eq:gleichgewicht}
-	V(x) = V(y) = 0
-\end{equation}
-
-\todo{bild, wie im code die dolle ascii art}
-Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hyptothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
-$$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
+XXXX \todo{} text, iwie auch auf das da oben beziehen
 
 \clearpage
 \section{Systemaufbau}
