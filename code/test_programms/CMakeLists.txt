@@ -4,3 +4,7 @@ project(ft_robot_simulation_tests)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_WARNINGS_PRIV} -g")
 
 add_subdirectory(network)
+
+set(SOURCE_FILES_MOVE movement.cxx)
+add_executable(move ${SOURCE_FILES_MOVE})
+target_link_libraries(move pthread rpc network world)
