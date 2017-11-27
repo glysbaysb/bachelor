@@ -383,9 +383,13 @@ Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei 
 linken Motor beschreibt. $R$ ist der Radius eines Rades, und $L$ die Distanz zwischen den R{\"{a}}dern.
 \begin{subequations}\label{eq:diffs}
 \begin{align}
-	\Theta(t) &= \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{diff-theta}\\
-	x(t) &= \frac{1}{2} \int_0^t \mathrm{(v_R(t) + v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{diff-x}\\
-	y(t) &= \frac{1}{2} \int_0^t \mathrm{(v_R(t) - v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{diff-y}
+	\Theta(t) &= \Theta(0) + \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{eq:diffs-theta}\\
+\intertext{Mithilfe der Orientierung zum Zeitpunkt $t$ ist es m{\"{o}}glich die "Fahrtrichtung" zum
+	Zeitpunkt $t$ zu bestimmen. Eine Multiplikation dieser mit den Geschwindigkeitsvektoren ergibt den
+	Bewegungsvektor zum Zeitpunkt $t$ - daraus l{\"{a}}sst sich die Position ermitteln:
+}
+	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
+	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
 \end{align}
 \end{subequations}
 
@@ -424,21 +428,19 @@ Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und se
  w(N_i) = 1 + e(N_i) * 0.03
 \end{equation}
 
-Der Robot kann sich nur in "Fahrtrichtung" (angegben durch $R_i$) bewegen und erreicht dabei eine
-Maximalgeschwindigkeit zwischen $ -3 \leq \Delta x \leq 3$.
-Innerhalb einer Simulationsrunde kann der Roboter seine Geschwindigkeit, pro
-Richtung, nur um 1 Geschwindigkeitseinheit {\"{a}}ndern. \todo{nochmal nachdenken}
-
-Die Roboter haben einen Energiespeicher, der mit maximal 100 Energieeinheiten
+Die Roboter haben einen Energiespeicher, der mit maximal 1000 Energieeinheiten
 aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
 \begin{equation}
     \label{eq:entladen}
- e_entladen(N_i, n{\"{a}}chste Runde) = e(N_i, diese Runde) - 1 - |V_i|
+	e(N_i, t + 1) = e(N_i, t) - 1 - |V_i|
 \end{equation}
-\paragraph{Bewegung} Die Bewegung des Roboters wird vorgegeben durch $V_i$ und $ R_i$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unitys Physikengine verarbeitet. Der zum Roboter geh{\"{o}}rende
-Rigidbody wird dann entsprechend manipuliert: die Rotation wird zwischen dem momentanen und dem gew{\"{u}}nschten Winkel
-interpoliert und \todo{bewegung ist noch kacke}.
+Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist, bewegt sich der Roboter nicht.
+
+Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unity verarbeitet.
+Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und, falls gen{\"{u}}gen Energie
+vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
+Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel interpoliert.
 
 \subsection{Die F{\"{u}}llstation}\label{fuelstation}
 Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
@@ -449,10 +451,10 @@ Falls sich ein Roboter an die F{\"{u}}llstation heranbewegt, also gilt:
     \label{eq:dist}
  |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
 \end{equation}
-wird dieser Roboter aufgeladen. Die Ladefunktion ist hier eine einfache Gerade:
+wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine einfache Gerade:
 \begin{equation}
     \label{eq:laden}
- e_laden(N_i, n{\"{a}}chste Runde) = max((e(N_i, diese Runde) + 10, 100) 
+	e(N_i, t + 1) = max((e(N_i, t) + 10, 1000) 
 \end{equation}
 
 \subsection{Die Platte}\label{plate}
@@ -461,14 +463,18 @@ Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nich
 
 Um das Kippen der Platte auf der Links-Rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
 
-F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt:
-$$ V(x) = x(F) * w(F) + \sum_{i=0}^{|N|} ( x(N_i) * w(N_i) ) $$
-
-Das gleiche gilt f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt wird:
-$$ V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) $$
+F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt gilt Gleichung ~\ref{eq:forces:y}.
+\begin{subequations}\label{eq:forces}
+\begin{align}
+	V(x) = x(F) * w(F) + \sum_{i=0}^{|N|} ( x(N_i) * w(N_i) ) \label{eq:forces:x}\\
+	V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) \label{eq:forces:y}\\
+\end{align}
+\end{subequations}
 
 Das Ziel ist es die Platte auszubalancieren, also soll gelten:
-$$ V(x) = V(y) = 0 $$
+\begin{equation}\label{eq:gleichgewicht}
+	V(x) = V(y) = 0
+\end{equation}
 
 \todo{bild, wie im code die dolle ascii art}
 Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hyptothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
