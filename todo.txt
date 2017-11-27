@@ -10,6 +10,9 @@ Deadline | Module		|	was
 		 | algo			| vlt noch einen?
 		 |				| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
+		 | thesis		| Einleitung wie die anderen
+		 |				| blender designen
+		 |				| vektorrechnung
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
