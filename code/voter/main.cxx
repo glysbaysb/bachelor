@@ -102,7 +102,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		printf("\tPos: (%f:%f)\n", ws->objects[i].x, ws->objects[i].y);
 		printf("\tMass: %f\n", ws->objects[i].m);
 
-		if(ws->objects[i].type == ROBOT && info->robot == ws->objects[i].id) {
+		if(ws->objects[i].type == ROBOT) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 		}
 	}
