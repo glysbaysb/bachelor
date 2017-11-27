@@ -61,13 +61,15 @@
 \begin{document}
 
 \maketitle
-\todo{Bilder: vom Fehlerinjektor?, Klassendiagram?, Ablaufdiagram für Algo?, Konsens?, Voter?}
+\todo{Bilder: vom Klassendiagram?, Ablaufdiagram für Algo?, Konsens?, Voter?}
+\todo{Formatierung durchgehen. Bilder, Tabellen, Codestuecke an der richtigen Stelle. Gleichungen sehen gut aus. Alle Verweise (aufs Glossar oder Sektionen)}
 \thispagestyle{empty}
 
 \clearpage
 \tableofcontents
 \listoffigures
 \listoftables
+\clearpage
 \printglossaries
 
 \clearpage
@@ -334,18 +336,63 @@ Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern
 \paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite (zum Beispiel 64bit) Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
 \paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} = 6\% $.
 
-L{\"{a}}ngere Zeichenketten
-werden mit anderen Signalzeichen kodiert; beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen}. In diesem Fall folgt die L{\"{a}}ng als 32bit big endian Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
+L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert; beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.
+In diesem Fall folgt die L{\"{a}}ng als 32bit big endian
+\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen.}
+Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
 
 \clearpage
 \section{RPC?}
 
 \clearpage
-\section{Quaternions? Vektorrechnung?}
+\section{Vektorrechnung?}
 
 \clearpage
 \section{Bewegungen}
-\subsection{Differential Drive}
+Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
+Dies gibt auch das Bewegungsmodell vor: \textit{differential steering}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
+
+\subsection{Khepera}\label{kephera}
+\todo{wie gebe ich Quellen fuer einen ganzen Absatz / Sektion an?}
+Die Kheperaroboterserie existiert seit Mitte der 90ger Jahre, das neuste Modell ist der Khepera IV. Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
+H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
+
+Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor. Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde.
+Um die Position des Roboters odeometrisch bestimmen zu k{\"{o}}nnen geben die Motoren auch aus, wie oft sich das jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter
+auch Infrarot-, Ultraschall- und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden um Kollisionen zu vermeiden.
+Mithilfe der integrieten Beschleunigungs- und Gyrosensoren kann der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
+
+Gesteuert wird der Khepera IV von einer ARM CPU auf der ein vollwertiges Linux l{\"{a}}uft. Des weiteren gibt es auch ein WLAN Modul, eine Kamera und Lautsprecher plus Mikrophon.
+
+\begin{figure}
+	\centering
+	\includevisio{k4-detail1.png}
+	\caption{Der Khepera IV Roboter}
+	\label{fig:kheperaiv}
+\end{figure}
+
+\subsection{Differential Steering}
+Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden --- sie sind fest. Es kann zwischen drei Bewegungsarten unterschieden werden:
+\begin{itemize}
+\item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
+\item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung, rotieren wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
+\item Falls die R{\"{a}}der in unterschiedliche Richtungen rotieren, wendet der Roboter auf der Stelle. Dabei dreht sich der Roboter auch wieder in Richtung des langsamer rotierenden Rades.
+\end{itemize}
+
+Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t angibt, w{\"{a}}hrend $V_l(t)$ den
+linken Motor beschreibt. $R$ ist der Radius eines Rades, und $L$ die Distanz zwischen den R{\"{a}}dern.
+\begin{multline}
+\label{eq:diffs}
+\begin{split}
+	& \Theta(t) = \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \\
+	& x(t) = \frac{1}{2} \int_0^t \mathrm{(v_R(t) + v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \\
+	& y(t) = \frac{1}{2} \int_0^t \mathrm{(v_R(t) - v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \\
+\end{split}
+\end{multline}
+\todo{sieht doof aus, muss iwie mittig}
+
+\clearpage
+\section{Die Gleichgewichte?}
 
 \clearpage
 \section{Die Welt}
@@ -360,7 +407,7 @@ In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewe
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
-\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das auch den simulierten Eigenschaften des Roboters entspricht. Die Grundform des Roboters ist
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter entspricht. Die Grundform des Roboters ist
 ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
 Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{Bild}
@@ -370,8 +417,8 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{physisch?}
 Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
-Geschwindigkeit $ V_i = \Delta v $ und einen Rotationsquaternion
-$ R_i = \bigl(\begin{smallmatrix} r_x(i) \\ r_y(i) \\ r_z(i) \\ r_i(i) \end{smallmatrix}\bigr)$.
+Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
+$ R_i = r_y(i)$.
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
 \begin{equation}
@@ -500,7 +547,7 @@ unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batter
 \todo{bild? wovon wollte ich hier ein bid haben?}
 
 \subsection{Netzwerk}
-Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ \frac{1}{20} $ aller Pakete
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ ^1/_{20} $ aller Pakete
 ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
 
 \subsection{Controller}
@@ -533,7 +580,7 @@ die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}
 
 \paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Im Extremfall k{\"{o}}nen alle Controller ausfallen, die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu $\frac{1}{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu $^1/_{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsubsection{R{\"{a}}umliche Redudanz}
