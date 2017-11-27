@@ -345,7 +345,7 @@ Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overh
 \section{RPC?}
 
 \clearpage
-\section{Vektorrechnung?}
+\section{Quaternions? Vektorrechnung?}
 
 \clearpage
 \section{Bewegungen}
@@ -381,15 +381,13 @@ Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B.
 
 Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t angibt, w{\"{a}}hrend $V_l(t)$ den
 linken Motor beschreibt. $R$ ist der Radius eines Rades, und $L$ die Distanz zwischen den R{\"{a}}dern.
-\begin{multline}
-\label{eq:diffs}
-\begin{split}
-	& \Theta(t) = \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \\
-	& x(t) = \frac{1}{2} \int_0^t \mathrm{(v_R(t) + v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \\
-	& y(t) = \frac{1}{2} \int_0^t \mathrm{(v_R(t) - v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \\
-\end{split}
-\end{multline}
-\todo{sieht doof aus, muss iwie mittig}
+\begin{subequations}\label{eq:diffs}
+\begin{align}
+	\Theta(t) &= \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{diff-theta}\\
+	x(t) &= \frac{1}{2} \int_0^t \mathrm{(v_R(t) + v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{diff-x}\\
+	y(t) &= \frac{1}{2} \int_0^t \mathrm{(v_R(t) - v_L(t)) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{diff-y}
+\end{align}
+\end{subequations}
 
 \clearpage
 \section{Die Gleichgewichte?}
@@ -418,7 +416,7 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
 Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
-$ R_i = r_y(i)$.
+$ R_i = r_y(i)$. \todo{Ausdehnung}
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
 \begin{equation}
