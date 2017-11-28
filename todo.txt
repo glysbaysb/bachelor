@@ -10,7 +10,7 @@ Deadline | Module		|	was
 		 | algo			| vlt noch einen?
 		 |				| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
-		 | thesis		| Einleitung wie die anderen
+		 | thesis		| 
 		 |				| blender designen
 		 |				| vektorrechnung
 ---------+--------------+----------------

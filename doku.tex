@@ -62,7 +62,7 @@
 
 \maketitle
 \todo{Bilder: vom Klassendiagram?, Ablaufdiagram für Algo?, Konsens?, Voter?}
-\todo{Formatierung durchgehen. Bilder, Tabellen, Codestuecke an der richtigen Stelle. Gleichungen sehen gut aus. Alle Verweise (aufs Glossar oder Sektionen)}
+\todo{Formatierung durchgehen. Bilder, Tabellen, Codestuecke an der richtigen Stelle. Gleichungen sehen gut aus. Alle Verweise (aufs Glossar oder Sektionen) (nach ?? suchen)}
 \thispagestyle{empty}
 
 \clearpage
@@ -81,26 +81,61 @@
 	\label{fig:simulation}
 \end{figure}
 
-Da fehlt noch sehr, sehr viel. ErzÃ¤hlen Sie eine "Geschichte": Beginnen
-Sie mit einer Welt, die jeder kennt, und beschreiben diese immer weiter,
-bis Sie beim Thema angekommen sind (das wÃ¤re hier die Ausbildung in
-Ausfallsicheren Systemen, die Welt davor sind die ausfallsicheren
-Systeme selbst). Damit haben Sie eine umfassende Motivation fÃ¼r das
-Problem aufgebaut, das dann kurz und knackig erklÃ¤rt wird: Eine weitere
-Aufgabe. Alles andere kommt dann spÃ¤ter..
+\subsection{Motivation} Seit der Einf{\"{u}}hrung der Computer und vorallem seit dem rasanten Wachstums des
+Internets, werden Computer in immer mehr Bereichen eingesetzt. Es gibt nur noch wenige Berufe oder 
+Freizeitaktivit{\"{a}}ten die komplett ohne auskommen; Die Buchhaltung geschieht komplett elektronisch und
+das Geld wird elektronisch {\"{u}}berwiesen, anstatt in einer Lohnt{\"{u}}te ausgeh{\"{a}}ndigt zu werden.
+Und um herauszufinden ob der Lohn angekommen ist benutzt man Onlinebanking, wobei eine
+unm{\"{o}}glich absch{\"{a}}tzbare Anzahl an vernetzten Computern beteiligt ist. Auch komplett ohne Technik
+durchf{\"{u}}hrbare Freizeitaktivit{\"{a}}ten wie das Kegeln sind heute ohne Computerunterst{\"{u}}tzung
+kaum noch vorstellbar --- in den Kegelbahnen z{\"{a}}hlt ein Computer f{\"{u}}r jeden Spieler mit wie viele
+Punkte erreicht wurden und stellt die umgeworfenen Kegel automatisch wieder auf.
 
-\paragraph{Motivation} Im Rahmen des Modules Ausfallsichere Systeme sollen die Studenten ihr neu erworbenes Wissen auch praktisch anwenden k{\"{o}}nnen. Dies geschieht im Rahmen einer {\"{U}}bungsaufgabe. In dieser sollen die gelernten Konzepte angewandt werden, wodurch das frisch erworbene Wissen vertieft und die M{\"{o}}glichkeiten und Grenzen dessen verdeutlicht werden.
+Dies bietet enorme, jeden Tag ersichtlich werdene Vorteile, birgt jedoch auch Risiken. Die Komplexit{\"{a}}t,
+oder den Aufwand, die der "Nutzer" bew{\"{a}}ltigen muss, sinkt zwar (meistens), allerdings wird das
+System fehleranf{\"{a}}lliger. Es gibt mehr Komponenten, also kann mehr kaputt gehen.
 
-Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt nutzbar sein.
-Dies f{\"{u}}hrte zur Idee, eine Computersimulation zu entwickeln, da diese visuell ansprechend ist und vielf{\"{a}}tige
-Interationsm{\"{o}}glichkeiten bieten k{\"{o}}nnen.
-\todo{Aufabau dieser Arbeit?}
+Zu einem Problem wird dies falls es um lebenswichtige (oder NOCH SCHLIMEMR: Geld) Bereiche wie die
+Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnliches geht. Auch kleine Fehler dort k{\"{o}}nnen
+enorme Konsequen haben. 
+
+Auch mit gr{\"{o}}sstm{\"{o}}glicher Sorgfalt ist es nicht m{\"{o}}glich fehlerfreie Software zu
+entwickeln.\todo{jpl} Es kann allerdings versucht werden die Auswirkungen der verbleibenden Fehler zu
+minimieren. Das System soll also fehlertolerant gemacht werden. Zu diesem Zweck gibt es eine Vielzahl an
+Techniken; hier soll nur beispielhaft die Redudanz genannt werden: Wenn ein System eine Funktionalit{\"{a}}t
+immer bereitstellen muss, kann es sinnvoll sein das ganze System zu duplizieren. Falls dann die erste
+Instanz ausf{\"{a}}llt kann statdessen die zweite genutzt werden, womit die Funktionalit{\"{a}}t gew{\"{a}}hrleistet
+bleibt. Dies ist zum Beispiel bei Passagierflugzeugen der Fall, der Ausfall eines Motors f{\"{u}}hrt nicht
+zur Katastrophe da der zweite auch alleine erm{\"{o}}glicht das Flugzeug sicher zu landen. Mit Redudanz
+alleine k{\"{o}}nnen aber nicht alle Probleme gel{\"{o}}st werden. Beispielsweise kann man sich vorstellen
+das Patientendaten auf mehreren Rechner abgespeichert werden, um auch bei Ausfall eines Rechners trotzdem
+noch nachvollziehen zu k{\"{o}}nen welche Medikamente die Patienten brauchen. Was ist aber wenn es zu
+einem Patienten in den verschiednen Datenbanken verschiedene Angaben stehen? Welche Informationen sind die
+richtigen?
+
+\subsection{Aufgabenstellung} In dem Modul "Ausfallsichere Systeme" werden die verschiedenen Techniken und ihre Vor- und Nachteile
+erl{\"{a}}utert und verglichen. Um das neu erworbenes Wissen auch praktisch anwenden (und vertiefen) zu k{\"{o}}nnen gibt es w{\"{a}}hrend des Semesters eine {\"{U}}bungsaufgabe.
+Die Aufgabe dieser Bachelorarbeit ist die Konzeption der selbigen. Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt
+nutzbar sein und gerade auch Menschen ohne Fachkentnisse einen Einblick in die Komplexit{\"{a}}t geben.
+
+Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln. Diese k{\"{o}}nen visuell ansprechend sein und bieten vielf{\"{a}}tige Interationsm{\"{o}}glichkeiten.
+
+\subsection{Gliederung} Als erstes wird die Simulation in groben Z{\"{u}}gen beschrieben und mit vorhandenen XXX\todo{} vergliechen. Danach werden die ben{\"{o}}tigten
+Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um mechanische und physische Konzepte wie das
+\textit{differential steering}\ref{diffs} und die mathematische Grundlagen der Vektorrechnung, aber auch Informationstechnologische Aspekte wie die Serialsisierung von Daten oder
+verschiedene Netzwerkkommunikationsarten werden betrachtet. Darauf aufbauend wird dann die Implementierung beschrieben, mit besonderem Fokus auf dem Fehlermodell und der
+Fehlerinjektion.
+
+Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gezogen.
 
 \clearpage
 \section{Vorherige Arbeiten}
 Da das Ziel dieser Arbeit die Entwicklung einer Aufgabe zur Verdeutlichung der Prinzipen Ausfallsicherer Systeme ist, wird ein kurzer {\"{U}}berblick {\"{u}}ber bereits bestehende Systeme dieser Art gegeben.
 
 \subsection{Die balancierenden Roboter}
+"Ja... das ganze hatte damals ein ganz anderes Ziel, schon das macht es
+hier eher unpassend. Es muss entsprechend dargestellt werden."
+
 Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde an der Humboldt Universit{\"{a}}t Berlin in Zusammenarbeit
 mit Daimler Benz, eine Simulation {\"{a}}hnlich dieser entwickelt. Zu dieser wurde dann sp{\"{a}}ter ein echter physikalischer Roboter hinzugef{\"{u}}gt.
 
@@ -578,7 +613,7 @@ Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter
 Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementierung einer
 Beispielimplementation.
 
-\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. \todo{aeh damit ist es dann doch iwie wieder rundenbasiert?} Diese Informationen werden von den Votern empfangen, k{\"{o}}nnen
+\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. Diese Informationen werden von den Votern empfangen, k{\"{o}}nnen
 aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
 jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
 
