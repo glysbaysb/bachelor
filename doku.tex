@@ -81,7 +81,7 @@
 	\label{fig:simulation}
 \end{figure}
 
-\subsection{Motivation} Seit der Einf{\"{u}}hrung der Computer und vorallem seit dem rasanten Wachstums des
+\subsection{Motivation} Seit der Einf{\"{u}}hrung der Computer und vor allem seit dem rasanten Wachstums des
 Internets, werden Computer in immer mehr Bereichen eingesetzt. Es gibt nur noch wenige Berufe oder 
 Freizeitaktivit{\"{a}}ten die komplett ohne auskommen; Die Buchhaltung geschieht komplett elektronisch und
 das Geld wird elektronisch {\"{u}}berwiesen, anstatt in einer Lohnt{\"{u}}te ausgeh{\"{a}}ndigt zu werden.
@@ -122,7 +122,7 @@ Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln. Diese k{\"{o}}
 
 \subsection{Gliederung} Als erstes wird die Simulation in groben Z{\"{u}}gen beschrieben und mit vorhandenen XXX\todo{} vergliechen. Danach werden die ben{\"{o}}tigten
 Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um mechanische und physische Konzepte wie das
-\textit{differential steering}\ref{diffs} und die mathematische Grundlagen der Vektorrechnung, aber auch Informationstechnologische Aspekte wie die Serialsisierung von Daten oder
+\textit{differential steering}\ref{diffs} und die mathematische Grundlagen der Vektorrechnung, aber auch Informationstechnologische Aspekte wie die Serialisierung von Daten oder
 verschiedene Netzwerkkommunikationsarten werden betrachtet. Darauf aufbauend wird dann die Implementierung beschrieben, mit besonderem Fokus auf dem Fehlermodell und der
 Fehlerinjektion.
 
@@ -387,7 +387,7 @@ Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overh
 Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
 Dies gibt auch das Bewegungsmodell vor: \textit{differential steering}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
 
-\subsection{Khepera}\label{kephera}
+\subsection{Khepera}\label{khepera}
 \todo{wie gebe ich Quellen fuer einen ganzen Absatz / Sektion an?}
 Die Kheperaroboterserie existiert seit Mitte der 90ger Jahre, das neuste Modell ist der Khepera IV. Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
 H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
@@ -406,7 +406,7 @@ Gesteuert wird der Khepera IV von einer ARM CPU auf der ein vollwertiges Linux l
 	\label{fig:kheperaiv}
 \end{figure}
 
-\subsection{Differential Steering}
+\subsection{Differential Steering}\label{diffs}
 Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden --- sie sind fest. Es kann zwischen drei Bewegungsarten unterschieden werden:
 \begin{itemize}
 \item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
@@ -451,7 +451,7 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 \end{equation}
 
 \todo{bild, wie im code die dolle ascii art}
-Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hyptothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
+Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hypothenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
 $$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
 
 
@@ -469,7 +469,8 @@ Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell be
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
 \paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\ref{khepera} entspricht. Die Grundform des Roboters ist
-ein Kegel, an dessen DINGSBUMS\todo{} befinden sich Ausbuchtungen, diese geben eine visuelle Indikation {\"{u}}ber die Position der R{\"{a}}der. Der F{\"{u}}llstand wird {\"{u}}ber eine Lampe angezeigt, die ihre
+eine S{\"{a}}ule.
+Der Energielevel wird {\"{u}}ber eine Lampe auf der Oberseite angezeigt, die ihre
 Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 \todo{Bild}
 
