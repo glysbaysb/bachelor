@@ -300,7 +300,20 @@ static void* networkHandler(void* ctx_) {
 			pfd[1].revents = 0;
 
 			WorldStatus* ws = parseWorldStatus(buf, len);
+
+			/* fault injector */
+			if(rand() % (1. / ctx->cfg.dropWorldStatus) == 0) {
+				goto CLEANUP;
+			} else if(rand() % (1. / ctx->cfg.fakeWorldStatus) == 0) {
+				/*ws->xTilt;
+				ws->yTilt;
+
+				ws->numOfObjects;
+				ws->objects;*/
+			}
+
 			ctx->getWorldStatusCallback(ws, ctx->additional);
+CLEANUP:
 			if(ws) {
 				free(ws);
 			}
