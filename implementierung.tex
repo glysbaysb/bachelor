@@ -1,0 +1,315 @@
+\clearpage
+\section{Architektur}
+
+\subsection{Simulationsidee}
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+platziert werden. Die Summe alle Gewichte kippt die Platte; sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
+die Platte und die Simulation endet.
+
+Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
+schnell).
+
+Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
+so dass:
+\begin{itemize}
+\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
+\item die Roboter nicht kollidieren
+\item die Platte nicht kippt
+\end{itemize}
+
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
+Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+Teil dieser Bachelorarbeit ist eine
+Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
+
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
+Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
+
+\begin{itemize}
+\item Simulation berechnet bewegungen und so. per definition ausfallsicher gegen ALLES! (... als ob). grafische ausgabe
+\item Voter sammelt steuerkommandos. per definition ausfallsicher ggü crash failure
+\item Controller generiert steuerkommandos, kann jederzeit ausfallen
+\end{itemize}
+
+Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
+Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
+
+\subsection{XX}
+netzwerkbild
+event gesteuerte kommunikation
+
+\clearpage
+\section{Fehlerinjektion}
+Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt, wird eine Fehlerinjektion benutzt, um die Fehlertoleranz zu testen.
+In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
+unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
+
+
+\subsection{Netzwerk}
+Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ ^1/_{20} $ aller Pakete
+ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
+\todo{markus fragen}
+
+\subsection{Controller}
+Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}. Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
+offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
+\lstinputlisting{../fault_injector.sh}
+
+\subsection{Simulation}
+\subsubsection{XXX}
+JSON Datei
+Aufgeteilt in Roboter und Netzwerk. Gibt permamente und temporaere Fehler. perm mit zeit und wahrscheinlichkeit, temp nur mit wahrscheinlichkeit.
+\todo{temporaer sind jetzt nur quasi einen frame lang...}
+
+\subsubsection{Fernsteuerung}
+Der Benutzer kann einen Roboter fernsteuern und hat damit direkten Einfluss auf die simulierte Welt. W{\"{a}}hrend ein Roboter
+ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht, es gelten die gleichen Einschr{\"{a}}nkungen bei
+Geschwindigkeit und Rotation, und so weiter.
+
+Die Roboter werden {\"{u}}ber die Pfeiltasten gesteuert (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter). Um
+anzuzeigen welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
+Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter aufgehoben; falls die Fernsteuerung gerade nicht aktiv ist, wird dies in der Simulation angezeigt.
+
+
+\clearpage
+\section{Die Welt}
+Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer F{\"{u}}llstation, an der die Robter Energie tanken k{\"{o}}nnen, und
+der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
+
+Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
+Dabei stellt sie, unter anderem, eine Physikengine, eine Grafikengine und eine Schnitstelle zum scripten dieser bereit. 
+
+\subsection{Die Roboter}\label{robot}
+In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
+Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
+gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
+
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\ref{khepera} entspricht. Die Grundform des Roboters ist
+eine S{\"{a}}ule.
+Der Energielevel wird {\"{u}}ber eine Lampe auf der Oberseite angezeigt, die ihre
+Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
+\todo{Bild}
+
+
+\paragraph{Physikalisches Modell}
+\todo{physisch?}
+Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
+$ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
+Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
+$ R_i = r_y(i)$. \todo{Ausdehnung}
+
+Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
+\begin{equation}
+    \label{eq:w}
+ w(N_i) = 1 + e(N_i) * 0.03
+\end{equation}
+
+Die Roboter haben einen Energiespeicher, der mit maximal 1000 Energieeinheiten
+aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
+Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
+\begin{equation}
+    \label{eq:entladen}
+	e(N_i, t + 1) = e(N_i, t) - 1 - |V_i|
+\end{equation}
+Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist, bewegt sich der Roboter nicht.
+
+Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unity verarbeitet.
+Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und, falls gen{\"{u}}gen Energie
+vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
+Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel interpoliert.
+
+\subsection{Die F{\"{u}}llstation}\label{fuelstation}
+Innerhalb der Welt muss eine F{\"{u}}llstation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine F{\"{u}}llstation hat dabei ein festes Gewicht: $ w(F) = 5 $.
+
+Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
+Falls sich ein Roboter an die F{\"{u}}llstation heranbewegt, also gilt: 
+\begin{equation}
+    \label{eq:dist}
+ |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
+\end{equation}
+wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine einfache Gerade:
+\begin{equation}
+    \label{eq:laden}
+	e(N_i, t + 1) = max((e(N_i, t) + 10, 1000) 
+\end{equation}
+
+\subsection{Die Platte}\label{plate}
+Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
+XXXX \todo{} text, iwie auch auf das da oben beziehen
+
+\clearpage
+\section{Systemaufbau}
+\todo{alles neu}
+Das ganze System besteht aus verschiedenen Komponenten, die teilweise sogar in unterschiedlichen Netzwerken h{\"{a}}ngen. 
+
+\subsection{Netzwerk}\label{network}
+Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}umliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
+f{\"{u}}r die Konsensbildung und um Informationen {\"{u}}ber den momentanen Status der Simulation zu bekommen.
+
+Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}sst oder mehrfach sendet. 
+\todo{aufteilung im netzwerk als Bild}
+
+Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
+des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen, dass ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
+programmiert werden dass sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Netzwerk}
+	\caption{Aufteilung der Netzwerkteilnehmer}
+	\label{fig:network}
+\end{figure}
+
+\subsection{VMs}
+
+\subsection{Anzeige}\label{graphics}
+Um den Status der Simulation zu verfolgen, wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
+durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
+
+\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
+
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
+Platte visuell ausgeglichen werden k{\"{o}}nnte.
+
+\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
+
+
+\clearpage
+\section{Interface f{\"{u}}r die Studenten}\label{interface}
+Damit die Studenten sich auf die Implementierung der Fehlertoleranz konzentrieren k{\"{o}}nnen, gibt es Schnittstellen.
+Im ganzen System gibt es zwei Schnittstellen:
+\begin{itemize}
+\item Die Schnittstelle zwischen Controller und Voter
+\item Die Schnittstelle zwischen Voter und Roboter/Simulation
+\end{itemize}
+
+\paragraph{Die Schnittstelle zwischen Controller und Voter} Den Studenten wird nicht vorgegeben wie die Kommunikation zwischen den Controllern und Votern aussehen soll - denn gerade hier soll ja die Fehlertoleranz implementiert werden.
+
+\paragraph{Die Schnittstelle zwischen Voter und Roboter} Diese Schnittstelle besteht aus den Funktionen:
+\begin{lstlisting}[frame=single, language=c] 
+void* connectToWorld();
+void detachFromWorld(void* ctx);
+int createRobot(void* ctx);
+typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
+int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
+void moveRobot(void* ctx, int id, float speed, float angle);
+\end{lstlisting}
+
+Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
+dann vom Studentencode einfach aufgerufen werden.
+
+
+\clearpage
+\section{Beispielimplementation}
+Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen ist ein Teil der Bachelorarbeit die Implementierung einer
+Beispielimplementation.
+
+\paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. Diese Informationen werden von den Votern empfangen, k{\"{o}}nnen
+aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
+jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird dann an den Voter geschickt, der ein einfaches Mehrheitsvotum durchf{\"{u}}hrt und diese Bewegung an die Welt weitergibt.
+
+\subsection{Fehlermodell} \label{error-model}
+Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren, welche Art von Fehlern
+{\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
+die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}}st werden.
+
+\paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Im Extremfall k{\"{o}}nen alle Controller ausfallen, die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
+
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu $^1/_{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
+Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
+
+\subsubsection{R{\"{a}}umliche Redudanz}
+Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
+Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
+sind kann eine ordnungsgem{\"{a}}{\ss}e Steuerung nicht mehr garantiert werden.
+
+Wenn ein Roboter erstellt wird, werden auch $Y$ Controller gestartet. Die Ausf{\"{u}}hrung der Controller wird durch ein Skript
+{\"{u}}berwacht das ausgefallene Controller neu startet. \todo{ist das sinnvoll? dann muss man ja auch das skript killen um dann
+irgendwann mal zu wenig controller zu haben}
+
+\subsubsection{Netzwerkkommunikation}
+Da durch die Fehlerinjektion das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code, der 15 parity bits pro 240 Datenbits benutzt.
+Durch die Benutzung dieser Kodierung k{\"{o}}nnen alle Einzelfehler und Doppelfehler erkannt und korrigiert werden. Erst ab 7 Fehlern ist eine Korrektur nicht mehr m{\"{o}}glich, ab 15 Fehlern versagt auch eine Fehlererkennung.
+Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
+\begin{itemize}
+\item Durch expermientelle Verifikation wurde klar, dass im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
+	100 gr{\"{o}}{\ss}er ist, ist nicht erforderlich, eine sehr kompakte Kodierung zu benutzen, es ist ausreichend, die Redudanz zu reduzieren. 
+\item Es ist ein systematischer Code, der es erlaubt, w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
+	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
+	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
+\end{itemize}
+
+\subsection{Voter}
+\label{voter}
+Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
+Da nicht klar ist wie viele Controller momentan {\"{u}}berhaupt Steuerkommandos senden k{\"{o}}nnten, kann nicht gewartet werden bis eine bestimmte Anzahl von Kommandos empfangen wurde. Deswegen wird beim empfangen
+eines neuen Weltstatus das Steuerergebniss gebildet, weggesendet und der Vorgang wird neu gestartet.
+
+Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos
+Flie{\ss}kommazahlen enthalten ist keine exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt werden.
+\noindent\begin{minipage}{.30\textwidth}
+\begin{lstlisting}[caption=Sammeln, frame=tlrb, language=c++]
+votes.res[id].push_back(Vector{x, y});
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}{.60\textwidth}
+\begin{lstlisting}[caption=Auswahl, frame=tlrb, language=c++]
+/* go through all robots */
+for(auto&& votes : votes.res) {
+  /* vote */
+  std::sort(std::begin(votes.second), std::end(votes.second));
+  auto x = votes.second[votes.second.size() / 2];
+
+  /* send */
+  int r = 0;
+  if((r = moveRobot(info->worldCtx, votes.first, x.x_, x.y_)) < 0) {
+  	fprintf(stderr, "can't move robot: %d", r);
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{seqvoter}
+	\caption{Ablaufdiagramm Voter}
+	\label{fig:sequence-voter}
+\end{figure}
+\clearpage % make sure the table is, at least, in the right section
+
+\subsection{Controller}\label{controller}
+Die Roboter m{\"{u}}ssen sich so bewegen das die Platte m{\"{o}}glichst gut ausbalanciert
+ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
+kollidieren.
+
+\paragraph{Algorithmus zur Bestimmung der Bewegung} Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch,
+unkritisch oder dazwischen? Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur F{\"{u}}llstation. Roboter mit fast leerem Tank
+versuchen also sich aufzuf{\"{u}}llen, Roboter mit fast vollem Tank versuchen auszubalancieren.
+
+Jeder Controller berechnet f{\"{u}}r jeden Roboter wie dieser sich bewegen soll. Dabei wird mit dem Roboter im kritischtesten Zustand anfangen, denn dieser muss ja 
+unbedingt Richtung F{\"{u}}llstation und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen dann ausgleichen. Nachdem eine Roboterbewegung berechnet wurde, werden die Weltkippwinkel
+dementsprechend neu berechnet - so dass die letzten Roboter die Bewegungen der vorher berechneten mit in ihre Entscheidung einbeziehen.
+
+\paragraph{Bewegung} Um zu einem bestimmten Punkt hinzufahren (z.B. zur F{\"{u}}llstation) wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation
+wird immer in Bezug auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigeometrische Funktionen bestimmt werden:
+$$ M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)$$
+Desweiteren gibt es einen Distanzvektor zum Ziel:
+$$ D_i = F - P_i $$
+
+Der Winkel zwischen diesen beiden Vektoren gibt an wie weit der Roboter sich drehen muss um gerade zu dem Ziel fahren zu k{\"{o}}nnen. Dabei muss beachtet werden das nur der Wert des
+Winkels berechnet wird, das Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer nach rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die
+falsche Richtung drehen. Das Vorzeichen kann allerdings berechnet werden in dem man die Bewegungsvektoren in drei Dimensionen betrachtet und das Keuzprodukt bildet. In dem resultierenden
+Vektor gibt das Vorzeichen der Z Kompenente das Vorzeichen des Winkels an.
+
+\paragraph{Ausbalancieren} Um auszubalancieren wird 
+
+
+\clearpage
+\section{Evaluation}
+nochmal die anforderungen durchgehen
+eigentliches ziel ist lehrmittel, weil studenten erst demnaechst anfangen selbst implementieren
+
+
