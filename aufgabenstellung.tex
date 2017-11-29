@@ -24,7 +24,10 @@ Zu einem Problem wird dies falls es um lebenswichtige (oder NOCH SCHLIMEMR: Geld
 Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnliches geht. Auch kleine Fehler dort k{\"{o}}nnen
 enorme Konsequen haben. 
 
-bla bla menschen achten nicht drauf bla bla
+Wie man an \todo{a, b, und c} sieht, wird dieser Aspekt oft vernachl{\"{a}}ssigt. Oftmals ist es am wichtigsten den
+Projektzeitplan einzuhalten, und gerade nicht-funktionalen Eigenschaften geniessen keine hohe Priorit{\"{a}}t da M{\"{a}}ngel
+bei diesen dem Kunden nicht unbedingt auffallen. Erschwerend kommt hinzu das oft auch einfach das Problembewusstsein oder auch nur die
+n{\"{o}}tigen Grundlagen fehlen um System wirklich ausfallsicher zu machen.
 
 \subsection{Aufgabenstellung} In dem Modul "Ausfallsichere Systeme" werden die verschiedenen Techniken und ihre Vor- und Nachteile
 erl{\"{a}}utert und verglichen. Um das neu erworbenes Wissen auch praktisch anwenden (und vertiefen) zu k{\"{o}}nnen gibt es w{\"{a}}hrend des Semesters eine {\"{U}}bungsaufgabe.
@@ -47,7 +50,7 @@ Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gez
 
 \clearpage
 \section{Die ausfallsichere Heizung}\label{heizung}
-Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
+Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
 die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
@@ -60,9 +63,8 @@ die Arme treffen ist eine Klappe die den Luftstrom eines Arms ganz oder teilweis
 \end{itemize}
 
 Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege, oder sogar ganze Rechner, k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig das System ausfallsicher zu planen.
-
-\todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
+allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig das
+System ausfallsicher zu planen damit trotz des Ausfalls einer oder mehrerer Komponenten weiter geregelt wird.
 
 \paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
 ungeeignet machen. Dieses f{\"{u}}hrt ausserdem dazu das nur eine Studentengruppe gleichzeitig das System benutzen kann. Da jeder Versuchsdurchlauf einige Minuten dauert, kommt es zu
@@ -91,11 +93,13 @@ solange sie noch Energiereserven haben, m{\"{u}}ssen sie hin und wieder diesen S
 Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba},
 w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
 
-\paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll, diese bestehende Arbeit weiterzuverwenden.
-Die Einarbeitung in COBRA k{\"{o}}nnte vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren. Des weiteren ist das physikalische Modell der
-Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern nicht
+\paragraph{Evaluation} Die Einarbeitung in COBRA k{\"{o}}nnte vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren; da COBRA auch nur noch
+wenig genutzt wird, ist der Mehraufwand nicht zu rechtfertigen. Des weiteren ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r:
+die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern nicht
 der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich das sich Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren
-gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische Vereinfachung.
+gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische Vereinfachung gegen{\"{u}}ber der echten Welt.
 
 Da das Simulationsprogramm in den Neunzigern auf NeXTStep Rechnern entwickelt wurde, l{\"{a}}uft es auch nur auf diesen. Leider existieren solche Rechner in der Fachhochschule
 S{\"{u}}dwestfalen nicht, das Programm m{\"{u}}sste also erst portiert werden.
+
+Aus all diesen Gr{\"{u}}nden wurde sich entschieden eine neue {\"{U}}bungsaufgabe zu entwickeln.
