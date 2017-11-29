@@ -18,26 +18,46 @@ so dass:
 \item die Platte nicht kippt
 \end{itemize}
 
-Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen. (Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur
-Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
-Teil dieser Bachelorarbeit ist eine
-Beispielimplementation, die die oben ausgef{\"{u}}hrten Anforderungen erf{\"{u}}llt. Dies wurde auch mithilfe eines Fehlerinjektors verifiziert.
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen.
+(Abh{\"{a}}ngig vom Verh{\"{a}}ltniss der Anzahl der Controller zur Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+
+Die Voter und Controller laufen auf Virtuellen Maschinen, jeweils eine VM pro Voter- oder Controllerinstanz.
+Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist.
+Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen, sie soll nicht verf{\"{a}}lscht werden.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Netzwerk}
+	\caption{Aufteilung der Netzwerkteilnehmer}
+	\label{fig:network}
+\end{figure}
+
+Zusammendfassend besteht das ganze System aus diesen Teilen:
+\begin{itemize}
+	\item Die Simulation berechnet die Bewegungen und implementiert das physikalische Modell. Sie {\"{u}}bernimmt auch die Visualisierung. Per Definition ist sie ausfallsicher.
+	\item Der Voter sammelt die Steuerkommandos von den Controllern, bildet daraus das Steuerergebniss und sendet dies an die Simulation. Er ist per Definition ausfallsicher gegen \textit{crash failures}.
+	\item Die Controller generieren Steuerkommandos. Sie k{\"{o}}nnen jederzeit ausfallen.
+\end{itemize}
 
 \paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
 Daher ist es notwendig, ein Interface ins "innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
 
-\begin{itemize}
-\item Simulation berechnet bewegungen und so. per definition ausfallsicher gegen ALLES! (... als ob). grafische ausgabe
-\item Voter sammelt steuerkommandos. per definition ausfallsicher ggü crash failure
-\item Controller generiert steuerkommandos, kann jederzeit ausfallen
-\end{itemize}
-
-Die Voter und Controller laufen auf Virtuellen Maschinen , jeweils eine VM pro Voter- oder Controllerinstanz. Diese VMs befinden sich in einem Netzwerk das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist. Es wird vorgegeben dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss.
-Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen.
-
 \subsection{XX}
-netzwerkbild
-event gesteuerte kommunikation
+event gesteuerte kommunikation.
+\todo{keine ahnung was hier hin soll.}
+
+\subsection{Anzeige}\label{graphics}
+Um den Status der Simulation zu verfolgen, wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
+durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
+
+\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
+
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
+Platte visuell ausgeglichen werden k{\"{o}}nnte.
+
+\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
+
 
 \clearpage
 \section{Fehlerinjektion}
@@ -47,29 +67,45 @@ unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batter
 
 
 \subsection{Netzwerk}
-Alle UDP Pakete k{\"{o}}nnen verf{\"{a}}lscht werden. Die einzelnen Pakete werden dabei so manipuliert, dass durchschnittlich in $ ^1/_{20} $ aller Pakete
-ein Byte verf{\"{a}}lscht wird, ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
+Die Kommunikation zwischen Voter und Controller ist nur {\"{u}}ber ein IP Netzwerk m{\"{o}}glich; f{\"{u}}r dieses Modul kann ein eigenes Netzwerk aufgebaut werden in das eine
+Fehlerinjektionskomponente intergiert werden kann. Diese Komponente soll nur die Kommunikation die von den Studentenprogrammen ausgeht verf{\"{a}}lschen und alle andere normal
+behandeln. Die St{\"{a}}rke der Fehlerinjektion soll parametresierbar sein, zum Beispiel wie wahrscheinlich es ist das einzelne Pakete verf{\"{a}}lscht werden oder wie stark
+die Verf{\"{a}}lschung sein soll.
+
+Es wird vorgeschrieben das alle Kommunikation der Studentenprogramme {\"{u}}ber UDP laufen muss. Dadurch reicht es wenn der Fehlerinjektor nur UDP verf{\"{a}}lscht, was dazu
+f{\"{u}}hrt das die normalen Administrationstat{\"{a}}tigkeiten nicht beeintr{\"{a}}chtigt werden. Der Fehlerinjektor muss in der Lage sein mit einstellbaren Wahrscheinlichkeiten
+Pakete zu verf{\"{a}}lschen: bei den Arten der Verf{\"{a}}lschung ist es ausreichend wenn einzelne Bytes gekippt werden.
+
 \todo{markus fragen}
 
+Standartm{\"{a}}ssig ist dieser Fehlerinjektor so eingestellt dass durchschnittlich in $ ^1/_{20} $ aller Pakete ein Byte verf{\"{a}}lscht wird,
+ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
+
 \subsection{Controller}
-Die Controllerprogramme werden zu zuf{\"{a}}ligen Zeitpunkten beendet und gestartet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt. Dies simuliert einen \textit{crash failure}. Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
+Im Fehlermodell wurde spezifiziert das die Controller zu beliebigen Zeitpunkten einen \textit{crash failure} erleiden k{\"{o}}nnen.
+
+Um dies zu erm{\"{o}}glichen gibt es ein Shellskript, das die Controllerprogramme zu zuf{\"{a}}ligen Zeitpunkten beendet und wieder startet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
+Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
 offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 \lstinputlisting{../fault_injector.sh}
 
 \subsection{Simulation}
-\subsubsection{XXX}
+Laut Fehlermodell k{\"{o}}nnen Roboter, auf verschiedene Arten, fehlerbehaftet sein und die Roboter (beziehungsweise Voter) bekommen eventuell fehlerhafte, oder sogar gar keine, Informationen
+{\"{u}}ber den Status der Welt.
+
 JSON Datei
 Aufgeteilt in Roboter und Netzwerk. Gibt permamente und temporaere Fehler. perm mit zeit und wahrscheinlichkeit, temp nur mit wahrscheinlichkeit.
 \todo{temporaer sind jetzt nur quasi einen frame lang...}
 
 \subsubsection{Fernsteuerung}
-Der Benutzer kann einen Roboter fernsteuern und hat damit direkten Einfluss auf die simulierte Welt. W{\"{a}}hrend ein Roboter
-ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht, es gelten die gleichen Einschr{\"{a}}nkungen bei
-Geschwindigkeit und Rotation, und so weiter.
+Der Benutzer soll einen Roboter fernsteuern k{\"{o}}nnen und damit direkten Einfluss auf die simulierte Welt haben. W{\"{a}}hrend ein Roboter
+ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht,
+es gelten die gleichen Einschr{\"{a}}nkungen bei Geschwindigkeit und Rotation, und so weiter.
 
-Die Roboter werden {\"{u}}ber die Pfeiltasten gesteuert (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter). Um
-anzuzeigen welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
-Robotern umgeschaltet werden, mit der Escapetaste wird die Steuerung der Roboter aufgehoben; falls die Fernsteuerung gerade nicht aktiv ist, wird dies in der Simulation angezeigt.
+Dies wird durch ein Script in Unity erm{\"{o}}glicht. Im deaktivierten Zustand zeigt es einen Hilfetext auf dem Bildschirm an. Mit der Escapetaste wird die Fernsteuerung aktiviert, dann kann ein
+Roboter {\"{u}}ber die Pfeiltasten gesteuert werden (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter).
+Um anzuzeigen welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
+Robotern umgeschaltet werden. Bei einem weiteren Druck auf die Escapetaste wird die Fernsteuerung deaktiviert.
 
 
 \clearpage
@@ -93,7 +129,7 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 
 
 \paragraph{Physikalisches Modell}
-\todo{physisch?}
+\todo{muss das nicht auch irgendwie in die Grundlagen? Oder ist das Implementierung}
 Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
 Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
@@ -138,42 +174,6 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden, kippt.
 XXXX \todo{} text, iwie auch auf das da oben beziehen
 
-\clearpage
-\section{Systemaufbau}
-\todo{alles neu}
-Das ganze System besteht aus verschiedenen Komponenten, die teilweise sogar in unterschiedlichen Netzwerken h{\"{a}}ngen. 
-
-\subsection{Netzwerk}\label{network}
-Die Fehlertoleranz dieses Systems wird durch eine r{\"{a}}umliche Redudanz erreicht. Die verschiedenen Teile des Systems sind {\"{u}}ber ein Ethernetnetzwerk miteinander verbunden und benutzen dieses
-f{\"{u}}r die Konsensbildung und um Informationen {\"{u}}ber den momentanen Status der Simulation zu bekommen.
-
-Allerdings ist ein Teil der Systemkomponenten in einem Netzwerk das durch eine Fehlerinjektion Pakete verf{\"{a}}lscht, verschwinden l{\"{a}}sst oder mehrfach sendet. 
-\todo{aufteilung im netzwerk als Bild}
-
-Der Voter jedes simulierten Roboters ist dabei, wie auch die Simulation und die Anzeige, im nichtverf{\"{a}}lschenden Netzwerk. Dies entspricht der Realit{\"{a}}t, in der die physikalischen Bewegungen
-des Roboters auch einfach umgesetzt werden. Die Controller allerdings k{\"{o}}nnen sich nicht darauf verlassen, dass ihre Daten nicht verf{\"{a}}lscht wurden, sie m{\"{u}}ssen also von den Studenten so
-programmiert werden dass sie mit \textit{value faults/message corruption}\cite{richling-ass} umgehen k{\"{o}}nnen.
-
-\begin{figure}
-	\centering
-	\includevisio[width=\textwidth]{Netzwerk}
-	\caption{Aufteilung der Netzwerkteilnehmer}
-	\label{fig:network}
-\end{figure}
-
-\subsection{VMs}
-
-\subsection{Anzeige}\label{graphics}
-Um den Status der Simulation zu verfolgen, wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
-durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
-
-\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
-geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
-
-Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
-Platte visuell ausgeglichen werden k{\"{o}}nnte.
-
-\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
 
 
 \clearpage
