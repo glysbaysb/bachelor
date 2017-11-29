@@ -9,9 +9,9 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[ngerman]{babel}
-\setdefaultlanguage{german}
+%\setdefaultlanguage{german}
 \usepackage{translator}
-\usepackage[decimalsymbol=comma]{siunitx}
+%\usepackage[decimalsymbol=comma]{siunitx}
 
 \usepackage[style=ieee, backend=biber]{biblatex}
 \nocite{*} % alle unbenutzen Literatureintraege trotzdem anzeigen
@@ -77,10 +77,10 @@
 
 \clearpage
 \part{Aufgabenstellung}
-\include{../aufgabenstellung}
+\input{../aufgabenstellung}
 \part{L{\"{a}}sung}
-\include{../grundlagen}
-\include{../implementierung}
+\input{../grundlagen}
+\input{../implementierung}
 
 \clearpage
 \printbibliography
