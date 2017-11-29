@@ -33,8 +33,12 @@ nutzbar sein und gerade auch Menschen ohne Fachkentnisse einen Einblick in die K
 
 Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln. Diese k{\"{o}}nen visuell ansprechend sein und bieten vielf{\"{a}}tige Interationsm{\"{o}}glichkeiten.
 
-\subsection{Gliederung} Als erstes wird die Simulation in groben Z{\"{u}}gen beschrieben und mit vorhandenen XXX\todo{} vergliechen. Danach werden die ben{\"{o}}tigten
-Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um mechanische und physische Konzepte wie das
+\subsection{Gliederung} Diese Bachelorarbeit besteht aus 2 Teilen. Im ersten wird die Aufgabenstellung entwickelt, im zweiten der L{\"{o}}sungsweg skizziert.
+
+Der erste Teil besteht aus einer Einf{\"{u}}hrung um den Sinn und Zweck dieser Arbeit zu verdeutlichen. Danach wird erkl{\"{a}}rt warum die existierende {\"{U}}bungsaufgabe\ref{heizung}
+nicht ausreicht; basierend darauf werden die Anforderungen an die neue Aufgabe entwickelt.
+
+Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um mechanische und physische Konzepte wie das
 \textit{differential steering}\ref{diffs} und die mathematische Grundlagen der Vektorrechnung, aber auch Informationstechnologische Aspekte wie die Serialisierung von Daten oder
 verschiedene Netzwerkkommunikationsarten werden betrachtet. Darauf aufbauend wird dann die Implementierung beschrieben, mit besonderem Fokus auf dem Fehlermodell und der
 Fehlerinjektion.
@@ -42,7 +46,7 @@ Fehlerinjektion.
 Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gezogen.
 
 \clearpage
-\section{Die ausfallsichere Heizung}
+\section{Die ausfallsichere Heizung}\label{heizung}
 Eine weitere {\"{U}}bungsaufgabe wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter und 3 Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
@@ -60,39 +64,38 @@ allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heiz
 
 \todo{Mehr? Weiss nicht, ich will ja nicht unsere Implementation beschreiben}
 
-\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr
-tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
-ungeeignet machen. Es gibt auch wenig Interaktionsm{\"{o}}glichkeiten mit dem System, es ist also schwer etwas auszuprobieren und
-mit dem System zu spielen.
-gibt nur eine.
-warum die doof war, mal andere studenten fragen
+\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr tr{\"{a}}ge, und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen,
+ungeeignet machen. Dieses f{\"{u}}hrt ausserdem dazu das nur eine Studentengruppe gleichzeitig das System benutzen kann. Da jeder Versuchsdurchlauf einige Minuten dauert, kommt es zu
+Koordinationsproblemen, was dazu f{\"{u}}hrt das die Studenten einen gro{\ss}en Teil der Zeit damit verbringen zu warten.
 
 \clearpage
 \section{Anforderungen}
-nummerierte liste
-- mehrere instanzen gleichzeitig
-- komplett anders
-- fehlerinjektion parametrisierbar
+Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten was das neue System leisten soll:
+\begin{enumerate}
+	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
+	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
+	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich die Aufgabe bei Bedarf zu vereinfachen oder
+		zu verkomplizieren.
+	\item Um die Aufgabe zu l{\"{o}}sen muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
+\end{enumerate}
 
 \clearpage
 \section{Die balancierenden Roboter}
-"Ja... das ganze hatte damals ein ganz anderes Ziel, schon das macht es
-hier eher unpassend. Es muss entsprechend dargestellt werden."
-
 Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde an der Humboldt Universit{\"{a}}t Berlin in Zusammenarbeit
-mit Daimler Benz, eine Simulation {\"{a}}hnlich dieser entwickelt. Zu dieser wurde dann sp{\"{a}}ter ein echter physikalischer Roboter hinzugef{\"{u}}gt.
+mit Daimler Benz, eine Simulation {\"{a}}hnlich entwickelt. Ziel dieser Simulation war es eine simulierte Platte durch die Bewegung von simulierten
+Robotern auszubalancieren. Das Gewicht jedes Roboters wirkte auf die Platte, bringt sie also aus dem Gleichgewicht. Die Roboter m{\"{u}}ssen sich nun so
+bewegen das jede durch einen Roboter ausge{\"{u}}bte Kraft von einem anderen Roboter eliminiert wird. Damit es nicht m{\"{o}}glich ist einmal eine Stellung einzunehmen
+die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen Energiespeicher der mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen
+solange sie noch Energiereserven haben, m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
 
-Im Gegensatz zu diesem System musste es, zus{\"{a}}tzlich zur nicht-funktionalen Eigenschaft Ausfallsicherheit, auch echtzeitf{\"{a}}hig sein.
-
-\paragraph{Systemaufbau} Die Simulation und die Controller laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}, w{\"{a}}hrend
-das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
-
-\todo{mehr}
+Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba},
+w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
 
 \paragraph{Evaluation} Trotz des sehr {\"{a}}hnlichen Konzeptes ist es nicht sinnvoll, diese bestehende Arbeit weiterzuverwenden.
-Auch als reine {\"{U}}bungsaufgabe ist es nicht gut geeignet, da die Einarbeitung in COBRA vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren w{\"{u}}rde.
-bla bla gibt gaÂ´r keine NextStep rechner mehr.
-links, rechts bewegung, keine dynamik
+Die Einarbeitung in COBRA k{\"{o}}nnte vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren. Des weiteren ist das physikalische Modell der
+Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern nicht
+der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich das sich Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren
+gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische Vereinfachung.
 
-
-
+Da das Simulationsprogramm in den Neunzigern auf NeXTStep Rechnern entwickelt wurde, l{\"{a}}uft es auch nur auf diesen. Leider existieren solche Rechner in der Fachhochschule
+S{\"{u}}dwestfalen nicht, das Programm m{\"{u}}sste also erst portiert werden.
