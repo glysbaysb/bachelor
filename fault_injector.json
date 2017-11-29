@@ -1,10 +1,20 @@
 {
-	"breakEngineA" : 0.00001,
-	"stuckAtEngineA" : 0.00001,
-	"breakEngineB" : 0.00001,
-	"stuckAtEngineB" : 0.00001,
+	"robot" : {
+		"breakEngineA" : {
+			"perm": {120, 0.01}
+		},
+		"stuckAtEngineA" : {
+			"temp": 0.00001
+		},
+		"breakEngineB" : 0.00001,
+		"stuckAtEngineB" : 0.00001,
+		"maxEnginesBroken": 3,
+		"maxEnginesBrokenPerRobot": 1
+	},
 
-	"dropWorldStatus": 0.001,
-	"fakeWorldStatus": 0.001,
-	"dupWorldStatus": 0.001
+	"network" : {
+		"dropWorldStatus": 0.001,
+		"fakeWorldStatus": 0.001,
+		"dupWorldStatus": 0.001
+	}
 }
