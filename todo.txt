@@ -4,7 +4,9 @@ Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
 09-17	 | unity		| roboter designen + lampe + rauch
          |fehlerinjektor|
-		 | unity		| 
+		 | unity		| statisches gleichgewicht mit rotation, dynamisches
+		 |				| fehlerinj konf senden
+		 |				| ruckeln
 		 | ecc			| pakete > 255b
 		 | voter		| alles halt
 		 | algo			| vlt noch einen?

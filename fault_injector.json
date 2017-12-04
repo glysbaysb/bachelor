@@ -1,7 +1,7 @@
 {
 	"robot" : {
 		"breakEngineA" : {
-			"perm": {120, 0.01}
+			"perm": {"after": 120, "chance" : 0.01}
 		},
 		"stuckAtEngineA" : {
 			"temp": 0.00001
