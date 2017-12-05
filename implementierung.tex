@@ -2,7 +2,7 @@
 \section{Architektur}
 
 \subsection{Simulationsidee}
-Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu $N$ Roboter und $1$ F{\"{u}}llstation
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N} Roboter und $1$ F{\"{u}}llstation (\gls{F})
 platziert werden. Die Summe alle Gewichte kippt die Platte; sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
 die Platte und die Simulation endet.
 
@@ -10,7 +10,7 @@ Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei abe
 an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
 schnell).
 
-Gesteuert werden die Roboter von bis zu $M$ $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
+Gesteuert werden die Roboter von bis zu \gls{M} $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
 so dass:
 \begin{itemize}
 \item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
@@ -77,7 +77,7 @@ hei{\ss}t hier:
 		Die Wahrscheinlichkeiten f{\"{u}}r das Auftreten eines permamenten oder tempor{\"{a}}ren Stuck-At Fehlers sind unabh{\"{a}}ngig voneinander einstellbar.
 \end{itemize}
 
-Da jeder Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
+Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
 bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Um verschiedene Schwierigkeitsstufen der Simulation zu erm{\"{o}}glichen ist es m{\"{o}}glich einzustellen
 das nur ein Motor pro Roboter, im Vergleich zu beiden, gleichzeitig Fehler aufweisen kann.
 
@@ -170,7 +170,7 @@ offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 Laut Fehlermodell k{\"{o}}nnen Roboter, auf verschiedene Arten, fehlerbehaftet sein und die Roboter (beziehungsweise Voter) bekommen eventuell fehlerhafte, oder sogar gar keine, Informationen
 {\"{u}}ber den Status der Welt.
 
-JSON Datei
+\todo{JSON Datei}
 Aufgeteilt in Roboter und Netzwerk. Gibt permamente und temporaere Fehler. perm mit zeit und wahrscheinlichkeit, temp nur mit wahrscheinlichkeit.
 \todo{temporaer sind jetzt nur quasi einen frame lang...}
 
@@ -194,7 +194,7 @@ Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glic
 Dabei stellt sie, unter anderem, eine Physikengine, eine Grafikengine und eine Schnitstelle zum scripten dieser bereit. 
 
 \subsection{Die Roboter}\label{robot}
-In der simulierten Welt k{\"{o}}nnen sich bis zu $N$ Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
+In der simulierten Welt k{\"{o}}nnen sich bis zu \gls{N} Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
 
@@ -207,7 +207,7 @@ Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
 
 \paragraph{Physikalisches Modell}
 \todo{muss das nicht auch irgendwie in die Grundlagen? Oder ist das Implementierung}
-Ein Roboter $i$ wird dabei beschrieben durch seine Position und Gewicht
+Ein Roboter \gls{Ni} wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
 Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
 $ R_i = r_y(i)$. \todo{Ausdehnung}
@@ -374,7 +374,7 @@ dementsprechend neu berechnet - so dass die letzten Roboter die Bewegungen der v
 wird immer in Bezug auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigeometrische Funktionen bestimmt werden:
 $$ M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)$$
 Desweiteren gibt es einen Distanzvektor zum Ziel:
-$$ D_i = F - P_i $$
+$$ D_i = \gls{F} - P_i $$
 
 Der Winkel zwischen diesen beiden Vektoren gibt an wie weit der Roboter sich drehen muss um gerade zu dem Ziel fahren zu k{\"{o}}nnen. Dabei muss beachtet werden das nur der Wert des
 Winkels berechnet wird, das Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer nach rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die
