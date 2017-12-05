@@ -52,6 +52,24 @@ Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet das solange ein
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
 \clearpage
+\section{RPC}
+Der Grundgedanke von verteilten System ist es das die verschiedenen Systeme verschiedene Aufgaben
+erledigen. Oft gibt es aber Abh{\"{a}}ngigkeiten zwischen Aufgaben (Aufgabe A muss beendet werden
+bevor Aufgabe B angefangen werden kann, zum Beispiel weil das Ergebniss von A f{\"{u}}r B wichtig
+ist) oder die Ergebnisse von mehreren System m{\"{u}}ssen zusammengef{\"{u}}hrt werden. Zwischen
+den Systemen muss also eine Synchronisation und Kommunikation m{\"{o}}glich sein. Die Kommunikation
+an sich kann {\"{u}}ber verschiedene {\"{U}}bertragungsmedien erfolgen, allerdings muss die
+Kommunikation an die spezifischen Anforderungen der Applikation angepasst werden. Zum Beispiel
+ist die Kommunikation zwischen System die komplexe Wettermodelle berechnen eine andere als die
+Kommunikation um Konsistenz zwischen verteilten Datenbankinstanzen herzustellen.\todo{kann ich das einfach
+behaupten?}
+
+Abhilfe schaffen \textit{remote procedure call}, mit denen es f{\"{u}}r die verschiedenen Netzwerkteilnehmer
+so wirkt als k{\"{o}}nnten sie auf den anderen Netzwerkteilnehmern Funktionen direkt aufrufen.
+
+\todo{tja, ka. irgendwie mehr halt}
+
+\clearpage
 \section{Publish-Suscribe}
 Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten. Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
 Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es die Kommunikation {\"{u}}ber UDP Broadcasts
@@ -172,9 +190,6 @@ L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert; beispielsw
 In diesem Fall folgt die L{\"{a}}ng als 32bit big endian
 \footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen.}
 Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
-
-\clearpage
-\section{RPC?}
 
 \clearpage
 \section{Quaternions? Vektorrechnung?}
