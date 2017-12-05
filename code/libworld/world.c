@@ -33,6 +33,8 @@ typedef struct WorldContext_ {
 
 static void createRobotCallback(void* optional, msgpack_object_array* params);
 static void moveRobotCallback(void* optional, msgpack_object_array* params);
+static void getFiCfg(void* ctx_);
+static void getFiCfgCallback(void* optional, msgpack_object_array* params);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -199,7 +201,10 @@ static int initalizeRPC(WorldContext* wc) {
 		return -3;
 	}
 
-	wc->cfg = ficfg_parse("../fault_injector.json");
+	if(addProcedure(wc->rpc, GET_FI_CFG, &getFiCfgCallback, wc) < 0) {
+		return -4;
+	}
+
 
 	return 0;
 }
@@ -247,6 +252,8 @@ void* connectToWorld(const char* host) {
 		free(wc);
 		return NULL;
 	}
+
+	getFiCfg(wc);
 
 	return wc;
 }
@@ -302,9 +309,10 @@ static void* networkHandler(void* ctx_) {
 			WorldStatus* ws = parseWorldStatus(buf, len);
 
 			/* fault injector */
-			if(rand() % (1. / ctx->cfg.dropWorldStatus) == 0) {
+			printf("%d:%d\n", ctx->cfg.dropWorldStatus, ctx->cfg.dupWorldStatus);
+			if((rand() % ctx->cfg.dropWorldStatus) == 0) {
 				goto CLEANUP;
-			} else if(rand() % (1. / ctx->cfg.fakeWorldStatus) == 0) {
+			} else if((rand() % ctx->cfg.fakeWorldStatus) == 0) {
 				/*ws->xTilt;
 				ws->yTilt;
 
@@ -447,4 +455,37 @@ int createRobot(void* ctx_) {
 	nn_freemsg(reply);
 
 	return ctx->createRobot.id;
+}
+
+static void getFiCfgCallback(void* optional, msgpack_object_array* params) {
+	WorldContext* ctx = (WorldContext*)optional;
+
+	assert(params->size == 3);
+	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	ctx->cfg.dropWorldStatus = params->ptr[0].via.i64;
+	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	ctx->cfg.dupWorldStatus = params->ptr[1].via.i64;
+	assert(params->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[2].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	ctx->cfg.fakeWorldStatus = params->ptr[2].via.i64;
+}
+
+static void getFiCfg(void* ctx_) {
+	WorldContext* ctx = (WorldContext*)ctx_;
+
+	void* out = NULL;
+	size_t outLen = 0;
+	if((createRPCRequest(ctx->rpc, GET_FI_CFG, NULL, 0, &out, &outLen) < 0)) {
+		return -1;
+	}
+
+	int lenOut;
+	unsigned char* reply = synchronCall(ctx->reqSock, out, outLen, &lenOut);
+	free(out);
+	if(!reply) {
+		return -2;
+	}
+
+	handleRPC(ctx->rpc, reply, lenOut);
+
+	nn_freemsg(reply);
 }

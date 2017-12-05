@@ -5,11 +5,7 @@ extern "C" {
 #endif
 
 struct FiCfg {
-	double breakEngineA,
-		   stuckAtEngineA,
-		   breakEngineB,
-		   stuckAtEngineB;
-	double dropWorldStatus,
+	int dropWorldStatus,
 		   fakeWorldStatus,
 		   dupWorldStatus;
 };

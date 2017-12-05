@@ -30,7 +30,6 @@ public:
 
 
 TEST_F(FicfgTest, Simple) {
-	auto cfg = ficfg_parse("../fault_injector.json");
 }
 
 int main(int argc, char** argv) {
