@@ -30,22 +30,6 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 	return x;
 }
 
-double pi(int id, double e) {
-	const auto P = 0.1;
-	const auto I = 0.0001;
-	static std::map<int, double> iStateRotation;
-
-	std::cout << '#' << id << ": " << iStateRotation[id] << '\n';
-	iStateRotation[id] += e;
-	if(iStateRotation[id] > 1000) {
-		iStateRotation[id] = 1000;
-	} else if(iStateRotation[id] < -1000) {
-		iStateRotation[id] = -1000;
-	}
-
-	return P * e + iStateRotation[id] * I;
-}
-
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
 {
@@ -55,7 +39,6 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	if(robot->crit() < CRIT_THRESHHOLD) {
 #endif
 		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
-		accelleration.y_ = pi(robot->id(), accelleration.y_);
 #if 0
 	}
 	/* if it's */

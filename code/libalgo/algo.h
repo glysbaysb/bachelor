@@ -1,3 +1,21 @@
+/**
+ * @file The algorithm that determines how each robot should move considers how
+ * critical the status of each robot it. "critical" is defined as fuel left divided
+ * by the distance to the fuel station.
+ *
+ * There are three possible cases:
+ * - Either the value is above @CRIT_THRESHHOLD, then the robot may try to balance the
+ *   plate
+ * - Or it is belove @SAFE_THRESHHOLD then the robot has to move towards the
+ *   fuel station ASAP
+ * - Lastely it may be somewhere in between. In that case it also tries to balance the
+ *   plate
+ *
+ * The algorithm firstly calculates how the most critical robot should move, then the
+ * second most and so on. After each robot the algorithm calculates how the world
+ * should look after each robot has moved. Then the algorithm takes that into
+ * account when calculating the next movements
+ */
 #ifndef ALGO_H
 #define ALGO_H
 

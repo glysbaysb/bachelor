@@ -1,3 +1,15 @@
+/**
+ * @file The voter is responsible for creating a robot in the simulation and
+ * then sending control commands, which come from the controllers.
+ *
+ * main() is responsible for creating the robot and registering the RPC
+ * callbacks. Once that is finished it polls for RPC requests from the
+ * controllers. The most important request (a vote to move a specific robot) is
+ * handled in voteCallback().
+ *
+ * The communication to the simulation is done almost entirely via callbacks,
+ * namely worldStatusCallback().
+ */
 #include <iostream>
 #include <iterator>
 #include <cstdio>

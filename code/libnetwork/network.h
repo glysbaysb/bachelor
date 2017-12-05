@@ -1,3 +1,9 @@
+/**
+ * @file Both voter and controller both use send RPCs over UDP broadcast
+ * sockets. They are pretty similar, so the class @ECCUDP can be used by them
+ * both. It allows to call a remote procedure and to receive calls from other
+ * programms
+ */
 #ifndef NETWORK_H
 #define NETWORK_H
 

@@ -1,3 +1,7 @@
+/**
+ * @file A simple test application that tries to move a robot directly. I've
+ * used it to check the differential steering algorithm.
+ */
 #include <iostream>
 #include <iterator>
 #include <cstdio>

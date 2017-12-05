@@ -7,6 +7,15 @@
 extern "C" {
 #endif
 
+/**
+ * The different procedure codes. To make it easier to figure out the type of
+ * call the different users of this library get codes with a lot of space
+ * inbetween.
+ *
+ * For example the communication between simulation and voter is in the
+ * 0x1??????? range, the 0x2??????? range is used for internal testing while
+ * the 0x3??????? range is used in communications between controller and voter.
+ */
 enum Procedure {
 	NONE = 0,
 	MOVE_ROBOT = 0x10000000,

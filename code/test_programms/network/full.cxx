@@ -1,3 +1,13 @@
+/**
+ * @file a simple application that reads data from stdin, sends them as RPC,
+ * receives the reply (exactly what has been sent) and then writes that to
+ * stdout.
+ *
+ * I've used it to test whether the RPC works, with something like:
+ * Machine A: `./full`
+ * Machine B: `./full < somefile > somefile2`
+ * Then `diff somefile somefile2`
+ */
 #include <iostream>
 #include <iterator>
 #include <cstdint>

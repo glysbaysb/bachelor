@@ -1,3 +1,7 @@
+/**
+ * @file The controller receives the world status and the uses libalgo to
+ * decide how each robot shall move.
+ */
 #include <iostream>
 #include <math.h>
 #include <memory>
