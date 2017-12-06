@@ -15,6 +15,8 @@ Deadline | Module		|	was
 		 | thesis		| 
 		 |				| blender designen
 		 |				| vektorrechnung
+		 |				| im Text immer auf die Anforderungen beziehen
+		 |				| irgendwie vlt die Simulationsidee noch in die Aufgabenstellung?
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
