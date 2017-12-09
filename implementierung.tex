@@ -112,7 +112,11 @@ Es wird vorgeschrieben, dass die ganze Kommunikation der Studentenprogramme {\"{
 f{\"{u}}hrt, dass die normalen Administrationstat{\"{a}}tigkeiten nicht beeintr{\"{a}}chtigt werden. Der Fehlerinjektor muss in der Lage sein, mit einstellbaren Wahrscheinlichkeiten
 Pakete zu verf{\"{a}}lschen: bei den Arten der Verf{\"{a}}lschung ist es ausreichend, wenn einzelne Bytes gekippt werden.
 
-\todo{markus fragen}
+Daf{\"{u}}r zust{\"{a}}ndig ist Net Inject\cite{kubertzki}. Dabei werden auf den fraglichen Rechnern
+Standartrouten definiert, die den Netzwerkverkehr {\"{u}}ber andere Rechner leiten, auf denen Net Inject
+installiert ist. Dort werden die Pakete vom Modul NetMod angenommen und es wird {\"{u}}berpr{\"{u}}ft ob
+f{\"{u}}r diese Kommunikation (spezifiziert durch Protkoll, Quell- und Zielport) Verf{\"{a}}lschungsregeln
+existieren. Anhand dieser Regeln wird das Paket dann ausgwertet und, bei Bedarf, verf{\"{a}}lscht.
 
 Standardm{\"{a}}ssig ist dieser Fehlerinjektor so eingestellt dass durchschnittlich in $ ^1/_{20} $ aller Pakete ein Byte verf{\"{a}}lscht wird,
 ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.

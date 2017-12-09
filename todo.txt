@@ -17,6 +17,7 @@ Deadline | Module		|	was
 		 |				| vektorrechnung
 		 |				| im Text immer auf die Anforderungen beziehen
 		 |				| irgendwie vlt die Simulationsidee noch in die Aufgabenstellung?
+		 |				| was man fürs kompilieren braucht?
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 

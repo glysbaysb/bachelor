@@ -70,34 +70,51 @@ so wirkt als k{\"{o}}nnten sie auf den anderen Netzwerkteilnehmern Funktionen di
 \todo{tja, ka. irgendwie mehr halt}
 
 \clearpage
-\section{Publish-Suscribe}
+\section{Interaktionsmuster}
+In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
+ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen, so wie auch menschliche
+Kommunikation.
+
+\subsection{Request-Reply}
+Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
+ist das normaleste das einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
+und \textit{reply}.
+
+Diese Form der Kommunikation ist gut geeignet f{\"{u}} Client-Server Kommunikation wie das
+aufrufen von Websites. Diese Art von Kommunikation f{\"{u}}hrt zu Problemen falls sich die
+Informationen schnell {\"{a}}ndern -- die verschiedenen Clients agieren dann vielleicht basierend
+auf leicht unterschiedlichen Informationen, was zu Problemen f{\"{u}}hren kann.
+
+\subsection{Publish-Subscribe}
+Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
+
 Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten. Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
 Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es die Kommunikation {\"{u}}ber UDP Broadcasts
 laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht kriegen ohne
 das sich der Sender darum k{\"{u}}mmern muss an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
 Voter aber in unterschiedlichen Subnetzen sein k{\"{o}}nnen ist dies nicht m{\"{o}}glich.
 
-Abhilfe schafft das Publish-Suscribe Kommunikationspattern\cite{pubsub}. Dort gibt es einen Publisher (in
-diesem Fall die Simulation) und Suscriber (die Voter/Roboter). Die Suscriber verbinden sich mit dem
+Abhilfe schafft das Publish-Subscribe Kommunikationspattern\cite{pubsub}. Dort gibt es einen Publisher (in
+diesem Fall die Simulation) und Subscriber (die Voter/Roboter). Die Subscriber verbinden sich mit dem
 Publisher und teilen ihm mit welche Art von Nachrichten sie interessiert. Der Publisher verteilt dann die
-Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Informationen an alle Suscriber zu denen momentan ein Kontakt m{\"{o}}glich ist.
+Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Informationen an alle Subscriber zu denen momentan ein Kontakt m{\"{o}}glich ist.
 
 Dies hat drei gro{\ss}e Vorteile. Es gibt eine r{\"{a}}umliche Trennung, das hei{\ss}t der Publisher muss
-nichts {\"{u}}ber die Suscriber (zum Beispiel Anzahl, IP Adresse) und andersrum wissen. Es reicht
+nichts {\"{u}}ber die Subscriber (zum Beispiel Anzahl, IP Adresse) und andersrum wissen. Es reicht
 wenn beide wissen wo sie sich "treffen" k{\"{o}}nnen. Als zweites gibt es eine zeitliche Trennung zwischen
 den Kommunikationspartner --- der Publisher kann Nachrichten verschicken ohne sich dar{\"{u}}ber Gedanken
-machen zu m{\"{u}}ssen wann diese beim Suscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Suscriber
+machen zu m{\"{u}}ssen wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
 uninteressant ist wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
 Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes. Die Nachrichten werden Daten
 von ihrer Herstellung verschickt, das Sender einer Nachricht ist also (aus Sicht des
-Publishers) O(1) in Bezug auf die Anzahl der Suscriber. Auch auf Seiten des Suscribers gibt es eine
+Publishers) O(1) in Bezug auf die Anzahl der Subscriber. Auch auf Seiten des Subscribers gibt es eine
 Asynchronit{\"{a}}t, die empfangen Daten werden mithilfe eines Callback angenommen und blockieren damit
 nicht die Abarbeitung dieser Daten.
 
 \begin{figure}
 	\centering
 	\includevisio{pubsub}
-	\caption{Publish-Suscribe}
+	\caption{Publish-Subscribe}
 	\label{fig:pubsub}
 \end{figure}
 \todo{sieht kacke aus. kleiner und andere Auflösung?}
@@ -112,7 +129,7 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 \subsection{Anforderungen}
 Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
 
-Es gibt allerdings keine Netzwerklibrary, die dieses Pattern und RPC anbietet; da es einfacher ist, auf Publish-Suscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
+Es gibt allerdings keine Netzwerklibrary, die dieses Pattern und RPC anbietet; da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
 Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
@@ -123,7 +140,7 @@ dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Biblioth
 \centering
 \begin{tabu}{c | c | c | c | p{5cm}}
 	\toprule
-	Name & RPC & Publish-Suscribe & C++ Runtimeabh{\"{a}}ngigkeit & andere Sprachen \\
+	Name & RPC & Publish-Subscribe & C++ Runtimeabh{\"{a}}ngigkeit & andere Sprachen \\
 	\midrule
 	SunRPC & \checkmark & \xmark & \checkmark & C\#, Java, ... \\
 	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, Python, Java, ... \\
