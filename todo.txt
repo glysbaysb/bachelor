@@ -5,18 +5,15 @@ Deadline | Module		|	was
 09-17	 | unity		| roboter designen + lampe + rauch
          |fehlerinjektor|
 		 | unity		| statisches gleichgewicht mit rotation, dynamisches
-		 |				| fehlerinj konf senden
+		 |				| fehlerinj konf senden --> testen
 		 |				| ruckeln
 		 | ecc			| pakete > 255b
-		 | voter		| alles halt
-		 | algo			| vlt noch einen?
-		 |				| scheiÃbewegung (das ruckeln in unity &
+		 | algo			| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
 		 | thesis		| 
 		 |				| blender designen
 		 |				| vektorrechnung
 		 |				| im Text immer auf die Anforderungen beziehen
-		 |				| irgendwie vlt die Simulationsidee noch in die Aufgabenstellung?
 		 |				| was man fürs kompilieren braucht?
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
