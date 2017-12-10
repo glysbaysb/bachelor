@@ -149,7 +149,7 @@ Im Fehlermodell wurde spezifiziert das die Controller zu beliebigen Zeitpunkten 
 Um dies zu erm{\"{o}}glichen gibt es ein Shellskript, das die Controllerprogramme zu zuf{\"{a}}ligen Zeitpunkten beendet und wieder startet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
 Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
 offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
-\lstinputlisting{../fault_injector.sh}
+\lstinputlisting[language=Bash]{../fault_injector.sh}
 
 \subsection{Simulation}
 Auch innerhalb der Simulation soll es Fehler geben, zum Beispiel an den Robotermotoren. Desweiteren soll,
@@ -318,7 +318,7 @@ die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}
 Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
 
 \subsubsection{R{\"{a}}umliche Redudanz}
-Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}lig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
+Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}llig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
 Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
 sind kann eine ordnungsgem{\"{a}}{\ss}e Steuerung nicht mehr garantiert werden.
 
@@ -347,12 +347,12 @@ eines neuen Weltstatus das Steuerergebniss gebildet, weggesendet und der Vorgang
 Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos
 Flie{\ss}kommazahlen enthalten ist keine exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt werden.
 \noindent\begin{minipage}{.30\textwidth}
-\begin{lstlisting}[caption=Sammeln, frame=tlrb, language=c++]
+	\begin{lstlisting}[caption=Sammeln, frame=tlrb, language={[11]C++}]
 votes.res[id].push_back(Vector{x, y});
 \end{lstlisting}
 \end{minipage}\hfill
 \begin{minipage}{.60\textwidth}
-\begin{lstlisting}[caption=Auswahl, frame=tlrb, language=c++]
+\begin{lstlisting}[caption=Auswahl, frame=tlrb, language={[11]C++}]
 /* go through all robots */
 for(auto&& votes : votes.res) {
   /* vote */
