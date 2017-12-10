@@ -3,11 +3,21 @@
 
 \subsection{XX}
 event gesteuerte kommunikation.
-\todo{keine ahnung was hier hin soll.}
+\todo{mhm, irgendwie ne begruendung}
+anforderung 2, mehrere instanzen
 
 \subsection{Anzeige}\label{graphics}
-Um den Status der Simulation zu verfolgen, wird die simulierte Welt und die in ihr enthaltenen Objekte angezeigt. Dies geschieht mit dem gleichen Programm das die Simulation auch tats{\"{a}}chlich
-durchf{\"{u}}hrt, die Unity engine stellt die ben{\"{o}}tigte Funktionalit{\"{a}}t f{\"{u}}r beide Aufgaben bereit.
+F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten die diese Aufgabe l{\"{o}}sen
+sollen muss es m{\"{o}}glich sein einzusch{\"{a}}tzen wie der momentane Status der Simulation ist.
+Also wo befinden sich Roboter, wie voll sind sie, wie stark kippt die Platte? All dies soll auch, wie
+in \hyperref[anforderung]{Anforderung 5} festgelegt, visuell ansprechend sein.
+
+Da die Unity Engine auch eine vollwertige Grafikengine ist (dies war ja schliesslich ein Kriterium)
+kann diese Funktionalit{\"{a}}t genutzt werden. Das Simulationsprogramm ist nicht nur f{\"{u}}r die
+reine Simulation sondern auch f{\"{u}}r die Anzeige verantwortlich.
+
+Angezeigt wird eine kreisf{\"{o}}rmige Platte auf der sich die verschiedenen Roboter bewegen. Auch die
+Ladestation wird angezeigt.
 
 \paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
 geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
@@ -19,10 +29,12 @@ Platte visuell ausgeglichen werden k{\"{o}}nnte.
 
 \clearpage
 \section{Fehlermodell}\label{fm}
-\todo{bla bla warum?}
-Daf{\"{u}}r muss erst einmal ein Fehlermodell aufgestellt werden. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
-der Simulation sind hier die simulierte Welt mit ihren Robotern (und den dazugeh{\"{o}}rigen Motoren/Aktoren und Sensoren), die Kommunikationswege zwischen Voter und Controller
-und die Controller selbst.
+Das Ziel der Aufgabe ist es Studierenden etwas {\"{u}}ber ausfallsichere Systeme beizubringen. Daf{\"{u}}r
+muss auch etwas ausfallen, damit dann die Auswirkungen des Ausfalls abgemindert werden k{\"{o}}nnen.
+
+Im Fehlermodell wird festgelegt was alles -- und auf welche Weise -- ausfallen kann. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
+der Simulation sind hier die simulierte Welt mit ihren Robotern (und den dazugeh{\"{o}}rigen Motoren/Aktoren
+und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Controller selbst.
 
 \subsection{Roboter / Motoren}
 Die simulierten Roboter {\"{a}}hneln dem Khepera Roboter und haben daher 2 Motoren. Diese beiden Motoren k{\"{o}}nnen unabh{\"{a}}ngig von einander fehlerhaft sein. Fehlerhaft
@@ -37,10 +49,17 @@ hei{\ss}t hier:
 \end{itemize}
 
 Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
-bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Um verschiedene Schwierigkeitsstufen der Simulation zu erm{\"{o}}glichen ist es m{\"{o}}glich, einzustellen
-dass nur ein Motor pro Roboter, im Vergleich zu beiden, gleichzeitig Fehler aufweisen kann.
+bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Es soll m{\"{o}}glich sein verschiedene 
+Schwierigkeitsstufen der Simulation einzustellen. Daher ist es m{\"{o}}glich
+dass nur ein Motor pro Roboter gleichzeitig Fehler aufweisen kann.
 
 Aus dem gleichen Grund ist es parametresierbar wie viele Roboter gleichzeitig irgendeine Art von Fehler aufweisen k{\"{o}}nnen.
+
+Zus{\"{a}}tzlich zu diesen Fehler soll es auch m{\"{o}}glich sein einen Roboter fernzusteuern. W{\"{a}}hrend
+der Fernsteuerung darf dieser Roboter keine Steuerbefehle seines Voters ausf{\"{u}}hrend sonder wird rein
+vom Nuter gesteuert. Diese Art der Fehlerinjektion w{\"{u}}rde in Richtung byzantinische Fehler gehen,
+denn dies w{\"{u}}rde es erm{\"{o}}glichen gezielt die Platte zu destabilisieren oder Roboter zu
+blockieren.
 
 \subsection{Weltstatusinformationen}
 Die Roboter haben ihre Aktoren, um sich in der Welt zu bewegen. Damit sie sich sinnvoll bewegen und die Platte balanciert k{\"{o}}nnen, brauchen sie Informationen {\"{u}}ber den
@@ -96,11 +115,14 @@ falls, die Controller falsche Steuerkommandos senden, oder theoretisch richtige 
 
 \clearpage
 \section{Fehlerinjektion}
-Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt, wird eine Fehlerinjektion benutzt, um die Fehlertoleranz zu testen. Die hier
-simulierten Fehlerarten sind im \hyperref[fm]{Fehlermodell} beschrieben.
+Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquellen gibt, wird eine
+Fehlerinjektion benutzt, um die Fehlertoleranz zu testen. Die hier simulierten Fehlerarten 
+sind im \hyperref[fm]{Fehlermodell} beschrieben.
+
 In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
 unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
 
+Wie in \hyperref{anforderung}[Anforderung 3] spezifiert, sind alle Fehlerwahrscheinlichkeiten einstellbar.
 
 \subsection{Netzwerk}
 Die Kommunikation zwischen Voter und Controller ist nur {\"{u}}ber ein IP Netzwerk m{\"{o}}glich; f{\"{u}}r dieses Modul kann ein eigenes Netzwerk aufgebaut werden, in das eine
@@ -130,6 +152,10 @@ offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 \lstinputlisting{../fault_injector.sh}
 
 \subsection{Simulation}
+Auch innerhalb der Simulation soll es Fehler geben, zum Beispiel an den Robotermotoren. Desweiteren soll,
+laut Fehlermodell, auch die Fernsteuerung eines Roboters m{\"{o}}glich sein.
+
+\subsection{xxx}
 Laut \hyperref[fm]{Fehlermodell} k{\"{o}}nnen die Robotermotoren auf verschiedene Arten fehlerbehaftet sein und die Voter bekommen eventuell
 fehlerhafte, oder sogar gar keine, Informationen {\"{u}}ber den Status der Welt. Die Wahrscheinlichkeiten f{\"{u}}r diese verschiedenen F{\"{a}}lle
 werden in einer JSON Konfigurationsdatei angegeben. Die Simulation liest diese beim Start aus und ver{\"{a}}ndert\todo{doofes wort} dann w{\"{a}}hrend des laufenden Betriebes
@@ -169,7 +195,7 @@ der Badewannenkurve folgen. Bei der Badewannenkurve wird zus{\"{a}}tzlich zur Au
 \todo{temporaer sind jetzt nur quasi einen frame lang...}
 
 \subsubsection{Fernsteuerung}
-Der Benutzer soll einen Roboter fernsteuern k{\"{o}}nnen und damit direkten Einfluss auf die simulierte Welt haben. W{\"{a}}hrend ein Roboter
+Wie im \hyperref[fm]{Fehlermodell} festgelegt soll der Benutzer einen Roboter fernsteuern k{\"{o}}nnen und damit direkten Einfluss auf die simulierte Welt haben. W{\"{a}}hrend ein Roboter
 ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht,
 es gelten die gleichen Einschr{\"{a}}nkungen bei Geschwindigkeit und Rotation, und so weiter.
 
