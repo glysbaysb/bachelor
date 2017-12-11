@@ -35,6 +35,7 @@ static void createRobotCallback(void* optional, msgpack_object_array* params);
 static void moveRobotCallback(void* optional, msgpack_object_array* params);
 static void getFiCfg(void* ctx_);
 static void getFiCfgCallback(void* optional, msgpack_object_array* params);
+static void fakeWorldStatus(WorldStatus* ws);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -313,11 +314,7 @@ static void* networkHandler(void* ctx_) {
 			if((rand() % ctx->cfg.dropWorldStatus) == 0) {
 				goto CLEANUP;
 			} else if((rand() % ctx->cfg.fakeWorldStatus) == 0) {
-				/*ws->xTilt;
-				ws->yTilt;
-
-				ws->numOfObjects;
-				ws->objects;*/
+				fakeWorldStatus(ws);
 			}
 
 			ctx->getWorldStatusCallback(ws, ctx->additional);
@@ -488,4 +485,22 @@ static void getFiCfg(void* ctx_) {
 	handleRPC(ctx->rpc, reply, lenOut);
 
 	nn_freemsg(reply);
+}
+
+static void fakeWorldStatus(WorldStatus* ws) {
+	switch(rand() % 5) {
+	case 0:
+	case 1:
+		ws->xTilt += (rand() / rand());
+		break;
+	case 2:
+	case 3:
+		ws->yTilt += (rand() / rand());
+		break;
+	case 4:
+		/*				ws->numOfObjects;
+			ws->objects;*/
+		break;
+	}
+
 }
