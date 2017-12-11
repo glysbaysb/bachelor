@@ -183,6 +183,23 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 }
 \end{lstlisting}
 
+\paragraph{dropWorldStatus} Der Status der Welt kann, aus Sicht des Roboters, einfach nicht ankommen. Dies
+	ist ein \textit{omission fault}.
+\paragraph{dupWorldStatus} Des weiteren kann ein veralteter Weltstatus ein weiteres mal empfangen werden.
+    Hierbei handelt es sich allerdings immer um den jeweils letzten.
+\paragraph{fakeWorldStatus} Es ist auch m{\"{o}}glich das Daten zur richtigen Zeit ankommen, aber
+    verf{\"{a}}lscht wurden. Verf{\"{a}}lscht werden kann hierbei:
+	\begin{itemize}
+		\item X- und Y-Kippwinkel. Die Werte werden dabei maximal um $\pm XXX$ verf{\"{a}}lscht.
+		\item Die Daten maximal eines Roboters. Namentlich kann hierbei eine der folgenden Daten
+			ver{\"{a}}ndert werden:
+			\begin{itemize}
+				\item X- und Y-Koordinaten, um maximal
+				\item Das Gewicht um maximal
+				\item Der Ladezustand
+			\end{itemize}
+	\end{itemize}
+
 \subsubsection{Motor}
 Die zweite Kategorie von Fehlern sind die Ausf{\"{a}}le der Motoren. Direkt angegeben werden die maximale Anzahl an fehlerhaften Robotern und die maximale
 Anzahl an fehlerhaften Motoren pro Roboter. Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r oder permament fehlerbehaftet (Stuck At oder keinerlei Leitung) sein.
