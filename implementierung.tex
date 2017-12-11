@@ -155,11 +155,21 @@ offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
 Auch innerhalb der Simulation soll es Fehler geben, zum Beispiel an den Robotermotoren. Desweiteren soll,
 laut Fehlermodell, auch die Fernsteuerung eines Roboters m{\"{o}}glich sein.
 
-\subsubsection{xxx}
-Laut \hyperref[fm]{Fehlermodell} k{\"{o}}nnen die Robotermotoren auf verschiedene Arten fehlerbehaftet sein und die Voter bekommen eventuell
-fehlerhafte, oder sogar gar keine, Informationen {\"{u}}ber den Status der Welt. Die Wahrscheinlichkeiten f{\"{u}}r diese verschiedenen F{\"{a}}lle
-werden in einer JSON Konfigurationsdatei angegeben. Die Simulation liest diese beim Start aus und ver{\"{a}}ndert\todo{doofes wort} dann w{\"{a}}hrend des laufenden Betriebes
-die Robotermotoren. Ein Teil der Informationen muss an den Voter weitergegeben werden, daher fragt dieser beim Start automatisch die ben{\"{o}}tigten Daten ab.
+Laut \hyperref[fm]{Fehlermodell} k{\"{o}}nnen die Robotermotoren auf verschiedene Arten fehlerbehaftet
+sein und die Voter bekommen eventuell fehlerhafte, oder sogar gar keine, Informationen {\"{u}}ber
+den Status der Welt. Die Wahrscheinlichkeiten f{\"{u}}r diese verschiedenen F{\"{a}}lle
+werden in einer JSON Konfigurationsdatei angegeben. Die Simulation liest diese beim Start aus und 
+l{\"{a}}sst dann w{\"{a}}hrend des laufenden Betriebes die Robotermotoren ausfallen.
+Ein Teil der Informationen muss an den Voter weitergegeben werden, daher fragt dieser beim Start
+automatisch die ben{\"{o}}tigten Daten ab.
+
+
+\subsubsection{Weltstatus}
+Die echten \hyperref[khepera]{Kheperaroboter} haben verschiedene Sensoren (Infrarot, Ultraschall,
+odeometrische Motoren, eine Kamera, etc). In der echten Welt k{\"{o}}nnen auch diese Senoren fehlerhaft
+sein. Allerdings werden in der Simulation diese Sensoren nicht simuliert, die Roboter kriegen alle
+ben{\"{o}}tigten Informationen als Weltstatuspaket. Um die fehlerhafte Sensorik nachzuahmen, soll diese
+Informationen abge{\"{a}}ndert werden.
 
 Der Status der Welt der von der Simulation zum Voter geschickt wird kann, wie im \hyperref[fm]{Fehlermodell} angegeben, verf{\"{a}}scht werden, kann zeitweise gar
 nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrscheinlichkeiten f{\"{u}}r diese drei F{\"{a}}lle werden direkt angegeben.
@@ -173,6 +183,7 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 }
 \end{lstlisting}
 
+\subsubsection{Motor}
 Die zweite Kategorie von Fehlern sind die Ausf{\"{a}}le der Motoren. Direkt angegeben werden die maximale Anzahl an fehlerhaften Robotern und die maximale
 Anzahl an fehlerhaften Motoren pro Roboter. Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r oder permament fehlerbehaftet (Stuck At oder keinerlei Leitung) sein.
 Die Wahrscheinlichkeiten f{\"{u}}r diese beiden Fehlerarten werden getrennt angegeben und k{\"{o}}nnen entweder einer zeitunabh{\"{a}}nigen festen Wahrscheinlichkeit oder
