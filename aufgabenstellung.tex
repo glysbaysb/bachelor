@@ -59,9 +59,14 @@ Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gez
 \section{Die ausfallsichere Heizung}\label{heizung}
 Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, den einer kontrolliert
-beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe.
+beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
+
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
 die Arme treffen, ist die Klappe, die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
+
+Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
+der Rechner zugeordnet. Zus{\"{a}}tzlich hat der L{\"{u}}ftungsrechner einen Temperatursensor pro Arm zwischen L{\"{u}}fter und Heizung, und der Heizungsrechner jeweils
+einen Temperatursensor vor der Heizung.
 
 \begin{figure}
 	\centering
@@ -70,20 +75,42 @@ die Arme treffen, ist die Klappe, die den Luftstrom eines Arms ganz oder teilwei
 	\label{fig:heizunghw}
 \end{figure}
 
-Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
-der Rechner zugeordnet. Zus{\"{a}}tzlich hat der L{\"{u}}ftungsrechner einen Temperatursensor pro Arm zwischen L{\"{u}}fter und Heizung, und der Heizungsrechner jeweils
-einen Temperatursensor vor der Heizung.
+\subsection{XXX Benutzung? Gebrauch? Fehlermodell?}
+All diese Bestandteile k{\"{o}}nnen auf verschiedene Arten fehlerhaft sein, die Aufgabe der Studierenden ist es sich f{\"{u}}r die verschiedenen Fehlerkombinationen
+geeignete Strategien auszudenken um die Auswirkungen zu minimieren.
 
-Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
+Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, also sich nicht weiter aufheizen kann. Dies muss erst einmal erkannt werden, zum Beispiel
+durch den Vergleich des Soll-wertes der Heizungsansteuerung und den Temperaturen vor und hinter der Heizk{\"{o}}rper. Falls diese Temperaturen gleich sind,
+wurde die Luft die vom L{\"{u}}fter Richtung Ausgang bewegt wurde, nicht aufgew{\"{a}}rmt, ergo heizt dieser Heizk{\"{o}}rper nicht. Dann k{\"{o}}nnen sich die
+Rechner abstimmen wie sie die Temperatur trotzdem ansteigen lassen k{\"{o}}nnen, zum Beispiel ob der {\"{u}}brig gebliene Heizk{\"{o}}rper st{\"{a}}rker heizen
+soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
-alles was ausfallen kann.
-Diese Kommunikationswege oder sogar ganze Rechner k{\"{o}}nnen
-allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig, das
-System ausfallsicher zu planen, damit trotz des Ausfalls einer oder mehrerer Komponenten weiter geregelt wird.
+{\"{A}}hnlich ist es bei einem Ausfall der L{\"{u}}fter. Auch Doppelfehler sind m{\"{o}}glich, also das eine L{\"{u}}ftung und ein Heizk{\"{o}}rper ausfallen. Falls
+dies in unterschiedlichen {\"{A}}rmen passiert, kann sich ein Arm {\"{u}}berhitzen und besch{\"{a}}digt werden.
 
-\paragraph{Evaluation} Dieses System hat allerdings physikalische Beschr{\"{a}}nkungen, die es sehr tr{\"{a}}ge und damit als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen
-ungeeignet machen. Dieses f{\"{u}}hrt au{\ss}erdem dazu, dass nur eine Studentengruppe gleichzeitig das System benutzen kann. Da jeder Versuchsdurchlauf einige Minuten dauert, kommt es zu
-Koordinationsproblemen, was dazu f{\"{u}}hrt, dass die Studenten einen gro{\ss}en Teil der Zeit damit verbringen zu warten.
+Auch die Kommunikationswege k{\"{o}}nnen ausfallen. Was passiert wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
+Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden und I\textsuperscript{2}C nur
+als \textit{passive backup? cold standby?}. Oder einen {\"{U}}bertragungsweg nur f{\"{u}}r Daten und den anderen um zu signalisieren das dieser Rechner noch das
+Steuerprogramm ausf{\"{u}}hrt, wodurch erkannt werden kann das der Daten{\"{u}}bertragungsweg ausgefallen ist.
+
+Als letztes k{\"{o}}nnen auch die Temperatursensoren ausfallen. Im Luftausgangsstrom, wo drei Sensoren nebeneinander angeordnet sind, ist es m{\"{o}}glich den
+Ausfall eines Sensors anhand der Diskrepanz der Messergebnisse aller Sensoren zu erkennen. Eine m{\"{o}}gliche Strategie um die Ausgangstemperatur zu
+bestimmen w{\"{a}}re also die \textit{triple modular redudancy} auszunutzen und den Mittelwert aller nicht klar als fehlerhaft erkennbaren Sensoren zu bilden.
+Es ist auch denkbar die vorherigen Messwerte zu benutzen um, anhand unrealistischer Spr{\"{u}}nge der Messwerte, zu erkennen das ein Sensor einen fehlerhaften
+Messwert geliefert hat.
+
+Nat{\"{u}}rlich ist es auch denkbar das mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt erst ein Sensor, dann das Netzwerk aus und danach
+steckt die Klappt fest.
+
+\subsection{Evaluation} Dadurch das die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft ($ \approx (15*15*50)cm^3$) aufheizen muss,
+ist die Regelung sehr tr{\"{a}}ge. Damit ist es als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
+bis die Temperatur eingeregelt wurde, dann ein Fehler injeziert wurde (zum Beispiel eine Heizung ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert
+wurde.
+
+Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits das es bei gro{\ss}en Gruppen an Sch{\"{u}}lern unm{\"{o}}glich wird das alle etwas
+f{\"{u}}hlen k{\"{o}}nnen und andererseits, es durch die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet m{\"{u}}ssen
+alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die allermeiste Zeit mit warten und nur wenig Zeit mit produktiver
+Arbeit.
 
 \clearpage
 \section{Anforderungen}\label{anforderung}
@@ -95,7 +122,8 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
 		Arten der Fehlerinjektion ganz auschgeschaltet werden.
 	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
-	\item Die Simulation soll visuell ansprechend sein.
+	\item Es soll visuell ansprechend sein.
+	\item Es darf auch durch unsachgem{\"{a}}{\ss}en Gebrauch nicht gesch{\"{a}}digt werden
 \end{enumerate}
 
 \clearpage
