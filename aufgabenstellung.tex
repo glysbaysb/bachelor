@@ -21,7 +21,7 @@ Dies bietet enorme, jeden Tag ersichtlich werdene Vorteile, birgt jedoch auch Ri
 oder den Aufwand, die der "Nutzer" bew{\"{a}}ltigen muss, sinkt zwar (meistens), allerdings wird das
 System fehleranf{\"{a}}lliger. Es gibt mehr Komponenten, also kann mehr kaputt gehen.
 
-Zu einem Problem wird dies falls es um lebenswichtige (oder NOCH SCHLIMEMR: Geld) Bereiche wie die
+Zu einem Problem wird dies falls es um lebenswichtige Bereiche wie die
 Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnliches geht. Auch kleine Fehler dort k{\"{o}}nnen
 enorme Konsequen haben. 
 
@@ -30,10 +30,16 @@ Projektzeitplan einzuhalten, und gerade nicht-funktionalen Eigenschaften geniess
 bei diesen dem Kunden nicht unbedingt auffallen. Erschwerend kommt hinzu das oft auch einfach das Problembewusstsein oder auch nur die
 n{\"{o}}tigen Grundlagen fehlen um System wirklich ausfallsicher zu machen.
 
-\subsection{Aufgabenstellung} In dem Modul "Ausfallsichere Systeme" werden die verschiedenen Techniken und ihre Vor- und Nachteile
-erl{\"{a}}utert und verglichen. Um das neu erworbenes Wissen auch praktisch anwenden (und vertiefen) zu k{\"{o}}nnen, gibt es w{\"{a}}hrend des Semesters eine {\"{U}}bungsaufgabe.
+\subsection{Aufgabenstellung} In dem Modul "Ausfallsichere Systeme" soll den Studenten beigebracht werden wie sie ausfallsichere Systeme
+designen und implementieren k{\"{o}}nnen, um gerade solche Probleme zu vermeiden. Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und
+einen praktischen Teil (eine {\"{U}}bungsaufgabe). Die {\"{U}}bungsaufgabe soll eine M{\"{o}}glichkeit geben das theoretische Wissen anzuwenden.
+Dabei werden die Studenten aus den gelernten Techniken die richtigen f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen
+abw{\"{a}}gen und sie dann zu implementieren. Durch die praktische Anwendung wird das gelernte wiederholt und vertieft, was zu einem besseren
+Verst{\"{a}}ndnis f{\"{u}}hrt.
+
 Die Aufgabe dieser Bachelorarbeit ist die Konzeption der selbigen. Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt
-nutzbar sein und gerade auch Menschen ohne Fachkentnisse einen Einblick in die Komplexit{\"{a}}t geben.
+nutzbar sein und gerade auch Menschen ohne Fachkentnisse einen Einblick in die Komplexit{\"{a}}t ausfallsicherer Systeme geben, dabei aber trotzdem interessant
+sein.
 
 Dies f{\"{u}}hrte zur Idee eine Computersimulation zu entwickeln. Diese kann visuell ansprechend sein und bieten vielf{\"{a}}tige Interationsm{\"{o}}glichkeiten.
 
@@ -52,18 +58,26 @@ Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gez
 \clearpage
 \section{Die ausfallsichere Heizung}\label{heizung}
 Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
-L{\"{u}}fter und drei Temperatursensoren (jeweils einer an dem L{\"{u}}fter und Heizk{\"{o}}rper, einer im Ausgangsluftstrom) eine Temperatur zu regeln.
+L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, den einer kontrolliert
+beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe.
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
-die Arme treffen, ist eine Klappe, die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
+die Arme treffen, ist die Klappe, die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
-\paragraph{Systemaufbau} Die verschiedenen Komponenten h{\"{a}}ngen an drei verschiedenen Rechnern\footnote{jeweils mit eigenem Temperatursensor}:
-\begin{itemize}
-\item einem Rechner, der die Heizk{\"{o}}rper steuert
-\item einem Rechner, der die L{\"{u}}fter steuert
-\item einem Rechner, der die Klappe steuert
-\end{itemize}
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{HeizungHW}
+	\caption{Aktoren und Sensoren der Heizung}
+	\label{fig:heizunghw}
+\end{figure}
 
-Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren. Diese Kommunikationswege oder sogar ganze Rechner k{\"{o}}nnen
+Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
+der Rechner zugeordnet. Zus{\"{a}}tzlich hat der L{\"{u}}ftungsrechner einen Temperatursensor pro Arm zwischen L{\"{u}}fter und Heizung, und der Heizungsrechner jeweils
+einen Temperatursensor vor der Heizung.
+
+Diese Rechner k{\"{o}}nnen {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
+
+alles was ausfallen kann.
+Diese Kommunikationswege oder sogar ganze Rechner k{\"{o}}nnen
 allerdings zu jedem Zeitpunkt ausfallen; Auch die Sensoren und Aktoren (die Heizungen, die L{\"{u}}fter oder die Klappe) k{\"{o}}nnen ausfallen --- es ist also notwendig, das
 System ausfallsicher zu planen, damit trotz des Ausfalls einer oder mehrerer Komponenten weiter geregelt wird.
 
