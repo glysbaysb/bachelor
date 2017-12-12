@@ -128,12 +128,16 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 
 \clearpage
 \section{Die balancierenden Roboter}
-Um die M{\"{o}}glichkeiten des in \cite{Werner00} neu entwickelten CORE Systems zu testen wurde an der Humboldt Universit{\"{a}}t Berlin in Zusammenarbeit
-mit Daimler Benz eine Simulation entwickelt. Ziel dieser Simulation war es, eine simulierte Platte durch die Bewegung von simulierten
-Robotern auszubalancieren. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also aus dem Gleichgewicht. Die Roboter m{\"{u}}ssen sich nun so
+An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine Simulation\cite{Werner00} entwickelt. In der Simulation soll
+eine simulierte Platte durch die Bewegung von simulierten Robotern auszubalanciert werden. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also aus dem Gleichgewicht.
+Die Roboter m{\"{u}}ssen sich nun so
 bewegen, dass jede durch einen Roboter ausge{\"{u}}bte Kraft von einem anderen Roboter eliminiert wird. Damit es nicht m{\"{o}}glich ist, einmal eine Stellung einzunehmen,
 die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen Energiespeicher, der mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen
 solange sie noch Energiereserven haben, m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
+
+Das Ziel dieser Simulation war zu demonstrieren das auch in Echtzeitsystem eine Konsensfindung m{\"{o}}glich ist. Fall ein Ergebniss durch
+\textit{triple modular redudance} und einen Voter bestimmt werden soll, verh{\"{a}}hlt sich die naive Implementation im Falle eines \textit{timing faults} so das die
+Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. 
 
 Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba},
 w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
