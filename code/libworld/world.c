@@ -308,10 +308,9 @@ static void* networkHandler(void* ctx_) {
 			WorldStatus* ws = parseWorldStatus(buf, len);
 
 			/* fault injector */
-			printf("%d:%d\n", ctx->cfg.dropWorldStatus, ctx->cfg.dupWorldStatus);
-			if((rand() % ctx->cfg.dropWorldStatus) == 0) {
+			if(FAULT(ctx->cfg.dropWorldStatus)) {
 				goto CLEANUP;
-			} else if((rand() % ctx->cfg.fakeWorldStatus) == 0) {
+			} else if(FAULT(ctx->cfg.fakeWorldStatus)) {
 				fakeWorldStatus(ws);
 			}
 

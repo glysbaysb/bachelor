@@ -31,6 +31,8 @@ struct FiCfg {
 
 void fakeWorldStatus(WorldStatus* ws);
 void getFiCfgCallback(void* optional, msgpack_object_array* params);
+
+#define FAULT(probability) (probability == 0 ? 0 : (rand() % probability == 0))
 #ifdef __cplusplus
 }
 #endif
