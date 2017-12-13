@@ -6,6 +6,28 @@
 
 #include "ficfg.h"
 
+static void fakeObject(SimulationObject* o) {
+	const int sign = rand() % 2 == 0 ? 1 : -1;
+
+	switch(rand() % 5) {
+	case 0:
+		o->x += sign * (rand() % 50000) / 10000.;
+		break;
+	case 1:
+		o->y += sign * (rand() % 50000) / 10000.;
+		break;
+	case 2:
+		o->rotation += sign * (rand() % 70000) / 10000.;
+		break;
+	case 3:
+		o->m += sign * (rand() % 50000) / 10000.;
+		break;
+	case 4:
+		o->fuel += sign * (rand() % 50);
+		break;
+	}
+}
+
 void fakeWorldStatus(WorldStatus* ws) {
 	const int sign = rand() % 2 == 0 ? 1 : -1;
 
@@ -18,10 +40,13 @@ void fakeWorldStatus(WorldStatus* ws) {
 	case 3:
 		ws->yTilt += sign * (rand() % 20000) / 10000.;
 		break;
-	case 4:
-		/*				ws->numOfObjects;
-			ws->objects;*/
+	case 4: {
+		size_t idx = rand() % ws->numOfObjects;
+		SimulationObject * o = &ws->objects[idx];
+		fakeObject(o);
+
 		break;
+	}
 	}
 
 }

@@ -190,14 +190,17 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 \paragraph{fakeWorldStatus} Es ist auch m{\"{o}}glich das Daten zur richtigen Zeit ankommen, aber
     verf{\"{a}}lscht wurden. Verf{\"{a}}lscht werden kann hierbei:
 	\begin{itemize}
-		\item X- und Y-Kippwinkel. Dabei wird einer der Werte um maximal $\pm 2\textdegree$ verf{\"{a}}lscht.
+		\item X- und Y-Kippwinkel. Dabei wird einer der Werte um maximal $\pm 2\textdegree$ verf{\"{a}}lscht. Die Verf{\"{a}}lschung geschieht in 40\% der F{\"{a}}lle.
 		\item Die Daten maximal eines Roboters. Namentlich kann hierbei eine der folgenden Daten
 			ver{\"{a}}ndert werden:
 			\begin{itemize}
-				\item X- und Y-Koordinaten, um maximal
-				\item Das Gewicht um maximal
-				\item Der Ladezustand
+				\item X- oder Y-Koordinaten, um maximal $\pm 5$ Einheiten
+				\item Die Rotation, um maximal $\pm 7\textdegree$
+				\item Das Gewicht um maximal $\pm 5$ Einheiten
+				\item Der Ladezustand um maximal $\pm 50$ Einheiten
 			\end{itemize}
+			Jede dieser Verf{\"{a}}lschungsarten ist gleich wahrscheinlich, sie liegen also bei 20\%.
+		\item Die Daten der Ladestation, nach den gleichen Regeln wie f{\"{u}}r den Roboter
 	\end{itemize}
 
 \subsubsection{Motor}
