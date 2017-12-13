@@ -104,7 +104,7 @@ Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Infor
 Dies hat drei gro{\ss}e Vorteile. Es gibt eine r{\"{a}}umliche Trennung, das hei{\ss}t der Publisher muss
 nichts {\"{u}}ber die Subscriber (zum Beispiel Anzahl, IP Adresse) und andersrum wissen. Es reicht
 wenn beide wissen wo sie sich "treffen" k{\"{o}}nnen. Als zweites gibt es eine zeitliche Trennung zwischen
-den Kommunikationspartner --- der Publisher kann Nachrichten verschicken ohne sich dar{\"{u}}ber Gedanken
+den Kommunikationspartner -- der Publisher kann Nachrichten verschicken ohne sich dar{\"{u}}ber Gedanken
 machen zu m{\"{u}}ssen wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
 uninteressant ist wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
 Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes. Die Nachrichten werden Daten
@@ -169,7 +169,7 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 \clearpage
 \section{Serialisierung}
 Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben, der Rest der Arbeit soll in C geschreiben werden. Die Verwendung verschiedener Sprachen erschwert die Benutzung eines
-Bin{\"{a}}rprotokoll --- aus diesem Grund werden die Daten serialisiert.
+Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist, dass es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
@@ -203,7 +203,7 @@ Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
 Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
 \paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite (zum Beispiel 64bit) Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
-\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} \approx 6\% $.
+\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an -- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} \approx 6\% $.
 
 L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert, beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.
 In diesem Fall folgt die L{\"{a}}ng als 32bit big endian

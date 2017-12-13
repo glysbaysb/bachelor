@@ -14,7 +14,7 @@ das Geld wird elektronisch {\"{u}}berwiesen, anstatt in einer Lohnt{\"{u}}te aus
 Und um herauszufinden ob der Lohn angekommen ist benutzt man Onlinebanking, wobei eine
 unm{\"{o}}glich absch{\"{a}}tzbare Anzahl an vernetzten Computern beteiligt ist. Auch komplett ohne Technik
 durchf{\"{u}}hrbare Freizeitaktivit{\"{a}}ten wie das Kegeln sind heute ohne Computerunterst{\"{u}}tzung
-kaum noch vorstellbar --- in den Kegelbahnen z{\"{a}}hlt ein Computer f{\"{u}}r jeden Spieler mit wie viele
+kaum noch vorstellbar -- in den Kegelbahnen z{\"{a}}hlt ein Computer f{\"{u}}r jeden Spieler mit wie viele
 Punkte erreicht wurden und stellt die umgeworfenen Kegel automatisch wieder auf.
 
 Dies bietet enorme, jeden Tag ersichtlich werdene Vorteile, birgt jedoch auch Risiken. Die Komplexit{\"{a}}t,
@@ -89,12 +89,12 @@ soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
 {\"{A}}hnlich ist es bei einem Ausfall der L{\"{u}}fter. 
 
-Um die Kommunikation zu testen k{\"{o}}nnen auch die Kommunikationswege k{\"{o}}nnen ausfallen\footnote{Hierbei
+Um die Kommunikation zu testen k{\"{o}}nnen auch die Kommunikationswege ausfallen\footnote{Hierbei
 wird das LAN-Kabel aus dem Switch gezogen, wodurch dieser Rechner keine Verbindung mehr zu den anderen hat.
 Das gleiche gilt f{\"{u}}r die I\textsuperscript{2}C Leitungen}.
 Was passiert wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
 Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden
-und I\textsuperscript{2}C nur als \textit{host standby}. Alternativ wird ein {\"{U}}bertragungsweg nur
+und I\textsuperscript{2}C nur als \textit{hot standby}. Alternativ wird ein {\"{U}}bertragungsweg nur
 f{\"{u}}r Daten genutzt und der anderen um zu signalisieren das dieser Rechner noch das
 Steuerprogramm ausf{\"{u}}hrt. Der Ausfall einer der beiden Leitung kann anhand der Aktivit{\"{a}}t auf der
 anderen erkannt werden.
@@ -166,7 +166,7 @@ entwickelt werden.
 
 Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen,
 bewegen. Dies ist aber bei den meisten Robotern nicht der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, dass sich
-Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische
+Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen Gleichgewichte -- auch dies eine unrealistische
 Vereinfachung gegen{\"{u}}ber der echten Welt. Die physikalische Simulation m{\"{u}}sste also erweitert werden.
 
 Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf NeXTStep Rechner entwickelt -- diese existieren an der
@@ -198,7 +198,7 @@ Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass au
 (Abh{\"{a}}ngig vom Verh{\"{a}}ltnis der Anzahl der Controller zur Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
 
 Die Voter und Controller laufen auf Virtuellen Maschinen, jeweils eine VM pro Voter- oder Controllerinstanz.
-Diese VMs befinden sich in einem Netzwerk, dass durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist.
+Diese VMs befinden sich in einem Netzwerk, dass durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht -- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist.
 Es wird vorgegeben, dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen, sie soll nicht verf{\"{a}}lscht werden.
 
 \begin{figure}
