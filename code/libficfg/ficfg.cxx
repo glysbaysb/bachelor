@@ -7,14 +7,16 @@
 #include "ficfg.h"
 
 void fakeWorldStatus(WorldStatus* ws) {
+	const int sign = rand() % 2 == 0 ? 1 : -1;
+
 	switch(rand() % 5) {
 	case 0:
 	case 1:
-		ws->xTilt += (rand() % 20000) / 10000.;
+		ws->xTilt += sign * (rand() % 20000) / 10000.;
 		break;
 	case 2:
 	case 3:
-		ws->yTilt += (rand() % 20000) / 10000.;
+		ws->yTilt += sign * (rand() % 20000) / 10000.;
 		break;
 	case 4:
 		/*				ws->numOfObjects;
