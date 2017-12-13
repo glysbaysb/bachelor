@@ -29,6 +29,7 @@ typedef struct WorldContext_ {
 	} createRobot;
 
 	struct FiCfg cfg;
+	WorldStatus* ws; //! saved between invocations for dupWorldStatus
 } WorldContext;
 
 static void createRobotCallback(void* optional, msgpack_object_array* params);
@@ -305,19 +306,20 @@ static void* networkHandler(void* ctx_) {
 			assert(len > 0);
 			pfd[1].revents = 0;
 
-			WorldStatus* ws = parseWorldStatus(buf, len);
+			ctx->ws = parseWorldStatus(buf, len);
 
 			/* fault injector */
 			if(FAULT(ctx->cfg.dropWorldStatus)) {
 				goto CLEANUP;
 			} else if(FAULT(ctx->cfg.fakeWorldStatus)) {
-				fakeWorldStatus(ws);
+				fakeWorldStatus(ctx->ws);
+			} else if(FAULT(ctx->cfg.dupWorldStatus)) {
 			}
 
-			ctx->getWorldStatusCallback(ws, ctx->additional);
+			ctx->getWorldStatusCallback(ctx->ws, ctx->additional);
 CLEANUP:
-			if(ws) {
-				free(ws);
+			if(ctx->ws) {
+				free(ctx->ws);
 			}
 
 		}
