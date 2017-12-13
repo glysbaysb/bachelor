@@ -1,4 +1,4 @@
-latex: ../doku.tex ../lit.bib
+latex: ../doku.tex ../lit.bib ../implementierung.tex ../grundlagen.tex ../aufgabenstellung.tex ../glossary.tex
 	pdflatex ../doku.tex 
 	makeglossaries doku
 	biber doku
