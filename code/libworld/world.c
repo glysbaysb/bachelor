@@ -306,22 +306,23 @@ static void* networkHandler(void* ctx_) {
 			assert(len > 0);
 			pfd[1].revents = 0;
 
-			ctx->ws = parseWorldStatus(buf, len);
+			WorldStatus* new = parseWorldStatus(buf, len);
+			assert(new);
 
 			/* fault injector */
 			if(FAULT(ctx->cfg.dropWorldStatus)) {
-				goto CLEANUP;
+				/* intentionally left empty */
 			} else if(FAULT(ctx->cfg.fakeWorldStatus)) {
-				fakeWorldStatus(ctx->ws);
+				fakeWorldStatus(new);
+				ctx->getWorldStatusCallback(new, ctx->additional);
 			} else if(FAULT(ctx->cfg.dupWorldStatus)) {
+				ctx->getWorldStatusCallback(ctx->ws, ctx->additional);
 			}
 
-			ctx->getWorldStatusCallback(ctx->ws, ctx->additional);
-CLEANUP:
 			if(ctx->ws) {
 				free(ctx->ws);
 			}
-
+			ctx->ws = new;
 		}
 
 		if(buf) {
