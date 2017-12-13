@@ -102,7 +102,7 @@ Messwert geliefert hat.
 Nat{\"{u}}rlich ist es auch denkbar das mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt erst ein Sensor, dann das Netzwerk aus und danach
 steckt die Klappt fest.
 
-\subsection{Evaluation} Dadurch das die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft ($ \approx (15*15*50)cm^3$) aufheizen muss,
+\subsection{Evaluation} Dadurch das die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft ($ \approx (13*13*55)cm^3$) aufheizen muss,
 ist die Regelung sehr tr{\"{a}}ge. Damit ist es als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
 bis die Temperatur eingeregelt wurde, dann ein Fehler injeziert wurde (zum Beispiel eine Heizung ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert
 wurde.
@@ -136,20 +136,31 @@ die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen
 solange sie noch Energiereserven haben, m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
 
 Das Ziel dieser Simulation war zu demonstrieren das auch in Echtzeitsystem eine Konsensfindung m{\"{o}}glich ist. Fall ein Ergebniss durch
-\textit{triple modular redudance} und einen Voter bestimmt werden soll, verh{\"{a}}hlt sich die naive Implementation im Falle eines \textit{timing faults} so das die
+\textit{triple modular redudancy} und einen Voter bestimmt werden soll, verh{\"{a}}hlt sich die naive Implementation im Falle eines \textit{timing faults} so das die
 Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. 
 
-Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem und kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba},
-w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann.
+\subsection{XX}
+Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf
+einem Windowsrechner laufen kann. Die Teilnehmern kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}. CORBA ist ein Standart {\"{u}}ber den Programme auf
+mehreren Rechnern miteinander kommunizieren k{\"{o}}nnen, auch falls sie mit verschiedenen Programmiersprachen geschrieben wurden. Zus{\"{a}}tzlich zur reinen RPC
+Funktionalit{\"{a}}t abstrahiert es, unter anderem, Transkationen und Zeitsynchronisation.
 
-\paragraph{Evaluation} Die Einarbeitung in COBRA k{\"{o}}nnte vom tats{\"{a}}chlichen Lernstoff ablenken und das ganze unn{\"{o}}tig verkomplizieren; da COBRA auch nur noch
-wenig genutzt wird, ist der Mehraufwand nicht zu rechtfertigen. Des weiteren ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r:
-die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern nicht
-der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, dass sich Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren
-gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische Vereinfachung gegen{\"{u}}ber der echten Welt.
+In das System k{\"{o}}nnen Fehler injeziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden oder die Controller k{\"{o}}nnen. \todo{}
 
-Da das Simulationsprogramm in den Neunzigern auf NeXTStep Rechnern entwickelt wurde, l{\"{a}}uft es auch nur auf diesen. Leider existieren solche Rechner in der Fachhochschule
-S{\"{u}}dwestfalen nicht, das Programm m{\"{u}}sste also erst portiert werden.
+\subsection{Evaluation} 
+Die Simulationsidee an sich w{\"{u}}rde den Anforderungen entsprechen, sie unterscheidet sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
+gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Ein erster Kritikpunk ist das Anzeige nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu
+entwickelt werden.
+
+Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen,
+bewegen. Dies ist aber bei den meisten Robotern nicht der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, dass sich
+Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen Gleichgewichte --- auch dies eine unrealistische
+Vereinfachung gegen{\"{u}}ber der echten Welt. Die physikalische Simulation m{\"{u}}sste also erweitert werden.
+
+Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf NeXTStep Rechner entwickelt -- diese existieren an der
+Fachhochschule S{\"{u}}dwestfalen nicht, das Programm m{\"{u}}sste also erst portiert werden. Auch wird CORBA heutzutage nur noch wenig genutzt, also ist der Aufwand
+um sich in den Standart einzuarbeiten und sein Programm basierend auf diesem zu entwickeln nicht vertretbar. Gerade auch unter dem Gesichtspunkt das die Ausfallsicherheit
+im Vordergrund stehen sollte und nicht die Einarbeitung in einen Standart.
 
 Aus all diesen Gr{\"{u}}nden wurde entschieden eine neue {\"{U}}bungsaufgabe zu entwickeln.
 

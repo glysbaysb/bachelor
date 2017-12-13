@@ -3,9 +3,10 @@ Zeitplan
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
 09-17	 | unity		| roboter designen + lampe + rauch
-         |fehlerinjektor| was tuen bei wahrscheinlichkeit = 0?
 		 | unity		| statisches gleichgewicht mit rotation, dynamisches
-		 |				| fehlerinj konf senden --> testen
+		 |				| fehlerinj konf senden --> testen.
+								wahrschienlichkeit = 0
+								ob das ueberhaupt jemals passieren wird
 		 |				| ruckeln
 		 | ecc			| pakete > 255b
 		 | algo			| scheiÃbewegung (das ruckeln in unity &
