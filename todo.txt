@@ -18,6 +18,8 @@ Deadline | Module		|	was
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
+gtest
+
 fixe ideen
 ----------
 die Daten die empfangen werden, vergleichen mit den selbst berechneten. Falls zu krasser

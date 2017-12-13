@@ -28,6 +28,9 @@ struct FiCfg {
 		   dupWorldStatus; //! probability is 1 in dupWorldStatus
 };
 
+
+void fakeWorldStatus(WorldStatus* ws);
+void getFiCfgCallback(void* optional, msgpack_object_array* params);
 #ifdef __cplusplus
 }
 #endif

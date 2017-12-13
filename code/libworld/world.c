@@ -34,8 +34,6 @@ typedef struct WorldContext_ {
 static void createRobotCallback(void* optional, msgpack_object_array* params);
 static void moveRobotCallback(void* optional, msgpack_object_array* params);
 static void getFiCfg(void* ctx_);
-static void getFiCfgCallback(void* optional, msgpack_object_array* params);
-static void fakeWorldStatus(WorldStatus* ws);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -202,7 +200,7 @@ static int initalizeRPC(WorldContext* wc) {
 		return -3;
 	}
 
-	if(addProcedure(wc->rpc, GET_FI_CFG, &getFiCfgCallback, wc) < 0) {
+	if(addProcedure(wc->rpc, GET_FI_CFG, &getFiCfgCallback, &wc->cfg) < 0) {
 		return -4;
 	}
 
@@ -454,18 +452,6 @@ int createRobot(void* ctx_) {
 	return ctx->createRobot.id;
 }
 
-static void getFiCfgCallback(void* optional, msgpack_object_array* params) {
-	WorldContext* ctx = (WorldContext*)optional;
-
-	assert(params->size == 3);
-	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	ctx->cfg.dropWorldStatus = params->ptr[0].via.i64;
-	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	ctx->cfg.dupWorldStatus = params->ptr[1].via.i64;
-	assert(params->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[2].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	ctx->cfg.fakeWorldStatus = params->ptr[2].via.i64;
-}
-
 static void getFiCfg(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
@@ -485,22 +471,4 @@ static void getFiCfg(void* ctx_) {
 	handleRPC(ctx->rpc, reply, lenOut);
 
 	nn_freemsg(reply);
-}
-
-static void fakeWorldStatus(WorldStatus* ws) {
-	switch(rand() % 5) {
-	case 0:
-	case 1:
-		ws->xTilt += (rand() % 20000) / 10000.;
-		break;
-	case 2:
-	case 3:
-		ws->yTilt += (rand() % 20000) / 10000.;
-		break;
-	case 4:
-		/*				ws->numOfObjects;
-			ws->objects;*/
-		break;
-	}
-
 }

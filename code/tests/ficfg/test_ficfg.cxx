@@ -15,6 +15,8 @@
 #include <vector>
 #include <chrono>
 
+#include <msgpack.h>
+#include <libworld/world.h>
 #include <libficfg/ficfg.h>
 
 class FicfgTest : public ::testing::Test {
