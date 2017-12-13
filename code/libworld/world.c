@@ -491,11 +491,11 @@ static void fakeWorldStatus(WorldStatus* ws) {
 	switch(rand() % 5) {
 	case 0:
 	case 1:
-		ws->xTilt += (rand() / rand());
+		ws->xTilt += (rand() % 20000) / 10000.;
 		break;
 	case 2:
 	case 3:
-		ws->yTilt += (rand() / rand());
+		ws->yTilt += (rand() % 20000) / 10000.;
 		break;
 	case 4:
 		/*				ws->numOfObjects;
