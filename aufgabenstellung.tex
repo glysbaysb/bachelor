@@ -79,19 +79,25 @@ einen Temperatursensor vor der Heizung.
 All diese Bestandteile k{\"{o}}nnen auf verschiedene Arten fehlerhaft sein, die Aufgabe der Studierenden ist es sich f{\"{u}}r die verschiedenen Fehlerkombinationen
 geeignete Strategien auszudenken um die Auswirkungen zu minimieren.
 
-Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, also sich nicht weiter aufheizen kann. Dies muss erst einmal erkannt werden, zum Beispiel
+Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, beziehungsweise das dem
+Heizk{\"{o}}rper ein Fehler injeziert wird\footnote{In diesem Fall wird die Stromversorgung gekappt},
+also sich nicht weiter aufheizen kann. Dies muss erst einmal erkannt werden, zum Beispiel
 durch den Vergleich des Soll-wertes der Heizungsansteuerung und den Temperaturen vor und hinter der Heizk{\"{o}}rper. Falls diese Temperaturen gleich sind,
 wurde die Luft die vom L{\"{u}}fter Richtung Ausgang bewegt wurde, nicht aufgew{\"{a}}rmt, ergo heizt dieser Heizk{\"{o}}rper nicht. Dann k{\"{o}}nnen sich die
 Rechner abstimmen wie sie die Temperatur trotzdem ansteigen lassen k{\"{o}}nnen, zum Beispiel ob der {\"{u}}brig gebliene Heizk{\"{o}}rper st{\"{a}}rker heizen
 soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
-{\"{A}}hnlich ist es bei einem Ausfall der L{\"{u}}fter. Auch Doppelfehler sind m{\"{o}}glich, also das eine L{\"{u}}ftung und ein Heizk{\"{o}}rper ausfallen. Falls
-dies in unterschiedlichen {\"{A}}rmen passiert, kann sich ein Arm {\"{u}}berhitzen und besch{\"{a}}digt werden.
+{\"{A}}hnlich ist es bei einem Ausfall der L{\"{u}}fter. 
 
-Auch die Kommunikationswege k{\"{o}}nnen ausfallen. Was passiert wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
-Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden und I\textsuperscript{2}C nur
-als \textit{passive backup? cold standby?}. Oder einen {\"{U}}bertragungsweg nur f{\"{u}}r Daten und den anderen um zu signalisieren das dieser Rechner noch das
-Steuerprogramm ausf{\"{u}}hrt, wodurch erkannt werden kann das der Daten{\"{u}}bertragungsweg ausgefallen ist.
+Um die Kommunikation zu testen k{\"{o}}nnen auch die Kommunikationswege k{\"{o}}nnen ausfallen\footnote{Hierbei
+wird das LAN-Kabel aus dem Switch gezogen, wodurch dieser Rechner keine Verbindung mehr zu den anderen hat.
+Das gleiche gilt f{\"{u}}r die I\textsuperscript{2}C Leitungen}.
+Was passiert wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
+Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden
+und I\textsuperscript{2}C nur als \textit{host standby}. Alternativ wird ein {\"{U}}bertragungsweg nur
+f{\"{u}}r Daten genutzt und der anderen um zu signalisieren das dieser Rechner noch das
+Steuerprogramm ausf{\"{u}}hrt. Der Ausfall einer der beiden Leitung kann anhand der Aktivit{\"{a}}t auf der
+anderen erkannt werden.
 
 Als letztes k{\"{o}}nnen auch die Temperatursensoren ausfallen. Im Luftausgangsstrom, wo drei Sensoren nebeneinander angeordnet sind, ist es m{\"{o}}glich den
 Ausfall eines Sensors anhand der Diskrepanz der Messergebnisse aller Sensoren zu erkennen. Eine m{\"{o}}gliche Strategie um die Ausgangstemperatur zu
@@ -99,8 +105,10 @@ bestimmen w{\"{a}}re also die \textit{triple modular redudancy} auszunutzen und 
 Es ist auch denkbar die vorherigen Messwerte zu benutzen um, anhand unrealistischer Spr{\"{u}}nge der Messwerte, zu erkennen das ein Sensor einen fehlerhaften
 Messwert geliefert hat.
 
-Nat{\"{u}}rlich ist es auch denkbar das mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt erst ein Sensor, dann das Netzwerk aus und danach
-steckt die Klappt fest.
+Nat{\"{u}}rlich ist es auch denkbar das mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt
+erst ein Sensor, dann das Netzwerk aus und danach steckt die Klappt fest.
+Gerade bei Doppelfehlern in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen {\"{A}}rmen 
+ausfallen gibt es die Gefahr das sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
 
 \subsection{Evaluation} Dadurch das die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft ($ \approx (13*13*55)cm^3$) aufheizen muss,
 ist die Regelung sehr tr{\"{a}}ge. Damit ist es als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
@@ -111,6 +119,10 @@ Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits das es bei
 f{\"{u}}hlen k{\"{o}}nnen und andererseits, es durch die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet m{\"{u}}ssen
 alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die allermeiste Zeit mit warten und nur wenig Zeit mit produktiver
 Arbeit.
+
+Das letzes Problem ist das die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- also wenn sie sich zu sehr aufheizt --
+besch{\"{a}}digt, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Danach muss sie erst aufw{\"{a}}ndig
+repariert werden und ist in der Zwischenzeit nicht benutzbar.
 
 \clearpage
 \section{Anforderungen}\label{anforderung}
