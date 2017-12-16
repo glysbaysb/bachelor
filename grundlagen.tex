@@ -9,16 +9,19 @@ Anstatt solch eine Engine selbst zu implementieren, wird eine vorhandene genomme
 
 Um die sehr gro{\ss}e Auswahl einzuschr{\"{a}}nken, wurden die nachfolgenden Kriterien benutzt.
 
-\paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein; dies schliesst, zum Beispiel, die CryEngine\cite{cryengine} automatisch aus.
+\paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein;
+dies schlie{\ss}t zum Beispiel die CryEngine\cite{cryengine} automatisch aus.
 
-\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
+\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf
+ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
 
-\paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten, zus{\"{a}}tzlich zur reinen 3D Engine, auch eine Physikengine und eine Audioengine.
+\paragraph{Funktionalit{\"{a}}t} Eine Untermenge der 3D Engines sind \textit{game engines}, diese beeinhalten 
+zus{\"{a}}tzlich zur reinen 3D Engine auch eine Physikengine und eine Audioengine.
 Durch die Art der Simulation ist ersichtlich, dass eine Physikengine viel Arbeit ersparen k{\"{o}}nnte, gerade im Hinblick auf Beschleunigung, Bewegung oder Kollisionserkennung. Daher werden \textit{game engines} reinen 3D Engines (wie Blender) vorgezogen.
 
-\paragraph{\todo{namen finden}} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
+\paragraph{Einfache Benutzung} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
-Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation und schließlich wie verbreitet diese
+Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schließlich wie verbreitet diese
 \textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
 Gerade in diesem Punkt stach Unity hervor und wurde deshalb als Basis f{\"{u}}r diese Arbeit ausgew{\"{a}}hlt.
@@ -40,46 +43,51 @@ verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra 
 Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 
 \begin{itemize}
-\item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren und andererseits zur Erkennung des Kontaktes mit der F{\"{u}}llstation
+\item die Kollisionserkennung, einerseits um zu bestrafen wenn Roboter in einander fahren,
+	und andererseits zur Erkennung des Kontaktes mit der F{\"{u}}llstation
 \item die Bewegung der Objekte in der Welt zu simulieren, abh{\"{a}}ngig von ihrem Gewicht und ihrer Geschwindigkeit
 \end{itemize}
 
 \subsection{Scripting bei Unity}
-Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, daf{\"{u}} k{\"{o}}nnen
+Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, daf{\"{u}}r k{\"{o}}nnen
 die Skriptsprachen C\#, JavaScript und Boo genutzt werden.\cite{wiki:unity}
-Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich alle Eigenschaften
-der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
+Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich, alle Eigenschaften
+der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera
+oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet, dass solange ein Objekt mit dieser kollidiert, testet, ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
 \clearpage
 \section{RPC}
-Der Grundgedanke von verteilten System ist es das die verschiedenen Systeme verschiedene Aufgaben
-erledigen. Oft gibt es aber Abh{\"{a}}ngigkeiten zwischen Aufgaben (Aufgabe A muss beendet werden
+Der Grundgedanke von verteilten System ist es, verschiedene Systeme verschiedene Aufgaben
+erledigen zu lassen. Oft gibt es aber Abh{\"{a}}ngigkeiten zwischen Aufgaben (Aufgabe A muss beendet werden
 bevor Aufgabe B angefangen werden kann, zum Beispiel weil das Ergebniss von A f{\"{u}}r B wichtig
 ist) oder die Ergebnisse von mehreren System m{\"{u}}ssen zusammengef{\"{u}}hrt werden. Zwischen
-den Systemen muss also eine Synchronisation und Kommunikation m{\"{o}}glich sein. Die Kommunikation
+den Systemen muss also eine Synchronisation und Kommunikation m{\"{o}}glich sein.
+
+Die Kommunikation
 an sich kann {\"{u}}ber verschiedene {\"{U}}bertragungsmedien erfolgen, allerdings muss die
 Kommunikation an die spezifischen Anforderungen der Applikation angepasst werden. Zum Beispiel
-ist die Kommunikation zwischen System die komplexe Wettermodelle berechnen eine andere als die
-Kommunikation um Konsistenz zwischen verteilten Datenbankinstanzen herzustellen.\todo{kann ich das einfach
+ist die Kommunikation zwischen Systemen die komplexe Wettermodelle berechnen, eine andere als die
+Kommunikation, um Konsistenz zwischen verteilten Datenbankinstanzen herzustellen.\todo{kann ich das einfach
 behaupten?}
 
 Abhilfe schaffen \textit{remote procedure call}, mit denen es f{\"{u}}r die verschiedenen Netzwerkteilnehmer
-so wirkt als k{\"{o}}nnten sie auf den anderen Netzwerkteilnehmern Funktionen direkt aufrufen.
+so wirkt, als k{\"{o}}nnten sie auf den anderen Netzwerkteilnehmern Funktionen direkt aufrufen. Welche
+Funktionen dies sind, h{\"{a}}ngt von der jeweiligen Anwendung ab.
 
 \todo{tja, ka. irgendwie mehr halt}
 
 \clearpage
 \section{Interaktionsmuster}
 In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
-ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen, so wie auch menschliche
-Kommunikation.
+ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
+werden diese Mustern mit menschlicher Kommunikation verglichen.
 
 \subsection{Request-Reply}
 Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
-ist das normaleste das einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
+ist meistens so das einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
 und \textit{reply}.
 
 Diese Form der Kommunikation ist gut geeignet f{\"{u}} Client-Server Kommunikation wie das
@@ -91,24 +99,24 @@ auf leicht unterschiedlichen Informationen, was zu Problemen f{\"{u}}hren kann.
 Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
 
 Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten. Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
-Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es die Kommunikation {\"{u}}ber UDP Broadcasts
-laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht kriegen ohne
-das sich der Sender darum k{\"{u}}mmern muss an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
-Voter aber in unterschiedlichen Subnetzen sein k{\"{o}}nnen ist dies nicht m{\"{o}}glich.
+Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es, die Kommunikation {\"{u}}ber UDP Broadcasts
+laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht empfangen, ohne
+dass sich der Sender darum k{\"{u}}mmern muss an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
+Voter aber in unterschiedlichen Subnetzen sein k{\"{o}}nnen, ist dies nicht m{\"{o}}glich.
 
 Abhilfe schafft das Publish-Subscribe Kommunikationspattern\cite{pubsub}. Dort gibt es einen Publisher (in
 diesem Fall die Simulation) und Subscriber (die Voter/Roboter). Die Subscriber verbinden sich mit dem
-Publisher und teilen ihm mit welche Art von Nachrichten sie interessiert. Der Publisher verteilt dann die
+Publisher und teilen ihm mit, welche Art von Nachrichten sie interessiert. Der Publisher verteilt dann die
 Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Informationen an alle Subscriber zu denen momentan ein Kontakt m{\"{o}}glich ist.
 
 Dies hat drei gro{\ss}e Vorteile. Es gibt eine r{\"{a}}umliche Trennung, das hei{\ss}t der Publisher muss
 nichts {\"{u}}ber die Subscriber (zum Beispiel Anzahl, IP Adresse) und andersrum wissen. Es reicht
 wenn beide wissen wo sie sich "treffen" k{\"{o}}nnen. Als zweites gibt es eine zeitliche Trennung zwischen
-den Kommunikationspartner -- der Publisher kann Nachrichten verschicken ohne sich dar{\"{u}}ber Gedanken
+den Kommunikationspartner -- der Publisher kann Nachrichten verschicken, ohne sich dar{\"{u}}ber Gedanken
 machen zu m{\"{u}}ssen wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
 uninteressant ist wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
 Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes. Die Nachrichten werden Daten
-von ihrer Herstellung verschickt, das Sender einer Nachricht ist also (aus Sicht des
+von ihrer Herstellung verschickt, das Senden einer Nachricht ist also (aus Sicht des
 Publishers) O(1) in Bezug auf die Anzahl der Subscriber. Auch auf Seiten des Subscribers gibt es eine
 Asynchronit{\"{a}}t, die empfangen Daten werden mithilfe eines Callback angenommen und blockieren damit
 nicht die Abarbeitung dieser Daten.
@@ -203,15 +211,15 @@ Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
 
 Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
 \paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite (zum Beispiel 64bit) Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
-\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren gibt es erst ein Signalzeichen \todo{besseres wort} in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an -- also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von $ \frac{1}{\frac{2^5-1}{2}} \approx 6\% $.
+\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren, gibt es erst ein Signalzeichen,
+in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --
+also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von
+$ \frac{1}{\frac{2^5-1}{2}} \approx 6\% $.
 
 L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert, beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.
 In diesem Fall folgt die L{\"{a}}ng als 32bit big endian
-\footnote{L{\"{a}}ngen werden immer in big-endian kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}rleisten zu k{\"{o}}nen.}
+\footnote{L{\"{a}}ngen werden immer in big-endian, kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}hrleisten zu k{\"{o}}nen.}
 Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
-
-\clearpage
-\section{Quaternions? Vektorrechnung?}
 
 \clearpage
 \section{Bewegungen}
@@ -219,16 +227,18 @@ Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im un
 Dies gibt auch das Bewegungsmodell vor: \hyperref[diffs]{\textit{differential steering}}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
 
 \subsection{Khepera}\label{khepera}
-\todo{wie gebe ich Quellen fuer einen ganzen Absatz / Sektion an?}
 Die Khepera-Roboterserie existiert seit Mitte der 90er Jahre, das neuste Modell ist der Khepera IV
 \footnote{Vergleiche: \cite{Soares2016}}.
 Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
 H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
 
-Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor. Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde.
-Um die Position des Roboters odeometrisch bestimmen zu k{\"{o}}nnen, geben die Motoren auch aus, wie oft sich das jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter
-auch Infrarot-, Ultraschall- und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden um Kollisionen zu vermeiden.
-Mithilfe der integrieten Beschleunigungs- und Gyrosensoren kann der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
+Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor.
+Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde. Um die Position des
+Roboters odeometrisch bestimmen zu k{\"{o}}nnen, geben die Motoren auch aus, wie oft sich das
+jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter auch Infrarot-, Ultraschall-
+und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden
+um Kollisionen zu vermeiden. Mithilfe der integrierten Beschleunigungs- und Gyrosensoren kann
+der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
 
 Gesteuert wird der Khepera IV von einer ARM CPU, auf der ein vollwertiges Linux l{\"{a}}uft. Des weiteren gibt es auch ein WLAN Modul, eine Kamera und Lautsprecher plus Mikrophon.
 
@@ -267,12 +277,19 @@ Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 \todo{nur allgemein irgendwie kurve fahren vs. erst drehen dann gerade fahren}
 
 \clearpage
-\section{Die Gleichgewichte?}
-Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. Dies ist nur der Fall, wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf die Platte wirken, sich zu Null aufaddieren. Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
+\section{Die Gleichgewichte}
+Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. 
 
-Um das Kippen der Platte auf der links-rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen, werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+\subsection{Statisches Gleichgewicht}
+Die Platte ist im statischen Gleichgewicht wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf sie wirken, sich zu Null aufaddieren.
+Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
 
-F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt gilt Gleichung ~\ref{eq:forces:y}.
+Um das Kippen der Platte auf der links-rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen, werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz
+im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung
+\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+
+F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt
+gilt Gleichung ~\ref{eq:forces:y}.
 \begin{subequations}\label{eq:forces}
 \begin{align}
 	V(x) = x(F) * w(F) + \sum_{i=0}^{|\gls{N}|} ( x(N_i) * w(N_i) ) \label{eq:forces:x}\\
@@ -285,8 +302,13 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 	V(x) = V(y) = 0
 \end{equation}
 
-\todo{bild, wie im code die dolle ascii art}
-Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hypotenuse" das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
+\subsection{Dynamischen Gleichgewicht}
+
+
+\subsection{Kippwinkel}
+\todo{einleitung und bild, wie im code die dolle ascii art}
+Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hypotenuse"
+das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
 $$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
 
 

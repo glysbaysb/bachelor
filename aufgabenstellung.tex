@@ -80,11 +80,11 @@ Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gez
 
 \clearpage
 \section{Die ausfallsichere Heizung}\label{heizung}
-Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel ist es, mithilfe zwei Heizk{\"{o}}rpern, zweier
-L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, den einer kontrolliert
+Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
+L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
 beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
 
-Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter, an dem Punkt, an dem sich
+Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter; an dem Punkt, an dem sich
 die Arme treffen, ist die Klappe, die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
 Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
@@ -98,52 +98,57 @@ einen Temperatursensor vor der Heizung.
 	\label{fig:heizunghw}
 \end{figure}
 
-\subsection{XXX Benutzung? Gebrauch? Fehlermodell?}
-All diese Bestandteile k{\"{o}}nnen auf verschiedene Arten fehlerhaft sein, die Aufgabe der Studierenden ist es sich f{\"{u}}r die verschiedenen Fehlerkombinationen
-geeignete Strategien auszudenken um die Auswirkungen zu minimieren.
+All diese Bestandteile k{\"{o}}nnen auf verschiedene Arten fehlerhaft sein. Die Aufgabe der Studierenden
+ist es, sich f{\"{u}}r die verschiedenen Fehlerkombinationen
+geeignete Strategien auszudenken, um die Auswirkungen zu minimieren.
 
-Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, beziehungsweise das dem
-Heizk{\"{o}}rper ein Fehler injeziert wird\footnote{In diesem Fall wird die Stromversorgung gekappt},
+Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, beziehungsweise dass dem
+Heizk{\"{o}}rper ein Fehler injiziert wird\footnote{In diesem Fall wird die Stromversorgung gekappt},
 also sich nicht weiter aufheizen kann. Dies muss erst einmal erkannt werden, zum Beispiel
-durch den Vergleich des Soll-wertes der Heizungsansteuerung und den Temperaturen vor und hinter der Heizk{\"{o}}rper. Falls diese Temperaturen gleich sind,
+durch den Vergleich des Sollwertes der Heizungsansteuerung und den Lufttemperaturen vor und hinter der Heizk{\"{o}}rper. Falls diese Temperaturen gleich sind,
 wurde die Luft die vom L{\"{u}}fter Richtung Ausgang bewegt wurde, nicht aufgew{\"{a}}rmt, ergo heizt dieser Heizk{\"{o}}rper nicht. Dann k{\"{o}}nnen sich die
-Rechner abstimmen wie sie die Temperatur trotzdem ansteigen lassen k{\"{o}}nnen, zum Beispiel ob der {\"{u}}brig gebliene Heizk{\"{o}}rper st{\"{a}}rker heizen
+Rechner abstimmen, wie sie die Temperatur trotzdem ansteigen lassen k{\"{o}}nnen, zum Beispiel ob der {\"{u}}brig gebliene Heizk{\"{o}}rper st{\"{a}}rker heizen
 soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
 {\"{A}}hnlich ist es bei einem Ausfall der L{\"{u}}fter. 
 
-Um die Kommunikation zu testen k{\"{o}}nnen auch die Kommunikationswege ausfallen\footnote{Hierbei
+Um die Kommunikation zu testen, k{\"{o}}nnen auch die Kommunikationswege ausfallen\footnote{Hierbei
 wird das LAN-Kabel aus dem Switch gezogen, wodurch dieser Rechner keine Verbindung mehr zu den anderen hat.
 Das gleiche gilt f{\"{u}}r die I\textsuperscript{2}C Leitungen}.
-Was passiert wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
+Was passiert, wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
 Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden
 und I\textsuperscript{2}C nur als \textit{hot standby}. Alternativ wird ein {\"{U}}bertragungsweg nur
-f{\"{u}}r Daten genutzt und der anderen um zu signalisieren das dieser Rechner noch das
+f{\"{u}}r Daten genutzt und der andere um zu signalisieren, dass dieser Rechner noch das
 Steuerprogramm ausf{\"{u}}hrt. Der Ausfall einer der beiden Leitung kann anhand der Aktivit{\"{a}}t auf der
 anderen erkannt werden.
 
-Als letztes k{\"{o}}nnen auch die Temperatursensoren ausfallen. Im Luftausgangsstrom, wo drei Sensoren nebeneinander angeordnet sind, ist es m{\"{o}}glich den
-Ausfall eines Sensors anhand der Diskrepanz der Messergebnisse aller Sensoren zu erkennen. Eine m{\"{o}}gliche Strategie um die Ausgangstemperatur zu
-bestimmen w{\"{a}}re also die \textit{triple modular redudancy} auszunutzen und den Mittelwert aller nicht klar als fehlerhaft erkennbaren Sensoren zu bilden.
-Es ist auch denkbar die vorherigen Messwerte zu benutzen um, anhand unrealistischer Spr{\"{u}}nge der Messwerte, zu erkennen das ein Sensor einen fehlerhaften
-Messwert geliefert hat.
+Als letztes k{\"{o}}nnen auch die Temperatursensoren ausfallen. Im Luftausgangsstrom, wo drei Sensoren 
+nebeneinander angeordnet sind, ist es m{\"{o}}glich den
+Ausfall eines Sensors anhand der Diskrepanz der Messergebnisse aller Sensoren zu erkennen. Eine m{\"{o}}gliche 
+Strategie, um die Ausgangstemperatur zu
+bestimmen, w{\"{a}}re also, die \textit{triple modular redudancy} auszunutzen und den Mittelwert aller nicht klar als 
+fehlerhaft erkennbaren Sensoren zu bilden.
+Es ist auch denkbar, die vorherigen Messwerte zu benutzen um anhand unrealistischer Spr{\"{u}}nge der Messwerte zu 
+erkennen, dass ein Sensor einen fehlerhaften Messwert geliefert hat.
 
-Nat{\"{u}}rlich ist es auch denkbar das mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt
-erst ein Sensor, dann das Netzwerk aus und danach steckt die Klappt fest.
-Gerade bei Doppelfehlern in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen {\"{A}}rmen 
-ausfallen gibt es die Gefahr das sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
+Nat{\"{u}}rlich ist es auch denkbar, dass mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt
+erst ein Sensor, dann das Netzwerk aus und danach steckt die Klappe fest.
+Gerade bei Doppelfehlern, in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen {\"{A}}rmen 
+ausfallen, gibt es die Gefahr, dass sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
 
-\subsection{Evaluation} Dadurch das die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft ($ \approx (13*13*55)cm^3$) aufheizen muss,
-ist die Regelung sehr tr{\"{a}}ge. Damit ist es als Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
-bis die Temperatur eingeregelt wurde, dann ein Fehler injeziert wurde (zum Beispiel eine Heizung ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert
-wurde.
+Weil die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft 
+($ \approx (13*13*55)cm^3$) aufheizen m{\"{u}}ssen, ist die Regelung sehr tr{\"{a}}ge. Damit ist es als
+Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
+bis die Temperatur eingeregelt wurde, dann ein Fehler injiziert wurde (zum Beispiel eine Heizung
+ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert wurde.
 
-Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits das es bei gro{\ss}en Gruppen an Sch{\"{u}}lern unm{\"{o}}glich wird das alle etwas
-f{\"{u}}hlen k{\"{o}}nnen und andererseits, es durch die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet m{\"{u}}ssen
-alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die allermeiste Zeit mit warten und nur wenig Zeit mit produktiver
-Arbeit.
+Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits, dass es bei gro{\ss}en Gruppen
+an Sch{\"{u}}lern unm{\"{o}}glich wird, dass alle etwas f{\"{u}}hlen k{\"{o}}nnen und andererseits, es durch
+die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet, m{\"{u}}ssen
+alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die
+allermeiste Zeit mit warten und nur wenig Zeit mit produktiver Arbeit.
 
-Das letzes Problem ist das die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- also wenn sie sich zu sehr aufheizt --
+Das letzes Problem ist, dass die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- also wenn sie sich zu sehr aufheizt --
 besch{\"{a}}digt, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Danach muss sie erst aufw{\"{a}}ndig
 repariert werden und ist in der Zwischenzeit nicht benutzbar.
 
@@ -153,7 +158,7 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 \begin{enumerate}
 	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
 	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
-	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich
+	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich,
 		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
 		Arten der Fehlerinjektion ganz auschgeschaltet werden.
 	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
@@ -163,47 +168,59 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 
 \clearpage
 \section{Die balancierenden Roboter}
-An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine Simulation\cite{Werner00} entwickelt. In der Simulation soll
-eine simulierte Platte durch die Bewegung von simulierten Robotern auszubalanciert werden. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also aus dem Gleichgewicht.
-Die Roboter m{\"{u}}ssen sich nun so
-bewegen, dass jede durch einen Roboter ausge{\"{u}}bte Kraft von einem anderen Roboter eliminiert wird. Damit es nicht m{\"{o}}glich ist, einmal eine Stellung einzunehmen,
-die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen Energiespeicher, der mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen
-solange sie noch Energiereserven haben, m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
+An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine
+Simulation\cite{Werner00} entwickelt. In der Simulation soll eine simulierte Platte durch die Bewegung von 
+simulierten Robotern ausbalanciert werden. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also
+aus dem Gleichgewicht.
 
-Das Ziel dieser Simulation war zu demonstrieren das auch in Echtzeitsystem eine Konsensfindung m{\"{o}}glich ist. Fall ein Ergebniss durch
-\textit{triple modular redudancy} und einen Voter bestimmt werden soll, verh{\"{a}}hlt sich die naive Implementation im Falle eines \textit{timing faults} so das die
+Die Roboter m{\"{u}}ssen sich nun so bewegen, dass jede durch einen Roboter ausge{\"{u}}bte Kraft von einem
+anderen Roboter eliminiert wird. Damit es nicht m{\"{o}}glich ist, einmal eine Stellung einzunehmen,
+die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen Energiespeicher, der
+mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen solange sie noch Energiereserven haben, 
+m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
+
+Das Ziel dieser Simulation war zu demonstrieren, dass auch in Echtzeitsystem eine Konsensfindung m{\"{o}}glich
+ist. Fall ein Ergebniss durch \textit{triple modular redudancy} und einen Voter bestimmt werden soll, 
+verh{\"{a}}lt sich die naive Implementation im Falle eines \textit{timing faults}, so dass die
 Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. 
+\todo{raussuchen ob das nicht mit den relative mehrheit geloest wurde}
 
-\subsection{XX}
-Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf
-einem Windowsrechner laufen kann. Die Teilnehmern kommunizieren {\"{u}}ber CORBA miteinander\cite{predictablecorba}. CORBA ist ein Standart {\"{u}}ber den Programme auf
-mehreren Rechnern miteinander kommunizieren k{\"{o}}nnen, auch falls sie mit verschiedenen Programmiersprachen geschrieben wurden. Zus{\"{a}}tzlich zur reinen RPC
-Funktionalit{\"{a}}t abstrahiert es, unter anderem, Transkationen und Zeitsynchronisation.
+Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem, 
+w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf
+einem Windowsrechner laufen kann. Die Teilnehmern kommunizieren {\"{u}}ber CORBA 
+miteinander\cite{predictablecorba}. CORBA ist ein Standard, {\"{u}}ber den Programme auf
+mehreren Rechnern miteinander kommunizieren k{\"{o}}nnen, auch falls sie in verschiedenen Programmiersprachen 
+geschrieben wurden. Zus{\"{a}}tzlich zur reinen RPC Funktionalit{\"{a}}t abstrahiert es, unter anderem, 
+Transkationen und Zeitsynchronisation.
 
-In das System k{\"{o}}nnen Fehler injeziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden oder die Controller k{\"{o}}nnen. \todo{}
+In das System k{\"{o}}nnen Fehler injiziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden oder die Controller k{\"{o}}nnen. \todo{}
 
-\subsection{Evaluation} 
-Die Simulationsidee an sich w{\"{u}}rde den Anforderungen entsprechen, sie unterscheidet sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
-gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Ein erster Kritikpunk ist das Anzeige nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu
-entwickelt werden.
+Die balancieren Robotern w{\"{u}}rden den Anforderungen an vielen Stellen entsprechen, zum Beispiel
+unterscheidet sie sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
+gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Ein erster Kritikpunk ist das Anzeige
+nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu entwickelt werden.
 
-Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich holonomisch, also ohne Limitationen in alle Richtungen,
-bewegen. Dies ist aber bei den meisten Robotern nicht der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, dass sich
-Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen Gleichgewichte -- auch dies eine unrealistische
-Vereinfachung gegen{\"{u}}ber der echten Welt. Die physikalische Simulation m{\"{u}}sste also erweitert werden.
+Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich
+holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern
+nicht der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, 
+dass sich Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen 
+Gleichgewichte -- auch dies eine unrealistische Vereinfachung gegen{\"{u}}ber der echten Welt. Die
+physikalische Simulation m{\"{u}}sste also erweitert werden.
 
-Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf NeXTStep Rechner entwickelt -- diese existieren an der
-Fachhochschule S{\"{u}}dwestfalen nicht, das Programm m{\"{u}}sste also erst portiert werden. Auch wird CORBA heutzutage nur noch wenig genutzt, also ist der Aufwand
-um sich in den Standart einzuarbeiten und sein Programm basierend auf diesem zu entwickeln nicht vertretbar. Gerade auch unter dem Gesichtspunkt das die Ausfallsicherheit
-im Vordergrund stehen sollte und nicht die Einarbeitung in einen Standart.
+Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf 
+NeXTStep Rechner entwickelt -- diese existieren an der Fachhochschule S{\"{u}}dwestfalen nicht, das Programm 
+m{\"{u}}sste also erst portiert werden. Auch wird CORBA heutzutage nur noch wenig genutzt, also ist der Aufwand,
+um sich in den Standard einzuarbeiten und sein Programm basierend auf diesem zu entwickeln, nicht vertretbar. 
+Dies gilt gerade auch unter dem Gesichtspunkt, dass die Ausfallsicherheit im Vordergrund stehen sollte und
+nicht die Einarbeitung in einen Standard.
 
-Aus all diesen Gr{\"{u}}nden wurde entschieden eine neue {\"{U}}bungsaufgabe zu entwickeln.
+Aus all diesen Gr{\"{u}}nden wurde entschieden, eine neue {\"{U}}bungsaufgabe zu entwickeln.
 
 \clearpage
 \section{Simulationsidee}
-Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N} Roboter und $1$ F{\"{u}}llstation (\gls{F})
-platziert werden. Die Summe alle Gewichte kippt die Platte; sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt
-die Platte um und die Simulation endet.
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N}
+Roboter und $1$ F{\"{u}}llstation (\gls{F}) platziert werden. Die Summe alle Gewichte kippt die Platte;
+sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt die Platte um und die Simulation endet.
 
 Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
 an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
@@ -221,7 +238,8 @@ Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass au
 (Abh{\"{a}}ngig vom Verh{\"{a}}ltnis der Anzahl der Controller zur Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
 
 Die Voter und Controller laufen auf Virtuellen Maschinen, jeweils eine VM pro Voter- oder Controllerinstanz.
-Diese VMs befinden sich in einem Netzwerk, dass durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht -- dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk wie es zum Beispiel bei Funknetzwerken der Fall ist.
+Diese VMs befinden sich in einem Netzwerk, das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --
+dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk, wie es zum Beispiel bei Funknetzwerken der Fall ist.
 Es wird vorgegeben, dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen, sie soll nicht verf{\"{a}}lscht werden.
 
 \begin{figure}

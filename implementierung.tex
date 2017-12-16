@@ -7,32 +7,37 @@ event gesteuerte kommunikation.
 anforderung 2, mehrere instanzen
 
 \subsection{Anzeige}\label{graphics}
-F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten die diese Aufgabe l{\"{o}}sen
+F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten, die diese Aufgabe l{\"{o}}sen
 sollen muss es m{\"{o}}glich sein einzusch{\"{a}}tzen wie der momentane Status der Simulation ist.
-Also wo befinden sich Roboter, wie voll sind sie, wie stark kippt die Platte? All dies soll auch, wie
+Also: wo befinden sich Roboter, wie voll sind sie, wie stark kippt die Platte? All dies soll auch, wie
 in \hyperref[anforderung]{Anforderung 5} festgelegt, visuell ansprechend sein.
 
-Da die Unity Engine auch eine vollwertige Grafikengine ist (dies war ja schliesslich ein Kriterium)
+Da die Unity Engine auch eine vollwertige Grafikengine ist (dies war ja schliesslich ein Kriterium),
 kann diese Funktionalit{\"{a}}t genutzt werden. Das Simulationsprogramm ist nicht nur f{\"{u}}r die
 reine Simulation sondern auch f{\"{u}}r die Anzeige verantwortlich.
 
 Angezeigt wird eine kreisf{\"{o}}rmige Platte auf der sich die verschiedenen Roboter bewegen. Auch die
 Ladestation wird angezeigt.
 
-\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese werden verschiedene Skripte angegeh{\"{a}}ngt um z.B. dem Benutzer die M{\"{o}}glichkeit zu
-geben die Kamera zu bewegen oder \todo{halt noch irgendwas}.
+\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese
+werden verschiedene Skripte angegeh{\"{a}}ngt, um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+geben die Kamera zu bewegen und damit einen anderen Teil der Simulation genauer zu betrachten.
 
-Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert - dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der
-Platte visuell ausgeglichen werden k{\"{o}}nnte.
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert --
+dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der Platte visuell ausgeglichen
+werden k{\"{o}}nnte. Um immer einen Teil der Simulation im Blick haben zu k{\"{o}}nnen schwebt die Kamera
+{\"{u}}ber der Platte und schaut in einem 20\textdegree Winkel schr{\"{a}}g nach unten.
 
-\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich an der Stelle \todo{nachgucken} und scheint mit einem XXXX\textdegree Winkel nach unten.
+\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich weit von der
+Platte entfernt und scheint in einem steilen Winkel von links oben auf diese.
 
 \clearpage
 \section{Fehlermodell}\label{fm}
-Das Ziel der Aufgabe ist es Studierenden etwas {\"{u}}ber ausfallsichere Systeme beizubringen. Daf{\"{u}}r
-muss auch etwas ausfallen, damit dann die Auswirkungen des Ausfalls abgemindert werden k{\"{o}}nnen.
+Das Ziel der Aufgabe ist es, Studierenden etwas {\"{u}}ber ausfallsichere Systeme beizubringen. Daf{\"{u}}r
+muss auch etwas ausfallen, denn nur dann wird getestet ob die Auswirkungen des Ausfalls abgemindert werden 
+konnten.
 
-Im Fehlermodell wird festgelegt was alles -- und auf welche Weise -- ausfallen kann. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
+Im Fehlermodell wird festgelegt, was alles -- und auf welche Weise -- ausfallen kann. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
 der Simulation sind hier die simulierte Welt mit ihren Robotern (und den dazugeh{\"{o}}rigen Motoren/Aktoren
 und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Controller selbst.
 
@@ -40,12 +45,16 @@ und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Cont
 Die simulierten Roboter {\"{a}}hneln dem Khepera Roboter und haben daher 2 Motoren. Diese beiden Motoren k{\"{o}}nnen unabh{\"{a}}ngig von einander fehlerhaft sein. Fehlerhaft
 hei{\ss}t hier:
 \begin{itemize}
-	\item Die H{\"{a}}ufigkeit von Hardwarefehler wird oft mithilfe der Badewannenkurve modelliert. Sie besagt das Hardware entweder kurz nach Inbetriebnahme oder nach
-		langer Betriebszeit mit hoher Wahrscheinlichkeit fehlerhaft ist, und in der Zwischenzeit nur mit niedriger Wahrscheinlichkeit. F{\"{u}}r die Motoren der Roboter wird
-		ein vereinfachtes Modell genutzt, in dem die Wahrscheinlichkeit f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf
+	\item Die H{\"{a}}ufigkeit von Hardwarefehler wird oft mithilfe der Badewannenkurve modelliert. Sie besagt,
+		dass Hardware entweder kurz nach Inbetriebnahme oder nach langer Betriebszeit mit hoher
+		Wahrscheinlichkeit fehlerhaft ist, und in der Zwischenzeit nur mit niedriger Wahrscheinlichkeit.
+		F{\"{u}}r die Motoren der Roboter wird ein vereinfachtes Modell genutzt, in dem die Wahrscheinlichkeit 
+		f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf
 		Null sinkt. Falls der Motor in dieser Zeit Fehler aufweist, bleibt diese Fehler auch.
-	\item Desweiteren kann ein Motor tempor{\"{a}}r ein Stuck-At Verhalten aufweisen. Dieses kann jederzeit passieren und entweder tempor{\"{a}}rer oder permament sein.
-		Die Wahrscheinlichkeiten f{\"{u}}r das Auftreten eines permamenten oder tempor{\"{a}}ren Stuck-At Fehlers sind unabh{\"{a}}ngig voneinander einstellbar.
+	\item Desweiteren kann ein Motor tempor{\"{a}}r ein \textit{stuck-at}-Verhalten aufweisen. Dieses
+		kann jederzeit passieren und entweder tempor{\"{a}}rer oder permament sein.
+		Die Wahrscheinlichkeiten f{\"{u}}r das Auftreten eines permamenten oder tempor{\"{a}}ren
+		\textit{stuck-at}-Fehlers sind unabh{\"{a}}ngig voneinander einstellbar.
 \end{itemize}
 
 Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
@@ -53,28 +62,33 @@ bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Es soll m{
 Schwierigkeitsstufen der Simulation einzustellen. Daher ist es m{\"{o}}glich
 dass nur ein Motor pro Roboter gleichzeitig Fehler aufweisen kann.
 
-Aus dem gleichen Grund ist es parametresierbar wie viele Roboter gleichzeitig irgendeine Art von Fehler aufweisen k{\"{o}}nnen.
+Aus dem gleichen Grund ist es parametresierbar, wie viele Roboter gleichzeitig irgendeine Art von Fehler aufweisen k{\"{o}}nnen.
 
-Zus{\"{a}}tzlich zu diesen Fehler soll es auch m{\"{o}}glich sein einen Roboter fernzusteuern. W{\"{a}}hrend
-der Fernsteuerung darf dieser Roboter keine Steuerbefehle seines Voters ausf{\"{u}}hrend sonder wird rein
+Zus{\"{a}}tzlich zu diesen Fehler soll es auch m{\"{o}}glich sein, einen Roboter fernzusteuern. W{\"{a}}hrend
+der Fernsteuerung darf dieser Roboter keine Steuerbefehle seines Voters ausf{\"{u}}hrend sondern wird rein
 vom Nuter gesteuert. Diese Art der Fehlerinjektion w{\"{u}}rde in Richtung byzantinische Fehler gehen,
-denn dies w{\"{u}}rde es erm{\"{o}}glichen gezielt die Platte zu destabilisieren oder Roboter zu
+denn dies w{\"{u}}rde es erm{\"{o}}glichen, gezielt die Platte zu destabilisieren oder Roboter zu
 blockieren.
 
 \subsection{Weltstatusinformationen}
-Die Roboter haben ihre Aktoren, um sich in der Welt zu bewegen. Damit sie sich sinnvoll bewegen und die Platte balanciert k{\"{o}}nnen, brauchen sie Informationen {\"{u}}ber den
-Status der Welt und ihre (und die der anderen Roboter) Position in dieser. Diese Informationen sind direkt verf{\"{u}}gbar und m{\"{u}}ssen nicht, zum Beispiel odeometrisch,
-erst herausgefunden werden. In der realen Welt sind Sensoren, wie sie hier vielleicht h{\"{a}}tten simuliert werden k{\"{o}}nnen, nat{\"{u}}rlich manchmal fehlerbehaftet.
-Um dies nachzubilden k{\"{o}}nnen die Informationen {\"{u}}ber den Weltstatus auf verschiedene Arten fehlerhaft an den Roboter weitergeleitet werden.
+Die Roboter haben ihre Aktoren, um sich in der Welt zu bewegen. Damit sie sich sinnvoll bewegen und die
+Platte balanciert k{\"{o}}nnen, brauchen sie Informationen {\"{u}}ber den Status der Welt und ihre
+(und die der anderen Roboter) Position in dieser. Diese Informationen sind direkt verf{\"{u}}gbar
+und m{\"{u}}ssen nicht, zum Beispiel odeometrisch, erst herausgefunden werden. In der realen Welt sind
+Sensoren, wie sie hier vielleicht h{\"{a}}tten simuliert werden k{\"{o}}nnen, nat{\"{u}}rlich manchmal 
+fehlerbehaftet. Um dies nachzubilden k{\"{o}}nnen, die Informationen {\"{u}}ber den Weltstatus auf
+verschiedene Arten fehlerhaft an den Roboter weitergeleitet werden.
 
-Als erstes ist es m{\"{o}}glich das der Roboter einfach keinerlei Informationen mehr bekommt, also ein \textit{omission failure} vorliegt. Ein \textit{stuck-at} Fehler liegt
+Als erstes ist es m{\"{o}}glich, dass der Roboter einfach keinerlei Informationen mehr bekommt, also ein \textit{omission failure} vorliegt. Ein \textit{stuck-at} Fehler liegt
 vor wenn veralterte Informationen wieder an den Roboter weitergegeben werden, so als w{\"{u}}rde ein Sensor nur noch seine letzen g{\"{u}}ltigen Daten liefern. Der dritte
 Fall liegt vor, wenn komplett falsche Daten geliefert werden. Komplett falsch hei{\ss}t, dass die Anzahl und die Positionen, Gewichte etc. der Roboter potenziell fehlerhaft an
 den Roboter weitergegeben werden. Die Wahrscheinlichkeiten f{\"{u}}r die jeweiligen F{\"{a}}lle lassen sich unabh{\"{a}}ngig von einander einstellen.
 
 \subsection{Netwerk}
-Da die simulierten Roboter den Khepera Robotern {\"{a}}hneln sollen, sollen auch ihre Kommunikationsm{\"{o}}glichkeiten denen der Khepera Roboter {\"{a}}hneln. Bei
-beweglichen Objekten sind Ethernetkabel suboptimal, weswegen diese Funkverbindungen bevorzugen. Funkverbindungen haben aber, im Gegensatz zu gut abgeschirmten
+Da die simulierten Roboter den Khepera Robotern {\"{a}}hneln sollen, sollen auch ihre 
+Kommunikationsm{\"{o}}glichkeiten denen der Khepera Roboter {\"{a}}hneln. Bei beweglichen
+Objekten sind Ethernetkabel suboptimal, weswegen diese Funkverbindungen -- im Falle der Khepera
+Roboter ist dies WLAN -- bevorzugen. Funkverbindungen haben aber, im Gegensatz zu gut abgeschirmten
 Ethernetkabeln, Probleme mit Interferenzen durch andere Funk{\"{u}}bertragungen.
 
 Dies f{\"{u}}hrt dazu das w{\"{a}}hrend der {\"{U}}bertragung Bits, oder sogar ganze Bytes, verf{\"{a}}lscht werden. Auch die Wahrscheinlichkeit f{\"{u}}r diesen Fall
@@ -83,17 +97,20 @@ Es wird angenommen das die meiste Kommunikation zwischen Robotern "in Sichtweite
 es ist un{\"{u}}blich das Pakete verloren gehen oder zeitverz{\"{o}}gert weitergeleitet werden, daher ist dies nicht Teil des Fehlermodells.
 
 \subsection{Controller}
-Es wird davon ausgegangen das die Controllerprogramme auf unzuverl{\"{a}}ssiger Hardware, unzuverl{\"{a}}ssigen Betriebssystem laufen und fehlerhaft programmiert sind.
-Daher muss davon ausgegangen werden das die Programme jederzeit abst{\"{u}}rzen k{\"{o}}nnen. Desweiteren kann auch nicht davon ausgegangen werden das die
-Controllerprogramme das einzige Programm ist das l{\"{a}}uft; es kann also auch zu Problemen bei der Resourceverteilung (RAM, CPU Zeit) kommen.
+Es wird davon ausgegangen, dass die Controllerprogramme auf unzuverl{\"{a}}ssiger Hardware, unzuverl{\"{a}}ssigen 
+Betriebssystem laufen und fehlerhaft programmiert sind. Daher muss davon ausgegangen werden, dass die
+Programme jederzeit abst{\"{u}}rzen k{\"{o}}nnen. Desweiteren kann auch nicht davon ausgegangen werden,
+dass die Controllerprogramme das einzige Programm ist, das l{\"{a}}uft; es kann also auch zu Problemen bei
+der Resourceverteilung (RAM, CPU Zeit) kommen.
 
 \subsection{Auswirkungen}
-\todo{irgendwie passt das nicht so wirklich hier hinter...}
-Nachdem Fehlermodelle f{\"{u}}r die verschiedenen Elemente des Systems entwickelt wurden, kann betrachtet werden welche Auswirkungen die verschiedenen Fehler haben
-k{\"{o}}nnen.
+Nachdem Fehlermodelle f{\"{u}}r die verschiedenen Elemente des Systems entwickelt wurden, kann
+betrachtet werden, welche Auswirkungen die verschiedenen Fehler haben k{\"{o}}nnen. Hierbei werden nur
+die Auswirkungen in Bezug auf die Platte betrachtet.
 
-\paragraph{Unkontrollierte Bewegung} Falls sich ein Roboter unkontrolliert bewegt (also ein oder mehrere Motoren einen Stuck-At Fehler und die
-verbliebenden Motoren gar nicht mehr funktionieren) kann dieser Roboter nicht mehr genutzt werden um die Platte auszubalancieren.
+\paragraph{Unkontrollierte Bewegung} Falls sich ein Roboter unkontrolliert bewegt (also ein oder
+mehrere Motoren einen \textit{stuck-at}-Fehler und die verbliebenden Motoren gar nicht mehr funktionieren)
+kann dieser Roboter nicht mehr genutzt werden um die Platte auszubalancieren.
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{fm_robot}
@@ -102,9 +119,11 @@ verbliebenden Motoren gar nicht mehr funktionieren) kann dieser Roboter nicht me
 \end{figure}
 \clearpage
 
-\paragraph{Inkorrekte Bewegungen} Ein Roboter bewegt sich "falsch", wenn seine Bewegung weder die Platte ausbalanciert noch dazu gedacht, ist den Energiespeicher
-aufzuf{\"{u}}llen. Dies kann verschiedene Gr{\"{u}}nde haben: Entweder bewegt der Roboter sich unkontrolliert oder er wird falsch angesteuert. Dies kann passieren
-falls, die Controller falsche Steuerkommandos senden, oder theoretisch richtige Steuerkommandos falsch ausgewertet werden.
+\paragraph{Inkorrekte Bewegungen} Ein Roboter bewegt sich "falsch", wenn seine Bewegung weder die Platte 
+ausbalanciert noch dazu gedacht, ist den Energiespeicher aufzuf{\"{u}}llen. Dies kann verschiedene Gr{\"{u}}nde 
+haben: Entweder bewegt der Roboter sich unkontrolliert oder er wird falsch angesteuert. Beide F{\"{a}}lle
+passieren falls die Controller falsche Steuerkommandos senden, oder theoretisch richtige Steuerkommandos
+falsch ausgewertet werden.
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{fm_robot2}
@@ -119,15 +138,20 @@ Da es in der Simulation, anders in einer realen Welt, keine normalen Fehlerquell
 Fehlerinjektion benutzt, um die Fehlertoleranz zu testen. Die hier simulierten Fehlerarten 
 sind im \hyperref[fm]{Fehlermodell} beschrieben.
 
-In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet (wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme
-unvorhersehbar ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat.
+In diesem Fall wird simuliert, dass das Netzwerk Daten fehlerhaft weiterleitet
+(wie es z.B. ein Funknetzwerk tuen w{\"{u}}rde) und das die Controllerprogramme unvorhersehbar
+ausfallen - was nachbildet, dass z.B. der Controller seine Batterie entladen hat. Auf der Roboterseite
+kann die Funktionsf{\"{a}}higkeit der Motoren eingeschr{\"{a}}nkt werden oder sie k{\"{o}}nnen
+falsche Informationen {\"{u}}ber den Status der Welt empfangen.
 
-Wie in \hyperref{anforderung}[Anforderung 3] spezifiert, sind alle Fehlerwahrscheinlichkeiten einstellbar.
+Wie in \hyperref[anforderung]{Anforderung 3} spezifiert, sind alle Fehlerwahrscheinlichkeiten einstellbar.
 
 \subsection{Netzwerk}
-Die Kommunikation zwischen Voter und Controller ist nur {\"{u}}ber ein IP Netzwerk m{\"{o}}glich; f{\"{u}}r dieses Modul kann ein eigenes Netzwerk aufgebaut werden, in das eine
-Fehlerinjektionskomponente intergiert werden kann. Diese Komponente soll nur die Kommunikation, die von den Studentenprogrammen ausgeht, verf{\"{a}}lschen und alle andere normal
-behandeln. Die St{\"{a}}rke der Fehlerinjektion soll parametresierbar sein, zum Beispiel wie wahrscheinlich es ist, das, einzelne Pakete verf{\"{a}}lscht werden, oder wie stark
+Die Kommunikation zwischen Voter und Controller ist nur {\"{u}}ber ein IP Netzwerk m{\"{o}}glich;
+f{\"{u}}r dieses Modul kann ein eigenes Netzwerk aufgebaut werden, in das eine Fehlerinjektionskomponente 
+intergiert werden kann. Diese Komponente soll nur die Kommunikation, die von den Studentenprogrammen ausgeht, 
+verf{\"{a}}lschen und alle andere normal behandeln. Die St{\"{a}}rke der Fehlerinjektion soll parametresierbar 
+sein, zum Beispiel wie wahrscheinlich es ist, das, einzelne Pakete verf{\"{a}}lscht werden oder wie stark
 die Verf{\"{a}}lschung sein soll.
 
 Es wird vorgeschrieben, dass die ganze Kommunikation der Studentenprogramme {\"{u}}ber UDP laufen muss. Dadurch reicht es, wenn der Fehlerinjektor nur UDP verf{\"{a}}lscht, was dazu
@@ -138,17 +162,20 @@ Daf{\"{u}}r zust{\"{a}}ndig ist Net Inject\cite{kubertzki}. Dabei werden auf den
 Standartrouten definiert, die den Netzwerkverkehr {\"{u}}ber andere Rechner leiten, auf denen Net Inject
 installiert ist. Dort werden die Pakete vom Modul NetMod angenommen und es wird {\"{u}}berpr{\"{u}}ft ob
 f{\"{u}}r diese Kommunikation (spezifiziert durch Protkoll, Quell- und Zielport) Verf{\"{a}}lschungsregeln
-existieren. Anhand dieser Regeln wird das Paket dann ausgwertet und, bei Bedarf, verf{\"{a}}lscht.
+existieren. Anhand dieser Regeln wird das Paket dann ausgwertet und bei Bedarf verf{\"{a}}lscht.
 
 Standardm{\"{a}}ssig ist dieser Fehlerinjektor so eingestellt dass durchschnittlich in $ ^1/_{20} $ aller Pakete ein Byte verf{\"{a}}lscht wird,
 ohne dass das Betriebssystem diese Modifikation erkennt. Diese Erkennung muss also von den Studenten selbst implementiert werden.
 
 \subsection{Controller}
-Im Fehlermodell wurde spezifiziert das die Controller zu beliebigen Zeitpunkten einen \textit{crash failure} erleiden k{\"{o}}nnen.
+Im Fehlermodell wurde spezifiziert, dass die Controller zu beliebigen Zeitpunkten einen
+\textit{crash failure} erleiden k{\"{o}}nnen.
 
-Um dies zu erm{\"{o}}glichen gibt es ein Shellskript, das die Controllerprogramme zu zuf{\"{a}}ligen Zeitpunkten beendet und wieder startet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
-Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt, z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig
-offen haben oder nur eine eingeschr{\"{a}}nkte Menge Speicher benutzen.
+Um dies zu erm{\"{o}}glichen, gibt es ein Shellskript, das die Controllerprogramme zu zuf{\"{a}}ligen Zeitpunkten 
+beendet und wieder startet - dabei wird das Programm einfach mit SIGKILL beendet und nicht vorgewarnt.
+Mit einer Wahrscheinlichkeit von 33\% werden dem Programm auch nur eingeschr{\"{a}}nkte Ressourcen zugeteilt,
+z.B. darf es nur eine bestimmte Anzahl an Dateideskriptoren gleichzeitig offen haben oder nur eine 
+eingeschr{\"{a}}nkte Menge Speicher benutzen.
 \lstinputlisting[language=Bash]{../fault_injector.sh}
 
 \subsection{Simulation}
@@ -185,17 +212,19 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 
 \paragraph{dropWorldStatus} Der Status der Welt kann, aus Sicht des Roboters, einfach nicht ankommen. Dies
 	ist ein \textit{omission fault}.
-\paragraph{dupWorldStatus} Des weiteren kann ein veralteter Weltstatus ein weiteres mal empfangen werden.
-    Hierbei handelt es sich allerdings immer um den jeweils letzten.
-\paragraph{fakeWorldStatus} Es ist auch m{\"{o}}glich das Daten zur richtigen Zeit ankommen, aber
+\paragraph{dupWorldStatus} Des weiteren kann ein veralteter Weltstatus ein weiteres Mal empfangen werden.
+    Hierbei handelt es sich allerdings immer nur um den jeweils letzten und nicht um noch weiter in
+	der Vergangenheit liegende.
+\paragraph{fakeWorldStatus} Es ist auch m{\"{o}}glich, dass Daten zur richtigen Zeit ankommen, aber
     verf{\"{a}}lscht wurden. Verf{\"{a}}lscht werden kann hierbei:
 	\begin{itemize}
-		\item X- und Y-Kippwinkel. Dabei wird einer der Werte um maximal $\pm 2\textdegree$ verf{\"{a}}lscht. Die Verf{\"{a}}lschung geschieht in 40\% der F{\"{a}}lle.
-		\item Die Daten maximal eines Roboters. Namentlich kann hierbei eine der folgenden Daten
-			ver{\"{a}}ndert werden:
+		\item X- und Y-Kippwinkel. Dabei wird einer der Werte um maximal $\pm 2$\textdegree verf{\"{a}}lscht.
+			Diese Art der Verf{\"{a}}lschung geschieht in jeweils 40\% der F{\"{a}}lle.
+		\item Mit einer Wahrscheinlichkeit von 10\% werden die Daten maximal eines Roboters verf{\"{a}}lscht.
+			Namentlich kann hierbei eine der folgenden Daten ver{\"{a}}ndert werden:
 			\begin{itemize}
 				\item X- oder Y-Koordinaten, um maximal $\pm 5$ Einheiten
-				\item Die Rotation, um maximal $\pm 7\textdegree$
+				\item Die Rotation, um maximal $\pm 7$\textdegree
 				\item Das Gewicht um maximal $\pm 5$ Einheiten
 				\item Der Ladezustand um maximal $\pm 50$ Einheiten
 			\end{itemize}
@@ -204,10 +233,13 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 	\end{itemize}
 
 \subsubsection{Motor}
-Die zweite Kategorie von Fehlern sind die Ausf{\"{a}}le der Motoren. Direkt angegeben werden die maximale Anzahl an fehlerhaften Robotern und die maximale
-Anzahl an fehlerhaften Motoren pro Roboter. Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r oder permament fehlerbehaftet (Stuck At oder keinerlei Leitung) sein.
-Die Wahrscheinlichkeiten f{\"{u}}r diese beiden Fehlerarten werden getrennt angegeben und k{\"{o}}nnen entweder einer zeitunabh{\"{a}}nigen festen Wahrscheinlichkeit oder
-der Badewannenkurve folgen. Bei der Badewannenkurve wird zus{\"{a}}tzlich zur Ausfallwahrscheinlichkeit auch noch die Dauer (in s) des ersten Bereiches angegeben.
+Die zweite Kategorie von Fehlern sind die Ausf{\"{a}}lle der Motoren. Direkt angegeben werden die maximale
+Anzahl an fehlerhaften Robotern und die maximale Anzahl an fehlerhaften Motoren pro Roboter.
+Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r oder permament fehlerbehaftet (\textit{stuck-at}
+oder keinerlei Leitung) sein. Die Wahrscheinlichkeiten f{\"{u}}r diese beiden Fehlerarten werden getrennt
+angegeben und k{\"{o}}nnen entweder einer zeitunabh{\"{a}}nigen festen Wahrscheinlichkeit oder der
+Badewannenkurve folgen. Bei der Badewannenkurve wird zus{\"{a}}tzlich zur Ausfallwahrscheinlichkeit auch
+noch die Dauer (in s) des ersten Bereiches angegeben.
 \begin{lstlisting}[frame=single, language=json] 
 {
 	"robot" : {
@@ -226,13 +258,17 @@ der Badewannenkurve folgen. Bei der Badewannenkurve wird zus{\"{a}}tzlich zur Au
 \todo{temporaer sind jetzt nur quasi einen frame lang...}
 
 \subsubsection{Fernsteuerung}
-Wie im \hyperref[fm]{Fehlermodell} festgelegt soll der Benutzer einen Roboter fernsteuern k{\"{o}}nnen und damit direkten Einfluss auf die simulierte Welt haben. W{\"{a}}hrend ein Roboter
-ferngesteuert wird, f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}hlt sich der Roboter normal, es wird also die gleiche Menge Energie verbraucht,
-es gelten die gleichen Einschr{\"{a}}nkungen bei Geschwindigkeit und Rotation, und so weiter.
+Wie im \hyperref[fm]{Fehlermodell} festgelegt, soll der Benutzer einen Roboter fernsteuern k{\"{o}}nnen
+und damit direkten Einfluss auf die simulierte Welt haben. W{\"{a}}hrend ein Roboter ferngesteuert wird, 
+f{\"{u}}hrt dieser eine Roboter keine Befehle seines Voters mehr aus. Abgesehen davon verh{\"{a}}lt sich der
+Roboter normal, es wird also die gleiche Menge Energie verbraucht, es gelten die gleichen
+Einschr{\"{a}}nkungen bei Geschwindigkeit und Rotation, und so weiter.
 
-Dies wird durch ein Script in Unity erm{\"{o}}glicht. Im deaktivierten Zustand zeigt es einen Hilfetext auf dem Bildschirm an. Mit der Escapetaste wird die Fernsteuerung aktiviert, dann kann ein
-Roboter {\"{u}}ber die Pfeiltasten gesteuert werden (Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter).
-Um anzuzeigen, welcher Roboter gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
+Dies wird durch ein Script in Unity erm{\"{o}}glicht. Im deaktivierten Zustand zeigt es einen Hilfetext
+auf dem Bildschirm an. Mit der Escapetaste wird die Fernsteuerung aktiviert; um dies zu signalisieren wird
+der Hilfetext ge{\"{a}}ndert. Dann kann ein Roboter {\"{u}}ber die Pfeiltasten gesteuert werden
+(Vorw{\"{a}}rts beschleunigt, Links und Rechts drehen den Roboter). Um anzuzeigen, welcher Roboter
+gerade gesteuert wird wird dieser von oben angeleuchtet. Mit der Tabulatortaste kann zwischen den
 Robotern umgeschaltet werden. Bei einem weiteren Druck auf die Escapetaste wird die Fernsteuerung deaktiviert.
 
 
@@ -241,8 +277,9 @@ Robotern umgeschaltet werden. Bei einem weiteren Druck auf die Escapetaste wird 
 Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer Ladestation, an der die Robter Energie tanken k{\"{o}}nnen, und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
-Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige Spiele oder, in diesem Fall, Simulationen zu schreiben.
-Dabei stellt sie, unter anderem eine Physikengine, eine Grafikengine und eine Schnitstelle zum scripten dieser bereit. 
+Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige 
+Spiele oder, in diesem Fall, Simulationen zu schreiben. Dabei stellt sie, unter anderem eine Physikengine,
+eine Grafikengine und eine Schnitstelle zum Scripten dieser bereit. 
 
 \subsection{Die Roboter}\label{robot}
 In der simulierten Welt k{\"{o}}nnen sich bis zu \gls{N} Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
@@ -340,43 +377,55 @@ jeder Controller f{\"{u}}r jeden Roboter die n{\"{a}}chste Bewegung. Diese wird 
 
 \subsection{Fehlermodell} \label{error-model}
 Bei der Planung eines ausfallsicheren Systems ist es besonders wichtig zu definieren, welche Art von Fehlern
-{\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r dieses Projekt werden f{\"{u}}r jede Fehlerklasse
+{\"{u}}berhaupt korrigiert / abgefangen werden soll. F{\"{u}}r die Beispielimplementation ist es nicht
+n{\"{o}}tig eine Regelung zur Ausbalancierung zu entwickelen. Daher werden nur f{\"{u}}r bestimmte Fehlerklassen
 die m{\"{o}}glichen Fehler aufgelistet und beschrieben, ob und wie sie gel{\"{o}}st werden.
 
 \paragraph{Crash failure} Die Controller k{\"{o}}nnen jederzeit ausfallen. Im Extremfall k{\"{o}}nen alle Controller ausfallen, die Voter sind, per Definition, gegen diese Art von Fehlern unempfindlich.
 
-\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu $^1/_{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf \textit{Single Byte Errors} beschr{\"{a}}nkt.
-Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht erkannt und f{\"{u}}hren zu einem \textit{silent failure}; \todo{auswirkungen}
+\paragraph{Value error} Das Netzwerk kann Pakete verf{\"{a}}lschen, es wird angenommen, dass bei bis zu
+$^1/_{20}$ aller Pakete Verf{\"{a}}lschungen geben kann, diese sich allerdings auf
+\textit{Single Byte Errors} beschr{\"{a}}nkt. Dar{\"{u}}ber hinausgehende Verf{\"{a}}lschungen werden nicht
+erkannt und f{\"{u}}hren zu einem \textit{silent failure}; Dadurch wird der Roboter fehlerhaft angesteuert,
+dies ist allerdings nicht mehr Teil des Fehlermodells.
 
 \subsubsection{R{\"{a}}umliche Redudanz}
-Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}llig sind und leicht ausfallen - daraus folgt das eine gro{\ss}e
-Anzahl an Controllern f{\"{u}}r jeden Roboter kontrollieren muss; nur falls weniger als $X$ Controller dieses Roboter noch aktiv
-sind kann eine ordnungsgem{\"{a}}{\ss}e Steuerung nicht mehr garantiert werden.
-
-Wenn ein Roboter erstellt wird, werden auch $Y$ Controller gestartet. Die Ausf{\"{u}}hrung der Controller wird durch ein Skript
-{\"{u}}berwacht das ausgefallene Controller neu startet. \todo{ist das sinnvoll? dann muss man ja auch das skript killen um dann
-irgendwann mal zu wenig controller zu haben}
+Es wird davon ausgegangen, dass die Controller sehr fehleranf{\"{a}}llig sind und leicht ausfallen --
+daraus folgt das eine gro{\ss}e Anzahl ($Y$) an Controllern f{\"{u}}r jeden Roboter kontrollieren muss;
+nur falls weniger als $X$ Controller dieses Roboter noch aktiv sind kann eine ordnungsgem{\"{a}}{\ss}e
+Steuerung nicht mehr garantiert werden. Zu bestimmen wie gro{\ss} $X$ sein muss ist nicht Teil der
+Beispielimplementation.
 
 \subsubsection{Netzwerkkommunikation}
-Da durch die Fehlerinjektion das Netzwerk UDP Pakete verf{\"{a}}lscht m{\"{u}}ssen alle Daten mit einer Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code, der 15 parity bits pro 240 Datenbits benutzt.
-Durch die Benutzung dieser Kodierung k{\"{o}}nnen alle Einzelfehler und Doppelfehler erkannt und korrigiert werden. Erst ab 7 Fehlern ist eine Korrektur nicht mehr m{\"{o}}glich, ab 15 Fehlern versagt auch eine Fehlererkennung.
+Da durch die Fehlerinjektion das Netzwerk UDP Pakete verf{\"{a}}lscht, m{\"{u}}ssen alle Daten mit einer 
+Kanalkodierung versehen werden. Hier wird ein (255, 240) Reed-Solomon Code benutzt, also ein Code, der 15 parity 
+bits pro 240 Datenbits benutzt. Durch die Benutzung dieser Kodierung k{\"{o}}nnen alle Einzelfehler und 
+Doppelfehler erkannt und korrigiert werden. Erst ab 7 Fehlern ist eine Korrektur nicht mehr m{\"{o}}glich, ab 15 
+Fehlern versagt auch eine Fehlererkennung.
+
 Diese Kodierungsart wurde aus zwei Gr{\"{u}}nden gew{\"{a}}hlt:
 \begin{itemize}
-\item Durch expermientelle Verifikation wurde klar, dass im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird. Da das durchschnittliche Paket um mindestens Faktor
-	100 gr{\"{o}}{\ss}er ist, ist nicht erforderlich, eine sehr kompakte Kodierung zu benutzen, es ist ausreichend, die Redudanz zu reduzieren. 
-\item Es ist ein systematischer Code, der es erlaubt, w{\"{a}}hrend des laufenden Betriebes die Pakete mitzuschneiden
-	und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche - beispielsweise bei einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort
-	sind Nutz- und Kodierungsdaten nicht klar unterscheidbar.
+\item Durch expermientelle Verifikation wurde klar, dass im Netzwerk nur 1 Byte pro Paket verf{\"{a}}lscht wird.
+	Da das durchschnittliche Paket um mindestens Faktor 100 gr{\"{o}}{\ss}er ist, ist nicht erforderlich,
+	eine sehr kompakte Kodierung zu benutzen, es ist ausreichend, die Redudanz zu reduzieren. 
+\item Es ist ein systematischer Code, der es erlaubt, w{\"{a}}hrend des laufenden Betriebes die Pakete 
+	mitzuschneiden und sich die Daten anzugucken. Dies vereinfacht die Fehlersuche -- beispielsweise bei
+	einem Viterbicode w{\"{a}}re dies nicht m{\"{o}}glich, dort sind Nutz- und Kodierungsdaten nicht klar 
+	unterscheidbar.
 \end{itemize}
 
 \subsection{Voter}
 \label{voter}
-Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r zust{\"{a}}ndig aus den vielen Steuerkommandos die ankommen die Mehrheit zu bilden (\textit{N-modular reduancy}).
-Da nicht klar ist wie viele Controller momentan {\"{u}}berhaupt Steuerkommandos senden k{\"{o}}nnten, kann nicht gewartet werden bis eine bestimmte Anzahl von Kommandos empfangen wurde. Deswegen wird beim empfangen
-eines neuen Weltstatus das Steuerergebniss gebildet, weggesendet und der Vorgang wird neu gestartet.
+Der Roboter kann nur direkt durch den Voter gesteuert werden. Der Voter ist dabei nur daf{\"{u}}r
+zust{\"{a}}ndig, aus den vielen Steuerkommandos, die ankommen, die Mehrheit zu bilden (\textit{N-modular reduancy}).
+Da nicht klar ist, wie viele Controller momentan {\"{u}}berhaupt Steuerkommandos senden k{\"{o}}nnten,
+kann nicht gewartet werden bis eine bestimmte Anzahl von Kommandos empfangen wurde. Deswegen wird beim Empfangen
+eines neuen Weltstatus (also zu periodisch wiederkehrenden Zeitpunkten) das Steuerergebniss gebildet,
+weggesendet und der Vorgang wird neu gestartet.
 
-Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen (\textit{Mid-Value Selection}). Da die Steuerkommandos
-Flie{\ss}kommazahlen enthalten ist keine exakte Votierung m{\"{o}}glich. Die Wahl des Medians f{\"{u}}hrt zus{\"{a}}tzlich dazu das weniger "extreme" Bewegungen bevorzugt werden.
+Um das Steuerergebniss zu finden werden die empfangenen Steuerkommandos sortiert und der Medianwert genommen 
+(\textit{Mid-Value Selection}). Anstatt des Mittelwerts wird der Medians genutzt weil dadurch weniger "extreme"
+Bewegungen bevorzugt werden.
 \noindent\begin{minipage}{.30\textwidth}
 	\begin{lstlisting}[caption=Sammeln, frame=tlrb, language={[11]C++}]
 votes.res[id].push_back(Vector{x, y});
@@ -410,30 +459,56 @@ for(auto&& votes : votes.res) {
 
 \subsection{Controller}\label{controller}
 Die Roboter m{\"{u}}ssen sich so bewegen, dass die Platte m{\"{o}}glichst gut ausbalanciert
-ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten die Roboter auch nicht miteinander
-kollidieren.
+ist und gleichzeitig die Roboter nicht ihre ganze Tankf{\"{u}}llung verbrauchen. Gleichzeitig sollten
+die Roboter auch nicht miteinander kollidieren.
 
 \paragraph{Algorithmus zur Bestimmung der Bewegung} Der implementierte Algorithmus unterschiedet zwischen 3 Situation: ist der Zustand des Roboters kritisch,
 unkritisch oder dazwischen? Dabei ist das Kriterium die momentane Tankf{\"{u}}llung geteilt durch die Entfernung zur Ladestation. Roboter mit fast leerem Tank
 versuchen also sich aufzuf{\"{u}}llen, Roboter mit fast vollem Tank versuchen auszubalancieren.
 
-Jeder Controller berechnet f{\"{u}}r jeden Roboter wie dieser sich bewegen soll. Dabei wird mit dem Roboter im kritischtesten Zustand anfangen, denn dieser muss ja 
-unbedingt Richtung Ladestation und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen dann ausgleichen. Nachdem eine Roboterbewegung berechnet wurde, werden die Weltkippwinkel
-dementsprechend neu berechnet - so dass die letzten Roboter die Bewegungen der vorher berechneten mit in ihre Entscheidung einbeziehen.
+Jeder Controller berechnet f{\"{u}}r jeden Roboter wie dieser sich bewegen soll. Dabei wird mit dem Roboter
+im kritischtesten Zustand anfangen, denn dieser muss ja unbedingt Richtung Ladestation gesteuert werden 
+und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen diese Bewegung dann ausgleichen. Daf{\"{u}}r werden nach
+jeder berechneten Roboterbewegung die Weltkippwinkel neu berechnet, so dass die vollsten Roboter die Bewegungen
+der vorher berechneten mit in ihre Entscheidung einbeziehen.
 
-\paragraph{Bewegung} Um zu einem bestimmten Punkt hinzufahren (z.B. zur Ladestation) wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation
-wird immer in Bezug auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigeometrische Funktionen bestimmt werden:
-$$ M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)$$
-Desweiteren gibt es einen Distanzvektor zum Ziel:
-$$ D_i = \gls{F} - P_i $$
+\paragraph{Bewegung zu einem Punkt} Um zu einem bestimmten Punkt hinzufahren (z.B. zur Ladestation),
+wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation wird immer in Bezug
+auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigonometrische Funktionen bestimmt werden:
+\begin{equation}
+\label{eq:M}
+	M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)
+\end{equation}
+Die n{\"{a}}chste Bewegung gerade nach vorne wird dann anhand dieser Werte "aufgeteilt". Falls der Roboter
+in einem 90\textdegree Winkel nach rechts "guckt" ($M_i = \bigl(\begin{smallmatrix} 0 \\ 1 \end{smallmatrix}\bigr)$)
+w{\"{u}}rde er sich beim nach vorne fahren auf der Y-Achse nach rechts bewegen.
 
-Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des
-Winkels berechnet wird, das Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer nach rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die
-falsche Richtung drehen. Das Vorzeichen kann allerdings berechnet werden, in dem man die Bewegungsvektoren in drei Dimensionen betrachtet und das Keuzprodukt bildet. In dem resultierenden
-Vektor gibt das Vorzeichen der Z Kompenente das Vorzeichen des Winkels an.
+Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ D_i = \gls{F} - P_i $
 
-\paragraph{Ausbalancieren} Um auszubalancieren wird\todo{} 
+Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel 
+fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des Winkels berechnet wird, das
+Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer (egal ob das Ziel links oder rechts liegt) nach 
+rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die falsche Richtung drehen.
+Das Vorzeichen kann allerdings berechnet werden, in dem man die Bewegungsvektoren in drei Dimensionen betrachtet 
+und das Keuzprodukt bildet. Dabei gibt das Vorzeichen der Z Kompenente des resultierenden Vektors das Vorzeichen 
+des Winkels an.
 
+Um nun zu einem Punkt zu fahren wird sich anhand des Drehwinkels gedreht und entsprechend des Distanzvektores 
+bewegt. Da Rotation und Translation gleichzeitig ausgef{\"{u}}hrt werden, f{\"{a}}hrt der Roboter eine Kurve.
+\footnote{Es w{\"{a}}hre auch m{\"{o}}glich erst die Rotation, dann die Translation durchzuf{\"{u}}hren}
+Da sich der Winkel stetig verkleinert, dreht sich der Roboter immer weniger. Die Geschwindigkeit wird nicht
+angepasst.
+
+\paragraph{Ausbalancieren} Auch das ausbalancieren kann als Bewegung zu einem Punkt aufgefasst werden.
+Die Platte ist ja durch die Gewichte der Roboter aus dem Gleichgewicht gebracht worden, um sie wieder ins
+Gleichgewicht zu bringen k{\"{o}}nnten sich die einzelnen Roboter ja an den jeweiligen Punkt bewegen der
+die Platte ins Gleichgewicht bringen w{\"{u}}rde.
+
+Dazu wird zuerst der Kippwinkel der Platte ohne den momentan betrachteten Roboter berechnet. Anhand dessen
+kann bestimmt werden an welcher Position der momentan betrachtete Roboter sein m{\"{u}}sste um die Platte
+ins Lot zu bringen. Dorthin bewegt der Roboter sich nun, stoppt allerdings am Rande der Platte um nicht
+herunterzufallen -- schlie{\ss}lich kann es sein das dieser Roboter sich von der Platte bewegen m{\"{u}}sste
+um die Platte auszubalancieren.
 
 \clearpage
 \section{Evaluation}
