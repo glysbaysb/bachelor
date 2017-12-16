@@ -25,6 +25,8 @@
 #define CRIT_THRESHHOLD 20
 #define SAFE_THRESHHOLD 80
 
+class Action;
+
 struct Vector
 {
 	double x_,
@@ -40,6 +42,14 @@ struct Vector
 		return Vector(x_ + a.x_, y_ + a.y_);
 	}
 
+	Vector& operator+=(const Vector& a)
+	{
+		x_ += a.x_;
+		y_ += a.y_;
+
+		return *this;
+	}
+	
 	Vector operator-(const Vector& a) const
 	{
 		return Vector(x_ - a.x_, y_ - a.y_);
@@ -83,8 +93,8 @@ protected:
 	//todo: Vector velocity_;
 
 public:
-	Object(int id, Vector pos, double rot) :
-		id_(id), pos_(pos), rotation_(rot)
+	Object(int id, Vector pos, double rot, double m) :
+		id_(id), pos_(pos), rotation_(rot), m_(m)
 	{
 	}
 
@@ -108,6 +118,11 @@ public:
 	{
 		return rotation_;
 	}
+
+	double weight() const
+	{
+		return m_;
+	}
 };
 
 class Robot : public Object
@@ -125,8 +140,8 @@ public:
 		return crit() < a.crit();
 	}
 
-	Robot(int id, Vector pos, double rotation, double fuel) :
-		Object(id, pos, rotation), fuel_(fuel)
+	Robot(int id, Vector pos, double rotation, double fuel, double m) :
+		Object(id, pos, rotation, m), fuel_(fuel)
 	{
 	}
 
@@ -142,8 +157,8 @@ public:
 class FuelStation: public Object
 {
 public:
-	FuelStation(int id, Vector pos, double rotation) :
-		Object(id, pos, rotation)
+	FuelStation(int id, Vector pos, double rotation, double m) :
+		Object(id, pos, rotation, m)
 	{
 	}
 };

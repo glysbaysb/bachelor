@@ -102,9 +102,9 @@ static WorldStatus unpackWorldStatus(msgpack_object_array* params)
 		auto fuel = object->ptr[6].via.f64;
 
 		if(type == 'R') {
-			ws.robots.emplace_back(Robot(ID, {x, y}, rotation, fuel));
+			ws.robots.emplace_back(Robot(ID, {x, y}, rotation, fuel, m));
 		} else {
-			ws.fuelStation = new FuelStation(ID, Vector(x, y), rotation);
+			ws.fuelStation = new FuelStation(ID, Vector(x, y), rotation, m);
 		}
 	}
 

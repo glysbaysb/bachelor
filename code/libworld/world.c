@@ -34,7 +34,7 @@ typedef struct WorldContext_ {
 
 static void createRobotCallback(void* optional, msgpack_object_array* params);
 static void moveRobotCallback(void* optional, msgpack_object_array* params);
-static void getFiCfg(void* ctx_);
+static int getFiCfg(void* ctx_);
 
 static int recvNanaomsg(int sock, char** buf, int* len) {
 	assert(buf);
@@ -454,7 +454,7 @@ int createRobot(void* ctx_) {
 	return ctx->createRobot.id;
 }
 
-static void getFiCfg(void* ctx_) {
+static int getFiCfg(void* ctx_) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	void* out = NULL;

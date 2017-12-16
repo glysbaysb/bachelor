@@ -5,30 +5,9 @@
 
 #include "algo.h"
 
-static bool _isInsideCircle(const Vector& position, const double& radius)
-{
-	auto squareDistance = (position.x_ * position.x_) + (position.y_ * position.y_);
-	auto squareRadius = radius * radius;
-
-	return squareDistance <= squareRadius;
-}
-
-static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
-{
-	auto d = (a - b).norm();
-	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
-
-	auto x = 180 - angle(facing, d);
-
-	/* correct the angle, if it's on the left */
-	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
-	if(dotZ < 0) {
-		x = -x;
-	}
-	
-	std::cout << "winkel: " << x << '\n';
-	return x;
-}
+static bool _isInsideCircle(const Vector& position, const double& radius);
+static double _rotateTowards(const Vector& a, const double rotation, const Vector& b);
+static Vector _actionToVector(const Action& a);
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
@@ -61,12 +40,25 @@ static std::vector<Action> _calc_movement(const std::pair<double, double>& angle
 		return {};
 	}
 
-	auto actions = std::vector<Action>();
-	actions.push_back(_calc_movement(angle, robot, fuel));
+	auto action =_calc_movement(angle, robot, fuel);
 
-	/* todo: update angle */
+	robot->pos() += _actionToVector(action);
+	auto xAngle = std::accumulate(objects.begin(), objects.end(), (fuel.pos().x_ * fuel.weight()),
+					[](double b, const Robot& a)
+					{
+						return b + (a.pos().x_ * a.weight());
+					});
+	auto yAngle = std::accumulate(objects.begin(), objects.end(), (fuel.pos().y_ * fuel.weight()),
+					[](double b, const Robot& a)
+					{
+						return b + (a.pos().y_ * a.weight());
+					});
+
 	
-	auto otherActions = _calc_movement(angle, objects, fuel, robot + 1);
+	auto actions = std::vector<Action>();
+	actions.push_back(action);
+
+	auto otherActions = _calc_movement({xAngle, yAngle}, objects, fuel, robot + 1);
 	actions.insert(std::end(actions), std::begin(otherActions), std::end(otherActions));
 	return actions;
 }
@@ -81,4 +73,35 @@ std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::v
 	/* ... so start the recursion with the last element -> move the robot with
 	   the most critical condition first */
 	return _calc_movement(angle, objects, fuel, objects.rbegin());
+}
+
+static bool _isInsideCircle(const Vector& position, const double& radius)
+{
+	auto squareDistance = (position.x_ * position.x_) + (position.y_ * position.y_);
+	auto squareRadius = radius * radius;
+
+	return squareDistance <= squareRadius;
+}
+
+static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
+{
+	auto d = (a - b).norm();
+	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
+
+	auto x = 180 - angle(facing, d);
+
+	/* correct the angle, if it's on the left */
+	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
+	if(dotZ < 0) {
+		x = -x;
+	}
+	
+	std::cout << "winkel: " << x << '\n';
+	return x;
+}
+
+static Vector _actionToVector(const Action& a)
+{
+	/* todo: update angle */
+	return Vector{0., 0.};
 }
