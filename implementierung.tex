@@ -1,10 +1,43 @@
 \clearpage
 \section{Architektur}
+\todo{warum beschreiben}
 
-\subsection{XX}
-event gesteuerte kommunikation.
-\todo{mhm, irgendwie ne begruendung}
-anforderung 2, mehrere instanzen
+\subsection{Simulation}
+
+
+\subsection{Kommunikation zwischen den Systemteilen}
+Bei verteilten Systemen (wie diesem) ist einer der wichtigsten Punkte wie die Kommunikation zwischen den Systemteilen abl{\"{a}}uft.
+Hierbei kann zwischen zwei Gruppierungen unterschieden werden: einmal die Kommunikation zwischen Simulation und Voter und andererseits
+die Kommunikationen zwischen den Controllern und zwischen Controller und Voter. Da die letztere von den Studierenden geplant werden soll,
+wird sie hier nicht weiter untersucht.
+
+Durch die Simulationsidee  und Anforderungen der Fehlermodells sind einige Eckpunkte der Architektur bereits vorgegeben. Da alle Voter
+in der gleichen Welt miteinander interagieren sollen, ist es am einfachsten wenn die Simulation ein Server ist, zu dem sich alle
+verbinden. Dieser Server kann dann intern die Simulation vorantreiben und nur die Ergebnisse dieser weiterversenden. Die Alternative
+w{\"{a}}re ein System ohne zentrale Instanz in dem die Simulation auf jedem Robter ausgef{\"{u}}hrt wird. In diesem Fall gibt es
+allerdings das Problem das sich der Status der Simulationen voneinander desychnorisieren kann, zum Beispiel wenn ein Voter
+eine schw{\"{a}}cheren CPU hat, die l{\"{a}}nger zur Berechnung eines Simulationstaktes braucht als die anderen Voter. Daher ist
+das Modell mit zentrale Instanz vorzuziehen; es stellt automatisch sicher das alle Voter (im Normalfall, also ohne Fehler)
+die gleichen Informationen kriegen und anhand dieser dann reagieren.
+
+Auch soll die Simualation nicht rundenbasiert, sondern \todo{mhm kann ich hier echtzeit sagen?} sein. Gerade bei einer 3D-Ansicht
+wurde es unangehnem auffallen wenn auch nur wenige Millisekunden nichts passiert. Viel wichtiger ist allerdings das dies eine
+unrealistische Vereinfachung gegen{\"{u}}ber der realen Welt w{\"{a}}hre, die sich nun einmal konstant ver{\"{a}}ndert.
+
+Daher wird das \hyperref[pubsub]{\textit{publish-subscripe pattern}} von \hyperref[nanomsg]{Nanomsg} eingesetzt. Mithilfe dieses sendet die Simulation / der Publisher
+Informationen an die Suscriber / die Voter. Die Voter k{\"{o}}nnen diese Informationen dann an die Controller weitersenden und auf die
+Steuerkommandos warten. Diese k{\"{o}}nnen dann ausgewertet und an die Simulation geschickt werden. Dieses Pattern f{\"{u}}hrt zu
+einer zeitlichen Entkoppelung von Sender und Empf{\"{a}}nger, daher ist die Kommunikation event-gesteuert.
+
+Desweiteren hat es auch den Vorteil das, wie in \hyperref[Anforderung]{Anforderung 2} gefordert, mehrere Instanzen gleichzeitig
+laufen k{\"{o}}nnen. Mehrere Simulation k{\"{o}}nnen auf jeweils eigenem PC gestartet werden; die Voter verbinden sich dann mit "ihrer"
+Simulation und kommen den anderen Instanzen nicht in die Quere.
+
+Damit die Studenten sich nicht um die Kommunikation zur Simulation k{\"{u}}mmern m{\"{u}}ssen brauchen sie eine Bibliothek welche
+diese Funktionalit{\"{a}}t bereitstellt. Sie kann benutzt werden um einen neuen Roboter zu erstellen und diesen zu steuern.
+Im Fehlermodell gibt es auch eine Anforderung das einzelene Voter andere Informationen {\"{u}}ber den Status der Welt
+bekommen sollen als andere. Daher ist die Bibliothek nicht nur f{\"{u}}r die reine Kommunikation zust{\"{a}}ndig, sondern wird auch
+benutzt um diese Art von Fehler zu injizieren.
 
 \subsection{Anzeige}\label{graphics}
 F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten, die diese Aufgabe l{\"{o}}sen
@@ -28,8 +61,9 @@ dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der Platte vi
 werden k{\"{o}}nnte. Um immer einen Teil der Simulation im Blick haben zu k{\"{o}}nnen schwebt die Kamera
 {\"{u}}ber der Platte und schaut in einem 20\textdegree Winkel schr{\"{a}}g nach unten.
 
-\paragraph{Lichtquelle} Um die Szene auszuleuchten, gibt es ein Spotlight. Dies befindet sich weit von der
-Platte entfernt und scheint in einem steilen Winkel von links oben auf diese.
+\paragraph{Lichtquelle} Damit etwas sichtbar wird, muss es von Licht getroffen werden. In der Simulation
+gibt es daher ein Spotlight. Dies befindet sich weit von der Platte entfernt und scheint in einem steilen Winkel
+von links oben auf diese.
 
 \clearpage
 \section{Fehlermodell}\label{fm}
@@ -359,7 +393,7 @@ void detachFromWorld(void* ctx);
 int createRobot(void* ctx);
 typedef void (*TypeGetWorldStatusCallback)(WorldStatus ws, void* optional);
 int startProcessingWorldEvents(void* ctx, TypeGetWorldStatusCallback cb, void* optional);
-void moveRobot(void* ctx, int id, float speed, float angle);
+void moveRobot(void* ctx, int id, float vL, float vR);
 \end{lstlisting}
 
 Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
