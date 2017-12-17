@@ -3,7 +3,32 @@
 \todo{warum beschreiben}
 
 \subsection{Simulation}
+Der wichtigste Teil dieser Bachelorarbeit ist die Simulation. Sie soll nicht nur ein physikalisch glaubw{\"{u}}rdiges Modell
+f{\"{u}}r Roboterbewegungen darstellen, den Votern die ben{\"{o}}tigten Informationen zur Steuerung bereitstellen und die
+Steuerkommandos auch empfangen und ausf{\"{u}}hren sondern dies auch graphisch darstellen. Dar{\"{u}}ber hinaus soll die
+Simulation das Geschehen auch graphisch darstellen und dem Benutzer die M{\"{o}}glichkeit geben mit der Simulation zu
+interagieren, zum einen durch Bewegen der Kamera, zum anderen durch eine Fernsteuerung eines Roboters, zwecks Fehlerinjektion.
 
+Um all diese Aufgaben zu erf{\"{u}}llen gibt es mehrere Klassen. Diese lassen sich grob in zwei Kategorien einteilen: als
+erstes die Klassen die f{\"{u}}r die Simulation und das Netzwerk zust{\"{a}}ndig sind, als zweites die Klassen die den Benutzer
+mit dem System interagieren lassen.
+\todo{Klassendiagramm neu malen}
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Arch}
+	\caption{Klassendiagramm}
+	\label{fig:arch}
+\end{figure}
+
+In der ersten Kategorie sind dabei die RPC Klasse die Daten serialisiert und dann {\"{u}}ber \textit{publish-suscribe} anderen
+zur Verf{\"{u}}gung stellt. Sie nimmt auch Steuerkommandos an und leitet diese an den jeweiligen Roboter weiter. Dieser f{\"{u}}hr
+das Steuerkommando dann aus -- allerdings unter Beachtung des Fehlermodells; es kann also sein das zu diesem Zeitpunkt zum
+Beispiel ein Motor ausgefallen ist und daher sich nur der andere bewegen kann.
+
+Um dem Benutzer die M{\"{o}}glichkeit zu geben einen anderen Teil der Simulation zu sehen, gibt es die Klasse "Camera Controller".
+Sie ist da{\"{u}}r zust{\"{a}}ndig die Kamera zu bewegen. Abgesehen von den Objekten in der Welt wird, oben links in der Ecke,
+auch angezeigt wie stark die Welt gekippt ist. Dies erledigt das "Radar" Skript, das drei farbige Kreise zeichnet welche die
+Kippung symbolisieren und auf diesen einen schwarzen Kreis zeichnet der anzeigt wie stark gerade gekippt wurde.
 
 \subsection{Kommunikation zwischen den Systemteilen}
 Bei verteilten Systemen (wie diesem) ist einer der wichtigsten Punkte wie die Kommunikation zwischen den Systemteilen abl{\"{a}}uft.
@@ -64,6 +89,11 @@ werden k{\"{o}}nnte. Um immer einen Teil der Simulation im Blick haben zu k{\"{o
 \paragraph{Lichtquelle} Damit etwas sichtbar wird, muss es von Licht getroffen werden. In der Simulation
 gibt es daher ein Spotlight. Dies befindet sich weit von der Platte entfernt und scheint in einem steilen Winkel
 von links oben auf diese.
+
+\paragraph{User Interface} Desweiteren wird dem Benutzer, in der Mitte, als Text angezeigt ob die
+Fernsteuerungsfehlerinjektion an- oder ausgeschaltet ist. Das Radar oben links zeigt an wie stark die Platte
+durch die Gewichte der Roboter und der Ladestation gekippt wurde und kann genutzt werden um einzusch{\"{a}}tzen
+wie gut die Regelung ist.
 
 \clearpage
 \section{Fehlermodell}\label{fm}

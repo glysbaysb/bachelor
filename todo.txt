@@ -7,6 +7,7 @@ Deadline | Module		|	was
 		 |				| fehlerinj konf senden --> testen.
 								wahrschienlichkeit = 0
 								ob das ueberhaupt jemals passieren wird
+						| wenn fehlerinjektor an -> kamera bewegt sich nicht?
 		 |				| ruckeln
 		 | ecc			| pakete > 255b
 		 | algo			| scheiÃbewegung (das ruckeln in unity &
