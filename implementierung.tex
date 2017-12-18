@@ -95,6 +95,8 @@ Fernsteuerungsfehlerinjektion an- oder ausgeschaltet ist. Das Radar oben links z
 durch die Gewichte der Roboter und der Ladestation gekippt wurde und kann genutzt werden um einzusch{\"{a}}tzen
 wie gut die Regelung ist.
 
+\todo{mehr?}
+
 \clearpage
 \section{Fehlermodell}\label{fm}
 Das Ziel der Aufgabe ist es, Studierenden etwas {\"{u}}ber ausfallsichere Systeme beizubringen. Daf{\"{u}}r
@@ -380,10 +382,12 @@ Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinh
 \end{equation}
 Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist, bewegt sich der Roboter nicht.
 
-Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation weitergegeben und dann von Unity verarbeitet.
-Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und, falls gen{\"{u}}gen Energie
-vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
+Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation
+weitergegeben und dann von Unity verarbeitet. Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und,
+falls gen{\"{u}}gen Energie vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
 Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel interpoliert.
+
+\todo{fehlerinjektion}
 
 \subsection{Die Ladestation}\label{fuelstation}
 Innerhalb der Welt muss eine Ladestation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine Ladestation hat dabei ein festes Gewicht: $ w(F) = 5 $.
@@ -403,9 +407,32 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
 XXXX \todo{} text, iwie auch auf das da oben beziehen
 
-\subsection{Benutzerinterface}
-
 \subsection{Netzwerkschnittstelle}
+Zur Kommunikation mit den Studentenprogrammen gibt es die Netzwerkschnittstelle. Hierr{\"{u}}ber bekommen die Voter die Informationen {\"{u}}ber den momentanen
+Status der Welt und k{\"{o}}nnen die Roboter bewegen (nachdem sie einen Roboter erstellt haben). Die Kommunikation geschieht {\"{u}}ber ein selbstentwickeltes
+RPC Protokoll. Dieses erlaubt es verschiedene Funktion (aufgef{\"{u}}hrt in \ref{interface}) aufzurufen und die Weltstatusinformationen zu empfangen.
+
+Haupts{\"{a}}chlich verantwortlich hierf{\"{u}}r ist die Klasse HandleRPCRequest. Bei der Initalisierung erstellt sie zwei \textit{sockets}, einen der f{\"{u}}r
+die Weltstatusinformationen nach dem \textit{publish-suscribe} Muster sendet (TCP, Port 8001) und einen der die RPC Anfragen bearbeitet (TCP, Port 8000).
+
+In der Update() Funktion werden die Funktion f{\"{u}}r das abarbeiten der RPC Anfragen und das senden der Weltstatusinformationen aufgerufen. In handleRPC()
+wird versucht vom socket zu lesen. Dies geschieht nicht-blockierend, so dass, falls keine Daten gelesen werden konnten die Funktion direkt einen Fehler
+zur{\"{u}}ckgibt. Ist dies der Fall, passiert in handleRPC() nichts weiter. Sind allerdings doch Daten empfangen worden, werden sie zu allererst deserialisiert.
+Danach kann das RPC Paket ausgewertet werden; je nach dem welche Funktion aufgerufen werden soll, verzweigt sich die Ausf{\"{u}}hrung.
+
+Wenn sich ein Voter mit der Simulation verbindet werden als aller erstes die Fehlerinjektionskonfigurationen abgefragt -- dies geschieht durch einen RPC Aufruf
+von GET\_FAULT\_INJECTOR\_NETWORK\_CFG. In diesem Fall serialisiert die Simulation diese Daten und schickt sie an den Voter zur{\"{u}}ck.
+
+Als n{\"{a}}chstes erstellt ein Voter einen Roboter, durch Aufruf von CREATE\_ROBOT. In diesem Fall wird aus dem Roboter \textit{prefab} ein Roboter an einer
+zuf{\"{a}}lligen Positionen erstellt. Von diesem wird dann die Objektid genommen und an den Voter gesendet. Dieser kann diese nun benutzen um den Roboter zu
+steuern.
+
+Die Steuerung eines Roboters geschieht durch einen Aufruf von MOVE\_ROBOT. Dann wird im RoboterController die Funktion MoveRobot() aufgerufen, in der die
+Bewegung (unter Beachtung des Ladestands und der Fehlerinjektion) ausgef{\"{u}}hrt wird. Diese RPC Funktion gibt nichts an den Aufrufer zur{\"{u}}ck, Erfolg
+oder Misserfolg des Steuerbefehls muss anhand der Weltstatusinformationen erkannt werden.
+
+Die Weltstatusinformationen werden von der Funktion sendWorldStatus() alle 250ms an alle Subscriber gesendet. Eine genauere Beschreibung des Weltstatus findet
+sich in \ref{worldstatus}.
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
@@ -431,6 +458,8 @@ void moveRobot(void* ctx, int id, float vL, float vR);
 Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
 dann vom Studentencode einfach aufgerufen werden.
 
+\todo{weltstatusinfo}
+\todo{vlt noch iwas?}
 
 \clearpage
 \section{Beispielimplementation}
