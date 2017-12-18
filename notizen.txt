@@ -1,16 +1,6 @@
 nachwippen...
 
-Fault injector parametisibar:
-* roboter geht kaputt
-* bauteile gehen kaputt
---> ganz kapuut, stuck at
-* weltstatus kommt manchmal nicht, verfaelscht, letzter nochmal (in libworld)
-
 formelzeichen & quellcodeverzeichniss
-
-rpc und vektor kurz anreissen
-
-bspimplemantation muss nur irgendwie bewegen
 ----
 
 Rundenbasiert

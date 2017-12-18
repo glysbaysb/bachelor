@@ -14,8 +14,6 @@ Deadline | Module		|	was
 		 wegfindung)
 		 | thesis		| 
 		 |				| blender designen
-		 |				| vektorrechnung
-		 |				| im Text immer auf die Anforderungen beziehen
 		 |				| was man fürs kompilieren braucht?
 ---------+--------------+----------------
 		 |				| Scheißbewegung wieder richtig machen? vlt fertig

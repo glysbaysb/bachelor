@@ -63,7 +63,8 @@ abstammen und registriert sind werden w{\"{a}}hrend der Berechnung jedes Frames 
 der Funktion ab, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist und Inputevents
 behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
 werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen die in dieser
-Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame.
+Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame. Desweiteren muss der Klassenname innerhalb einer Datei so
+hei{\ss}en wie die Datei selbst.
 
 Da Konstruktor und Dekonstrktor nicht {\"{u}}berschrieben werden k{\"{o}}nnen, gibt es die virtual functions Start() und OnDestroy(). Diese
 {\"{u}}bernehmen die Aufgaben des Konstruktor und Dekonstrktors.
