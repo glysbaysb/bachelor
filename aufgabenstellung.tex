@@ -7,76 +7,84 @@
 	\label{fig:simulation}
 \end{figure}
 
-\subsection{Motivation} Seit der Einf{\"{u}}hrung der Computer und vor allem seit dem rasanten Wachstums des
-Internets, werden Computer in immer mehr Bereichen eingesetzt. Es gibt nur noch wenige Berufe oder 
-Freizeitaktivit{\"{a}}ten die komplett ohne auskommen; Die Buchhaltung geschieht komplett elektronisch und
-das Geld wird elektronisch {\"{u}}berwiesen, anstatt in einer Lohnt{\"{u}}te ausgeh{\"{a}}ndigt zu werden.
-Und um herauszufinden ob der Lohn angekommen ist benutzt man Onlinebanking, wobei eine
-unm{\"{o}}glich absch{\"{a}}tzbare Anzahl an vernetzten Computern beteiligt ist. Auch komplett ohne Technik
-durchf{\"{u}}hrbare Freizeitaktivit{\"{a}}ten wie das Kegeln sind heute ohne Computerunterst{\"{u}}tzung
-kaum noch vorstellbar -- in den Kegelbahnen z{\"{a}}hlt ein Computer f{\"{u}}r jeden Spieler mit wie viele
-Punkte erreicht wurden und stellt die umgeworfenen Kegel automatisch wieder auf.
+Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu lÃ¶sende Problem-- die Entwicklung einer 
+{\"{U}}bungsaufgabe zum Modul "Ausfallsichere Systeme" -- entfaltet, im zweiten auf dazu ben{\"{o}}tigten
+Grundlagen eingegangen und als letztes wird der LÃ¶sungsweg skizziert. 
 
-Dies bietet enorme, jeden Tag ersichtlich werdene Vorteile, birgt jedoch auch Risiken. Die Komplexit{\"{a}}t,
-oder den Aufwand, die der "Nutzer" bew{\"{a}}ltigen muss, sinkt zwar (meistens), allerdings wird das
-System fehleranf{\"{a}}lliger. Es gibt mehr Komponenten, also kann mehr kaputt gehen.
+Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
+Danach wird erklÃ¤rt, warum die bislang an der FH SÃ¼dwestfalen existierend{\"{U}}bungsaufgabe nicht optimal ist. 
+Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
 
-Zu einem Problem wird dies falls es um lebenswichtige Bereiche wie die
-Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnliches geht. Auch kleine Fehler dort k{\"{o}}nnen
-enorme Konsequen haben. 
+Im zweiten Teil werden als erstes die benÃ¶tigten Grundlagen zur Umsetzung erklÃ¤rt. Dabei geht es einerseits um 
+mechanische und physische Konzepte wie das differential steering und auch um informationstechnologische Aspekte
+wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.
 
-Trotzdem wird dieser Aspekt oft vernachl{\"{a}}ssigt. Ein tragisches Beispiel ist der Therac-25, eine
-Maschine zur Strahlentherapie. Durch verschiedene Softwarefehler kam es, unter bestimmten Umst{\"{a}}nden, zu
-{\"{u}}berh{\"{o}}hten Strahlendosen die teilweise t{\"{o}}dlich endeten.
+Darauf aufbauend wird dann im dritten Teil die Implementierung beschrieben, mit besonderem Fokus auf dem 
+Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit 
+gezogen.
 
-Eine offensichtliche Gegenma{\ss}nahme ist es die Software gr{\"{u}}ndlich zu testen. Es gibt verschiedene
-Arten von Tests und Teststrategien, die das System aus unterschiedlichen Blickwinkeln betrachten. Hierbei kann zwischen
-\textit{static} und \textit{dynamic testing} unterschieden werden. Bei statischem Testen wird der Quellcode untersucht,
-das Programm oder Programmbestandteile aber nicht ausgef{\"{u}}hrt. Ein Beispiel daf{\"{u}}r ist \textit{static analysis},
-bei der der Programmcode auf auf{\"{a}}llige Codekonstrukte untersucht wird, die ha{\"{u}}fig zu Fehlern f{\"{u}}hren -- wie zum
-Beispiel die Benutzung nicht initalsierter Variablen. Ein anderer Ansatz sind die \textit{code reviews} bei
-denen der programmierte Code mit weiteren Programmieren besprochen wird um nach dem Vier Augen Prinzip weitere Probleme zu
-identifizieren. \todo{jpl erwaehnen?}
+\subsection{Motivation}
+Seit der EinfÃ¼hrung der Computer und vor allem seit dem rasanten Wachstums des Internets, werden Computer in immer 
+mehr Bereichen eingesetzt. Das betrifft nicht nur die eigentlichen "Personal-Computer" auf dem Schreibtisch, 
+sondern mehr und mehr embedded systems, die fÃ¼r viele Laien gar nicht als "Computer" wahrgenommen werden. Diese 
+als "Digitalisierung" beschriebene Tendenz der Gegenwart hat neben der Berufswelt l{\"{a}}ngst auch weite Bereiche 
+der Freizeitaktivit{\"{a}}ten erfasst -- in Bowlingbahnen beispielsweise z{\"{a}}hlt ein Computer fÃ¼r jeden 
+Spieler mit, wie viele Punkte erreicht wurden und stellt die umgeworfenen Pins automatisch wieder auf. All dies 
+bietet enorme, jeden Tag ersichtlich werdende Vorteile, birgt jedoch auch Risiken. 
 
-Ein Beispiel f{\"{u}}r das dynamische Testen sind Unit Tests, bei denen eine logische Einheit des Systems isoliert getestet wird
-in dem sie mit vorher festgelegten Parametern ausgef{\"{u}}hrt wird und das Ergebniss mit einem erwarteten Ergebniss verglichen
-wird. Zum Beispiel k{\"{o}}nnen bei einem Navigationsger{\"{a}}t die Wegfindung, die Anzeige und das interpretieren der Kartendaten
-als eigene Module programmiert und getestet werden. Um die Wegfindung zu testen w{\"{u}}rde dann eine k{\"{u}}nstliche Karte genutzt
-und getestet ob der Wegfindungsalgorithmus f{\"{u}}r vorher definierte Strecken auf dieser Karte die k{\"{u}}rzesten Wege
-findet.
+Denn durch die steigende Komplexit{\"{a}}t der Hard- und Software wird das System fehleranf{\"{a}}lliger. Es gibt 
+mehr Komponenten, also kann mehr kaputt gehen. Letztlich ist es nicht mÃ¶glich, in hochkomplexen Systemen ein 
+absolut perfektes, v{\"{o}}llig fehlerfreies System zu entwickeln. 
+Was bei einem Bowlingabend fÃ¼r die Mitspieler nicht besonders kritisch ist, wird zu einem Problem,in unmittelbar 
+lebenswichtigen Bereichen wie der Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnlichem. Auch kleine 
+Fehler dort k{\"{o}}nnen enorme Konsequenzen haben. Ein tragisches Beispiel ist der Therac-25, eine Maschine zur 
+Strahlentherapie. Durch verschiedene Softwarefehler kam es unter bestimmten UmstÃ¤nden zu {\"{u}}berh{\"{o}}hten 
+Strahlendosen, die teilweise t{\"{o}}dlich endeten.
 
-Es gibt allerdings auch F{\"{a}}lle in denen es nicht machbar ist das System komplett durchzutesten. Beispielweise ist es
-mit spezieller Hardware m{\"{o}}glich den Befehlssatz einer CPU zu emulieren und zu {\"{u}}berpr{\"{u}}fen ob bestimmte Befehlskombinationen
-zu Problemen f{\"{u}}hren. Allerdings ist die Geschwindigkeit der Tests um mehrere Gr{\"{o}}ssenordnungen kleiner als die der tats{\"{a}}chlichen
-CPU, so das eine eine x86 CPU in der ersten Sekunde mehr Instruktionen ausf{\"{u}}hrt als w{\"{a}}hrend des gesamten Testzyklus\cite{kaplan}.
-Es ist also unm{\"{o}}glich die CPU komplett durchzutesten, was dazu f{\"{u}}hrt das CPUs trotzdem noch Fehler enthalten, ein ber{\"{u}}hmtes
-Beispiel ist der Pentium F00F Bug.
+Aus dem bislang Festgestellten ergibt sich die zwingende Notwendigkeit, Hard- und Software gr{\"{u}}ndlich zu 
+testen. Es gibt verschiedene Arten von Tests und Teststrategien, die das System aus unterschiedlichen Blickwinkeln 
+betrachten. Hierbei kann, zum Beispiel, zwischen static und dynamic testing unterschieden werden. 
+
+Bei statischem Testen wird der Quellcode untersucht, das Programm oder  Programmbestandteile aber nicht 
+ausgef{\"{u}}hrt. Ein Beispiel dafÃ¼r ist static analysis, bei der der Programmcode auf auf{\"{a}}fÃ¤llige 
+Codekonstrukte untersucht wird, die h{\"{a}}ufig zu Fehlern fÃ¼hren -- wie zum Beispiel die Benutzung nicht 
+initialisierter Variablen. 
+
+Ein anderer Ansatz sind die code reviews, bei denen der programmierte Code mit weiteren Programmieren besprochen 
+wird, um nach dem Vier-Augen-Prinzip weitere Probleme zu identifizieren.\todo{jpl erwaehnen?}
+
+Ein Beispiel f{\"{u}}r das dynamische Testen sind Unit-Tests, bei denen eine logische Einheit des Systems isoliert 
+getestet wird, in dem sie mit vorher festgelegten Parametern ausgef{\"{u}}hrt wird und das Ergebnis mit einem 
+erwarteten Ergebnis verglichen wird. Zum Beispiel k{\"{o}}nnen bei einem Navigationsger{\"{a}}t die Wegfindung, die 
+Anzeige und das Interpretieren der Kartendaten als eigene Module programmiert und getestet werden. Um die 
+Wegfindung zu testen, w{\"{u}}rde dann eine k{\"{u}}nstliche Karte genutzt und getestet, ob der 
+Wegfindungsalgorithmus f{\"{u}}r vorher definierte Strecken auf dieser Karte die k{\"{u}}rzesten Wege findet. 
+
+Es gibt allerdings auch F{\"{a}}lle, in denen es nicht machbar ist das System komplett durchzutesten. 
+Beispielsweise ist es zwar mit spezieller Hardware m{\"{o}}glich, den Befehl{\ss}atz einer CPU zu emulieren und zu 
+{\"{u}}berpr{\"{u}}fen, ob bestimmte Befehlskombinationen zu Problemen f{\"{u}}hren. Allerdings ist die 
+Geschwindigkeit der Tests um mehrere Gr{\"{o}}{\ss}enordnungen kleiner als die der tats{\"{a}}chlichen CPU, so das 
+eine einzige x86 CPU in der ersten Sekunde mehr Instruktionen ausf{\"{u}}hrt als w{\"{a}}hrend des gesamten 
+Testzyklus \cite{kaplan}. Es ist also unm{\"{o}}glich die CPU komplett durchzutesten, was dazu f{\"{u}}hrt das CPUs 
+trotzdem noch Fehler enthalten, ein ber{\"{u}}hmtes Beispiel ist der Pentium F00F Bug.
 
 Da also Testen alleine nicht ausreicht ist es besonders wichtig bei der Designphase angefangen die Ausfallsicherheit immer einzuplanen. Daf{\"{u}}r
 muss ein Problembewusstsein geschaffen werden. Um dann wirklich ausfallsichere System zu entwickeln braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
 {\"{u}}ber das Design und die Entwicklung solcher.
 
-\subsection{Aufgabenstellung} Dies ist die Aufgabe des Moduls "Ausfallsichere Systeme". Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und
-einen praktischen Teil (eine {\"{U}}bungsaufgabe). Die {\"{U}}bungsaufgabe soll eine M{\"{o}}glichkeit geben das theoretische Wissen anzuwenden.
-Dabei werden die Studenten aus den gelernten Techniken die richtigen f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen
-abw{\"{a}}gen und sie dann zu implementieren. Durch die praktische Anwendung wird das gelernte wiederholt und vertieft, was zu einem besseren
-Verst{\"{a}}ndnis f{\"{u}}hrt.
+\subsection{Aufgabenstellung} 
+Diese Kenntni{\ss}e zu vermitteln ist die Aufgabe des Moduls "Ausfallsichere Systeme" im Rahmen des Studienganges 
+"Technische Informatik". Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und einen praktischen Teil (eine 
+{\"{u}}bungsaufgabe). Die {\"{u}}bungsaufgabe soll eine M{\"{o}}glichkeit geben, das in der Vorlesung erworbene 
+theoretische Wi{\ss}en anzuwenden. Dabei werden die Studierenden aus den gelernten Techniken die richtigen 
+f{\"{u}}r die Aufgabe herau{\ss}uchen m{\"{u}}{\ss}en, diese gegen Alternativen abw{\"{a}}gen und sie dann zu 
+implementieren. Durch die  praktische Anwendung wird das Gelernte wiederholt und vertieft, was zu einem be{\ss}eren 
+Verst{\"{a}}ndnis f{\"{u}}hrt. 
 
-Die Aufgabe dieser Bachelorarbeit ist die Konzeption der selbigen. Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt
-nutzbar sein und gerade auch Menschen ohne Fachkentnisse einen Einblick in die Komplexit{\"{a}}t ausfallsicherer Systeme geben, dabei aber trotzdem interessant
-sein.
-
-\subsection{Gliederung} Diese Bachelorarbeit besteht aus zwei Teilen. Im ersten wird die Aufgabenstellung entwickelt, im zweiten der L{\"{o}}sungsweg skizziert.
-
-Der erste Teil besteht aus einer Einf{\"{u}}hrung, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. Danach wird erkl{\"{a}}rt, warum die
-\hyperref[heizung]{existierende {\"{U}}bungsaufgabe} nicht ausreicht; basierend darauf werden die Anforderungen an die neue Aufgabe entwickelt.
-
-Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um mechanische und physische Konzepte wie das
-\hyperref[diffs]{\textit{differential steering}} und die mathematische Grundlagen der Vektorrechnung, aber auch um Informationstechnologische Aspekte wie die Serialisierung von Daten oder
-verschiedene Netzwerkkommunikationsarten. Darauf aufbauend wird dann die Implementierung beschrieben, mit besonderem Fokus auf dem Fehlermodell und der
-Fehlerinjektion.
-
-Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit gezogen.
+Die Aufgabe dieser Bachelorarbeit ist die Konzeption einer solchen praktischen {\"{u}}bungsaufgabe. 
+Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt 
+nutzbar sein. Damit soll auch Menschen ohne Fachkenntni{\ss}e ein intere{\ss}anter Einblick in die 
+Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
 
 \clearpage
 \section{Die ausfallsichere Heizung}\label{heizung}
@@ -153,20 +161,6 @@ besch{\"{a}}digt, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Dana
 repariert werden und ist in der Zwischenzeit nicht benutzbar.
 
 \clearpage
-\section{Anforderungen}\label{anforderung}
-Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was das neue System leisten soll:
-\begin{enumerate}
-	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
-	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
-	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich,
-		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
-		Arten der Fehlerinjektion ganz auschgeschaltet werden.
-	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
-	\item Es soll visuell ansprechend sein.
-	\item Es darf auch durch unsachgem{\"{a}}{\ss}en Gebrauch nicht gesch{\"{a}}digt werden
-\end{enumerate}
-
-\clearpage
 \section{Die balancierenden Roboter}
 An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine
 Simulation\cite{Werner00} entwickelt. In der Simulation soll eine simulierte Platte durch die Bewegung von 
@@ -193,7 +187,9 @@ mehreren Rechnern miteinander kommunizieren k{\"{o}}nnen, auch falls sie in vers
 geschrieben wurden. Zus{\"{a}}tzlich zur reinen RPC Funktionalit{\"{a}}t abstrahiert es, unter anderem, 
 Transkationen und Zeitsynchronisation.
 
-In das System k{\"{o}}nnen Fehler injiziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden oder die Controller k{\"{o}}nnen. \todo{}
+In das System k{\"{o}}nnen Fehler injiziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden. Auch
+die Controller k{\"{o}}nnen entweder beendet werden oder ihnen kann die Netzwerkverbindung entzogen werden. Es ist
+auch m{\"{o}}glich einen Roboter fernzusteuern und damit direkten Einfluss auf die Simulation zu nehmen.
 
 Die balancieren Robotern w{\"{u}}rden den Anforderungen an vielen Stellen entsprechen, zum Beispiel
 unterscheidet sie sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
@@ -215,6 +211,20 @@ Dies gilt gerade auch unter dem Gesichtspunkt, dass die Ausfallsicherheit im Vor
 nicht die Einarbeitung in einen Standard.
 
 Aus all diesen Gr{\"{u}}nden wurde entschieden, eine neue {\"{U}}bungsaufgabe zu entwickeln.
+
+\clearpage
+\section{Anforderungen}\label{anforderung}
+Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was das neue System leisten soll:
+\begin{enumerate}
+	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
+	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
+	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich,
+		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
+		Arten der Fehlerinjektion ganz auschgeschaltet werden.
+	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
+	\item Es soll visuell ansprechend sein.
+	\item Es darf auch durch unsachgem{\"{a}}{\ss}en Gebrauch nicht gesch{\"{a}}digt werden
+\end{enumerate}
 
 \clearpage
 \section{Simulationsidee}

@@ -60,8 +60,8 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 
 Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen die von UnityEngine.MonoBehaviour
 abstammen und registriert sind werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
-der Funktion ab, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist und Inputevents
-behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
+der Funktion ab\footnote{Vgl. \cite{unity-exex-order}}, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist
+und Inputevents behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
 werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen die in dieser
 Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame. Desweiteren muss der Klassenname innerhalb einer Datei so
 hei{\ss}en wie die Datei selbst.
