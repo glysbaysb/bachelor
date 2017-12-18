@@ -337,44 +337,45 @@ Robotern umgeschaltet werden. Bei einem weiteren Druck auf die Escapetaste wird 
 
 
 \clearpage
-\section{Die Welt}
+\section{Die Simulation}
 Die simulierte Welt besteht aus den Robotern, die von den Studierenden gesteuert werden sollen, einer Ladestation, an der die Robter Energie tanken k{\"{o}}nnen, und
 der Welt, einer kreisf{\"{o}}rmigen, kippbaren Platten, auf der diese Objekte platziert werden und sich bewegen k{\"{o}}nnen.
 
 Simuliert wird die Welt mit der Unity \textit{game engine}. Diese erm{\"{o}}glicht es plattformunabh{\"{a}}nige 
 Spiele oder, in diesem Fall, Simulationen zu schreiben. Dabei stellt sie, unter anderem eine Physikengine,
-eine Grafikengine und eine Schnitstelle zum Scripten dieser bereit. 
+eine Grafikengine und eine Schnitstelle zum Scripten dieser bereit. Desweiteren gibt es auch M{\"{o}}glichkeiten Benutzereingaben
+abzufragen, um dem Benutzer die M{\"{o}}glichkeit zu geben mit der Simulation zu interagieren.
+
+Hier werden die M{\"{o}}glichkeiten der objektorierntierten Programmierung genutzt. Jeder Bestandteil der Simulation wird durch
+ein Skript abgebildet, diese Skripte k{\"{o}}nnen auch miteinander interagieren. Zum Beispiel benutzt die Robotersteuerungsklasse
+die RPC Klasse, so wie dies auch die Fehlerinjektion tut. Genauso wurde die Vererbung genutzt, denn die Roboter und Ladestation haben
+einige Eigenschaften gemeinsam (zum Beispiel Position und Gewicht), die eine Vererbungshierachie erm{\"{o}}glichen.
 
 \subsection{Die Roboter}\label{robot}
 In der simulierten Welt k{\"{o}}nnen sich bis zu \gls{N} Roboter bewegen. Diese bewegen sich aber nicht selbstst{\"{a}}ndig, sondern werden von den Controllern ferngesteurt.
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
-gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell, dieses hat Auswirkungen auf die Simulation.
+gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell; dieses hat Auswirkungen auf die Simulation.
 
 \paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\ref{khepera} entspricht. Die Grundform des Roboters ist
-eine S{\"{a}}ule.
-Der Energielevel wird {\"{u}}ber eine Lampe auf der Oberseite angezeigt, die ihre
-Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) {\"{a}}ndert.
+eine S{\"{a}}ule. Auf dieser befindet sich eine Lampe die den Energielevel angezeigt; daf{\"{u}} {\"{a}}ndert sich ihre Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) .
 \todo{Bild}
 
 
 \paragraph{Physikalisches Modell}
-\todo{muss das nicht auch irgendwie in die Grundlagen? Oder ist das Implementierung}
 Ein Roboter \gls{Ni} wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
 Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
 $ R_i = r_y(i)$. \todo{Ausdehnung}
 
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
-\begin{equation}
-    \label{eq:w}
+\begin{equation}\label{eq:w}
  w(N_i) = 1 + e(N_i) * 0.03
 \end{equation}
 
 Die Roboter haben einen Energiespeicher, der mit maximal 1000 Energieeinheiten
 aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
 Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
-\begin{equation}
-    \label{eq:entladen}
+\begin{equation}\label{eq:entladen}
 	e(N_i, t + 1) = e(N_i, t) - 1 - |V_i|
 \end{equation}
 Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist, bewegt sich der Roboter nicht.
@@ -389,8 +390,7 @@ Innerhalb der Welt muss eine Ladestation platziert werden, um den Roboter die M{
 
 Diese wird vor Simulationsbeginn platziert und bewegt sich im weiteren Verlauf nicht.
 Falls sich ein Roboter an die Ladestation heranbewegt, also gilt: 
-\begin{equation}
-    \label{eq:dist}
+\begin{equation}\label{eq:dist}
  |\bigl(\begin{smallmatrix} x(i) \\ y(i) \end{smallmatrix}\bigr) - \bigl(\begin{smallmatrix} x(F) \\ y(F) \end{smallmatrix}\bigr)| \leq |\bigl(\begin{smallmatrix} 1 \\ 1 \end{smallmatrix}\bigr)|
 \end{equation}
 wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine einfache Gerade:
@@ -403,7 +403,9 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
 XXXX \todo{} text, iwie auch auf das da oben beziehen
 
+\subsection{Benutzerinterface}
 
+\subsection{Netzwerkschnittstelle}
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
