@@ -58,6 +58,22 @@ oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet, dass solange ein Objekt mit dieser kollidiert, testet, ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
+Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen die von UnityEngine.MonoBehaviour
+abstammen und registriert sind werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
+der Funktion ab, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist und Inputevents
+behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
+werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen die in dieser
+Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame.
+
+Da Konstruktor und Dekonstrktor nicht {\"{u}}berschrieben werden k{\"{o}}nnen, gibt es die virtual functions Start() und OnDestroy(). Diese
+{\"{u}}bernehmen die Aufgaben des Konstruktor und Dekonstrktors.
+
+Es gibt auch weitere {\"{u}}berschreibare Funktionen, mit denen es m{\"{o}}glich ist sich in verschiedene Zwischenschritte des Renderprozesses
+einzuklinken (zum Beispiel OnWillRenderObject, OnPostRender, ...). Das gleiche gilt auch f{\"{u}}r Inputevents (beispielsweise OnMouseMove) und
+die Ereginisse der Physikengine (OnCollisionStart(), ...).
+
+\subsection{prefab?}
+
 \clearpage
 \section{RPC}
 Der Grundgedanke von verteilten System ist es, verschiedene Systeme verschiedene Aufgaben
