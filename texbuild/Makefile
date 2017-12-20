@@ -1,9 +1,9 @@
-latex: ../doku.tex ../lit.bib ../implementierung.tex ../grundlagen.tex ../aufgabenstellung.tex ../glossary.tex
-	pdflatex ../doku.tex 
-	makeglossaries doku
-	biber doku
-	pdflatex ../doku.tex
-	pdflatex ../doku.tex
+latex: ../bachelor.tex ../lit.bib ../implementierung.tex ../grundlagen.tex ../aufgabenstellung.tex ../glossary.tex
+	pdflatex ../bachelor.tex 
+	makeglossaries bachelor
+	biber bachelor
+	pdflatex ../bachelor.tex
+	pdflatex ../bachelor.tex
 
 clean:
-	rm doku*
+	rm bachelor*
