@@ -27,16 +27,13 @@
 static const int* sequence;
 static int idx;
 int rand() {
-	auto a = sequence[idx++];
-
-	std::cout << a << '\n';
-	return a;
+	return sequence[idx++];
 }
 
 class FicfgTest : public ::testing::Test {
 private:
 	void new_simobject(SimulationObject* so) {
-		so->x = so->y = 1.;
+		so->x = so->y = 0.;
 
 		so->rotation = 90.;
 		so->fuel = 500;
@@ -89,8 +86,31 @@ TEST_F(FicfgTest, FakeAngle) {
 	ASSERT_FLOAT_EQ(ws_->yTilt, 2.5);
 }
 
+TEST_F(FicfgTest, FakePosition) {
+	static const int s[] = {1, // sign
+		4, // type
+		1, // index
+		1, // sign
+		0, // type
+		45000, // change
+
+		1, // sign
+		4, // type
+		1, // index
+		1, // sign
+		1, // type
+		45000, // change
+	};
+	sequence = s;
+
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->objects[0].x, -4.5);
+
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->objects[0].y, -4.5);
+}
+
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
-
