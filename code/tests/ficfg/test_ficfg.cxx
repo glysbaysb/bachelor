@@ -110,6 +110,49 @@ TEST_F(FicfgTest, FakePosition) {
 	ASSERT_FLOAT_EQ(ws_->objects[0].y, -4.5);
 }
 
+TEST_F(FicfgTest, FakeRotation) {
+	static const int s[] = {1, // sign
+		4, // type
+		0, // index
+		1, // sign
+		2, // type
+		20000, // change
+
+		0,
+		4,
+		0,
+		0,
+		2,
+		20000,
+	};
+	sequence = s;
+
+	/* down to -2 */
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->objects[0].rotation, 88.);
+
+	{
+		for(auto i = 0; i < 44; i++) {
+			idx = 0;
+			fakeWorldStatus(ws_);
+		}
+
+		EXPECT_FLOAT_EQ(ws_->objects[0].rotation, 0.);
+
+
+		idx = 0;
+		fakeWorldStatus(ws_);
+		ASSERT_FLOAT_EQ(ws_->objects[0].rotation, -2.);
+	}
+
+
+	/* up again */
+	idx = 6;
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->objects[0].rotation, 0.);
+
+}
+
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
