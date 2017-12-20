@@ -4,11 +4,16 @@
  * The unit tests for the ficfg functionality are in this file
  *
  * The tests are:
-*
+ * - Fake the X- and Y-Angle
+ *
  * All test functions are member functions of Ficfg.
  * Most of the unit tests test "normally", i.e. they expect all funciton calls
  * to succeed. Sometimes a unit test specifically tries something illegal to
  * test the error path. Those blocks of code are marked "F:" to improve clarity
+ *
+ * As the libficfg heavily uses rand() there is a "mock" of that function that
+ * outputs a well known sequence, carefully (*cough*) crafted to ensure
+ * determinism.
  */
 #include <gtest/gtest.h>
 #include <iostream>
@@ -38,11 +43,8 @@ private:
 		so->m = 100;
 	}
 
-protected:
-	WorldStatus* ws;
-public:
-	FicfgTest (){
-		ws = (WorldStatus*)calloc(1, sizeof(ws));
+	WorldStatus* new_worldstatus() {
+		auto ws = (WorldStatus*)calloc(1, sizeof(WorldStatus));
 		ws->xTilt = 1.;
 		ws->yTilt = 1.;
 
@@ -50,6 +52,14 @@ public:
 		ws->objects = (SimulationObject*)calloc(1, sizeof(SimulationObject));
 		new_simobject(&ws->objects[0]);
 
+		return ws;
+	}
+
+protected:
+	WorldStatus* ws_;
+public:
+	FicfgTest () : ws_(new_worldstatus()) {
+		
 		idx = 0;
 	}
 
@@ -69,14 +79,14 @@ TEST_F(FicfgTest, FakeAngle) {
 	};
 	sequence = s;
 
-	EXPECT_FLOAT_EQ(ws->xTilt, 1);
-	EXPECT_FLOAT_EQ(ws->yTilt, 1);
+	EXPECT_FLOAT_EQ(ws_->xTilt, 1);
+	EXPECT_FLOAT_EQ(ws_->yTilt, 1);
 
-	fakeWorldStatus(ws);
-	ASSERT_FLOAT_EQ(ws->xTilt, 2.5);
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->xTilt, 2.5);
 
-	fakeWorldStatus(ws);
-	ASSERT_FLOAT_EQ(ws->yTilt, 2.5);
+	fakeWorldStatus(ws_);
+	ASSERT_FLOAT_EQ(ws_->yTilt, 2.5);
 }
 
 int main(int argc, char** argv) {
