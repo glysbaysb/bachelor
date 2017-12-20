@@ -311,11 +311,14 @@ static void* networkHandler(void* ctx_) {
 
 			/* fault injector */
 			if(FAULT(ctx->cfg.dropWorldStatus)) {
+				puts("dropped\n");
 				/* intentionally left empty */
 			} else if(FAULT(ctx->cfg.fakeWorldStatus)) {
+				puts("faked\n");
 				fakeWorldStatus(new);
 				ctx->getWorldStatusCallback(new, ctx->additional);
 			} else if(FAULT(ctx->cfg.dupWorldStatus)) {
+				puts("dup\n");
 				ctx->getWorldStatusCallback(ctx->ws, ctx->additional);
 			}
 

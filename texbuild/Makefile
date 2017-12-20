@@ -4,6 +4,5 @@ latex: ../bachelor.tex ../lit.bib ../implementierung.tex ../grundlagen.tex ../au
 	biber bachelor
 	pdflatex ../bachelor.tex
 	pdflatex ../bachelor.tex
-
 clean:
 	rm bachelor*
