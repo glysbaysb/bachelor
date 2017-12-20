@@ -54,9 +54,14 @@ private:
 
 protected:
 	WorldStatus* ws_;
+	FiCfg cfg;
 public:
-	FicfgTest () : ws_(new_worldstatus()) {
-		
+	FicfgTest () : ws_(new_worldstatus())
+	{
+		cfg.dropWorldStatus = 1000;
+		cfg.dupWorldStatus = 1000;
+		cfg.fakeWorldStatus = 1000;
+
 		idx = 0;
 	}
 
@@ -64,6 +69,40 @@ public:
 	}
 };
 
+TEST_F(FicfgTest, ProbabilityCfg) {
+	ASSERT_EQ(FAULT(0), 0);	
+
+	static const int s[] = {700, 1000};
+	sequence = s;
+
+	{
+		idx = 0;
+		ASSERT_EQ(FAULT(cfg.dropWorldStatus), 0);
+		ASSERT_EQ(FAULT(cfg.dropWorldStatus), 1);
+	}
+
+	{
+		idx = 0;
+		ASSERT_EQ(FAULT(cfg.dupWorldStatus), 0);
+		ASSERT_EQ(FAULT(cfg.dupWorldStatus), 1);
+	}
+
+	{
+		idx = 0;
+		ASSERT_EQ(FAULT(cfg.fakeWorldStatus), 0);
+		ASSERT_EQ(FAULT(cfg.fakeWorldStatus), 1);
+	}
+
+	{
+		static const int s[] = {1, 0, 1};
+		sequence = s;
+
+		idx = 0;
+		ASSERT_EQ(FAULT(2), 0);
+		ASSERT_EQ(FAULT(2), 1);
+		ASSERT_EQ(FAULT(2), 0);
+	}
+}
 
 TEST_F(FicfgTest, FakeAngle) {
 	static const int s[] = {0, // sign
