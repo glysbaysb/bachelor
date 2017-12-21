@@ -320,6 +320,8 @@ static void* networkHandler(void* ctx_) {
 			} else if(FAULT(ctx->cfg.dupWorldStatus)) {
 				puts("dup\n");
 				ctx->getWorldStatusCallback(ctx->ws, ctx->additional);
+			} else {
+				ctx->getWorldStatusCallback(new, ctx->additional);
 			}
 
 			if(ctx->ws) {
