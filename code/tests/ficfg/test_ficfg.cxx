@@ -30,7 +30,7 @@
 
 static const int* sequence;
 static int idx;
-int rand() {
+int rand() __THROW {
 	return sequence[idx++];
 }
 
@@ -108,8 +108,8 @@ TEST_F(FicfgTest, ProbabilityCfg) {
 	}
 
 	{
-		static const int s[] = {1, 0, 1};
-		sequence = s;
+		static const int s2[] = {1, 0, 1};
+		sequence = s2;
 
 		idx = 0;
 		ASSERT_EQ(FAULT(2), 0);
