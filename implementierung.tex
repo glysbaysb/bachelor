@@ -36,7 +36,7 @@ Hierbei kann zwischen zwei Gruppierungen unterschieden werden: einmal die Kommun
 die Kommunikationen zwischen den Controllern und zwischen Controller und Voter. Da die letztere von den Studierenden geplant werden soll,
 wird sie hier nicht weiter untersucht.
 
-Durch die Simulationsidee  und Anforderungen der Fehlermodells sind einige Eckpunkte der Architektur bereits vorgegeben. Da alle Voter
+Durch die Simulationsidee und Anforderungen der Fehlermodells sind einige Eckpunkte der Architektur bereits vorgegeben. Da alle Voter
 in der gleichen Welt miteinander interagieren sollen, ist es am einfachsten wenn die Simulation ein Server ist, zu dem sich alle
 verbinden. Dieser Server kann dann intern die Simulation vorantreiben und nur die Ergebnisse dieser weiterversenden. Die Alternative
 w{\"{a}}re ein System ohne zentrale Instanz in dem die Simulation auf jedem Robter ausgef{\"{u}}hrt wird. In diesem Fall gibt es
@@ -45,14 +45,24 @@ eine schw{\"{a}}cheren CPU hat, die l{\"{a}}nger zur Berechnung eines Simulation
 das Modell mit zentrale Instanz vorzuziehen; es stellt automatisch sicher das alle Voter (im Normalfall, also ohne Fehler)
 die gleichen Informationen kriegen und anhand dieser dann reagieren.
 
-Auch soll die Simualation nicht rundenbasiert, sondern \todo{mhm kann ich hier echtzeit sagen?} sein. Gerade bei einer 3D-Ansicht
-wurde es unangehnem auffallen wenn auch nur wenige Millisekunden nichts passiert. Viel wichtiger ist allerdings das dies eine
-unrealistische Vereinfachung gegen{\"{u}}ber der realen Welt w{\"{a}}hre, die sich nun einmal konstant ver{\"{a}}ndert.
+F{\"{u}}r den zeitlichen Ablauf in der Simulation sind zwei M{\"{o}}glichkeiten denkbar: eine rundenbasierte Abfolge oder eine
+Abfolge in Echtzeit. Bei der rundenbasieren Simulationstrategie wird der Status der Simulation immer nach festgelegten Intervallen
+ver{\"{a}}ndert. In diesem Fall w{\"{a}}re es denkbar das die Controller und Voter 250ms Zeit haben ihre Bewegungsvorschl{\"{a}}ge
+zu berechnen und diese an die Simulation schicken. Diese sammelt sie, wendet sie alle auf einmal an und versendet den neuen Status der
+Welt. Damit beginnt die n{\"{a}}chste Runde. Die Alternative ist es das Bewegungsvorschl{\"{a}}ge direkt angewendet werden, falls
+der Abstimmungsvorgang zwischen den Controllern also schneller vonstatten geht bewegen sich die Roboter auch {\"{o}}fter.
 
-Daher wird das \hyperref[pubsub]{\textit{publish-subscripe pattern}} von \hyperref[nanomsg]{Nanomsg} eingesetzt. Mithilfe dieses sendet die Simulation / der Publisher
+Beide M{\"{o}}glichkeiten w{\"{a}}hren realisierbar, allerdings wird die Echtzeitmethode vorgezogen. Einerseits da, gerade bei einer
+3D-Ansicht, es unangehnem auff{\"{a}}llt wenn auch nur wenige Millisekunden nichts passiert --- es wirkt als w{\"{u}}rde die
+Simulation stocken. Desweiteren ist es auch eine unrealistische Vereinfachung gegen{\"{u}}ber der realen Welt w{\"{a}}hre,
+die sich nun einmal konstant ver{\"{a}}ndert.
+
+Dies hei{\ss} zwangsl{\"{a}}ufig das eine Event-gesteuerten Kommunikation eingesetzt werden muss. Sender und Empf{\"{a}}nger
+sollen zeitlich entkoppelt sein, haupts{\"{a}}chlich ihre eigenen Aufgaben durchf{\"{u}}hren und erst zu "passenden" Zeitpunkten
+mit den jeweils anderen Kommunikationspartnern interagieren. Daher wird das \hyperref[pubsub]{\textit{publish-subscripe pattern}}
+von \hyperref[nanomsg]{Nanomsg} eingesetzt. Mithilfe dieses sendet die Simulation / der Publisher
 Informationen an die Suscriber / die Voter. Die Voter k{\"{o}}nnen diese Informationen dann an die Controller weitersenden und auf die
-Steuerkommandos warten. Diese k{\"{o}}nnen dann ausgewertet und an die Simulation geschickt werden. Dieses Pattern f{\"{u}}hrt zu
-einer zeitlichen Entkoppelung von Sender und Empf{\"{a}}nger, daher ist die Kommunikation event-gesteuert.
+Steuerkommandos warten. Diese k{\"{o}}nnen dann ausgewertet und an die Simulation geschickt werden.
 
 Desweiteren hat es auch den Vorteil das, wie in \hyperref[Anforderung]{Anforderung 2} gefordert, mehrere Instanzen gleichzeitig
 laufen k{\"{o}}nnen. Mehrere Simulation k{\"{o}}nnen auf jeweils eigenem PC gestartet werden; die Voter verbinden sich dann mit "ihrer"
@@ -405,7 +415,14 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 
 \subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
-XXXX \todo{} text, iwie auch auf das da oben beziehen
+
+Die Kr{\"{a}}fte die auf die Platte wirken berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y}. Es wird definiert das die Platte um
+maximal 30\textdegree kippen kann, dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
+m{\"{o}}gliche Maximalkraft entspricht also den 30\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
+zu errechnen.
+
+Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn 2 (oder mehr) Roboter sich auf der Platte befinden. Vorher wirkt das Gewicht der Ladestation zu
+stark und die Platte ist schon beim Start so stark gekippt das sie nicht mehr ausbalanciert werden kann.
 
 \subsection{Netzwerkschnittstelle}
 Zur Kommunikation mit den Studentenprogrammen gibt es die Netzwerkschnittstelle. Hierr{\"{u}}ber bekommen die Voter die Informationen {\"{u}}ber den momentanen
