@@ -285,8 +285,8 @@ Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 	Zeitpunkt $t$ zu bestimmen. Eine Multiplikation dieser mit den Geschwindigkeitsvektoren ergibt den
 	Bewegungsvektor zum Zeitpunkt $t$ - daraus l{\"{a}}sst sich die Position ermitteln:
 }
-	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
-	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) * \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
+	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
+	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
 \end{align}
 \end{subequations}
 
@@ -309,8 +309,8 @@ F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forc
 gilt Gleichung ~\ref{eq:forces:y}.
 \begin{subequations}\label{eq:forces}
 \begin{align}
-	V(x) = x(F) * w(F) + \sum_{i=0}^{|\gls{N}|} ( x(N_i) * w(N_i) ) \label{eq:forces:x}\\
-	V(y) = y(F) * w(F) + \sum_{i=0}^{|N|} ( y(N_i) * w(N_i) ) \label{eq:forces:y}
+	V(x) = x(F) \times w(F) + \sum_{i=0}^{|\gls{N}|} ( x(N_i) \times w(N_i) ) \label{eq:forces:x}\\
+	V(y) = y(F) \times w(F) + \sum_{i=0}^{|N|} ( y(N_i) \times w(N_i) ) \label{eq:forces:y}
 \end{align}
 \end{subequations}
 
@@ -320,7 +320,17 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 \end{equation}
 
 \subsection{Kippwinkel}
-Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt.
+Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 30\textdegree erreicht wird, falls sich alle
+Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
+die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
+
+\begin{equation}\label{eq:tilt-from-maxtilt}
+30\degree = Max, X\degree = Curr \\
+\Rightarrow \frac{Max}{Curr} = \frac{30}{X} \\
+\Rightarrow \frac{1}{X} = \frac{Max}{30 * Curr} \\
+\Rightarrow X = \frac{30 * Curr}{Max}
+\end{equation}
+\todo{nicht alles in eine zeile}
 
 \subsection{Dynamischen Gleichgewicht}
 Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
