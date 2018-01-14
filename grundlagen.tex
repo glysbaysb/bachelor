@@ -319,13 +319,19 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 	V(x) = V(y) = 0
 \end{equation}
 
-\subsection{Dynamischen Gleichgewicht}
-
-
 \subsection{Kippwinkel}
-\todo{einleitung und bild, wie im code die dolle ascii art}
-Um aus den Kr{\"{a}}ften den Kippwinkel zu errechnen muss, wie im Bild dargestellt, der Arcussinus genutzt werden. Dabei ist die "Hypotenuse"
-das Plattengewicht ($ N_Platte = 1000$). \todo{das wirkt total komisch. Ich teile Kraft/Gewicht? Und sowieso kann man asinus fuer solche Sachen ueberhaupt benutzen?}
-$$ asin(\frac{V(x)}{ N_Platte}) = \beta = W_{x}, asin(\frac{V(y)}{N_Platte}) = \alpha = W_{y} $$
+Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt.
+
+\subsection{Dynamischen Gleichgewicht}
+Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
+{\"{A}}nderung und schwingt dann langsam ab. Da ein geschlossenes System simuliert wird, ist dem Impuls eine gleich gro{\ss}e Kraft entgegen gerichtet.
+Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathematisch ausgedr{\"{u}}ckt:
+\begin{equation}\label{eq:schwingung}
+	s(t) = s(0) e^\mathrm{-\delta t} sin(\omega_d t)
+\end{equation}
+\footnote{$\delta$ und $\omega_d$ sind in der Simulation frei einstellbar}
+
+Hierbei ist $s(t)$ ein Vektor, in dem die Geschwindigkeits{\"{a}}nderung in X- und Y-Richtung die jeweiligen Elemente sind. Um die gesamte Schwindung der
+Platte zu bestimmen werden die Ergebnissvektoren der einzelnen Roboter aufaddiert.
 
 
