@@ -8,3 +8,6 @@ add_subdirectory(network)
 set(SOURCE_FILES_MOVE movement.cxx)
 add_executable(move ${SOURCE_FILES_MOVE})
 target_link_libraries(move pthread rpc network world)
+
+set(SOURCE_FILES_IMPULS impuls.cxx)
+add_executable(impuls ${SOURCE_FILES_IMPULS})
