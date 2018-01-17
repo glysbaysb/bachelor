@@ -397,7 +397,12 @@ weitergegeben und dann von Unity verarbeitet. Die neue Position und der neue Rot
 falls gen{\"{u}}gen Energie vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
 Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel linear interpoliert.
 
-\todo{fehlerinjektion}
+Hierbei muss auch die Fehlerinjektion beachtet werden. Es ist m{\"{o}}glich das die gew{\"{u}}nschte Drehzahl eines Motors nicht eingenommen werden
+kann, entweder weil dieser momentan ein \textit{stuck-at}-Verhalten aufweist, oder kaputt (definiert als: Drehzahl = 0) ist. Daf{\"{u}}r wird bevor
+die Bewegung durchgef{\"{u}}hrt wird {\"{u}}berpr{\"{u}}ft ob einer der beiden Motoren momentan nicht korrekt funktioniert; ist dies der Fall so wird,
+statt des gew{\"{u}}nschten Sollwertes, diesem Motor der Sollwert der Fehlerinjektion zugewiesen. Mit diesem Wert wird nun normal weitergerechnet, also
+erst die {\"{U}}berpr{\"{u}}fung ob der Roboter sich von der verbleibenden Energiemenge her so bewegen kann, und -- falls dies der Fall ist -- wird nun
+nach und nach diese Drehzahl der Motoren eingenommen was zu einer Rotation und Translation des Roboters f{\"{u}}hrt.
 
 \subsection{Die Ladestation}\label{fuelstation}
 Innerhalb der Welt muss eine Ladestation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine Ladestation hat dabei ein festes Gewicht: $ w(F) = 5 $.
