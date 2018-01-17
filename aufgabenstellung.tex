@@ -7,15 +7,15 @@
 	\label{fig:simulation}
 \end{figure}
 
-Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu lÃ¶sende Problem-- die Entwicklung einer 
+Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung einer 
 {\"{U}}bungsaufgabe zum Modul "Ausfallsichere Systeme" -- entfaltet, im zweiten auf dazu ben{\"{o}}tigten
-Grundlagen eingegangen und als letztes wird der LÃ¶sungsweg skizziert. 
+Grundlagen eingegangen und als letztes wird der L{\"{o}}sungsweg skizziert. 
 
 Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
-Danach wird erklÃ¤rt, warum die bislang an der FH SÃ¼dwestfalen existierend{\"{U}}bungsaufgabe nicht optimal ist. 
+Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierend{\"{U}}bungsaufgabe nicht optimal ist. 
 Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
 
-Im zweiten Teil werden als erstes die benÃ¶tigten Grundlagen zur Umsetzung erklÃ¤rt. Dabei geht es einerseits um 
+Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um 
 mechanische und physische Konzepte wie das differential steering und auch um informationstechnologische Aspekte
 wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.
 
@@ -24,21 +24,21 @@ Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der
 gezogen.
 
 \subsection{Motivation}
-Seit der EinfÃ¼hrung der Computer und vor allem seit dem rasanten Wachstums des Internets, werden Computer in immer 
+Seit der Einf{\"{u}}hrung der Computer und vor allem seit dem rasanten Wachstums des Internets, werden Computer in immer 
 mehr Bereichen eingesetzt. Das betrifft nicht nur die eigentlichen "Personal-Computer" auf dem Schreibtisch, 
-sondern mehr und mehr embedded systems, die fÃ¼r viele Laien gar nicht als "Computer" wahrgenommen werden. Diese 
+sondern mehr und mehr embedded systems, die f{\"{u}}r viele Laien gar nicht als "Computer" wahrgenommen werden. Diese 
 als "Digitalisierung" beschriebene Tendenz der Gegenwart hat neben der Berufswelt l{\"{a}}ngst auch weite Bereiche 
-der Freizeitaktivit{\"{a}}ten erfasst -- in Bowlingbahnen beispielsweise z{\"{a}}hlt ein Computer fÃ¼r jeden 
+der Freizeitaktivit{\"{a}}ten erfasst -- in Bowlingbahnen beispielsweise z{\"{a}}hlt ein Computer f{\"{u}}r jeden 
 Spieler mit, wie viele Punkte erreicht wurden und stellt die umgeworfenen Pins automatisch wieder auf. All dies 
 bietet enorme, jeden Tag ersichtlich werdende Vorteile, birgt jedoch auch Risiken. 
 
 Denn durch die steigende Komplexit{\"{a}}t der Hard- und Software wird das System fehleranf{\"{a}}lliger. Es gibt 
-mehr Komponenten, also kann mehr kaputt gehen. Letztlich ist es nicht mÃ¶glich, in hochkomplexen Systemen ein 
+mehr Komponenten, also kann mehr kaputt gehen. Letztlich ist es nicht m{\"{o}}glich, in hochkomplexen Systemen ein 
 absolut perfektes, v{\"{o}}llig fehlerfreies System zu entwickeln. 
-Was bei einem Bowlingabend fÃ¼r die Mitspieler nicht besonders kritisch ist, wird zu einem Problem,in unmittelbar 
+Was bei einem Bowlingabend f{\"{u}}r die Mitspieler nicht besonders kritisch ist, wird zu einem Problem,in unmittelbar 
 lebenswichtigen Bereichen wie der Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnlichem. Auch kleine 
 Fehler dort k{\"{o}}nnen enorme Konsequenzen haben. Ein tragisches Beispiel ist der Therac-25, eine Maschine zur 
-Strahlentherapie. Durch verschiedene Softwarefehler kam es unter bestimmten UmstÃ¤nden zu {\"{u}}berh{\"{o}}hten 
+Strahlentherapie. Durch verschiedene Softwarefehler kam es unter bestimmten Umst{\"{a}}nden zu {\"{u}}berh{\"{o}}hten 
 Strahlendosen, die teilweise t{\"{o}}dlich endeten.
 
 Aus dem bislang Festgestellten ergibt sich die zwingende Notwendigkeit, Hard- und Software gr{\"{u}}ndlich zu 
@@ -46,8 +46,8 @@ testen. Es gibt verschiedene Arten von Tests und Teststrategien, die das System 
 betrachten. Hierbei kann, zum Beispiel, zwischen static und dynamic testing unterschieden werden. 
 
 Bei statischem Testen wird der Quellcode untersucht, das Programm oder  Programmbestandteile aber nicht 
-ausgef{\"{u}}hrt. Ein Beispiel dafÃ¼r ist static analysis, bei der der Programmcode auf auf{\"{a}}fÃ¤llige 
-Codekonstrukte untersucht wird, die h{\"{a}}ufig zu Fehlern fÃ¼hren -- wie zum Beispiel die Benutzung nicht 
+ausgef{\"{u}}hrt. Ein Beispiel daf{\"{u}}r ist static analysis, bei der der Programmcode auf auf{\"{a}}llige
+Codekonstrukte untersucht wird, die h{\"{a}}ufig zu Fehlern f{\"{u}}hren -- wie zum Beispiel die Benutzung nicht 
 initialisierter Variablen. 
 
 Ein anderer Ansatz sind die code reviews, bei denen der programmierte Code mit weiteren Programmieren besprochen 
