@@ -395,7 +395,7 @@ Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist
 Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation
 weitergegeben und dann von Unity verarbeitet. Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und,
 falls gen{\"{u}}gen Energie vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
-Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel interpoliert.
+Um die Bewegung fl{\"{u}}{\ss}iger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel linear interpoliert.
 
 \todo{fehlerinjektion}
 
@@ -421,8 +421,12 @@ maximal 30\textdegree kippen kann, dies sei der Fall wenn die Ladestation und al
 m{\"{o}}gliche Maximalkraft entspricht also den 30\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
 zu errechnen.
 
-Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn 2 (oder mehr) Roboter sich auf der Platte befinden. Vorher wirkt das Gewicht der Ladestation zu
+Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn sich 2 (oder mehr) Roboter auf der Platte befinden. Vorher wirkt das Gewicht der Ladestation zu
 stark und die Platte ist schon beim Start so stark gekippt das sie nicht mehr ausbalanciert werden kann.
+
+Die Impulse welche auf die Platte wirken (beschrieben in \ref{eq:schwingung}) f{\"{u}}hren zu einer zus{\"{a}}tzlichen Kippung und einer Rotation der Platte.
+In dieser Formel muss die Funktion der Geschwindigkeit zum Zeitpunkt 0 abgeleitet werden, da die Beschleunigung allerdings linear zwischen momentaner und
+gew{\"{u}}nschter interpoliert wird, ist dies immer eine Konstante (vereinfacht wird hier 1 angenommen).
 
 \subsection{Netzwerkschnittstelle}
 Zur Kommunikation mit den Studentenprogrammen gibt es die Netzwerkschnittstelle. Hierr{\"{u}}ber bekommen die Voter die Informationen {\"{u}}ber den momentanen
