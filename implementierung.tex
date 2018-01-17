@@ -386,7 +386,7 @@ Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und se
 
 Die Roboter haben einen Energiespeicher, der mit maximal 1000 Energieeinheiten
 aufgeladen werden kann, und verbrauchen diese Energie, ob beim Fahren oder
-Stillstand. Dabei verbrauchen sie pro Runde ohne Bewegung immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
+Stillstand. Dabei verbrauchen sie pro Sekunde immer eine Energieeinheit und zus{\"{a}}tzlich, abh{\"{a}}ngig von der Geschwindigkeit, Energie f{\"{u}}r die Bewegung:
 \begin{equation}\label{eq:entladen}
 	e(N_i, t + 1) = e(N_i, t) - 1 - |V_i|
 \end{equation}
@@ -417,8 +417,8 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
 
 Die Kr{\"{a}}fte die auf die Platte wirken berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y}. Es wird definiert das die Platte um
-maximal 30\textdegree kippen kann, dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
-m{\"{o}}gliche Maximalkraft entspricht also den 30\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
+maximal 10\textdegree kippen kann, dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
+m{\"{o}}gliche Maximalkraft entspricht also den 10\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
 zu errechnen.
 
 Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn sich 2 (oder mehr) Roboter auf der Platte befinden. Vorher wirkt das Gewicht der Ladestation zu
