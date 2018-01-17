@@ -272,7 +272,7 @@ Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B.
 \begin{itemize}
 \item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
 \item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung rotieren, wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
-\item Falls die R{\"{a}}der in unterschiedliche Richtungen rotieren, wendet der Roboter auf der Stelle. Dabei dreht sich der Roboter auch wieder in Richtung des langsamer rotierenden Rades.
+\item Falls die R{\"{a}}der gleisch schneller, aber in unterschiedliche Richtunge rotieren, wendet der Roboter auf der Stelle.
 \end{itemize}
 
 Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ den
@@ -291,7 +291,13 @@ Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 \end{subequations}
 
 \subsection{Wegfindung}
-\todo{nur allgemein irgendwie kurve fahren vs. erst drehen dann gerade fahren}
+Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nung auf allen Achsen) bewegen kann, wird die Wegfindung
+erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problems) k{\"{o}}nnte der Roboter sich erst auf der Stelle
+drehen, bis er das Ziel "anguckt" und sich dann gradlienig auf dieses zubewegen.
+
+Falls einer der beiden Robotermotoren allerdings nicht vollst{\"{a}}ndig funktionst{\"{u}}chtig ist, ist dies nicht m{\"{o}}glich. Eine m{\"{o}}gliche
+Alternative w{\"{a}}hre es eine Kurve zu fahren, dies muss allerdings -- abh{\"{a}}ngig von der zur{\"{u}}ckzulegenden Strecke -- nicht immer m{\"{o}}glich
+sein.
 
 \clearpage
 \section{Die Gleichgewichte}
