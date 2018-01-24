@@ -50,7 +50,10 @@ int main(int argc, char** argv)
 	}
 
 	callbackInfo.network = new Network(argv[2]);
-	callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&callbackInfo);
+	if(callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&callbackInfo) < 0) {
+		fprintf(stderr, "can't register callback\n");
+		return 1;
+	}
 	callbackInfo.network->addRPCHandler(Procedure::WORLD_STATUS, &worldStatusRPCCallback, (void*)&callbackInfo);
 
 	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
@@ -163,11 +166,13 @@ static void voteCallback(void* optional, msgpack_object_array* params)
 	auto y = params->ptr[2].via.f64;
 	// todo: clamp
 
+	std::cout << Vector{x, y} << " fuer " << id << " empfnange\n";
 	{
 		info->vote.m.lock();
 		info->vote.res[id].push_back(Vector{x, y});
 		info->vote.m.unlock();
 	}
+
 }
 
 static void worldStatusRPCCallback(void* optional, msgpack_object_array* params)

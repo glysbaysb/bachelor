@@ -2,6 +2,9 @@ nachwippen...
 
 formelzeichen & quellcodeverzeichniss
 ----
+GroundPlate ist ein Cylinder mit einem Mesh Collider. Dann fliegen die Roboter nicht weg,
+weil die Oberflaeche als rund angesehen wird und die da mitten rein gebeamt werden und all
+so ein Mist
 
 Rundenbasiert
 Controller kriegt alle Position+Neigungswinkel der Roboter <- Simulation macht broadcast

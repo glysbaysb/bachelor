@@ -8,7 +8,8 @@ Deadline | Module		|	was
 								wahrschienlichkeit = 0
 								ob das ueberhaupt jemals passieren wird
 						| wenn fehlerinjektor an -> kamera bewegt sich nicht?
-		 |				| ruckeln
+		 |				| die uberpruefung ob genug energie vorhanden ist ist in moverobot, das heisst
+		 |				|  das ding rollt noch lange weiter
 		 | ecc			| pakete > 255b
 		 | algo			| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
@@ -16,9 +17,7 @@ Deadline | Module		|	was
 		 |				| blender designen
 		 |				| was man fürs kompilieren braucht?
 ---------+--------------+----------------
-		 |				| Scheißbewegung wieder richtig machen? vlt fertig
 
-gtest
 
 fixe ideen
 ----------
