@@ -22,7 +22,7 @@
 	\normalsize
 	\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
 	\begin{tabular}{x{6cm}p{7.5cm}}
-		\rule{0mm}{5ex}\textbAutor:} & Geert Martin Ijewski
+		\rule{0mm}{5ex}{\textbAutor:} & Geert Martin Ijewski
 	\end{tabular} 
 \end{center}
 \pagebreak
@@ -46,9 +46,15 @@ Da die \href[NNanomsg Bibliothek]{https://github.com/mhowlett/NNanomsg} genutzt 
 Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64" angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}} die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
-
 \subsection{Einstellungen}
-\todo{Wie geht das mit den FI Config und den anderen Configs?}
+Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
 
+Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault_injector.json` eingestellt werden. Dort ist es m{\"{o}}glich f{\"{u}}r die einzelnen Motoren
+der Roboter die Fehlerwahrscheinlichkeiten (ob f{\"{u}}r tempor{\"{a}}re/dauerhafte oder \textit{stuck-at}/komplett funktionsunt{\"{u}}chtig) einzustellen, siehe
+Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in der Konfigdatei m{\"{o}}glich eine Fehlerwahrscheinlichkeit und die zeitliche L{\"{a}}nge
+des ersten Abschnitts dieser Kurve anzugeben.
+
+Desweiteren sollen auch die physikalsichen Parameter der Simulation an sich frei einstellbar sein; dies geschieht in `phys.json`. Dort k{\"{o}}nen, neben den Schwingkonstanten
+$\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel \todo{XXXX} eingestellt werden.
 
 \section{Der Code inklusive Interface}
