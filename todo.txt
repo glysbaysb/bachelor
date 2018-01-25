@@ -13,6 +13,8 @@ Deadline | Module		|	was
 		 | ecc			| pakete > 255b
 		 | algo			| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
+		 | ficfg        | koennen illegale werte rauskommen? also z.b.
+		 rotation > 360
 		 | thesis		| 
 		 |				| blender designen
 		 |				| was man fürs kompilieren braucht?
