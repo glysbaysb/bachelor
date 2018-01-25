@@ -1,0 +1,54 @@
+%\maketitle 
+%\thispagestyle{empty}
+%\clearpage
+
+\thispagestyle{empty}
+\begin{center}
+	\includegraphics[width=12cm]{fhlogo}\\
+	\large
+	\textbf{Fachbereich fÃ¼r}
+	\textbf{Elektrotechnik und Informationstechnik}\\
+	\large
+	\textbf{Studiengang Technische Informatik}\\
+	\vspace*{3cm}
+	\LARGE
+	\textbf{Benutzerhandbuch}\\
+	\Huge
+	\vspace*{1cm}
+	\textsf{\textbf{XXXXXXXXXXXXXXXXXXXX}}\\
+	\vspace*{3cm}
+	
+	\vfill
+	\normalsize
+	\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
+	\begin{tabular}{x{6cm}p{7.5cm}}
+		\rule{0mm}{5ex}\textbAutor:} & Geert Martin Ijewski
+	\end{tabular} 
+\end{center}
+\pagebreak
+
+\section{Bedienungsanleitung}
+Im folgenden wird die Bedienung der verschiedenen Teile des Systems erkl{\"{a}}rt. Hierbei wird zuerst auf das Simulationsprogramm und dann auf
+den restlichen Code, inklusive Benutzerschnitstelle, eingegangen.
+
+\section{Die Simulation}
+Durch die Benutzt von Unity ist die Simulation auf vielen verschiedenen Plattformen lauff{\"{a}}hig\footnote{Getestet wurde hierbei die x86_64 Windows
+und die x86 Linux Version}. Um {\"{A}}nderungen an ihr vorzunehmen, oder sie einfach nur f{\"{u}}r weitere Plattformen neu zu kompilieren.
+
+\subsection{Kompilierung}
+Hierf{\"{u}}r ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskomptabiel zu {\"{a}}lteren Versionen. Im Unity Editor
+ist eine IDE enthalten mit der es m{\"{o}}glich ist den C\# Code zu kompilieren, bei der Installation wird allerdings die Installation von Visual Studio
+2017 vorgeschlagen. Diese f{\"{u}}gt sich (mit den richtigen Plugins) besser in das Geschehen ein, so das es zum Beispiel m{\"{o}}glich ist im Code
+Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel dann pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
+und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen.
+
+Da die \href[NNanomsg Bibliothek]{https://github.com/mhowlett/NNanomsg} genutzt wird um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
+Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64" angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}} die
+Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
+
+
+\subsection{Einstellungen}
+\todo{Wie geht das mit den FI Config und den anderen Configs?}
+
+
+\section{Der Code inklusive Interface}
