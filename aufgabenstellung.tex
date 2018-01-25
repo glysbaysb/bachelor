@@ -23,7 +23,7 @@ Darauf aufbauend wird dann im dritten Teil die Implementierung beschrieben, mit 
 Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit 
 gezogen.
 
-\begin{subsection}{Motivation}
+\subsection{Motivation}
 Seit der Einf{\"{u}}hrung der Computer und vor allem seit dem rasanten Wachstums des Internets, werden Computer in immer 
 mehr Bereichen eingesetzt. Das betrifft nicht nur die eigentlichen "Personal-Computer" auf dem Schreibtisch, 
 sondern mehr und mehr embedded systems, die f{\"{u}}r viele Laien gar nicht als "Computer" wahrgenommen werden. Diese 
@@ -72,8 +72,7 @@ Da also Testen alleine nicht ausreicht ist es besonders wichtig bei der Designph
 muss ein Problembewusstsein geschaffen werden. Um dann wirklich ausfallsichere System zu entwickeln braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
 {\"{u}}ber das Design und die Entwicklung solcher.
 
-\end{subsection}
-\begin{subsection}{Aufgabenstellung} 
+\subsection{Aufgabenstellung} 
 Diese Kenntnisse zu vermitteln ist die Aufgabe des Moduls "Ausfallsichere Systeme" im Rahmen des Studienganges 
 "Technische Informatik". Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und einen praktischen Teil (eine 
 {\"{U}}bungsaufgabe). Die {\"{U}}bungsaufgabe soll eine M{\"{o}}glichkeit geben, das in der Vorlesung erworbene 
@@ -87,9 +86,8 @@ Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranst
 nutzbar sein. Damit soll auch Menschen ohne Fachkenntnisse ein interessanter Einblick in die 
 Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
 
-\end{subsection}
 \clearpage
-\begin{section}{Die ausfallsichere Heizung}\label{heizung}
+\section{Die ausfallsichere Heizung}\label{heizung}
 Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
 beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
@@ -162,7 +160,6 @@ Das letzes Problem ist, dass die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- al
 besch{\"{a}}digt, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Danach muss sie erst aufw{\"{a}}ndig
 repariert werden und ist in der Zwischenzeit nicht benutzbar.
 
-\end{section}
 \clearpage
 \section{Die balancierenden Roboter}
 An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine
@@ -215,7 +212,6 @@ nicht die Einarbeitung in einen Standard.
 
 Aus all diesen Gr{\"{u}}nden wurde entschieden, eine neue {\"{U}}bungsaufgabe zu entwickeln.
 
-\end{section}
 \clearpage
 \section{Anforderungen}\label{anforderung}
 Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was das neue System leisten soll:
@@ -230,7 +226,6 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
 \end{enumerate}
 
-\end{section}
 \clearpage
 \section{Simulationsidee}
 Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N}
@@ -273,4 +268,3 @@ Zusammenfassend besteht das ganze System aus diesen Teilen:
 
 \paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
 Daher ist es notwendig, ein Interface ins "Innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
-\end{section}
