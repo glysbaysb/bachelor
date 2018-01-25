@@ -98,7 +98,7 @@ protected:
 	}
 
 public:
-	Network(const char* interface) : udp(7777, 7777, interface)
+	Network(const char* interface, uint16_t bind, uint16_t broadcast) : udp(bind, broadcast, interface)
 	{
 		if((rpc = createRPCContext()) == nullptr) {
 			throw "can't create RPC context";

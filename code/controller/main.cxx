@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	auto network = Network(argv[1]);
+	auto network = Network(argv[1], 7777, 8888);
 	network.addRPCHandler(Procedure::WORLD_STATUS, &worldStatusCallback, &network);
 	network.addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&network);
 

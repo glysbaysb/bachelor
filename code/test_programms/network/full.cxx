@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	Network network(argv[1]);
+	Network network(argv[1], 10000, 10000);
 
 	network.addRPCHandler(Procedure::ECHO, echo_callback, nullptr);
 

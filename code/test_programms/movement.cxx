@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	callbackInfo.network = new Network(argv[2]);
+	callbackInfo.network = new Network(argv[2], 7777, 7777);
 
 	if(!(callbackInfo.worldCtx = connectToWorld(argv[1]))) {
 		fprintf(stderr, "can't init world");

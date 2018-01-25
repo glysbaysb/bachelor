@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	callbackInfo.network = new Network(argv[2]);
+	callbackInfo.network = new Network(argv[2], 8888, 7777);
 	if(callbackInfo.network->addRPCHandler(Procedure::VOTE_MOVE_ROBOT, &voteCallback, (void*)&callbackInfo) < 0) {
 		fprintf(stderr, "can't register callback\n");
 		return 1;
