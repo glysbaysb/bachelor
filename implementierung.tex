@@ -484,7 +484,35 @@ void moveRobot(void* ctx, int id, float vL, float vR);
 Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
 dann vom Studentencode einfach aufgerufen werden.
 
-\todo{weltstatusinfo}
+Die Weltstatusinformation beschreibt die beiden Kippwinkel der Platte und die Objekte auf dieser. Die Objekte (also Roboter & Ladestation) werden hierbei beschrieben
+durch ihre Position, ihre Rotation und Masse. Desweiteren gibt es auch eine eindeutigen Bezeichner und eine Ladestandsanzeige (diese ist allerdings nur bei Robotern
+g{\"{u}}ltig).
+\begin{lstlisting}[frame=single, language=c] 
+enum SimulationObjectType {
+	ROBOT,
+	FUEL_STATION
+};
+typedef struct SimulationObject {
+	enum SimulationObjectType type; //! Either "ROBOT" or "FUELSTATION"
+
+	float x; //! x position in the world
+	float y; //! y position
+	float rotation; //! rotation. 0 < rotation < 360
+	float m; //! mass of object
+
+	int id; //! id of this object. Use that for MoveRobot() calls
+
+	int fuel; //! how much fuel that robot has left. invalid for a
+		  //! fuel station
+} SimulationObject;
+\end{lstlisting}
+\begin{bytefield}[bitwidth=1.1em]{32}
+	\bitheader{0-31} \\
+	\bitbox{2}{TYPE} & \bitbox{4}{x} & \bitbox{4}{y} &
+	\bitbox{4}{rot} & \bitbox{4}{m} & \bitbox{4}{id} &
+	\bitbox{4}{fuel}
+\end{bytefield}
+
 \todo{vlt noch iwas?}
 
 \clearpage
