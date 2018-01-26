@@ -484,7 +484,7 @@ void moveRobot(void* ctx, int id, float vL, float vR);
 Diese wird den Studierenden als kompilierte Library mit einem detailliert kommentierten Headerfile zur Verf{\"{u}}gung gestellt und kann
 dann vom Studentencode einfach aufgerufen werden.
 
-Die Weltstatusinformation beschreibt die beiden Kippwinkel der Platte und die Objekte auf dieser. Die Objekte (also Roboter & Ladestation) werden hierbei beschrieben
+Die Weltstatusinformation beschreibt die beiden Kippwinkel der Platte und die Objekte auf dieser. Die Objekte (also Roboter und Ladestation) werden hierbei beschrieben
 durch ihre Position, ihre Rotation und Masse. Desweiteren gibt es auch eine eindeutigen Bezeichner und eine Ladestandsanzeige (diese ist allerdings nur bei Robotern
 g{\"{u}}ltig).
 \begin{lstlisting}[frame=single, language=c] 
@@ -506,31 +506,13 @@ typedef struct SimulationObject {
 		  //! fuel station
 } SimulationObject;
 \end{lstlisting}
-\begin{bytefield}[bitwidth=1.1em]{32}
-	\bitheader{0-31} \\
-	\bitbox{2}{TYPE} & \bitbox{4}{x} & \bitbox{4}{y} &
-	\bitbox{4}{rot} & \bitbox{4}{m} & \bitbox{4}{id} &
-	\bitbox{4}{fuel}
-\end{bytefield}
-\begin{bytefield}[bitwidth=1.1em]{32}
-        \bitheader{0-31} \\
-        \begin{rightwordgroup}{RTP \\  Header}
-            \bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X}
-            & \bitbox{4}{CC} & \bitbox{1}{M} & \bitbox{7}{PT}
-            & \bitbox{16}{sequence number} \\
-            \bitbox{32}{timestamp}
-        \end{rightwordgroup} \\
-        \bitbox{32}{synchronization source (SSRC) identifier} \\
-        \wordbox[tlr]{1}{contributing source (CSRC) identifiers} \\
-        \wordbox[blr]{1}{$\cdots$} \\
-        \begin{rightwordgroup}{RTP \\ Payload}
-            \wordbox[tlr]{3}{MPEG-4 Visual stream (byte aligned)} \\
-            \bitbox[blr]{16}{}
-            & \bitbox{16}{\dots\emph{optional} RTP padding}
-        \end{rightwordgroup}
-    \end{bytefield}
-
-\todo{vlt noch iwas?}
+%\begin{bytefield}[bitwidth=1.1em]{32}
+%	\bitheader{0-31} \\
+%	\bitbox{2}{TYPE} & \bitbox{4}{x} & \bitbox{4}{y} &
+%	\bitbox{4}{rot} & \bitbox{4}{m} & \bitbox{4}{id} &
+%	\bitbox{4}{fuel}
+%\end{bytefield}
+\todo{bytefield?}
 
 \clearpage
 \section{Beispielimplementation}
