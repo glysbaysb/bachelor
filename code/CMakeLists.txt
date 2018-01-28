@@ -15,7 +15,7 @@ include_directories(third_party/msgpack/include)
 #set(GTEST_ROOT third_party/googletest)
 #find_package(GTest REQUIRED)
 add_subdirectory(third_party/googletest)
-include_directories(third_party/googletest/googletest/include)
+#include_directories(third_party/googletest/googletest/include)
 
 # build my own stuff
 
