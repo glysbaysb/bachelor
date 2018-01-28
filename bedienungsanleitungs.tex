@@ -1,12 +1,31 @@
+\documentclass[
+    12pt,
+    bibliography=totoc,
+    ngerman,
+    enabledeprecatedfontcommands
+]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{todonotes}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[linktoc=all,pdfusetitle]{hyperref}
+\newcommand{\includevisio}[2][]{\includegraphics[#1]{#2}}
+\graphicspath{{../images/}}
+
+\begin{document}
 %\maketitle 
 %\thispagestyle{empty}
 %\clearpage
 
 \thispagestyle{empty}
 \begin{center}
-	\includegraphics[width=12cm]{fhlogo}\\
+	\includevisio{fhlogo}\\
 	\large
-	\textbf{Fachbereich fÃ¼r}
+	\textbf{Fachbereich f{\"{u}r}}
 	\textbf{Elektrotechnik und Informationstechnik}\\
 	\large
 	\textbf{Studiengang Technische Informatik}\\
@@ -20,10 +39,10 @@
 	
 	\vfill
 	\normalsize
-	\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
-	\begin{tabular}{x{6cm}p{7.5cm}}
-		\rule{0mm}{5ex}{\textbAutor:} & Geert Martin Ijewski
-	\end{tabular} 
+	%\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
+	%\begin{tabular}{x{6cm}p{7.5cm}}
+	%	\rule{0mm}{5ex}{\textbAutor:} & Geert Martin Ijewski
+	%\end{tabular} 
 \end{center}
 \pagebreak
 
@@ -32,24 +51,24 @@ Im folgenden wird die Bedienung der verschiedenen Teile des Systems erkl{\"{a}}r
 den restlichen Code, inklusive Benutzerschnitstelle, eingegangen.
 
 \section{Die Simulation}
-Durch die Benutzt von Unity ist die Simulation auf vielen verschiedenen Plattformen lauff{\"{a}}hig\footnote{Getestet wurde hierbei die x86_64 Windows
-und die x86 Linux Version}. Um {\"{A}}nderungen an ihr vorzunehmen, oder sie einfach nur f{\"{u}}r weitere Plattformen neu zu kompilieren.
+Durch die Benutzt von Unity ist die Simulation auf vielen verschiedenen Plattformen lauff{\"{a}}hig\footnote{Getestet wurde hierbei die x86\_64 Windows
+und die x86 Linux Version}. Um {\"{A}}nderungen an ihr vorzunehmen, oder sie einfach nur f{\"{u}}r weitere Plattformen neu zu kompilieren.\todo{aaeeh?}
 
 \subsection{Kompilierung}
-Hierf{\"{u}}r ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskomptabiel zu {\"{a}}lteren Versionen. Im Unity Editor
+Hierf{\"{u}}r ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskompatibel zu {\"{a}}lteren Versionen. Im Unity Editor
 ist eine IDE enthalten mit der es m{\"{o}}glich ist den C\# Code zu kompilieren, bei der Installation wird allerdings die Installation von Visual Studio
 2017 vorgeschlagen. Diese f{\"{u}}gt sich (mit den richtigen Plugins) besser in das Geschehen ein, so das es zum Beispiel m{\"{o}}glich ist im Code
-Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel dann pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
-und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen.
+Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
+und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
-Da die \href[NNanomsg Bibliothek]{https://github.com/mhowlett/NNanomsg} genutzt wird um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64" angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}} die
+Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
+Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64" angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 \subsection{Einstellungen}
 Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
 
-Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault_injector.json` eingestellt werden. Dort ist es m{\"{o}}glich f{\"{u}}r die einzelnen Motoren
+Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault\_injector.json` eingestellt werden. Dort ist es m{\"{o}}glich f{\"{u}}r die einzelnen Motoren
 der Roboter die Fehlerwahrscheinlichkeiten (ob f{\"{u}}r tempor{\"{a}}re/dauerhafte oder \textit{stuck-at}/komplett funktionsunt{\"{u}}chtig) einzustellen, siehe
 Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in der Konfigdatei m{\"{o}}glich eine Fehlerwahrscheinlichkeit und die zeitliche L{\"{a}}nge
 des ersten Abschnitts dieser Kurve anzugeben.
@@ -58,11 +77,15 @@ Desweiteren sollen auch die physikalsichen Parameter der Simulation an sich frei
 $\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel \todo{XXXX} eingestellt werden.
 
 \section{Der Code inklusive Interface}
-Der restliche Code ist in einem git repository und wird mithilfe CMakes gebaut. Dabei gibt es verschiedene Abh{\"{a}}nigkeiten, diese sind als in git als Untermodule eingebunden.
-Die meisten Libraries kompilieren und k{\"{o}}nnen ohne Probleme gelinkt werden, allerdings muss bei googletest aufgepasst werden das googletest und die Testprogramme mit den
+Der restliche Code ist in einem git repository und wird mithilfe von CMake gebaut. Der Code hat einige Bibliotheken
+als diese sind als in git als Untermodule eingebunden, k{\"{o}}nnen also leicht geladen werden.
+Die meisten Libraries kompilieren und k{\"{o}}nnen ohne Probleme gelinkt werden, allerdings muss bei googletest aufgepasst werden das es und die Testprogramme mit den
 gleichen Compiler- und Linkerversionen kompiliert wurden. Sonst kann es zu Unterschieden in der ABI kommen, wodurch unvorhersehbare Fehler auftreten k{\"{o}}nnen. Am einfachsten
 ist es googletest nicht zu installieren, sondern die lokale Version im git Submodule zu benutzen.
 
 Nach erfolgreicher Kompilierung k{\"{o}}nnen Voter und Controller gestartet werden. Die Reihenfolge ist dabei unerheblich; dem Voter muss als erstes die Adresse der Simulation
 {\"{u}}bergeben werden und als zweiten Parameter das Interface auf dem die Nachrichten f{\"{u}}r die Controller ({\"{u}}ber broadcast) gesendet werden sollen. Dem Controller
 wird als Parameter nur das Interface {\"{u}}bergeben.
+
+\end{document}
+
