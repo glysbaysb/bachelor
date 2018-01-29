@@ -11,3 +11,8 @@ target_link_libraries(move pthread rpc network world)
 
 set(SOURCE_FILES_IMPULS impuls.cxx)
 add_executable(impuls ${SOURCE_FILES_IMPULS})
+
+set(SOURCE_FILES_MSGPACK msgpack.c)
+add_executable(genmsgpack ${SOURCE_FILES_MSGPACK})
+target_link_libraries(genmsgpack msgpackc)
+

@@ -47,7 +47,3 @@ add_subdirectory(tests)
 add_subdirectory(test_programms)
 add_subdirectory(libalgo)
 
-set(SOURCE_FILES_MSGPACK msgpack.c)
-add_executable(genmsgpack ${SOURCE_FILES_MSGPACK})
-target_link_libraries(genmsgpack msgpackc)
-
