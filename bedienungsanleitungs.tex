@@ -116,8 +116,26 @@ wird als Parameter nur das Interface {\"{u}}bergeben. Dies ist nur eine Beispiel
 implementiert, sondern sie m{\"{u}}ssen in einer festen Reihenfolge eingegeben werden.
 
 \subsection{Interface}
+Das Interface selbst befindet sich in der Bibliothek libworld. Dies ist eine statische Bibliothek, die dann von anderen Programmen einfach genutzt werden
+gelinkt werden kann. world.h ist das dazugeh{\"{o}}rige Headerfile mit den Funktionsdeklarationen.
+
+libworld braucht einige weitere Bibliotheken, zum Beispiel librpc und libficfg. Durch die Benutzung von CMake werden diese allerdings automatisch mit gelinkt.
+
 \subsection{Beispielimplementation}
+Die Aufgabe des Voters ist es die Weltstatusinformationen anzunehmen, an die Controller zu senden und die Steuerkommandos zu sammeln und dann den Roboter in
+der Simulation zu steuern. Eine Beispielimplementation befindet sich im Ordner voter. In der Commitversion b8e7e5a8764002eeee07a3451745483f5ef00cc7 ist eine
+Minimalimplementierung enthalten, die dann von den Studenten erweitert werden kann.
+
+Die Beispielimplementation des Controllers (zusammen mit libalgo) dient nur zum Beweis der Machbarkeit und sollte den Studierenden nicht zur Verf{\"{u}}gung
+gestellt werden.
+
 \subsection{Unittests und Testprogramme}
+Im Verlauf der Programmierung wurden einige Testprogramme geschrieben welche die Entwicklung vereinfachten. Beispielsweise gibt es das movement Programm das
+einen Roboter konstant in eine bestimmte Richtung fahren l{\"{a}}sst, womit getestet wurde ob das \textit{differential steering} korrekt implementiert wurde.
+
+Auch gibt es Unit-Tests um zu verifizieren das bestimmte Funktionalit{\"{a}}ten auch nach {\"{A}}nderungen erhalten bleiben. Teilweise sind diese Teil der
+Beispielimplementation (wie die Unit-tests f{\"{u}}r libnetwork und libecc), teilweise aber auch Bestandteil des Interfaces wie die Unittests f{\"{u}}r librpc.
+Alle Tests k{\"{o}}nnen mit dem Shellskript "run-tests.sh" ausgef{\"{u}}hrt werden und geben dann den Status der einzelenen Teste aus.
 
 \end{document}
 
