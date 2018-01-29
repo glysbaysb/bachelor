@@ -63,7 +63,7 @@ Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert
 und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
 Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64" angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
+Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64", angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 \todo{iwo hochladen?}
@@ -80,13 +80,23 @@ Desweiteren sollen auch die physikalsichen Parameter der Simulation an sich frei
 $\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel und weitere Einstellungen wie das Basisgewicht eines Roboters oder der Zeitabstand zwischen dem
 Senden der Weltstatusinformationen eingestellt werden.
 
-\subsection{Bedienung}
+Diese Dateien werden beim Start des Programmes gelesen und ausgewertet. Zur Laufzeit ist keine {\"{A}}nderung der Parameter m{\"{o}}glich, hierf{\"{u}}r muss das Programm
+neu gestartet werden.
 
+\subsection{Bedienung}
+Nach dem starten der Simulation k{\"{o}}nnen sich die Voter verbinden. Dabei wird ein Roboter erstellt und auf der Platte abgesetzt. Dieser kann nun durch den Voter
+gesteuert werden; es ist auch m{\"{o}}glich den Roboter fernzusteuern -- mit der Escapetaste wird die Fernsteuerung eingeschaltet. Der ausgew{\"{a}}hlte Roboter kann
+dann mit den Pfeiltasten bewegt werden. Mithilfe der Tabulatortaste ist es m{\"{o}}glich den fernzusteuernden Roboter zu wechseln. Der Status der Fernsteuerung (an/aus)
+wird in der Mitte des Bildschirms angezeigt.
+
+Erst wenn sich zwei Roboter auf der Platte befinden kippt diese auch. Die Kippwinkel werden in der Mitte des Bildschirms als Zahl angezeigt. Desweiteren gibt es in der
+linken oberen Ecke eine Anzeige um einzusch{\"{a}}tzen wie "kritisch" die Platte schon gekippt ist. Dies wird durch verschiedenfarbige, in einander liegenden Kreisen
+symbolisiert. Dabei zeigt der innerste, gr{\"{u}}ne, an das die Platte gut ausbalanciert ist, w{\"{a}}hrend der {\"{a}}usserste, rote das Gegenteil bedeutet.
 
 
 \section{Der Code des Interfaces, inklusive Beispielimplementation}
 Der restliche Code ist in einem git repository und wird mithilfe von CMake gebaut. Der Code hat einige Bibliotheken
-als diese sind als in git als Untermodule eingebunden, k{\"{o}}nnen also leicht geladen werden.
+diese sind als in git als Untermodule eingebunden, k{\"{o}}nnen also leicht geladen werden.
 Die meisten Libraries kompilieren und k{\"{o}}nnen ohne Probleme gelinkt werden, allerdings muss bei googletest aufgepasst werden das es und die Testprogramme mit den
 gleichen Compiler- und Linkerversionen kompiliert wurden. Sonst kann es zu Unterschieden in der ABI kommen, wodurch unvorhersehbare Fehler auftreten k{\"{o}}nnen. Am einfachsten
 ist es googletest nicht zu installieren, sondern die lokale Version im git Submodule zu benutzen.
@@ -104,6 +114,10 @@ Nach erfolgreicher Kompilierung k{\"{o}}nnen Voter und Controller gestartet werd
 {\"{u}}bergeben werden und als zweiten Parameter das Interface auf dem die Nachrichten f{\"{u}}r die Controller ({\"{u}}ber broadcast) gesendet werden sollen. Dem Controller
 wird als Parameter nur das Interface {\"{u}}bergeben. Dies ist nur eine Beispielimplementation, daher wurde kein vollst{\"{a}}ndiges parsen der Kommandozeilenargumente
 implementiert, sondern sie m{\"{u}}ssen in einer festen Reihenfolge eingegeben werden.
+
+\subsection{Interface}
+\subsection{Beispielimplementation}
+\subsection{Unittests und Testprogramme}
 
 \end{document}
 
