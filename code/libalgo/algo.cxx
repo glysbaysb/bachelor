@@ -31,7 +31,14 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	}
 #endif
 	/* todo: would the robot fall? todo: current acceleration */
-	return Action{robot->id(), accelleration};
+
+	const auto L = 1,
+		  R = 1;
+	auto wheels = Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
+		(2 * accelleration.x_ + accelleration.y_ * L) / 2*R
+	};
+
+	return Action{robot->id(), wheels};
 }
 
 static std::vector<Action> _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
