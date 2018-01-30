@@ -49,21 +49,25 @@
 
 \section{Bedienungsanleitung}
 Im folgenden wird die Bedienung der verschiedenen Teile des Systems erkl{\"{a}}rt. Hierbei wird zuerst auf das Simulationsprogramm und dann auf
-den restlichen Code, inklusive Benutzerschnitstelle, eingegangen.
+den restlichen Code inklusive Benutzerschnitstelle eingegangen.
 
 \section{Die Simulation}
-Durch die Benutzt von Unity ist die Simulation auf vielen verschiedenen Plattformen lauff{\"{a}}hig\footnote{Getestet wurde hierbei die x86\_64 Windows
-und die x86 Linux Version}. Um {\"{A}}nderungen an ihr vorzunehmen, oder sie einfach nur f{\"{u}}r weitere Plattformen neu zu kompilieren.\todo{aaeeh?}
+Das Simulationsprogramm wurde mithilfe der Unity Engine entwickelt, die eingesetzten Skripte wurden
+dabei in C\# geschrieben. Dem Benutzer wird der Simulationsstatus angezeigt und es wird die M{\"{o}}glichkeit
+gegeben mithilfe einer Fernsteuerung eines Roboters in diese einzugreifen. Die Voter k{\"{o}}nnen sich
+mit der Simulation verbinden und empfangen dann die Weltstatusinformationen und k{\"{o}}nnen Steuerbefehle
+absetzen.
 
 \subsection{Kompilierung}
-Hierf{\"{u}}r ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskompatibel zu {\"{a}}lteren Versionen. Im Unity Editor
-ist eine IDE enthalten mit der es m{\"{o}}glich ist den C\# Code zu kompilieren, bei der Installation wird allerdings die Installation von Visual Studio
-2017 vorgeschlagen. Diese f{\"{u}}gt sich (mit den richtigen Plugins) besser in das Geschehen ein, so das es zum Beispiel m{\"{o}}glich ist im Code
+Um {\"{A}}nderungen an der Simulation durchzuf{\"{u}}hrend, oder sie nur auf eine andere Plattform
+zu portieren ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskompatibel zu {\"{a}}lteren Versionen. Im Unity Editor
+ist eine IDE enthalten, mit der es m{\"{o}}glich ist den C\# Code zu kompilieren, bei der Installation wird allerdings die Installation von Visual Studio
+2017 vorgeschlagen. Diese f{\"{u}}gt sich (mit den richtigen Plugins) besser in das Geschehen ein, so das es zum Beispiel m{\"{o}}glich ist, im Code
 Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
 und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
-Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unternordner, einer namens "x86", einer namens "x64", angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
+Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
+Dazu werden jeweils zwei Unternordner, einer namens \quote{x86}, einer namens \quote{x64} angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 \todo{iwo hochladen?}
@@ -71,9 +75,9 @@ Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 \subsection{Einstellungen}
 Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
 
-Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault\_injector.json` eingestellt werden. Dort ist es m{\"{o}}glich f{\"{u}}r die einzelnen Motoren
+Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault\_injector.json` eingestellt werden. Dort ist es m{\"{o}}glich, f{\"{u}}r die einzelnen Motoren
 der Roboter die Fehlerwahrscheinlichkeiten (ob f{\"{u}}r tempor{\"{a}}re/dauerhafte oder \textit{stuck-at}/komplett funktionsunt{\"{u}}chtig) einzustellen, siehe
-Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in der Konfigdatei m{\"{o}}glich eine Fehlerwahrscheinlichkeit und die zeitliche L{\"{a}}nge
+Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in der Konfigdatei m{\"{o}}glich, eine Fehlerwahrscheinlichkeit und die zeitliche L{\"{a}}nge
 des ersten Abschnitts dieser Kurve anzugeben.
 
 Desweiteren sollen auch die physikalsichen Parameter der Simulation an sich frei einstellbar sein; dies geschieht in `phys.json`. Dort k{\"{o}}nen, neben den Schwingkonstanten
@@ -111,7 +115,7 @@ make
 \end{lstlisting}
 
 Nach erfolgreicher Kompilierung k{\"{o}}nnen Voter und Controller gestartet werden. Die Reihenfolge ist dabei unerheblich; dem Voter muss als erstes die Adresse der Simulation
-{\"{u}}bergeben werden und als zweiten Parameter das Interface auf dem die Nachrichten f{\"{u}}r die Controller ({\"{u}}ber broadcast) gesendet werden sollen. Dem Controller
+{\"{u}}bergeben werden und als zweiten Parameter das Interface, auf dem die Nachrichten f{\"{u}}r die Controller ({\"{u}}ber broadcast) gesendet werden sollen. Dem Controller
 wird als Parameter nur das Interface {\"{u}}bergeben. Dies ist nur eine Beispielimplementation, daher wurde kein vollst{\"{a}}ndiges parsen der Kommandozeilenargumente
 implementiert, sondern sie m{\"{u}}ssen in einer festen Reihenfolge eingegeben werden.
 
