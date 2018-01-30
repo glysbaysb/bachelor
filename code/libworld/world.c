@@ -398,8 +398,8 @@ int moveRobot(void* ctx_, int id, float vL, float vR) {
 
 	msgpack_pack_array(&pk, 3);
 	msgpack_pack_int32(&pk, id);
-	msgpack_pack_int32(&pk, clamp(vL * 100, -100., 100.));
-	msgpack_pack_int32(&pk, clamp(vR * 100, -100., 100.));
+	msgpack_pack_int32(&pk, clamp(vL, -100., 100.));
+	msgpack_pack_int32(&pk, clamp(vR, -100., 100.));
 
 	/* create request with params */
 	void* out = NULL; size_t outLen = 0;
