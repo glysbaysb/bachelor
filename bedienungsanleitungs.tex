@@ -47,7 +47,7 @@
 \end{center}
 \pagebreak
 
-\section{Bedienungsanleitung}
+\section{Einleitung}
 Im folgenden wird die Bedienung der verschiedenen Teile des Systems erkl{\"{a}}rt. Hierbei wird zuerst auf das Simulationsprogramm und dann auf
 den restlichen Code inklusive Benutzerschnitstelle eingegangen.
 
@@ -67,10 +67,13 @@ Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert
 und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
 Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unternordner, einer namens \quote{x86}, einer namens \quote{x64} angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
+Dazu werden jeweils zwei Unternordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 \todo{iwo hochladen?}
+
+\subsection{Installation}
+\todo{}
 
 \subsection{Einstellungen}
 Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
@@ -107,8 +110,9 @@ ist es googletest nicht zu installieren, sondern die lokale Version im git Submo
 
 F{\"{u}}r den kompletten Kompiliervorgang m{\"{u}}ssen folgende Befehle ausgef{\"{u}}hrt werden:
 \begin{lstlisting}[frame=single, language=Bash] 
-git clone https://bitbucket.com/gmij/bachelor.git
+git clone https://bitbucket.com/gmij/bachelor.git # alternativ von CD nehmen
 cd bachelor
+git submodule update --recursive --remote
 mkdir build && cd build
 cmake ../code
 make
@@ -118,6 +122,9 @@ Nach erfolgreicher Kompilierung k{\"{o}}nnen Voter und Controller gestartet werd
 {\"{u}}bergeben werden und als zweiten Parameter das Interface, auf dem die Nachrichten f{\"{u}}r die Controller ({\"{u}}ber broadcast) gesendet werden sollen. Dem Controller
 wird als Parameter nur das Interface {\"{u}}bergeben. Dies ist nur eine Beispielimplementation, daher wurde kein vollst{\"{a}}ndiges parsen der Kommandozeilenargumente
 implementiert, sondern sie m{\"{u}}ssen in einer festen Reihenfolge eingegeben werden.
+
+\subsection{Abh{\"{a}}nigkeiten}
+\todo{}
 
 \subsection{Interface}
 Das Interface selbst befindet sich in der Bibliothek libworld. Dies ist eine statische Bibliothek, die dann von anderen Programmen einfach genutzt werden
