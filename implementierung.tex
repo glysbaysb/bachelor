@@ -45,6 +45,11 @@ eine schw{\"{a}}cheren CPU hat, die l{\"{a}}nger zur Berechnung eines Simulation
 das Modell mit zentrale Instanz vorzuziehen; es stellt automatisch sicher das alle Voter (im Normalfall, also ohne Fehler)
 die gleichen Informationen kriegen und anhand dieser dann reagieren.
 
+Durch die Verwendung einer zentralen Instanz ist die eine H{\"{a}}lfte der Isolation zwischen verschiedenen Instanzen realisiert:
+Die Voter jeder Instanz verbinden sich mit ihrer Instanz, diese sendet ihre Informationen nur an die verbundenen Voter.
+\footnote{Der andere Teil --- die Isolation zwischen verschiedenen Instanzen in Bezug auf Controller und Voter -- kann entweder
+durch die Benutzung verschiedener Ports oder den Gebrauch mehrere \textit{subnets} erreicht werden.}
+
 F{\"{u}}r den zeitlichen Ablauf in der Simulation sind zwei M{\"{o}}glichkeiten denkbar: eine rundenbasierte Abfolge oder eine
 Abfolge in Echtzeit. Bei der rundenbasieren Simulationstrategie wird der Status der Simulation immer nach festgelegten Intervallen
 ver{\"{a}}ndert. In diesem Fall w{\"{a}}re es denkbar das die Controller und Voter 250ms Zeit haben ihre Bewegungsvorschl{\"{a}}ge
