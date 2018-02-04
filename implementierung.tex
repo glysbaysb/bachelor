@@ -26,7 +26,7 @@ das Steuerkommando dann aus -- allerdings unter Beachtung des Fehlermodells; es 
 Beispiel ein Motor ausgefallen ist und daher sich nur der andere bewegen kann.
 
 Um dem Benutzer die M{\"{o}}glichkeit zu geben einen anderen Teil der Simulation zu sehen, gibt es die Klasse "Camera Controller".
-Sie ist da{\"{u}}r zust{\"{a}}ndig die Kamera zu bewegen. Abgesehen von den Objekten in der Welt wird, oben links in der Ecke,
+Sie ist daf{\"{u}}r zust{\"{a}}ndig die Kamera zu bewegen. Abgesehen von den Objekten in der Welt wird, oben links in der Ecke,
 auch angezeigt wie stark die Welt gekippt ist. Dies erledigt das "Radar" Skript, das drei farbige Kreise zeichnet welche die
 Kippung symbolisieren und auf diesen einen schwarzen Kreis zeichnet der anzeigt wie stark gerade gekippt wurde.
 
@@ -49,6 +49,9 @@ Durch die Verwendung einer zentralen Instanz ist die eine H{\"{a}}lfte der Isola
 Die Voter jeder Instanz verbinden sich mit ihrer Instanz, diese sendet ihre Informationen nur an die verbundenen Voter.
 \footnote{Der andere Teil --- die Isolation zwischen verschiedenen Instanzen in Bezug auf Controller und Voter -- kann entweder
 durch die Benutzung verschiedener Ports oder den Gebrauch mehrere \textit{subnets} erreicht werden.}
+
+Ein Nachteil dieser L{\"{o}}sung ist das sie einen \textit{single point of failure} erschafft. Fehler in dem Simulationsprogramm
+wirken sich direkt auf das ganze System aus; daher wird definiert das dieses keine Fehler enth{\"{a}}hlt.
 
 F{\"{u}}r den zeitlichen Ablauf in der Simulation sind zwei M{\"{o}}glichkeiten denkbar: eine rundenbasierte Abfolge oder eine
 Abfolge in Echtzeit. Bei der rundenbasieren Simulationstrategie wird der Status der Simulation immer nach festgelegten Intervallen

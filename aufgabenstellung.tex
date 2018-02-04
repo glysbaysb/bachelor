@@ -222,8 +222,10 @@ auch m{\"{o}}glich einen Roboter fernzusteuern und damit direkten Einfluss auf d
 
 Die balancieren Robotern w{\"{u}}rden den Anforderungen an vielen Stellen entsprechen, zum Beispiel
 unterscheidet sie sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
-gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Ein erster Kritikpunk ist das Anzeige
-nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu entwickelt werden.
+gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Gerade die dahinterliegende Idee ist
+leicht verst{\"{a}}ndlich und gut geeignet; die Implementation weisst allerdings einige Schwachstellen auf.
+
+Ein erster Kritikpunk ist das Anzeige nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu entwickelt werden.
 
 Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich
 holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern
@@ -267,6 +269,8 @@ Daher m{\"{u}}ssen die einzelnen Instanzen voneinander isoliert werden k{\"{o}}n
 
 \clearpage
 \section{Simulationsidee}
+Es wurde sich entschieden die Grundidee der Simulation beizubehalten, diese allerdings neu zu implementieren um die Kritikpunkte am
+bestehenden System auszumerzen. Im folgenden wird die Grundidee noch einmal konkretisiert:
 
 Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N}
 Roboter und $1$ F{\"{u}}llstation (\gls{F}) platziert werden. Die Summe alle Gewichte kippt die Platte;
