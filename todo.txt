@@ -2,14 +2,11 @@ Zeitplan
 --------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-09-17	 | unity		| roboter designen + lampe + rauch
 		 | unity		| statisches gleichgewicht mit rotation, dynamisches
 		 |				| fehlerinj konf senden --> testen.
 								wahrschienlichkeit = 0
 								ob das ueberhaupt jemals passieren wird
 						| wenn fehlerinjektor an -> kamera bewegt sich nicht?
-		 |				| die uberpruefung ob genug energie vorhanden ist ist in moverobot, das heisst
-		 |				|  das ding rollt noch lange weiter
 		 | ecc			| pakete > 255b
 		 | algo			| scheiÃbewegung (das ruckeln in unity &
 		 wegfindung)
@@ -17,7 +14,6 @@ Deadline | Module		|	was
 		 rotation > 360
 		 | thesis		| 
 		 |				| blender designen
-		 |				| was man fürs kompilieren braucht?
 ---------+--------------+----------------
 
 
