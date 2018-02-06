@@ -109,14 +109,15 @@ ist eine IDE enthalten, mit der es m{\"{o}}glich ist den C\# Code zu kompilieren
 Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
 und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
-Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unternordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
-Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
-
 \todo{iwo hochladen?}
 
 \subsection{Installation}
-\todo{}
+Das Simulationsprogramm muss nicht installiert werden, sondern kann direkt gestartet werden. Damit es die Konfigurationsdateien "fault\_injector.json" und
+"physics.json" findt m{\"{u}}ssen diese im gleichen Verzeichniss liegen.
+
+Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
+Dazu werden jeweils zwei Unterordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
+Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 \subsection{Einstellungen}
 Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
@@ -168,8 +169,10 @@ Nach erfolgreicher Kompilierung k{\"{o}}nnen Voter und Controller gestartet werd
 wird als Parameter nur das Interface {\"{u}}bergeben. Dies ist nur eine Beispielimplementation, daher wurde kein vollst{\"{a}}ndiges parsen der Kommandozeilenargumente
 implementiert, sondern sie m{\"{u}}ssen in einer festen Reihenfolge eingegeben werden.
 
-\subsection{Abh{\"{a}}nigkeiten}
-\todo{}
+\subsection{Abh{\"{a}}igkeiten}
+Der Quelltext benutzt einige Bibliotheken von dritten. Dies w{\"{a}}re zum einen das schon angesprochene Nanomsg zur Netzwerkkommunikation, MsgPack zur Datenserialisierung,
+gtest zum \textit{unit testing} und RSCODE zur Kanalkodierung. Dabei sind die ersten drei Bibliotheken (aus Platzgr{\"{u}}nden) nicht einfach so Bestandteil des Projektes
+sondern als git submodule eingebunden.
 
 \subsection{Interface}
 Das Interface selbst befindet sich in der Bibliothek libworld. Dies ist eine statische Bibliothek, die dann von anderen Programmen einfach genutzt werden
