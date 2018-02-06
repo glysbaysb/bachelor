@@ -17,6 +17,49 @@
 \graphicspath{{../images/}}
 \usepackage{listings}
 
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\definecolor{darkgreen}{RGB}{34,177,76}
+\colorlet{numb}{magenta!60!black}
+
+\lstset{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+	commentstyle=\color{darkgreen},
+	stringstyle=\color{red},
+	keywordstyle=\color{blue}
+}
+
+% JSON
+\lstdefinelanguage{json}{
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+
 \begin{document}
 %\maketitle 
 %\thispagestyle{empty}
@@ -82,10 +125,12 @@ Die Parameter f{\"{u}}r die Fehlerinjektion k{\"{o}}nnen in der Datei `fault\_in
 der Roboter die Fehlerwahrscheinlichkeiten (ob f{\"{u}}r tempor{\"{a}}re/dauerhafte oder \textit{stuck-at}/komplett funktionsunt{\"{u}}chtig) einzustellen, siehe
 Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in der Konfigdatei m{\"{o}}glich, eine Fehlerwahrscheinlichkeit und die zeitliche L{\"{a}}nge
 des ersten Abschnitts dieser Kurve anzugeben.
+\lstinputlisting[language=json]{../fault_injector.json}
 
 Desweiteren sollen auch die physikalsichen Parameter der Simulation an sich frei einstellbar sein; dies geschieht in `phys.json`. Dort k{\"{o}}nen, neben den Schwingkonstanten
 $\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel und weitere Einstellungen wie das Basisgewicht eines Roboters oder der Zeitabstand zwischen dem
 Senden der Weltstatusinformationen eingestellt werden.
+\lstinputlisting[language=json]{../physics.json}
 
 Diese Dateien werden beim Start des Programmes gelesen und ausgewertet. Zur Laufzeit ist keine {\"{A}}nderung der Parameter m{\"{o}}glich, hierf{\"{u}}r muss das Programm
 neu gestartet werden.
