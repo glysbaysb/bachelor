@@ -12,7 +12,6 @@ interagieren, zum einen durch Bewegen der Kamera, zum anderen durch eine Fernste
 Um all diese Aufgaben zu erf{\"{u}}llen gibt es mehrere Klassen. Diese lassen sich grob in zwei Kategorien einteilen: als
 erstes die Klassen die f{\"{u}}r die Simulation und das Netzwerk zust{\"{a}}ndig sind, als zweites die Klassen die den Benutzer
 mit dem System interagieren lassen.
-\todo{Klassendiagramm neu malen}
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{ClassDiagram}
@@ -465,8 +464,8 @@ Die Steuerung eines Roboters geschieht durch einen Aufruf von MOVE\_ROBOT. Dann 
 Bewegung (unter Beachtung des Ladestands und der Fehlerinjektion) ausgef{\"{u}}hrt wird. Diese RPC Funktion gibt nichts an den Aufrufer zur{\"{u}}ck, Erfolg
 oder Misserfolg des Steuerbefehls muss anhand der Weltstatusinformationen erkannt werden.
 
-Die Weltstatusinformationen werden von der Funktion sendWorldStatus() alle 250ms an alle Subscriber gesendet. Eine genauere Beschreibung des Weltstatus findet
-sich in \ref{worldstatus}.
+Wie oft die Weltstatusinformationen (von der Funktion sendWorldStatus()) an alle Subscriber gesendet wird, ist {\"{u}}ber die Konfigurationdateien
+einstellbar. Eine genauere Beschreibung des Weltstatus findet sich in \ref{worldstatus}.
 
 \clearpage
 \section{Interface f{\"{u}}r die Studenten}\label{interface}
@@ -495,7 +494,8 @@ dann vom Studentencode einfach aufgerufen werden.
 Die Weltstatusinformation beschreibt die beiden Kippwinkel der Platte und die Objekte auf dieser. Die Objekte (also Roboter und Ladestation) werden hierbei beschrieben
 durch ihre Position, ihre Rotation und Masse. Desweiteren gibt es auch eine eindeutigen Bezeichner und eine Ladestandsanzeige (diese ist allerdings nur bei Robotern
 g{\"{u}}ltig).
-\begin{lstlisting}[frame=single, language=c] 
+\label{worldstatus} 
+\begin{lstlisting}[frame=single, language=c]
 enum SimulationObjectType {
 	ROBOT,
 	FUEL_STATION
@@ -514,13 +514,6 @@ typedef struct SimulationObject {
 		  //! fuel station
 } SimulationObject;
 \end{lstlisting}
-%\begin{bytefield}[bitwidth=1.1em]{32}
-%	\bitheader{0-31} \\
-%	\bitbox{2}{TYPE} & \bitbox{4}{x} & \bitbox{4}{y} &
-%	\bitbox{4}{rot} & \bitbox{4}{m} & \bitbox{4}{id} &
-%	\bitbox{4}{fuel}
-%\end{bytefield}
-\todo{bytefield?}
 
 \clearpage
 \section{Beispielimplementation}
