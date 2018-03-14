@@ -345,7 +345,7 @@ Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch diese
 {\"{A}}nderung und schwingt dann langsam ab. Da ein geschlossenes System simuliert wird, ist dem Impuls eine gleich gro{\ss}e Kraft entgegen gerichtet.
 Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathematisch ausgedr{\"{u}}ckt:
 \begin{equation}\label{eq:schwingung}
-	s(t) = e^\mathrm{-\delta t} \big(sin(\omega_d t) \times \frac{\dot{x(0)} + \delta x(0)}{\omega_d} + x(0) * cos(\omega_d t)\big)
+	s(t) = e^\mathrm{-\delta t} \times sin(\omega_d t) \times s(0)
 \end{equation}
 \cite{wiki:schwingung}
 \footnote{$\delta$ und $\omega_d$ sind in der Simulation frei einstellbar}
