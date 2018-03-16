@@ -2,7 +2,6 @@ Zeitplan
 --------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-		 | unity		| statisches gleichgewicht mit rotation, dynamisches
 		 |				| fehlerinj konf senden --> testen.
 								wahrschienlichkeit = 0
 								ob das ueberhaupt jemals passieren wird

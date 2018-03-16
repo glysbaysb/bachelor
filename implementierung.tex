@@ -429,7 +429,7 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
 
 Die Kr{\"{a}}fte die auf die Platte wirken berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y}. Es wird definiert das die Platte um
-maximal 10\textdegree kippen kann, dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
+maximal 10\textdegree kippen kann; dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
 m{\"{o}}gliche Maximalkraft entspricht also den 10\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
 zu errechnen.
 
@@ -437,8 +437,15 @@ Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn sich 2 (oder mehr) Rob
 stark und die Platte ist schon beim Start so stark gekippt das sie nicht mehr ausbalanciert werden kann.
 
 Die Impulse welche auf die Platte wirken (beschrieben in \ref{eq:schwingung}) f{\"{u}}hren zu einer zus{\"{a}}tzlichen Kippung und einer Rotation der Platte.
-In dieser Formel muss die Funktion der Geschwindigkeit zum Zeitpunkt 0 abgeleitet werden, da die Beschleunigung allerdings linear zwischen momentaner und
-gew{\"{u}}nschter interpoliert wird, ist dies immer eine Konstante (vereinfacht wird hier 1 angenommen).
+Immer wenn ein Roboter sich bewegt, wird dieser Bewegungsimpuls gespeichert. Um die momentan auf die Platte wirkenden Kr{\"{a}}fte zu errechnen, werden alle
+Impulse aufaddiert. Da der Impuls mit der Zeit abschw{\"{a}}cht wird bei jedem Frame aus dem Anfangsimpuls und der seit dem vergangen Zeit der momentane
+Impuls errechnet -- wenn ein Impuls irgendwann keinen sp{\"{u}}rbaren Einfluss auf die Rechnung hat ($ |s(t)| < 0.01$) f{\"{a}}llt dieser Impuls aus der
+Rechnung heraus.
+
+Um die Platte dann tats{\"{a}}chlich zu kippen wird die Unity Funktion `AddTorque()` benutzt. Dieser wird ein Kraftvektor {\"{u}}bergeben, um sich also einem
+bestimmtem Kippwinkel anzun{\"{a}}hren wird erst die Differenz zwischen den momentanen Winkeln und den gew{\"{u}}nschten errechnet und dann eventuell auf
+einen Maximalwert heruntergesetzt (damit die Platte sich langsam zu den gew{\"{u}}nschten Winkeln hinbewegt und nicht direkt "springt"); Dieser Wert kann dann
+als XXXX auf die Platte wirken und rotiert sie in die gew{\"{u}}nschte Richtung.
 
 \subsection{Netzwerkschnittstelle}
 Zur Kommunikation mit den Studentenprogrammen gibt es die Netzwerkschnittstelle. Hierr{\"{u}}ber bekommen die Voter die Informationen {\"{u}}ber den momentanen

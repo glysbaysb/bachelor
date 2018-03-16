@@ -328,17 +328,16 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 \end{equation}
 
 \subsection{Kippwinkel}
-Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 30\textdegree erreicht wird, falls sich alle
+Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 10\textdegree erreicht wird, falls sich alle
 Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
 die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
 
-\begin{equation}\label{eq:tilt-from-maxtilt}
-30\degree = Max, X\degree = Curr \\
-\Rightarrow \frac{Max}{Curr} = \frac{30}{X} \\
-\Rightarrow \frac{1}{X} = \frac{Max}{30 \times Curr} \\
-\Rightarrow X = \frac{30 \times Curr}{Max}
-\end{equation}
-\todo{nicht alles in eine zeile}
+\begin{align}\label{eq:tilt-from-maxtilt}
+10\degree = Max, X\degree = Curr \\
+\Rightarrow \frac{Max}{Curr} = \frac{10}{X} \\
+\Rightarrow \frac{1}{X} = \frac{Max}{10 \times Curr} \\
+\Rightarrow X = \frac{10 \times Curr}{Max}
+\end{align}
 
 \subsection{Dynamischen Gleichgewicht}
 Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
