@@ -18,7 +18,6 @@
 \addbibresource{../lit.bib}
 \usepackage{setspace}
 \PassOptionsToPackage{hyphens}{url}
-\usepackage[linktoc=all,pdfusetitle]{hyperref}
 \usepackage[ampersand]{easylist}
 \usepackage{graphicx}
 \usepackage{longtable}
@@ -36,9 +35,11 @@
 \usepackage{alltt}
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{todonotes}
-\usepackage[toc]{glossaries}
 \usepackage{xcolor}
 \usepackage{gensymb}
+\usepackage[linktoc=all,pdfusetitle]{hyperref}
+\usepackage{bookmark}
+\usepackage[toc]{glossaries}
 
 \setstretch{1.433} %entspricht 1,5 in Word 
 \graphicspath{{../images/}}
@@ -115,11 +116,12 @@
 \tableofcontents
 \listoffigures
 \listoftables
+
 \clearpage
 \printglossary[title=Glossar, toctitle=Glossar]
 
-\clearpage
 \pagenumbering{arabic}
+\clearpage
 \part{Problemstellung}
 \input{../aufgabenstellung}
 \part{Grundlagen}
