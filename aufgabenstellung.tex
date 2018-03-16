@@ -246,26 +246,35 @@ allerdings die Idee dieser Aufgabe beibehalten; die neue Aufgabe soll nur die id
 ausmerzen.
 
 \clearpage
-\section{TITEL FINDEN}
-\todo{low level anforderungen die gebraucht werden um high level zu erfuellen}
+\section{Anforderungen -> Simulationsidee}
+Um die vorhandene Simulationsidee ohne die vorhanden Schwachstellen neu zu erstellen, so das die Anforderungen
+(wie in \ref{anforderung} beschrieben erf{\"{u}}llt werden) ist es n{\"{o}}tig diese eher abstrakten Anforderungen in
+technische Merkmale zu "{\"{u}}bersetzen".
 
-Da die Aufgabe visuell ansprechend sein soll und schnell reagieren soll, wird eine Simulation konzipiert. In dieser
-k{\"{o}}nnen physikalsiche Beschr{\"{a}}nkungen selbst festgelegt werden und die Anzeige kann selbst gestylt werden.
-Die Simulation soll in einer dreidimensionalen Ansicht angezeigt werden und nicht rundenbasiert ablaufen.
-
-Beim Einsatz einer Simulation gibt es auch keinerlei Gefahr durch unsachgem{\"{a}}ssen Gebrauch etwas zu besch{\"{a}}digen.
-Im schlimmsten Fall kann das Simulationsprogram einfach noch einmal neu gestartet werden um (tempor{\"{a}}re) Fehler zu
+Da es nicht m{\"{o}}glich sein soll die neue {\"{U}}bungsaufgabe zu besch{\"{a}}digen, muss es eine reine Softwareaufgabe
+sein. Diese k{\"{o}}nnen im schlimmsten Fall einfach noch einmal neu gestartet werden um (tempor{\"{a}}re) Fehler zu
 beheben.
+
+Bei einer Softwarel{\"{o}}sung ist es auch m{\"{o}}glich die Ausf{\"{u}}hrung mehrerer Instanzen unabh{\"{a}}nig voneinander
+zu erlauben, damit mehrere Studierendengruppen gleichzeitig ihre L{\"{o}}sung entwickeln k{\"{o}}nnen. Daher ist es notwendig
+das es keinerlei Resourcen gibt die sich alle Instanzen teilen m{\"{u}}ssen --- das Programm sollte also selbstst{\"{a}}nig und
+ohne weitere Komponenten laufen. Bei einem verteilten System das {\"{u}}ber ein IP-Netzwerk per Broadcast kommuniziert ist es
+auch wichtig eine Trennung der verschiedenen Instanzen zu erm{\"{o}}glichen (dies kann z.B. durch die Verwendung verschiedener
+Ports erreicht werden).
 
 Desweiteren erlaubt der Einsatz einer Simulation ein eigenes Fehlermodell zu definieren. Wenn das Fehlermodell nicht fest
 implementiert wird, sondern bei Bedarf ge{\"{a}}ndert werden kann soll es auch m{\"{o}}glich sein einzelne Fehlerquellen an/auszuschalten
 oder die Wahrscheinlich mit der Fehler auftreten anzupassen. Damit w{\"{a}}re die Anforderung nach der Parametresierbarkeit
 der Fehlerinjektion erf{\"{u}}llt.
 
-Damit die Ausfallsicherheit eines verteilten Systems getestet werden kann, muss es nat{\"{u}}rlich ein verteiltes System sein.
-Es sollen mehrere Instanzen des gleichen Systems gleichzeitig benutzbar sein, ohne das diese auf einander Einfluss zu nehmen.
-Daher m{\"{u}}ssen die einzelnen Instanzen voneinander isoliert werden k{\"{o}}nnen.
+Durch den Einsatz einer Simulation ist es auch m{\"{o}}glich die Visualisierung frei zu w{\"{a}}hlen; zum Beispiel kann die 2D
+Vogelperspektive wie in der Orginalimplementation der balancierenden Roboter durch eine 3D Ansicht abgel{\"{o}}st werden.
 
+Durch die Simulationsidee, den Ablauf der Steuerung der balancierenden Roboter, ist der Einsatz verschiedener Techniken um
+fehlertolerante Systeme --- wie zum Beispiel die Konsensbildung mit einem Voter oder verschiedene Arten der Vorw{\"{a}}rtsfehlerkorrektur ---
+n{\"{o}}tig. Dies ist gerade im Lehrkontext wichtig, damit m{\"{o}}glichst viele Konzepte sinnvoll angewandt werden
+k{\"{o}}nnen und es im besten Fall sogar n{\"{o}}tig ist das die Studenten zwischen verschiedenen Alternativen w{\"{a}}hlen
+m{\"{u}}ssen.
 
 \clearpage
 \section{Simulationsidee}
@@ -290,11 +299,16 @@ so dass:
 
 Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen.
 (Abh{\"{a}}ngig vom Verh{\"{a}}ltnis der Anzahl der Controller zur Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+Daraus folgt das die Studierenden in ihrer L{\"{o}}sung eine Konsensbildung implementieren m{\"{u}}ssen.
 
 Die Voter und Controller laufen auf Virtuellen Maschinen, jeweils eine VM pro Voter- oder Controllerinstanz.
 Diese VMs befinden sich in einem Netzwerk, das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --
 dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk, wie es zum Beispiel bei Funknetzwerken der Fall ist.
-Es wird vorgegeben, dass die gesamte Kommunikation {\"{u}}ber UDP stattfinden muss. Die Kommunikation von Simulation zu den Votern ist davon nicht betroffen, sie soll nicht verf{\"{a}}lscht werden.
+Es wird vorgegeben, dass die gesamte Kommunikation der Studentenprogramme {\"{u}}ber UDP stattfinden muss.
+Dies f{\"{u}}hrt dazu das die Studierenden Gegenmassnahmen gegen die Verf{\"{a}}lschung ergreifen m{\"{u}}ssen, denkbar
+w{\"{a}}hre hier zum Beispiel eine Kanalkodierung zur Vorw{\"{a}}rtsfehlerkorrektur.
+Die Kommunikation von Simulation zu den Votern ist nicht betroffen, sie soll nicht verf{\"{a}}lscht werden. (Statdessen
+kann die Schnittstelle gezieltere Verf{\"{a}}lschungen vornehmen.)
 
 \begin{figure}
 	\centering
@@ -310,5 +324,6 @@ Zusammenfassend besteht das ganze System aus diesen Teilen:
 	\item Die Controller generieren Steuerkommandos. Sie k{\"{o}}nnen jederzeit ausfallen.
 \end{itemize}
 
-\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden; die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden;
+die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
 Daher ist es notwendig, ein Interface ins "Innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
