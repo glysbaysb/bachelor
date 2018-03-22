@@ -1,3 +1,160 @@
+Teil 2:
+
+Der erste Teil endet mit einer Idee. Hier werden jetzt Grundlagen
+diskutiert, die aber schon unterstellen, dass das grundsätzliche
+Vorgehen klar ist. Dazu gibt es aber noch keinerlei Überlegungen an
+diesem Punkt der Arbeit.
+
+8
+
+"game engine" taucht aus dem Nichts aus... vorher war nur von
+"3D-Engine" die Rede. Die Erklärung kommt erst einen Absatz später
+
+Sie definieren hier Anforderungen und kommen dann zu Unity. So geht das
+nicht. Es müssten zumindest Alternativen diskutiert werden oder
+dargelegt werden, warum das nicht nötig ist.
+
+8.2 nennt sich "Unity". 8.3-8.5 stellen Teile von Unity vor. Das passt
+nicht, das sollten eher Unterabschnitte sein.
+
+9
+
+Der erste Satz ist FALSCH! Der Grundgedanke eines verteilten Systems ist
+es, dass eine Menge von Rechner GEMEINSAM eine Aufgabe bearbeitet, also
+zusammen etwas tut. Dazu können TEILaufgaben auf den einzelnen Knoten
+bearbeitet werden.
+
+Zu Ihrer Frage: Ich sehe nicht, wohin das führen soll. Die Aussage ist
+doch, dass die Eigenschaften, die das Kommunikationssystem haben muss,
+von den Anforderungen der Aufgabe des verteilten Systems abhängen. Das
+ist klar und das kann man so sagen. Das Beispiel würde ich weglassen.
+
+Der Satz danach ist nicht sinnvoll: "Abhilfe"... wovon denn? Was wird da
+gelöst? Die verschiedenen Eigenschaften nun gerade NICHT. RPC ist ein
+Programmierparadigma, keine Softwarelösung, die irgendwelche
+Eigenschaften mit sich bringt.
+
+In der aktuellen Form frage ich mich, welchen Sinn dieses Kapitel hat.
+Es ist extrem Highlevel und hat damit für die Arbeit aktuell keine
+weitere Aussage ausser der, dass es RPC gibt.
+
+10
+
+Die Idee gefällt mir, Sie müssten aber vollständiger sein und nicht nur
+zwei Ansätze vorstellen. Mindestens "Message Passing" müsste dazu und
+ich würde zudem RPC als eine Spezialform von Request/Reply ergänzen. Das
+löst auch das Problem mit Kapitel 9.
+
+11
+
+Hat das gleiche Grundproblem wie 8.
+
+11.1 Den ersten Satz verstehe ich nicht. Worauf bezieht sich "dieses
+Pattern"? Ausserdem treffen Sie hier quasi im Nebensatz eine der
+wichtigsten Entwurfsentscheidungen der Arbeit (RPC + Pub/Sub) und
+begründen diese nicht wirklich.
+
+Warum stört in diesem Setting C++? Das sollte begründet werden!
+
+Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
+
+11.2 fehlt noch einiges, oder?
+
+12
+
+Hier nun C#, vorher hat Sie C++ gestört? Verstehe ich nicht und muss
+argumentiert werden!
+
+12.1 Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
+entscheiden - gleiches Problem wie in 11.
+
+12.2 Siehe Kapitel 11, gleiches Problem.
+
+Insgesamt frage ich mich nach dem Lesen von 11 und 12 aber, warum es
+nicht eine sprachunabhängige RPC-Implementierung getan hätte. Dass es
+solche gibt, haben Sie im RPC-Kapitel gesagt und mir fallen da auch
+mindestens zwei ein. Im C#-Kontext wäre z.B. das Dotnet-Remoting eine
+lohnenswerte Alternative, oder eben das uralte CORBA. Ich vermute, dass
+Sie Gründe haben, die gegen so etwas sprechen, aber die müssen genannt
+und argumentiert werden.
+
+13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
+
+Rest okay. Eventuell könnten die Systemdetails vom Khepera weg, weil
+hier nicht nutzbringend. Statt dessen könnte man auf Kettenfahrzeuge
+oder das Segway verweisen, die nach dem gleichen Schema funktionieren.
+
+14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.
+
+"Nicht bewegen" ist unmöglich... die Anforderung muss genauer formuliert
+werden.
+
+14.2... wohin gehört das? Zu statisch oder dynamisch? Ich würde ganz am
+ANfang erklären, was alles relevant ist und damit den Rest motivieren.
+
+Teil III:
+
+15
+
+Ganz an den Anfang würde ich das Grobbild aus Kapitel 7 stellen und das
+dann verfeinern, ehe es an die einzelnen Bauteile geht. Vor allem können
+Sie dann schon einmal global sagen, was wie kommuniziert und können
+entsprecehnde Entscheidungen begründen. Quasi eine Art "Top-down-Approach".
+
+15.1 Ein Klassendiagramm ist durchaus relevanter Teil des Entwurfs, ich
+würde es aber eher nicht bei "Architektur" erwarten... Eventuell
+schauen, wie Sie global Ihre Texte in Ansatz/Entwurf -> Architektur ->
+Umsetzung gliedern können.
+
+15.2 Würde ich vor alle anderen Subsysteme setzen. Liesse sich auch gut
+aus dem eingangs genannten Bild begründen. Ansonsten gefällt mir 15.2
+unter "Architektur" viel besser als 15.1
+
+15.3 Ähnlich 15.1
+
+Insgesamt haben Sie hier sehr viele Vorgriffe.
+
+Fehlt zudem nicht noch einiges, z.B. die Ansatzpunkte für die Voter usw.?
+
+16. Was hat das bei "Implementierung" zu suchen? Das ist durchaus
+relevant für den Entwurf...
+
+Auch sollte man sagen, dass es hier um das zu simulierende Fehlermodell
+geht und nicht um das Fehlermodell Ihres Systems.
+
+16.1 Warum nicht einfach die Badewannenkurve? Nur das early life
+abzubilden halte ich nicht für zielführend, denn Ausfälle sind immer
+möglich. Ich würde eher so vereinfachen, dass man das early life
+weglässt und eine konstante Fehlerrate annimmt (also nur das useful life).
+
+Rest von 16 ist noch nicht fertig, oder?
+
+17 ist okay
+
+18 braucht irgendeine Verknüpfung zu 15.1
+
+19 Teile von 19 hätte ich mir in 15 gewünscht bei der Architektur
+
+20 ist okay, man könnte am Anfang aber nochmal den Bogen zum großen
+Bild/Ziel schliessen
+
+21 müsste man noch anpassen und auch etwas zu möglichen Erweiterungen
+schreiben.
+
+Eine Evaluation sollte es auch geben... dazu könnte man
+Messungen/Versuche mit dem Programm aus 20 machen.
+
+
+
+Global: Mir fehlt immer noch ein erkennbarer roter Faden, vor allem
+bleibt unklar, was Anforderung, Hintergrund, Entwurf, Ansatz,
+Architektur, Umsetzung ist, da recht viel gewechselt wird dazwischen.
+
+Die Teile für sich sind okay, sie brauchen nur die richtige Reihenfolge
+und Überleitungen.
+
+
+
 Zeitplan
 --------
 Deadline | Module		|	was
