@@ -79,36 +79,14 @@ Es gibt auch weitere {\"{u}}berschreibare Funktionen, mit denen es m{\"{o}}glich
 einzuklinken (zum Beispiel OnWillRenderObject, OnPostRender, ...). Das gleiche gilt auch f{\"{u}}r Inputevents (beispielsweise OnMouseMove) und
 die Ereginisse der Physikengine (OnCollisionStart(), ...).
 
-
-\clearpage
-\section{RPC}
-Der Grundgedanke von verteilten System ist es, verschiedene Systeme verschiedene Aufgaben
-erledigen zu lassen. Oft gibt es aber Abh{\"{a}}ngigkeiten zwischen Aufgaben (Aufgabe A muss beendet werden
-bevor Aufgabe B angefangen werden kann, zum Beispiel weil das Ergebniss von A f{\"{u}}r B wichtig
-ist) oder die Ergebnisse von mehreren System m{\"{u}}ssen zusammengef{\"{u}}hrt werden. Zwischen
-den Systemen muss also eine Synchronisation und Kommunikation m{\"{o}}glich sein.
-
-Die Kommunikation
-an sich kann {\"{u}}ber verschiedene {\"{U}}bertragungsmedien erfolgen, allerdings muss die
-Kommunikation an die spezifischen Anforderungen der Applikation angepasst werden. Zum Beispiel
-ist die Kommunikation zwischen Systemen die komplexe Wettermodelle berechnen, eine andere als die
-Kommunikation, um Konsistenz zwischen verteilten Datenbankinstanzen herzustellen.\todo{kann ich das einfach
-behaupten?}
-
-Abhilfe schaffen \textit{remote procedure call}, mit denen es f{\"{u}}r die verschiedenen Netzwerkteilnehmer
-so wirkt, als k{\"{o}}nnten sie auf den anderen Netzwerkteilnehmern Funktionen direkt aufrufen. Welche
-Funktionen dies sind, h{\"{a}}ngt von den jeweiligen Anforderungen der Anwendung oder des Systems ab.
-
-Viele RPC Bibliotheken abstrahieren den Aufruf einer Funktion {\"{u}}ber das Netzwerk so gut das es auch
-m{\"{o}}glich ist in verschiedenen Sprachen zu programmieren. Dies kann die Programmierung erleichtern, in dem
-die St{\"{a}}rken verschiedener Sprachen (zum Beispiel die Abw{\"{a}}gung zwischen Programmieraufwand und
-Programmeffizenz) geschickt kombiniert werden.
-
 \clearpage
 \section{Interaktionsmuster}
 In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
 ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
 werden diese Mustern mit menschlicher Kommunikation verglichen.
+
+\subsection{Message Passing}
+\todo{}
 
 \subsection{Request-Reply}
 Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
@@ -116,9 +94,15 @@ ist meistens so das einer redet, dann die andere Person antwortet. Es gibt also 
 und \textit{reply}.
 
 Diese Form der Kommunikation ist gut geeignet f{\"{u}} Client-Server Kommunikation wie das
-aufrufen von Websites. Diese Art von Kommunikation f{\"{u}}hrt zu Problemen falls sich die
-Informationen schnell {\"{a}}ndern -- die verschiedenen Clients agieren dann vielleicht basierend
-auf leicht unterschiedlichen Informationen, was zu Problemen f{\"{u}}hren kann.
+aufrufen von Websites. Allerdings kann diese Art von Kommunikation zu Problemen f{\"{u}}hren falls sich die
+Informationen schnell {\"{a}}ndern -- die verschiedenen Clients fragen den Server leicht zeitversetzt an und
+agieren dann vielleicht basierend auf leicht unterschiedlichen Informationen.
+
+Um das \textit{Request-Reply} Interaktionsmuster einfacher an die verschiedenen Anforderungen verschiedener
+Probleme anzupassen, gibt es die \textit{Remote Procedure Calls} als Spezialisierung des \textit{request-
+reply}. Dabei wird versucht die ganze Kommunikation so weit zu verstecken und abstrahieren das es so wirkt
+als k{\"{o}}nnten Funktion \textit{remote} (also in einem anderen Programm auf einem anderen Rechner) wie
+lokale Funktionen aufgerufen werden.
 
 \subsection{Publish-Subscribe}
 Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.

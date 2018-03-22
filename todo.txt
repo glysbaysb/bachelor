@@ -7,16 +7,6 @@ diesem Punkt der Arbeit.
 
 9
 
-Der erste Satz ist FALSCH! Der Grundgedanke eines verteilten Systems ist
-es, dass eine Menge von Rechner GEMEINSAM eine Aufgabe bearbeitet, also
-zusammen etwas tut. Dazu können TEILaufgaben auf den einzelnen Knoten
-bearbeitet werden.
-
-Zu Ihrer Frage: Ich sehe nicht, wohin das führen soll. Die Aussage ist
-doch, dass die Eigenschaften, die das Kommunikationssystem haben muss,
-von den Anforderungen der Aufgabe des verteilten Systems abhängen. Das
-ist klar und das kann man so sagen. Das Beispiel würde ich weglassen.
-
 Der Satz danach ist nicht sinnvoll: "Abhilfe"... wovon denn? Was wird da
 gelöst? Die verschiedenen Eigenschaften nun gerade NICHT. RPC ist ein
 Programmierparadigma, keine Softwarelösung, die irgendwelche
