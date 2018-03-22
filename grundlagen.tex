@@ -146,13 +146,19 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 \textit{subnet} ist.
 
 \subsection{Anforderungen}
-Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen aufrufen kann.
+Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen 
+aufrufen kann. Auch das Publish Suscribe Muster sollte genutzt werden, da alle Voter/Roboter die gleichen
+Informationen {\"{u}}ber den Weltstatus empfangen m{\"{u}}ssen um dann gemeinsam sinnvolle Bewegungen
+auszuf{\"{u}}hren.
 
 Es gibt allerdings keine Netzwerklibrary, die dieses Pattern und RPC anbietet; da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
 diese Funktionalit{\"{a}}t vorgezogen.
 
-Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt werden, f{\"{u}}gen dem Programm
-dann aber "heimlich" die C++ Runtime hinzu. Eine rein in C geschriebene Bibliothek ist daher vorzuziehen.
+Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt 
+werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Da die Netzwerkbibliothek nicht
+nur im Simulationsprogramm selbst sondern auch im Studenteninterface eingesetzt werden soll, m{\"{u}}sste dann
+um alle Eventualit{\"{a}}ten wie zum Beispiel \textit{exceptions} abzuhandeln die Studierenden auch C++
+Kentnisse haben. Da dies nicht vorausgesetzt werden kann ist eine rein in C geschriebene Bibliothek vorzuziehen.
 
 \clearpage % make sure the table is, at least, in the right section
 \begin{table}[h]

@@ -27,12 +27,9 @@ löst auch das Problem mit Kapitel 9.
 
 Hat das gleiche Grundproblem wie 8.
 
-11.1 Den ersten Satz verstehe ich nicht. Worauf bezieht sich "dieses
-Pattern"? Ausserdem treffen Sie hier quasi im Nebensatz eine der
+11.1 Ausserdem treffen Sie hier quasi im Nebensatz eine der
 wichtigsten Entwurfsentscheidungen der Arbeit (RPC + Pub/Sub) und
 begründen diese nicht wirklich.
-
-Warum stört in diesem Setting C++? Das sollte begründet werden!
 
 Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
 
