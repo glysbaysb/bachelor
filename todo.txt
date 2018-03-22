@@ -5,18 +5,6 @@ diskutiert, die aber schon unterstellen, dass das grundsätzliche
 Vorgehen klar ist. Dazu gibt es aber noch keinerlei Überlegungen an
 diesem Punkt der Arbeit.
 
-8
-
-"game engine" taucht aus dem Nichts aus... vorher war nur von
-"3D-Engine" die Rede. Die Erklärung kommt erst einen Absatz später
-
-Sie definieren hier Anforderungen und kommen dann zu Unity. So geht das
-nicht. Es müssten zumindest Alternativen diskutiert werden oder
-dargelegt werden, warum das nicht nötig ist.
-
-8.2 nennt sich "Unity". 8.3-8.5 stellen Teile von Unity vor. Das passt
-nicht, das sollten eher Unterabschnitte sein.
-
 9
 
 Der erste Satz ist FALSCH! Der Grundgedanke eines verteilten Systems ist
