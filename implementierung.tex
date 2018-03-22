@@ -1,6 +1,7 @@
 \clearpage
 \section{Architektur}
-\todo{warum beschreiben}
+Das ganze System besteht aus verschiedenen Teilen (zum Beispiel der Simulationsserver, der Voter und die Controller) welche
+auf bestimmten Arten miteinander kommunizieren und alle eine Funktion erf{\"{u}}llen.
 
 \subsection{Simulation}
 Der wichtigste Teil dieser Bachelorarbeit ist die Simulation. Sie soll nicht nur ein physikalisch glaubw{\"{u}}rdiges Modell
@@ -667,25 +668,31 @@ herunterzufallen -- schlie{\ss}lich kann es sein das dieser Roboter sich von der
 um die Platte auszubalancieren.
 
 \clearpage
-\section{Evaluation}
+\section{Zusammenfassung}
 Das Ziel dieser Bachelorarbeit war die Entwicklung einer {\"{U}}bungsaufgabe um Studierenden der Fachhochschule
 S{\"{u}}dwestfalen die Grundz{\"{u}}ge der Ausfallsicheren Systeme beizubringen. Dabei soll die schon bestehende
 {\"{U}}bungsaufgabe\ref{heizung} erg{\"{a}}nzt werden; \todo{}
 
-\begin{enumerate}
-	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
-	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
-	\item Es soll visuell ansprechend sein.
-	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
-\end{enumerate}
+Dabei besteht das System aus mehreren Teilen. Zum einen das Simulationsprogramm das gleichzeitig auch als
+Server f{\"{u}}r die, von den Studenten zu programmierenden, Roboter fungiert. Die Roboter bestehen aus
+einem von den Studierenden programmierten Teil; dieser benutzt die libworld um sich mit der Simulation zu
+verbinden und die Roboter in ihr zu steuern.
 
-Wie sehr diese Bachelorarbeit als Lehrmittel zeigt, kann noch nicht evauliert werden. Dies wird erst w{\"{a}}hrend der Benutzung durch die
-Studenten ersichtlich.
+%\begin{enumerate}
+%	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
+%	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
+%	\item Es soll visuell ansprechend sein.
+%	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
+%\end{enumerate}
 
-Es ist allerdings m{\"{o}}glich auszuwerten ob die anderen Anforderungen erf{\"{u}}llt worden sind. Als erstes soll hier
-die M{\"{o}}glichkeit betrachtet werden (im Gegensatz zur Heizung) das mehrere Gruppen gleichzeitig an ihrer L{\"{o}}sung arbeiten
-k{\"{o}}nnen. Durch die Nutzung eines Servers zu dem sich die Voter/Roboter verbinden zusammen mit ein wenig Absprache der Gruppe
-kann dieses Ziel erreicht werden. Die Simulation welche auf diesem Server l{\"{a}}uft liest beim Start eine Konfigurationdatei ein,
-mit der verschiedene Einstellungen der Fehlerinjektion frei gew{\"{a}}hlt werden k{\"{o}}nnen.
+Wie sehr diese Bachelorarbeit als Lehrmittel zeigt, kann noch nicht evauliert werden. Dies wird erst w{\"{a}}hrend
+der Benutzung durch die Studenten ersichtlich.
+
+Es ist allerdings m{\"{o}}glich auszuwerten ob die anderen Anforderungen erf{\"{u}}llt worden sind. Als erstes
+soll hier die M{\"{o}}glichkeit betrachtet werden (im Gegensatz zur Heizung) das mehrere Gruppen gleichzeitig
+an ihrer L{\"{o}}sung arbeiten k{\"{o}}nnen. Durch die Nutzung eines Servers zu dem sich die Voter/Roboter
+verbinden zusammen mit ein wenig Absprache der Gruppe kann dieses Ziel erreicht werden. Die Simulation welche
+auf diesem Server l{\"{a}}uft liest beim Start eine Konfigurationdatei ein, mit der verschiedene Einstellungen
+der Fehlerinjektion frei gew{\"{a}}hlt werden k{\"{o}}nnen.
 
 
