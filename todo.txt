@@ -37,9 +37,6 @@ Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
 
 12
 
-Hier nun C#, vorher hat Sie C++ gestört? Verstehe ich nicht und muss
-argumentiert werden!
-
 12.1 Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
 entscheiden - gleiches Problem wie in 11.
 
@@ -60,12 +57,6 @@ hier nicht nutzbringend. Statt dessen könnte man auf Kettenfahrzeuge
 oder das Segway verweisen, die nach dem gleichen Schema funktionieren.
 
 14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.
-
-"Nicht bewegen" ist unmöglich... die Anforderung muss genauer formuliert
-werden.
-
-14.2... wohin gehört das? Zu statisch oder dynamisch? Ich würde ganz am
-ANfang erklären, was alles relevant ist und damit den Rest motivieren.
 
 Teil III:
 
@@ -110,14 +101,6 @@ Rest von 16 ist noch nicht fertig, oder?
 
 19 Teile von 19 hätte ich mir in 15 gewünscht bei der Architektur
 
-20 ist okay, man könnte am Anfang aber nochmal den Bogen zum großen
-Bild/Ziel schliessen
-
-21 müsste man noch anpassen und auch etwas zu möglichen Erweiterungen
-schreiben.
-
-Eine Evaluation sollte es auch geben... dazu könnte man
-Messungen/Versuche mit dem Programm aus 20 machen.
 
 
 

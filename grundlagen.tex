@@ -191,8 +191,14 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 
 \clearpage
 \section{Serialisierung}
-Durch die Benutzung der Unity 3D Engine ist die Benutzung von C\# vorgeschrieben, der Rest der Arbeit soll in C geschreiben werden. Die Verwendung verschiedener Sprachen erschwert die Benutzung eines
-Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
+Da das Simulationsprogramm mithilfe der Unity 3D Engine geschrieben werden soll ist die Benutzung von C\#
+vorgeschrieben; der Rest der Arbeit (also das Interface f{\"{u}}r die Studenten) soll aber in C geschreiben werden
+damit die Studenten nicht um \textit{exceptions} oder andere Spezialf{\"{a}}lle abzuhandeln sich erst in
+(beispielsweise) C++ hereinarbeiten m{\"{u}}ssen. Die Verwendung verschiedener Sprachen erschwert alelrdings
+die Benutzung eines Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
+
+\todo{warum ueberhaupt binarprotokoll? "Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
+entscheiden - gleiches Problem wie in 11." denke mal das heiÃt die anforderungen klarer herausarbeiten}
 
 \subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist, dass es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
@@ -299,7 +305,12 @@ sein.
 
 \clearpage
 \section{Die Gleichgewichte}
-Die Platte soll sich im Gleichgewicht befinden, also sich nicht bewegen und nicht gekippt sein. 
+Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
+die Kippwinkel und die {\"{A}}nderungsrate des Kippwinkels zu minimieren.
+
+Dabei ist der Kippwinkel abh{\"{a}}ngig von der Verteilung der Gewichte auf der Platte, w{\"{a}}hrend die
+{\"{A}}nderungsrate von den auf die Platte wirkenden Kr{\"{a}}ften abh{\"{a}}ngt. Diese beiden Unterscheidungen
+werden in den nachfolgenden Kapiteln behandelt.
 
 \subsection{Statisches Gleichgewicht}
 Die Platte ist im statischen Gleichgewicht wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf sie wirken, sich zu Null aufaddieren.
@@ -324,6 +335,7 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 \end{equation}
 
 \subsection{Kippwinkel}
+\todo{woanders hinbewegen. ist eher implementation}
 Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 10\textdegree erreicht wird, falls sich alle
 Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
 die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
