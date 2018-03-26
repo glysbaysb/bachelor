@@ -1,0 +1,109 @@
+\documentclass[ngerman]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+%%\usepackage[style=alphabetic, backend=biber]{biblatex}
+%\addbibresource{../lit.bib}
+%\usepackage[nottoc,numbib]{tocbibind}
+%\usepackage[toc]{glossaries}
+\usepackage[pdfpagelabels=true,linktoc=all,pdfusetitle]{hyperref}
+
+\begin{document}
+
+\tableofcontents
+
+\clearpage
+
+
+
+\part{Aufgabestellung}
+\section{Einf{\"{u}}hrung}
+\subsection{Motivation}
+\subsection{Aufgabenstellung} 
+\section{Die ausfallsichere Heizung}\label{heizung}
+\section{Diskussion}
+\section{Anforderungen}\label{anforderung}
+\section{Die balancierenden Roboter}
+\section{Anforderungen -> Simulationsidee}
+\section{Simulationsidee}
+
+\part{Grundlagen}
+\section{Bewegungen}
+\subsection{Khepera}\label{khepera}
+\subsection{Differential Steering}\label{diffs}
+\subsection{Wegfindung}
+\section{Die Gleichgewichte}
+\subsection{Statisches Gleichgewicht}
+%\subsection{Kippwinkel} das muss eher in die Implementierung
+\subsection{Dynamischen Gleichgewicht}
+\section{Interaktionsmuster}
+\subsection{Message Passing}
+\subsection{Request-Reply}
+\subsection{Publish-Subscribe}
+
+
+\part{Architektur}
+% Ein grosses Problem von mir ist das ich nicht verstehe wie ich zwischen Grundlagen
+% und Architektur eine Trennung hinkriegen soll, weil sich das mMn gegenseitig bedingt.
+%
+% Siehe die Grundlagen oben. Also wuerde ich dann die Grundlagen die defintiiv durch
+% die Archtitektur beeinflusst werden, hinter den Entwurf stellen. Also diesen \part
+% gedanklich in zwei Teilen.
+% Hier ist erst noch Entwurf
+\section{Systembestandteile}
+\subsection{Kommunikation zwischen den Systemteilen} % eigentlich kann an dieser Stelle erst
+				% gesagt werden welche Kommuniktion*anforderungen* es gibt richtig?
+				% und nicht das z.B. hier pub-sub eingesetzt werden soll.
+				% hier das Paintbild "Aufteilung der Netzwerkteilnehme"?
+\subsection{Simulationsprogramm}\label{graphics} % z.B. hier das UML? Obwohl da ja schon Unitybestandteile drin sind
+\subsection{Voter / Interface}
+\subsection{Controller}
+\section{Fehlermodell der Simulation}\label{fm}
+\subsection{Roboter / Motoren}
+\subsection{Weltstatusinformationen}
+\subsection{Netwerk}
+\subsection{Controller}
+\subsection{Auswirkungen}
+% Hier fehlt die Fehlerinjektion oder? Die muss j auch entworfen werden
+% --------------
+% Hier ist Auswahl der "Komponente" basierend auf Anforderungen -> Alternativen -> Auswahl
+% -> beschreibung
+\section{Game Engine}
+\subsection{Anforderungen}
+\subsection{Unity}
+\subsubsection{Grafikengine}
+\subsubsection{Physikengine}
+\subsubsection{Scripting bei Unity}
+\section{Netzwerklibrary}
+\subsection{Anforderungen}
+\subsection{nanomsg}
+\section{Serialisierung}
+\subsection{Anforderungen}
+\subsection{MessagePack}
+
+
+\part{Implementierung}
+\section{Fehlerinjektion}
+\subsection{Netzwerk}
+\subsection{Controller}
+\subsection{Simulation}
+\subsubsection{Weltstatus}
+\subsubsection{Motor}
+\subsubsection{Fernsteuerung}
+\section{Die Simulation} % oder hier als Einleitung die Stiche von systembestandteile->Simulationsprogramm?
+% oder hier UML hin
+\subsection{Die Roboter}\label{robot}
+\subsection{Die Ladestation}\label{fuelstation}
+\subsection{Die Platte}\label{plate}
+\subsection{Netzwerkschnittstelle}
+\section{Interface f{\"{u}}r die Studenten}\label{interface}% ist das entwurf oder umsetzung?
+\section{Beispielimplementation}
+\subsection{Fehlermodell} \label{error-model}
+\subsubsection{R{\"{a}}umliche Redudanz}
+\subsubsection{Netzwerkkommunikation}
+\subsection{Voter}
+\subsection{Controller}\label{controller}
+\section{Zusammenfassung} % was fuer Messungen / Versuche koennte es denn geben? oder was fuer
+						% erweiterungen?
+
+\end{document}
