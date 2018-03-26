@@ -16,7 +16,7 @@ Auswahl einzuschr{\"{a}}nken, wurden die nachfolgenden Kriterien benutzt.
 
 \paragraph{Kosten} Die 3D Engine muss f{\"{u}}r den nicht-kommerziellen edukativen Gebrauch kostenlos sein.
 
-\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auf
+\paragraph{Plattformunabh{\"{a}}ngigkeit} Die mit der \textit{game engine} entwickelte Simulation muss auch
 ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar sein.
 
 \paragraph{Einfache Benutzung} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
@@ -24,7 +24,7 @@ tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kan
 Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schließlich wie verbreitet diese
 \textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
-Es gibt viele \textit{game engine}, genannt seien hier zum Beispiel Cryengine\ref{cryengine}, Unity, Blender, Source
+Es gibt viele \textit{game engines}, genannt seien hier zum Beispiel Cryengine\ref{cryengine}, Unity, Blender, Source
 oder Cube. Bis auf die Cryengine w{\"{a}}hren alle kostenlos; auch die Plattformunabh{\"{a}}ngigkeit ist bei
 fast allen gegeben. Doch gerade beim letzten Kriterium stach Unity hervor. Nicht nur gibt es eine sehr gro{\ss}e
 Community welche bei Problemen helfen kann, eine gute Dokumentation sondern es ist auch m{\"{o}}glich in bekannten
@@ -38,14 +38,14 @@ Unity ist eine von Unity Technologies entwickelte \textit{game engine}, die 2005
 In dieser Arbeit wird es benutzt, um die Welt und die Interaktionen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt
 abh{\"{a}}ngig von der Position und den Gewichten der Objekt gekippt werden oder die Kamera durch Tastatureingaben bewegt werden.
 
-\subsubsection{Unitys Grafikengine}
+\subsubsection{Grafikengine}
 Die in Unity enthaltene Grafikengine ist eine vollwertige 3D-Grafikengine, die es erm{\"{o}}glicht professionelle Videospiele zu programmieren. In dieser Arbeit wird nur
 ein kleiner Teil der Funktionalit{\"{a}}t benutzt; komplexere Features wie die Anzeige von Rauch oder realistischem Wasser sind nicht in der Simulation enthalten.
 
 Notwendig ist es aber, dass die verschiedenen Objekte in der simulierten Welt in 3D zu sehen sind und sich die Kamera bewegen l{\"{a}}sst, um das simulierte Geschehen zu
 verfolgen. Dies geh{\"{o}}rt zur Grundfunktionalit{\"{a}}t und muss nicht extra implementiert werden.
 
-\subsubsection{Unitys Physikengine}
+\subsubsection{Physikengine}
 Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umgebung. Dies wird durch die Physikengine von Unity erm{\"{o}}glicht, die in dieser Arbeit wichtigen Funktionalit{\"{a}}ten sind:
 
 \begin{itemize}
@@ -82,7 +82,7 @@ die Ereginisse der Physikengine (OnCollisionStart(), ...).
 \clearpage
 \section{Interaktionsmuster}
 In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
-ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
+gemeinsam ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
 werden diese Mustern mit menschlicher Kommunikation verglichen.
 
 \subsection{Message Passing}
@@ -107,6 +107,8 @@ lokale Funktionen aufgerufen werden.
 \subsection{Publish-Subscribe}
 Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
 
+\todo{darf ich mich hier auf die simulation beziehen? es wird ja eigentlich nur zur verdeutlichung
+eines allgemeinen Problemes benutzt}
 Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten. Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
 Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es, die Kommunikation {\"{u}}ber UDP Broadcasts
 laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht empfangen, ohne
@@ -198,7 +200,7 @@ damit die Studenten nicht um \textit{exceptions} oder andere Spezialf{\"{a}}lle 
 die Benutzung eines Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \todo{warum ueberhaupt binarprotokoll? "Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
-entscheiden - gleiches Problem wie in 11." denke mal das heiÃt die anforderungen klarer herausarbeiten}
+entscheiden - gleiches Problem wie in 11." denke mal das heit die anforderungen klarer herausarbeiten}
 
 \subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist, dass es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
@@ -305,6 +307,8 @@ sein.
 
 \clearpage
 \section{Die Gleichgewichte}
+\todo{auch hier beziehe ich mich auf "Roboter" und eine "Platte". Geht das in den Grundlagen?
+Oder muss ich die Grundlagen komplett frei von den Begriffen/der Aufgabenstellung halten?}
 Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
 die Kippwinkel und die {\"{A}}nderungsrate des Kippwinkels zu minimieren.
 

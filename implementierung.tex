@@ -319,7 +319,9 @@ nicht ankommen oder es kann ein alter Status erneut versendet werden. Die Wahrsc
 \subsubsection{Motor}
 Die zweite Kategorie von Fehlern sind die Ausf{\"{a}}lle der Motoren. Direkt angegeben werden die maximale
 Anzahl an fehlerhaften Robotern und die maximale Anzahl an fehlerhaften Motoren pro Roboter.
-Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r oder permament fehlerbehaftet (\textit{stuck-at}
+Die einzelnen Motoren k{\"{o}}nnen entweder tempor{\"{a}}r\footnote{Tempor{\"{a}}r bedeutet
+in diesem Fall bis zum n{\"{a}}chsten Steuerbefehl. Dieser wird nat{\"{u}}rlich wieder mit
+gleicher Fehlerwahrscheinlich "fehlschlagen"} oder permament fehlerbehaftet (\textit{stuck-at}
 oder keinerlei Leitung) sein. Die Wahrscheinlichkeiten f{\"{u}}r diese beiden Fehlerarten werden getrennt
 angegeben und k{\"{o}}nnen entweder einer zeitunabh{\"{a}}nigen festen Wahrscheinlichkeit oder der
 Badewannenkurve folgen. Bei der Badewannenkurve wird zus{\"{a}}tzlich zur Ausfallwahrscheinlichkeit auch
@@ -339,7 +341,6 @@ noch die Dauer (in s) des ersten Bereiches angegeben.
 }
 \end{lstlisting}
 
-\todo{temporaer sind jetzt nur quasi einen frame lang...}
 
 \subsubsection{Fernsteuerung}
 Wie im \hyperref[fm]{Fehlermodell} festgelegt, soll der Benutzer einen Roboter fernsteuern k{\"{o}}nnen
