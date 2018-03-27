@@ -27,59 +27,51 @@
 \section{Anforderungen -> Simulationsidee}
 \section{Simulationsidee}
 
-\part{Grundlagen}
-\section{Bewegungen}
-\subsection{Khepera}\label{khepera}
-\subsection{Differential Steering}\label{diffs}
-\subsection{Wegfindung}
-\section{Die Gleichgewichte}
-\subsection{Statisches Gleichgewicht}
-%\subsection{Kippwinkel} das muss eher in die Implementierung
-\subsection{Dynamischen Gleichgewicht}
-\section{Interaktionsmuster}
-\subsection{Message Passing}
-\subsection{Request-Reply}
-\subsection{Publish-Subscribe}
-
-
-\part{Architektur}
-% Ein grosses Problem von mir ist das ich nicht verstehe wie ich zwischen Grundlagen
-% und Architektur eine Trennung hinkriegen soll, weil sich das mMn gegenseitig bedingt.
-%
-% Siehe die Grundlagen oben. Also wuerde ich dann die Grundlagen die defintiiv durch
-% die Archtitektur beeinflusst werden, hinter den Entwurf stellen. Also diesen \part
-% gedanklich in zwei Teilen.
-% Hier ist erst noch Entwurf
+\part{Grundlagen \& Auswahl ODER Konzept ODER ...}
+% Blockschaltbild (Physiksim, Anzeige, Fehlermanager, Interface [mit FI] & Roboter, Bsp Controller)
+% Was man dafuer braucht
 \section{Systembestandteile}
-\subsection{Kommunikation zwischen den Systemteilen} % eigentlich kann an dieser Stelle erst
-				% gesagt werden welche Kommuniktion*anforderungen* es gibt richtig?
-				% und nicht das z.B. hier pub-sub eingesetzt werden soll.
-				% hier das Paintbild "Aufteilung der Netzwerkteilnehme"?
+\subsection{Kommunikation zwischen den Systemteilen}
 \subsection{Simulationsprogramm}\label{graphics} % z.B. hier das UML? Obwohl da ja schon Unitybestandteile drin sind
 \subsection{Voter / Interface}
 \subsection{Controller}
-\section{Fehlermodell der Simulation}\label{fm}
+\subsection{Fehlermanager}
+\section{Das simulierte Fehlermodell}\label{fm}
 \subsection{Roboter / Motoren}
 \subsection{Weltstatusinformationen}
 \subsection{Netwerk}
 \subsection{Controller}
 \subsection{Auswirkungen}
-% Hier fehlt die Fehlerinjektion oder? Die muss j auch entworfen werden
-% --------------
-% Hier ist Auswahl der "Komponente" basierend auf Anforderungen -> Alternativen -> Auswahl
-% -> beschreibung
+% Dann hier so ein bisschen Grundlagen, da ich schon einiges geplant/entworfen habe duerfte ich
+% auch aussortieren.
 \section{Game Engine}
 \subsection{Anforderungen}
 \subsection{Unity}
 \subsubsection{Grafikengine}
 \subsubsection{Physikengine}
 \subsubsection{Scripting bei Unity}
-\section{Netzwerklibrary}
-\subsection{Anforderungen}
-\subsection{nanomsg}
+\section{Bewegungsmuster}
+\subsection{Khepera}\label{khepera}
+\subsection{Differential Steering}\label{diffs}
+\subsection{Wegfindung}
+\section{Physiksimulation}
+\subsection{Physiksimulation der Platte}
+\subsubsection{Statisches Gleichgewicht}
+%\subsection{Kippwinkel} das muss eher in die Implementierung
+\subsubsection{Dynamischen Gleichgewicht}
+% Hier kann auch das mit Ladezustand bla bla rein. Halt allgemein der Rest fuer die Roboter eigentlich
+\section{Kommunikation}
+\subsection{Interaktionsmuster}
+\subsubsection{Message Passing}
+\subsubsection{Request-Reply}
+\subsubsection{Publish-Subscribe}
+\subsection{Netzwerklibrary}
+\subsubsection{Anforderungen}
+\subsubsection{nanomsg}
 \section{Serialisierung}
 \subsection{Anforderungen}
 \subsection{MessagePack}
+
 
 
 \part{Implementierung}
@@ -103,7 +95,8 @@
 \subsubsection{Netzwerkkommunikation}
 \subsection{Voter}
 \subsection{Controller}\label{controller}
-\section{Zusammenfassung} % was fuer Messungen / Versuche koennte es denn geben? oder was fuer
-						% erweiterungen?
-
+\section{Zusammenfassung}
+\paragraph{Evaluierung in Bezug auf Lernziel}
+\paragraph{Evaluierung in Bezug auf Simulation}
+% Liste: Einmal ohne FI -> balanciert, mit FI auf X% muesste nach Ys ausfallen, nach Xs ist Tank leer -> tanken funktioniert
 \end{document}
