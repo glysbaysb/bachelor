@@ -1,4 +1,224 @@
 \clearpage
+\section{Physiksimulation}
+\todo{einleitung}
+
+\subsection{Bewegungsmuster}
+Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
+Dies gibt auch das Bewegungsmodell vor: \hyperref[diffs]{\textit{differential steering}}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
+
+\subsubsection{Khepera}\label{khepera}
+Die Khepera-Roboterserie existiert seit Mitte der 90er Jahre, das neuste Modell ist der Khepera IV
+\footnote{Vergleiche: \cite{Soares2016}}.
+Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
+H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
+
+Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor.
+Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde. Um die Position des
+Roboters odeometrisch bestimmen zu k{\"{o}}nnen, geben die Motoren auch aus, wie oft sich das
+jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter auch Infrarot-, Ultraschall-
+und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden
+um Kollisionen zu vermeiden. Mithilfe der integrierten Beschleunigungs- und Gyrosensoren kann
+der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
+
+Gesteuert wird der Khepera IV von einer ARM CPU, auf der ein vollwertiges Linux l{\"{a}}uft. Des weiteren gibt es auch ein WLAN Modul, eine Kamera und Lautsprecher plus Mikrophon.
+
+\begin{figure}
+	\centering
+	\includevisio{k4-detail1.png}
+	\caption{Der Khepera IV Roboter}
+	\label{fig:kheperaiv}
+\end{figure}
+\clearpage
+
+\subsubsection{Differential Steering}\label{diffs}
+Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Es kann zwischen drei Bewegungsarten unterschieden werden:
+\begin{itemize}
+\item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
+\item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung rotieren, wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
+\item Falls die R{\"{a}}der gleisch schneller, aber in unterschiedliche Richtunge rotieren, wendet der Roboter auf der Stelle.
+\end{itemize}
+
+Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ den
+linken Motor beschreibt. \gls{R} ist der Radius eines Rades, und \gls{L} die Distanz zwischen den R{\"{a}}dern.
+Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
+\begin{subequations}\label{eq:diffs}
+\begin{align}
+	\Theta(t) &= \Theta(0) + \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{eq:diffs-theta}\\
+\intertext{Mithilfe der Orientierung zum Zeitpunkt $t$ ist es m{\"{o}}glich die "Fahrtrichtung" zum
+	Zeitpunkt $t$ zu bestimmen. Eine Multiplikation dieser mit den Geschwindigkeitsvektoren ergibt den
+	Bewegungsvektor zum Zeitpunkt $t$ - daraus l{\"{a}}sst sich die Position ermitteln:
+}
+	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
+	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
+\end{align}
+\end{subequations}
+
+\subsubsection{Wegfindung}
+Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nung auf allen Achsen) bewegen kann, wird die Wegfindung
+erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problems) k{\"{o}}nnte der Roboter sich erst auf der Stelle
+drehen, bis er das Ziel "anguckt" und sich dann gradlienig auf dieses zubewegen.
+
+Falls einer der beiden Robotermotoren allerdings nicht vollst{\"{a}}ndig funktionst{\"{u}}chtig ist, ist dies nicht m{\"{o}}glich. Eine m{\"{o}}gliche
+Alternative w{\"{a}}hre es eine Kurve zu fahren, dies muss allerdings -- abh{\"{a}}ngig von der zur{\"{u}}ckzulegenden Strecke -- nicht immer m{\"{o}}glich
+sein.
+
+\subsection{Physiksimulation der Platte}
+Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
+die Kippwinkel und die {\"{A}}nderungsrate des Kippwinkels zu minimieren.
+
+Dabei ist der Kippwinkel abh{\"{a}}ngig von der Verteilung der Gewichte auf der Platte, w{\"{a}}hrend die
+{\"{A}}nderungsrate von den auf die Platte wirkenden Kr{\"{a}}ften abh{\"{a}}ngt. Diese beiden Unterscheidungen
+werden in den nachfolgenden Kapiteln behandelt.
+
+\subsubsection{Statisches Gleichgewicht}
+Die Platte ist im statischen Gleichgewicht wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf sie wirken, sich zu Null aufaddieren.
+Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
+
+Um das Kippen der Platte auf der links-rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen, werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz
+im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung
+\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+
+F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt
+gilt Gleichung ~\ref{eq:forces:y}.
+\begin{subequations}\label{eq:forces}
+\begin{align}
+	V(x) = x(F) \times w(F) + \sum_{i=0}^{|\gls{N}|} ( x(N_i) \times w(N_i) ) \label{eq:forces:x}\\
+	V(y) = y(F) \times w(F) + \sum_{i=0}^{|N|} ( y(N_i) \times w(N_i) ) \label{eq:forces:y}
+\end{align}
+\end{subequations}
+
+Das Ziel ist es die Platte auszubalancieren, also soll gelten:
+\begin{equation}\label{eq:gleichgewicht}
+	V(x) = V(y) = 0
+\end{equation}
+
+\subsubsection{Kippwinkel}
+\todo{woanders hinbewegen. ist eher implementation}
+Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 10\textdegree erreicht wird, falls sich alle
+Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
+die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
+
+\begin{align}\label{eq:tilt-from-maxtilt}
+10\degree = Max, X\degree = Curr \\
+\Rightarrow \frac{Max}{Curr} = \frac{10}{X} \\
+\Rightarrow \frac{1}{X} = \frac{Max}{10 \times Curr} \\
+\Rightarrow X = \frac{10 \times Curr}{Max}
+\end{align}
+
+\subsubsection{Dynamischen Gleichgewicht}
+Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
+{\"{A}}nderung und schwingt dann langsam ab. Da ein geschlossenes System simuliert wird, ist dem Impuls eine gleich gro{\ss}e Kraft entgegen gerichtet.
+Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathematisch ausgedr{\"{u}}ckt:
+\begin{equation}\label{eq:schwingung}
+	s(t) = e^\mathrm{-\delta t} \times sin(\omega_d t) \times s(0)
+\end{equation}
+\cite{wiki:schwingung}
+\footnote{$\delta$ und $\omega_d$ sind in der Simulation frei einstellbar}
+
+Hierbei ist $s(t)$ ein Vektor, in dem die Geschwindigkeits{\"{a}}nderung in X-, Y- und Z-Richtung die jeweiligen Elemente sind. Um die gesamte Schwindung der
+Platte zu bestimmen werden die Ergebnissvektoren der einzelnen Roboter aufaddiert.
+
+\clearpage
+\section{Das zu simulierende Fehlermodell}\label{fm}
+Das Ziel der Aufgabe ist es, Studierenden etwas {\"{u}}ber ausfallsichere Systeme beizubringen. Daf{\"{u}}r
+muss auch etwas ausfallen, denn nur dann wird getestet ob die Auswirkungen des Ausfalls abgemindert werden 
+konnten.
+
+Im Fehlermodell wird festgelegt, was alles -- und auf welche Weise -- ausfallen kann. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
+der Simulation sind hier die simulierte Welt mit ihren Robotern (und den dazugeh{\"{o}}rigen Motoren/Aktoren
+und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Controller selbst.
+
+\subsection{Roboter / Motoren}
+Die simulierten Roboter {\"{a}}hneln dem Khepera Roboter und haben daher 2 Motoren. Diese beiden Motoren k{\"{o}}nnen unabh{\"{a}}ngig von einander fehlerhaft sein. Fehlerhaft
+hei{\ss}t hier:
+\begin{itemize}
+	\item Die H{\"{a}}ufigkeit von Hardwarefehler wird oft mithilfe der Badewannenkurve modelliert. Sie besagt,
+		dass Hardware entweder kurz nach Inbetriebnahme oder nach langer Betriebszeit mit hoher
+		Wahrscheinlichkeit fehlerhaft ist, und in der Zwischenzeit nur mit niedriger Wahrscheinlichkeit.
+		F{\"{u}}r die Motoren der Roboter wird ein vereinfachtes Modell genutzt, in dem die Wahrscheinlichkeit 
+		f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf
+		Null sinkt. Falls der Motor in dieser Zeit Fehler aufweist, bleibt diese Fehler auch.
+	\item Desweiteren kann ein Motor tempor{\"{a}}r ein \textit{stuck-at}-Verhalten aufweisen. Dieses
+		kann jederzeit passieren und entweder tempor{\"{a}}rer oder permament sein.
+		Die Wahrscheinlichkeiten f{\"{u}}r das Auftreten eines permamenten oder tempor{\"{a}}ren
+		\textit{stuck-at}-Fehlers sind unabh{\"{a}}ngig voneinander einstellbar.
+\end{itemize}
+
+Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
+bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Es soll m{\"{o}}glich sein verschiedene 
+Schwierigkeitsstufen der Simulation einzustellen. Daher ist es m{\"{o}}glich
+dass nur ein Motor pro Roboter gleichzeitig Fehler aufweisen kann.
+
+Aus dem gleichen Grund ist es parametresierbar, wie viele Roboter gleichzeitig irgendeine Art von Fehler aufweisen k{\"{o}}nnen.
+
+Zus{\"{a}}tzlich zu diesen Fehler soll es auch m{\"{o}}glich sein, einen Roboter fernzusteuern. W{\"{a}}hrend
+der Fernsteuerung darf dieser Roboter keine Steuerbefehle seines Voters ausf{\"{u}}hrend sondern wird rein
+vom Nuter gesteuert. Diese Art der Fehlerinjektion w{\"{u}}rde in Richtung byzantinische Fehler gehen,
+denn dies w{\"{u}}rde es erm{\"{o}}glichen, gezielt die Platte zu destabilisieren oder Roboter zu
+blockieren.
+
+\subsection{Weltstatusinformationen}
+Die Roboter haben ihre Aktoren, um sich in der Welt zu bewegen. Damit sie sich sinnvoll bewegen und die
+Platte balanciert k{\"{o}}nnen, brauchen sie Informationen {\"{u}}ber den Status der Welt und ihre
+(und die der anderen Roboter) Position in dieser. Diese Informationen sind direkt verf{\"{u}}gbar
+und m{\"{u}}ssen nicht, zum Beispiel odeometrisch, erst herausgefunden werden. In der realen Welt sind
+Sensoren, wie sie hier vielleicht h{\"{a}}tten simuliert werden k{\"{o}}nnen, nat{\"{u}}rlich manchmal 
+fehlerbehaftet. Um dies nachzubilden k{\"{o}}nnen, die Informationen {\"{u}}ber den Weltstatus auf
+verschiedene Arten fehlerhaft an den Roboter weitergeleitet werden.
+
+Als erstes ist es m{\"{o}}glich, dass der Roboter einfach keinerlei Informationen mehr bekommt, also ein \textit{omission failure} vorliegt. Ein \textit{stuck-at} Fehler liegt
+vor wenn veralterte Informationen wieder an den Roboter weitergegeben werden, so als w{\"{u}}rde ein Sensor nur noch seine letzen g{\"{u}}ltigen Daten liefern. Der dritte
+Fall liegt vor, wenn komplett falsche Daten geliefert werden. Komplett falsch hei{\ss}t, dass die Anzahl und die Positionen, Gewichte etc. der Roboter potenziell fehlerhaft an
+den Roboter weitergegeben werden. Die Wahrscheinlichkeiten f{\"{u}}r die jeweiligen F{\"{a}}lle lassen sich unabh{\"{a}}ngig von einander einstellen.
+
+\subsection{Netwerk}
+Da die simulierten Roboter den Khepera Robotern {\"{a}}hneln sollen, sollen auch ihre 
+Kommunikationsm{\"{o}}glichkeiten denen der Khepera Roboter {\"{a}}hneln. Bei beweglichen
+Objekten sind Ethernetkabel suboptimal, weswegen diese Funkverbindungen -- im Falle der Khepera
+Roboter ist dies WLAN -- bevorzugen. Funkverbindungen haben aber, im Gegensatz zu gut abgeschirmten
+Ethernetkabeln, Probleme mit Interferenzen durch andere Funk{\"{u}}bertragungen.
+
+Dies f{\"{u}}hrt dazu das w{\"{a}}hrend der {\"{U}}bertragung Bits, oder sogar ganze Bytes, verf{\"{a}}lscht werden. Auch die Wahrscheinlichkeit f{\"{u}}r diesen Fall
+soll einstellbar sein. Vereinfachend wird hier angenommen das jeweils nur ein Byte pro Paket verf{\"{a}}lscht wird, es gibt also keine \textit{burst errors}.
+Es wird angenommen das die meiste Kommunikation zwischen Robotern "in Sichtweite" geschieht, ohne Zwischenstationen und komplexes Routing. In diesem Fall ist
+es ist un{\"{u}}blich das Pakete verloren gehen oder zeitverz{\"{o}}gert weitergeleitet werden, daher ist dies nicht Teil des Fehlermodells.
+
+\subsection{Controller}
+Es wird davon ausgegangen, dass die Controllerprogramme auf unzuverl{\"{a}}ssiger Hardware, unzuverl{\"{a}}ssigen 
+Betriebssystem laufen und fehlerhaft programmiert sind. Daher muss davon ausgegangen werden, dass die
+Programme jederzeit abst{\"{u}}rzen k{\"{o}}nnen. Desweiteren kann auch nicht davon ausgegangen werden,
+dass die Controllerprogramme das einzige Programm ist, das l{\"{a}}uft; es kann also auch zu Problemen bei
+der Resourceverteilung (RAM, CPU Zeit) kommen.
+
+\subsection{Auswirkungen}
+Nachdem Fehlermodelle f{\"{u}}r die verschiedenen Elemente des Systems entwickelt wurden, kann
+betrachtet werden, welche Auswirkungen die verschiedenen Fehler haben k{\"{o}}nnen. Hierbei werden nur
+die Auswirkungen in Bezug auf die Platte betrachtet.
+
+\paragraph{Unkontrollierte Bewegung} Falls sich ein Roboter unkontrolliert bewegt (also ein oder
+mehrere Motoren einen \textit{stuck-at}-Fehler und die verbliebenden Motoren gar nicht mehr funktionieren)
+kann dieser Roboter nicht mehr genutzt werden um die Platte auszubalancieren.
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{fm_robot}
+	\caption{Fehlerbaum: Unkontrollierte Bewegung eines Roboters}
+	\label{fig:fault-tree-robot}
+\end{figure}
+\clearpage
+
+\paragraph{Inkorrekte Bewegungen} Ein Roboter bewegt sich "falsch", wenn seine Bewegung weder die Platte 
+ausbalanciert noch dazu gedacht, ist den Energiespeicher aufzuf{\"{u}}llen. Dies kann verschiedene Gr{\"{u}}nde 
+haben: Entweder bewegt der Roboter sich unkontrolliert oder er wird falsch angesteuert. Beide F{\"{a}}lle
+passieren falls die Controller falsche Steuerkommandos senden, oder theoretisch richtige Steuerkommandos
+falsch ausgewertet werden.
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{fm_robot2}
+	\caption{Fehlerbaum: Inkorrekte Bewegung eines Roboter}
+	\label{fig:fault-tree-robot2}
+\end{figure}
+
+\clearpage
 \section{Game Engine}
 \subsection{Anforderungen}
 Die Simulation, vor allem die Bewegung der Roboter, kann besonders gut visuell dargestellt werden.
@@ -80,15 +300,19 @@ einzuklinken (zum Beispiel OnWillRenderObject, OnPostRender, ...). Das gleiche g
 die Ereginisse der Physikengine (OnCollisionStart(), ...).
 
 \clearpage
-\section{Interaktionsmuster}
+\section{Kommunikation}
+\todo{bla bla dadurch das es verschiedene systembestandteile gibt bla bla kommunikation noetig, bla bla
+verschiedene moeglichkeiten bla bla einige vorgestellt bla bla dann ausgewaehlt}
+
+\subsection{Interaktionsmuster}
 In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
 gemeinsam ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
 werden diese Mustern mit menschlicher Kommunikation verglichen.
 
-\subsection{Message Passing}
+\subsubsection{Message Passing}
 \todo{}
 
-\subsection{Request-Reply}
+\subsubsection{Request-Reply}
 Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
 ist meistens so das einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
 und \textit{reply}.
@@ -104,7 +328,7 @@ reply}. Dabei wird versucht die ganze Kommunikation so weit zu verstecken und ab
 als k{\"{o}}nnten Funktion \textit{remote} (also in einem anderen Programm auf einem anderen Rechner) wie
 lokale Funktionen aufgerufen werden.
 
-\subsection{Publish-Subscribe}
+\subsubsection{Publish-Subscribe}
 Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
 
 \todo{darf ich mich hier auf die simulation beziehen? es wird ja eigentlich nur zur verdeutlichung
@@ -140,14 +364,12 @@ nicht die Abarbeitung dieser Daten.
 \end{figure}
 \todo{sieht kacke aus. kleiner und andere Auflösung?}
 
-
-\clearpage
-\section{Netzwerklibrary}
+\subsection{Netzwerklibrary}
 Um die Kommunikation zwischen den einzelnen Netzwerkteilnehmern nicht komplett selbst zu implementieren, k{\"{o}}nnen bereits bestehende Netzwerklibraries genutzt werden.
 Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkteilnehmer Funktionen aufzurufen oder sich f{\"{u}}r Multicasts anzumelden, auch wenn man in einem anderen
 \textit{subnet} ist.
 
-\subsection{Anforderungen}
+\subsubsection{Anforderungen}
 Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen 
 aufrufen kann. Auch das Publish Suscribe Muster sollte genutzt werden, da alle Voter/Roboter die gleichen
 Informationen {\"{u}}ber den Weltstatus empfangen m{\"{u}}ssen um dann gemeinsam sinnvolle Bewegungen
@@ -180,7 +402,7 @@ Kentnisse haben. Da dies nicht vorausgesetzt werden kann ist eine rein in C gesc
 
 Aus dieser vergleichenden Darstellung wird klar, dass nanomsg am besten geeignet ist; auf dessen speziellen Eigenschaften wird nun n{\"{a}}her eingegangen.
 
-\subsection{nanomsg}
+\subsubsection{nanomsg}
 nanomsg ist eine komplett in C geschrieben Netzwerkbibliothek, mit einer API die der POSIX Socket API gleicht (es wird sich also, zum Beispiel mit nn\_connect() verbunden oder mit nn\_send() gesendet).
 Der gro{\ss}e Vorteil von nanomsg sind die implementierten {\"{U}}bertragungsarten. Je nach gew{\"{u}}nschter {\"{U}}bertragungsart wird ein unterschiedlicher Socket erstellt, dieser erlaubt die
 Interaktion mit den anderen Netzwerkteilnehmern die auch diese {\"{U}}bertragunsart benutzen.
@@ -193,6 +415,9 @@ Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 
 \clearpage
 \section{Serialisierung}
+\todo{das ist doch konzeptionell auf einer anderen Ebene als sagen wir mal Game Engine oder Physiksim.? Ist doch im
+vergleich dazu unwichtig}
+
 Da das Simulationsprogramm mithilfe der Unity 3D Engine geschrieben werden soll ist die Benutzung von C\#
 vorgeschrieben; der Rest der Arbeit (also das Interface f{\"{u}}r die Studenten) soll aber in C geschreiben werden
 damit die Studenten nicht um \textit{exceptions} oder andere Spezialf{\"{a}}lle abzuhandeln sich erst in
@@ -243,125 +468,3 @@ L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert, beispielsw
 In diesem Fall folgt die L{\"{a}}ng als 32bit big endian
 \footnote{L{\"{a}}ngen werden immer in big-endian, kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}hrleisten zu k{\"{o}}nen.}
 Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
-
-\clearpage
-\section{Bewegungen}
-Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
-Dies gibt auch das Bewegungsmodell vor: \hyperref[diffs]{\textit{differential steering}}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
-
-\subsection{Khepera}\label{khepera}
-Die Khepera-Roboterserie existiert seit Mitte der 90er Jahre, das neuste Modell ist der Khepera IV
-\footnote{Vergleiche: \cite{Soares2016}}.
-Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
-H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
-
-Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor.
-Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde. Um die Position des
-Roboters odeometrisch bestimmen zu k{\"{o}}nnen, geben die Motoren auch aus, wie oft sich das
-jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter auch Infrarot-, Ultraschall-
-und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden
-um Kollisionen zu vermeiden. Mithilfe der integrierten Beschleunigungs- und Gyrosensoren kann
-der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
-
-Gesteuert wird der Khepera IV von einer ARM CPU, auf der ein vollwertiges Linux l{\"{a}}uft. Des weiteren gibt es auch ein WLAN Modul, eine Kamera und Lautsprecher plus Mikrophon.
-
-\begin{figure}
-	\centering
-	\includevisio{k4-detail1.png}
-	\caption{Der Khepera IV Roboter}
-	\label{fig:kheperaiv}
-\end{figure}
-\clearpage
-
-\subsection{Differential Steering}\label{diffs}
-Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Es kann zwischen drei Bewegungsarten unterschieden werden:
-\begin{itemize}
-\item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
-\item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung rotieren, wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
-\item Falls die R{\"{a}}der gleisch schneller, aber in unterschiedliche Richtunge rotieren, wendet der Roboter auf der Stelle.
-\end{itemize}
-
-Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ den
-linken Motor beschreibt. \gls{R} ist der Radius eines Rades, und \gls{L} die Distanz zwischen den R{\"{a}}dern.
-Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
-\begin{subequations}\label{eq:diffs}
-\begin{align}
-	\Theta(t) &= \Theta(0) + \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{eq:diffs-theta}\\
-\intertext{Mithilfe der Orientierung zum Zeitpunkt $t$ ist es m{\"{o}}glich die "Fahrtrichtung" zum
-	Zeitpunkt $t$ zu bestimmen. Eine Multiplikation dieser mit den Geschwindigkeitsvektoren ergibt den
-	Bewegungsvektor zum Zeitpunkt $t$ - daraus l{\"{a}}sst sich die Position ermitteln:
-}
-	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
-	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
-\end{align}
-\end{subequations}
-
-\subsection{Wegfindung}
-Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nung auf allen Achsen) bewegen kann, wird die Wegfindung
-erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problems) k{\"{o}}nnte der Roboter sich erst auf der Stelle
-drehen, bis er das Ziel "anguckt" und sich dann gradlienig auf dieses zubewegen.
-
-Falls einer der beiden Robotermotoren allerdings nicht vollst{\"{a}}ndig funktionst{\"{u}}chtig ist, ist dies nicht m{\"{o}}glich. Eine m{\"{o}}gliche
-Alternative w{\"{a}}hre es eine Kurve zu fahren, dies muss allerdings -- abh{\"{a}}ngig von der zur{\"{u}}ckzulegenden Strecke -- nicht immer m{\"{o}}glich
-sein.
-
-\clearpage
-\section{Die Gleichgewichte}
-\todo{auch hier beziehe ich mich auf "Roboter" und eine "Platte". Geht das in den Grundlagen?
-Oder muss ich die Grundlagen komplett frei von den Begriffen/der Aufgabenstellung halten?}
-Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
-die Kippwinkel und die {\"{A}}nderungsrate des Kippwinkels zu minimieren.
-
-Dabei ist der Kippwinkel abh{\"{a}}ngig von der Verteilung der Gewichte auf der Platte, w{\"{a}}hrend die
-{\"{A}}nderungsrate von den auf die Platte wirkenden Kr{\"{a}}ften abh{\"{a}}ngt. Diese beiden Unterscheidungen
-werden in den nachfolgenden Kapiteln behandelt.
-
-\subsection{Statisches Gleichgewicht}
-Die Platte ist im statischen Gleichgewicht wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf sie wirken, sich zu Null aufaddieren.
-Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
-
-Um das Kippen der Platte auf der links-rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen, werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz
-im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung
-\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
-
-F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt
-gilt Gleichung ~\ref{eq:forces:y}.
-\begin{subequations}\label{eq:forces}
-\begin{align}
-	V(x) = x(F) \times w(F) + \sum_{i=0}^{|\gls{N}|} ( x(N_i) \times w(N_i) ) \label{eq:forces:x}\\
-	V(y) = y(F) \times w(F) + \sum_{i=0}^{|N|} ( y(N_i) \times w(N_i) ) \label{eq:forces:y}
-\end{align}
-\end{subequations}
-
-Das Ziel ist es die Platte auszubalancieren, also soll gelten:
-\begin{equation}\label{eq:gleichgewicht}
-	V(x) = V(y) = 0
-\end{equation}
-
-\subsection{Kippwinkel}
-\todo{woanders hinbewegen. ist eher implementation}
-Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 10\textdegree erreicht wird, falls sich alle
-Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
-die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
-
-\begin{align}\label{eq:tilt-from-maxtilt}
-10\degree = Max, X\degree = Curr \\
-\Rightarrow \frac{Max}{Curr} = \frac{10}{X} \\
-\Rightarrow \frac{1}{X} = \frac{Max}{10 \times Curr} \\
-\Rightarrow X = \frac{10 \times Curr}{Max}
-\end{align}
-
-\subsection{Dynamischen Gleichgewicht}
-Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
-{\"{A}}nderung und schwingt dann langsam ab. Da ein geschlossenes System simuliert wird, ist dem Impuls eine gleich gro{\ss}e Kraft entgegen gerichtet.
-Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathematisch ausgedr{\"{u}}ckt:
-\begin{equation}\label{eq:schwingung}
-	s(t) = e^\mathrm{-\delta t} \times sin(\omega_d t) \times s(0)
-\end{equation}
-\cite{wiki:schwingung}
-\footnote{$\delta$ und $\omega_d$ sind in der Simulation frei einstellbar}
-
-Hierbei ist $s(t)$ ein Vektor, in dem die Geschwindigkeits{\"{a}}nderung in X-, Y- und Z-Richtung die jeweiligen Elemente sind. Um die gesamte Schwindung der
-Platte zu bestimmen werden die Ergebnissvektoren der einzelnen Roboter aufaddiert.
-
-
