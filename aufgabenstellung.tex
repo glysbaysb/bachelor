@@ -174,6 +174,16 @@ Auch w{\"{a}}re es sch{\"{o}}n wenn es noch subtilere M{\"{o}}glichkeiten der Fe
 es nur m{\"{o}}glich die L{\"{u}}fter komplett abzuschalten, aber keine \textit{stuck-at} Fehler zu injezieren.
 Gerade bei der Netzwerkkommunikation g{\"{a}}be es viele M{\"{o}}glichkeiten um Zeitfehler und Wertefehler zu injizieren.
 
+Eine bereits existierende Alternative w{\"{a}}re die Wippe. Sie besteht aus einem Computergesteuerten Motor der eine
+Wippe kippen kann auf der ein Ball liegt. Die Aufgabe ist es nun den Ball m{\"{o}}glichst in der Mitte zu balancieren.
+Dieses System ist intuitiv verst{\"{a}}ndlich und reagiert --- im Gegensatz zur Heizung --- sofort. Allerdings ist
+es ungeeignet um Konzepte der Ausfallsicherheit zu verdeutlichen: es gibt nur eine Komponente die ausfallen kann (den
+Motor).
+
+Momentan wird im Rahmen einer weiteren Bachelorarbeit ein {\"{a}}hnliches Prinzip im zweidimensionalen Raum entwickelt;
+die Kugel soll nun auf einer Achse "Vorne-Hinten" und auf der Achse "Links-Rechts" m{\"{o}}glichst im Mittelpunkt liegen.
+Auch die dadurch, wenigstens ansatzweise, vorhandene Redudandanz {\"{a}}ndert aber nichts am gr{\"{o}}{\ss}ten Kritikpunkt:
+es gibt nur ein System wodurch nur eine Studentengruppe gleichzeitig arbeiten kann.
 
 \clearpage
 \section{Anforderungen}\label{anforderung}
@@ -181,6 +191,7 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 \begin{enumerate}
 	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
 	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
+	\item Es soll auch m{\"{o}}glich sein au{\ss}erhalb des MR Labores an der Problemstellung weiterzuarbeiten.
 	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich,
 		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
 		Arten der Fehlerinjektion ganz auschgeschaltet werden.
@@ -191,8 +202,12 @@ Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was
 
 \clearpage
 \section{Die balancierenden Roboter}
-An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine
-Simulation\cite{Werner00} entwickelt. In der Simulation soll eine simulierte Platte durch die Bewegung von 
+Viele dieser Anforderungen k{\"{o}}nnen am einfachsten mit einer Simulation abgedeckt werden. Diese kann gleichzeitig
+von mehreren Gruppen genutzt werden und stellt keine Einschr{\"{a}}nkungen an die M{\"{o}}glichkeiten der Fehlerinjektion
+oder der ben{\"{o}}tigten Konzepte.
+
+An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine solche
+Simulation\cite{Werner00} entwickelt. In dieser soll eine simulierte Platte durch die Bewegung von 
 simulierten Robotern ausbalanciert werden. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also
 aus dem Gleichgewicht.
 
