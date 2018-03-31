@@ -9,6 +9,7 @@
 static bool _isInsideCircle(const Vector& position, const double& radius);
 static double _rotateTowards(const Vector& a, const double rotation, const Vector& b);
 static Vector _actionToVector(const Action& a);
+static Vector _unicycle_to_diff(const Vector& accelleration);
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
@@ -32,14 +33,19 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 #endif
 	/* todo: would the robot fall? todo: current acceleration */
 
+	
+	return Action{robot->id(), _unicycle_to_diff(accelleration)};
+}
+
+static Vector _unicycle_to_diff(const Vector& accelleration)
+{
 	const auto L = 1,
 		  R = 1;
-	auto wheels = Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
+	return Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
 		(2 * accelleration.x_ + accelleration.y_ * L) / 2*R
 	};
-
-	return Action{robot->id(), wheels};
 }
+
 
 static std::vector<Action> _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
 		const FuelStation& fuel, const std::vector<Robot>::reverse_iterator& robot)
