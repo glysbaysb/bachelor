@@ -19,7 +19,7 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	/* if this robot might run out of fuel, move towards fuel station */
 	if(robot->crit() < CRIT_THRESHHOLD) {
 #endif
-		accelleration = Vector(1., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
+		accelleration = Vector(100., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
 #if 0
 	}
 	/* if it's */
@@ -39,11 +39,16 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 
 static Vector _unicycle_to_diff(const Vector& accelleration)
 {
-	const auto L = 1,
-		  R = 1;
-	return Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
-		(2 * accelleration.x_ + accelleration.y_ * L) / 2*R
+	const auto L = 1.f,
+		  R = 0.5f;
+	/* v => speed, w => angle
+	   v_r = \frac{2v + wL}{2R}
+	   v_l = \frac{2v - wL}{2R} */
+	auto x = Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
+		(2 * accelleration.x_ - accelleration.y_ * L) / 2*R
 	};
+	std::cout << accelleration << " => " << x << '\n';
+	return x;
 }
 
 
