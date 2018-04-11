@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	detachFromWorld(callbackInfo.worldCtx);
 }
 
-float PID(float e, float timeFrame, float& integral, float& lastError)
+static float PID(float e, float timeFrame, float& integral, float& lastError)
 {
 	const float P = 1,
 		D = 0.001f,
@@ -63,6 +63,8 @@ float PID(float e, float timeFrame, float& integral, float& lastError)
 #include <libalgo/algo.h>
 #include <libalgo/algo.cxx>
 
+
+
 static std::pair<int, int> _move(const Info* const info, const SimulationObject& me)
 {
 	const auto DISTANCE = 1.0f;
@@ -72,35 +74,17 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 	bool onCircle = !_isInsideCircle({me.x, me.y}, DISTANCE - TOLERANCE) &&
 		_isInsideCircle({me.x, me.y}, DISTANCE + TOLERANCE);
 	if(!onCircle) {
-		std::cout << "not on circle\n";
-		/* move there */
-		auto moveCloser = !_isInsideCircle({me.x, me.y}, DISTANCE + TOLERANCE);
-		auto rot = _rotateTowards({me.x, 180. - me.y}, me.rotation, {0., 0.});
-		if(moveCloser) {
-			if(rot < 5 && rot > 0) {
-				std::cout << "gg\n";
-				return {100, 100};
-			} else if(rot < 180 && rot > 0) {
-				std::cout << "left\n";
-				return {100, -100};
-			} else {
-				std::cout << "right\n";
-				return {-100, 100};
-			}
-
-			std::cout << "closer\n";
-			//auto tmp = _unicycle_to_diff({100., });
-			//return {tmp.x_, tmp.y_};
+		auto dest = get_nearest_point_on_circle({me.x, me.y});
+		std::cout << "not on circle " << dest << "\n";
+		auto rot = _rotateTowards({me.x, me.y}, me.rotation, dest);
+		if(rot > -5 && rot < 5) {
+			return {100 + rot, 100 + rot};
+		} else if(rot < -5) {
+			return {50, -50};
 		} else {
-			/* facing away from middle? */
-			if(rot >= 175 && rot <= 185) {
-				std::cout << "further\n";
-				return {100, 100};
-			} else {
-				std::cout << "roate\n";
-				return {-100, 100};
-			}
+			return {-50, 50};
 		}
+		
 	} else {
 		std::cout << "\n\non the circle\n\n\n";
 		/* move on the circle */
