@@ -7,6 +7,7 @@ target_link_libraries(test_algo
     gtest
     gmock
 	pthread
+	algo
 )
 
 set(SOURCE_FILES_VECTOR test_vector.cxx)
@@ -15,4 +16,5 @@ target_link_libraries(test_vector
 	gtest
 	gmock
 	pthread
+	algo
 )

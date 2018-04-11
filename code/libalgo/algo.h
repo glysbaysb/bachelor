@@ -77,9 +77,13 @@ struct Vector
 		return a.length() < b.length();
 	}
 
-	Vector norm() {
+	Vector norm() const{
 		auto len = length();
 		return Vector{x_ / len, y_ / len};
+	}
+
+	friend Vector operator*(float a, const Vector& b) {
+		return Vector{a * b.x_, a * b.y_};
 	}
 };
 
@@ -123,6 +127,7 @@ public:
 	{
 		return m_;
 	}
+
 };
 
 class Robot : public Object
@@ -190,5 +195,8 @@ public:
 
 std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::vector<Robot>& objects,
 		const FuelStation& fuel);
+
+Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid = {0., 0.},
+		const float radius = 1.);
 
 #endif // ALGO_H

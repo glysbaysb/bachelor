@@ -27,8 +27,23 @@ public:
 
 };
 
-TEST_F(AlgoTest, Bla) {
-	ASSERT_EQ(0, 1);
+TEST_F(AlgoTest, FindCircle) {
+	/* Exactly on circle -> no need to move */
+	auto pos = Vector{0., 0.5f};
+	auto c1 = get_nearest_point_on_circle(pos, Vector{0., 0.}, 0.5f);
+	ASSERT_EQ(pos, c1);
+	//ASSERT_EQ(Vector{-1., 0.}, get_nearest_point_on_circle(Vector{-1., 0.}, 1.));
+
+	/*
+	   (0.894427;0.447214)
+	   (0.707107;0.707107)
+	   (-0.707107;-0.707107)
+	   */
+
+	std::cout << get_nearest_point_on_circle(Vector{2., 1.}) << std::endl;
+	std::cout << get_nearest_point_on_circle(Vector{2., 2.}) << std::endl;
+	std::cout << get_nearest_point_on_circle(Vector{-2., -2.}) << std::endl;
+	std::cout << get_nearest_point_on_circle(Vector{0., 0.}) << std::endl;
 }
 
 int main(int argc, char **argv) {

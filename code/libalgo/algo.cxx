@@ -107,7 +107,7 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 	auto d = (a - b).norm();
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
 
-	auto x = 180 - angle(facing, d);
+	auto x = angle(facing, d);
 
 	/* correct the angle, if it's on the left */
 	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
@@ -123,4 +123,10 @@ static Vector _actionToVector(const Action& a)
 {
 	/* todo: update angle */
 	return Vector{0., 0.};
+}
+
+Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid, const float radius)
+{
+	const auto dist = pos - circleMid;
+	return circleMid + radius * dist.norm();
 }
