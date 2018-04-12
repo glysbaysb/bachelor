@@ -7,9 +7,8 @@
 #include "algo.h"
 
 static bool _isInsideCircle(const Vector& position, const double& radius);
-static double _rotateTowards(const Vector& a, const double rotation, const Vector& b);
 static Vector _actionToVector(const Action& a);
-static Vector _unicycle_to_diff(const Vector& accelleration);
+static Vector _unicycle_to_diff(const double vel, const double angle);
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
@@ -19,7 +18,7 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	/* if this robot might run out of fuel, move towards fuel station */
 	if(robot->crit() < CRIT_THRESHHOLD) {
 #endif
-		accelleration = Vector(100., _rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
+		accelleration = Vector(100., rotateTowards(robot->pos(), robot->rotation(), fuel.pos()));
 #if 0
 	}
 	/* if it's */
@@ -34,20 +33,19 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	/* todo: would the robot fall? todo: current acceleration */
 
 	
-	return Action{robot->id(), _unicycle_to_diff(accelleration)};
+	return Action{robot->id(), _unicycle_to_diff(accelleration.x_, accelleration.y_)};
 }
 
-static Vector _unicycle_to_diff(const Vector& accelleration)
+static Vector _unicycle_to_diff(const double vel, const double angle)
 {
 	const auto L = 1.f,
 		  R = 0.5f;
 	/* v => speed, w => angle
 	   v_r = \frac{2v + wL}{2R}
 	   v_l = \frac{2v - wL}{2R} */
-	auto x = Vector{(2 * accelleration.x_ + accelleration.y_ * L) / 2*R,
-		(2 * accelleration.x_ - accelleration.y_ * L) / 2*R
+	auto x = Vector{(2 * vel + angle * L) / 2*R,
+		(2 * vel - angle* L) / 2*R
 	};
-	std::cout << accelleration << " => " << x << '\n';
 	return x;
 }
 
@@ -102,7 +100,7 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 	return squareDistance <= squareRadius;
 }
 
-static double _rotateTowards(const Vector& a, const double rotation, const Vector& b)
+double rotateTowards(const Vector& a, const double rotation, const Vector& b)
 {
 	auto d = (a - b).norm();
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI));
@@ -115,7 +113,6 @@ static double _rotateTowards(const Vector& a, const double rotation, const Vecto
 		x = -x;
 	}
 	
-	std::cout << "winkel: " << x << '\n';
 	return x;
 }
 

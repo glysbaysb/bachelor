@@ -46,6 +46,16 @@ TEST_F(AlgoTest, FindCircle) {
 	std::cout << get_nearest_point_on_circle(Vector{0., 0.}) << std::endl;
 }
 
+TEST_F(AlgoTest, RotateTowards) {
+	const auto me = Vector{0., 0.};
+	const auto rot = 0.;
+	
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector{0., 1.}), 180.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector{1., 0.}), 90.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector{1., 1.}), 135.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector{2., 2.}), 135.);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS(); 

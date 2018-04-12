@@ -70,21 +70,20 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 	const auto DISTANCE = 1.0f;
 	const auto TOLERANCE = 0.05f;
 
+	const auto myPos = Vector{me.x, me.y};
 	/* is in a correct position, i.e. somewhere +-Xm around the middle */
-	bool onCircle = !_isInsideCircle({me.x, me.y}, DISTANCE - TOLERANCE) &&
-		_isInsideCircle({me.x, me.y}, DISTANCE + TOLERANCE);
+	bool onCircle = !_isInsideCircle(myPos, DISTANCE - TOLERANCE) &&
+		_isInsideCircle(myPos, DISTANCE + TOLERANCE);
 	if(!onCircle) {
 		auto dest = get_nearest_point_on_circle({me.x, me.y});
-		std::cout << "not on circle " << dest << "\n";
-		auto rot = _rotateTowards({me.x, me.y}, me.rotation, dest);
-		if(rot > -5 && rot < 5) {
-			return {100 + rot, 100 + rot};
-		} else if(rot < -5) {
-			return {50, -50};
-		} else {
-			return {-50, 50};
-		}
-		
+		auto rot = rotateTowards(myPos, me.rotation, dest);
+		auto len = (dest - myPos).length();
+
+		auto movement = _unicycle_to_diff(len, rot);
+		std::cout << "not on circle " << dest << '\t' << len << ':' << 
+			me.rotation << "->" << rot << '\n'
+			<< movement << "\n";
+		return {movement.x_, movement.y_};
 	} else {
 		std::cout << "\n\non the circle\n\n\n";
 		/* move on the circle */

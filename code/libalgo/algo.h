@@ -199,4 +199,6 @@ std::vector<Action> calc_movement(const std::pair<double, double>& angle, std::v
 Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid = {0., 0.},
 		const float radius = 1.);
 
+double rotateTowards(const Vector& a, const double rotation, const Vector& b);
+
 #endif // ALGO_H
