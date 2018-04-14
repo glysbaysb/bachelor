@@ -76,13 +76,29 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
 
 	auto dest = onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y});
-	auto len = std::max((dest - myPos).length() * 100, 100.);
+	auto len = (dest - myPos).length() * 100;
 	std::cout << "move from " << myPos << " to " << dest << '\n';
 	auto rot = rotateTowards(myPos, me.rotation, dest);
-	std::cout << "from rot " << me.rotation << " to " << rot << '\n';
+	std::cout << "current rot " << me.rotation << ". need to turn: " << rot << '\n';
 
-	auto ret = unicycle_to_diff(len, rot);
-	return {ret.x_, ret.y_};
+	/* basically facing in the right direction? -> forward */
+	if(rot > -5 && rot < 5) {
+		std::cout << "forward\n";
+		auto ret = unicycle_to_diff(len, 0);
+		return {ret.x_, ret.y_};
+	} 
+	/* else: rotate in place */
+	else if(rot < -5 || rot > 180) {
+		std::cout << "left\n";
+		auto ret = unicycle_to_diff(0, -abs(rot) * 3);
+		return {ret.x_, ret.y_};
+	} else if(rot > 5 && rot < 180) {
+		std::cout << "right\n";
+		auto ret = unicycle_to_diff(0, abs(rot) * 3);
+		return {ret.x_, ret.y_};
+	} else {
+		std::cout << rot << " not handled" << std::endl;
+	}
 }
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional)
@@ -97,7 +113,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		printf("\tMass: %f\n", ws->objects[i].m);
 		printf("\tRot: %f\n", ws->objects[i].rotation);
 
-		if(ws->objects[i].type == ROBOT) {
+		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
 			auto m = _move(info, ws->objects[i]);
