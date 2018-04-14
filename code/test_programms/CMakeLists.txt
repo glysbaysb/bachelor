@@ -7,7 +7,7 @@ add_subdirectory(network)
 
 set(SOURCE_FILES_MOVE movement.cxx)
 add_executable(move ${SOURCE_FILES_MOVE})
-target_link_libraries(move pthread rpc network world)
+target_link_libraries(move pthread rpc network world algo)
 
 set(SOURCE_FILES_MOVE fuel_test.cxx)
 add_executable(fuel_test ${SOURCE_FILES_MOVE})

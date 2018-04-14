@@ -79,7 +79,7 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 		auto rot = rotateTowards(myPos, me.rotation, dest);
 		auto len = (dest - myPos).length();
 
-		auto movement = _unicycle_to_diff(len, rot);
+		auto movement = unicycle_to_diff(len, rot);
 		std::cout << "not on circle " << dest << '\t' << len << ':' << 
 			me.rotation << "->" << rot << '\n'
 			<< movement << "\n";

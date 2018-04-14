@@ -7,8 +7,6 @@
 #include "algo.h"
 
 static bool _isInsideCircle(const Vector& position, const double& radius);
-static Vector _actionToVector(const Action& a);
-static Vector _unicycle_to_diff(const double vel, const double angle);
 
 static Action _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>::reverse_iterator& robot,
 		const FuelStation& fuel)
@@ -33,22 +31,8 @@ static Action _calc_movement(const std::pair<double, double>& angle, const std::
 	/* todo: would the robot fall? todo: current acceleration */
 
 	
-	return Action{robot->id(), _unicycle_to_diff(accelleration.x_, accelleration.y_)};
+	return Action{robot->id(), unicycle_to_diff(accelleration.x_, accelleration.y_)};
 }
-
-static Vector _unicycle_to_diff(const double vel, const double angle)
-{
-	const auto L = 1.f,
-		  R = 0.5f;
-	/* v => speed, w => angle
-	   v_r = \frac{2v + wL}{2R}
-	   v_l = \frac{2v - wL}{2R} */
-	auto x = Vector{(2 * vel + angle * L) / 2*R,
-		(2 * vel - angle* L) / 2*R
-	};
-	return x;
-}
-
 
 static std::vector<Action> _calc_movement(const std::pair<double, double>& angle, const std::vector<Robot>& objects,
 		const FuelStation& fuel, const std::vector<Robot>::reverse_iterator& robot)
@@ -59,7 +43,7 @@ static std::vector<Action> _calc_movement(const std::pair<double, double>& angle
 
 	auto action =_calc_movement(angle, robot, fuel);
 
-	robot->pos() += _actionToVector(action);
+	// todo: robot->pos() += _actionToVector(action);
 	auto xAngle = std::accumulate(objects.begin(), objects.end(), (fuel.pos().x_ * fuel.weight()),
 					[](double b, const Robot& a)
 					{
@@ -116,14 +100,21 @@ double rotateTowards(const Vector& a, const double rotation, const Vector& b)
 	return x;
 }
 
-static Vector _actionToVector(const Action& a)
-{
-	/* todo: update angle */
-	return Vector{0., 0.};
-}
-
 Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid, const float radius)
 {
 	const auto dist = pos - circleMid;
 	return circleMid + radius * dist.norm();
+}
+
+Vector unicycle_to_diff(const double vel, const double angle)
+{
+	const auto L = 1.f,
+		  R = 0.5f;
+	/* v => speed, w => angle
+	   v_r = \frac{2v + wL}{2R}
+	   v_l = \frac{2v - wL}{2R} */
+	auto x = Vector{(2 * vel + angle * L) / 2*R,
+		(2 * vel - angle* L) / 2*R
+	};
+	return x;
 }

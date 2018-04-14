@@ -201,4 +201,6 @@ Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid = 
 
 double rotateTowards(const Vector& a, const double rotation, const Vector& b);
 
+Vector unicycle_to_diff(const double vel, const double angle);
+
 #endif // ALGO_H
