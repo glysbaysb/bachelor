@@ -67,29 +67,22 @@ static float PID(float e, float timeFrame, float& integral, float& lastError)
 
 static std::pair<int, int> _move(const Info* const info, const SimulationObject& me)
 {
-	const auto DISTANCE = 1.0f;
+	const auto CIRCLE_RADIUS = 1.0f;
 	const auto TOLERANCE = 0.05f;
 
 	const auto myPos = Vector{me.x, me.y};
 	/* is in a correct position, i.e. somewhere +-Xm around the middle */
-	bool onCircle = !_isInsideCircle(myPos, DISTANCE - TOLERANCE) &&
-		_isInsideCircle(myPos, DISTANCE + TOLERANCE);
-	if(!onCircle) {
-		auto dest = get_nearest_point_on_circle({me.x, me.y});
-		auto rot = rotateTowards(myPos, me.rotation, dest);
-		auto len = (dest - myPos).length();
+	bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
+		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
 
-		auto movement = unicycle_to_diff(len, rot);
-		std::cout << "not on circle " << dest << '\t' << len << ':' << 
-			me.rotation << "->" << rot << '\n'
-			<< movement << "\n";
-		return {movement.x_, movement.y_};
-	} else {
-		std::cout << "\n\non the circle\n\n\n";
-		/* move on the circle */
-		return {0, 0};
-	}
+	auto dest = onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y});
+	auto len = std::max((dest - myPos).length() * 100, 100.);
+	std::cout << "move from " << myPos << " to " << dest << '\n';
+	auto rot = rotateTowards(myPos, me.rotation, dest);
+	std::cout << "from rot " << me.rotation << " to " << rot << '\n';
 
+	auto ret = unicycle_to_diff(len, rot);
+	return {ret.x_, ret.y_};
 }
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional)
