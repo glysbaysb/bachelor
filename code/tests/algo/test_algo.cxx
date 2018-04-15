@@ -32,18 +32,23 @@ TEST_F(AlgoTest, FindCircle) {
 	auto pos = Vector(0., 0.5f);
 	auto c1 = get_nearest_point_on_circle(pos, Vector(0., 0.), 0.5f);
 	ASSERT_EQ(pos, c1);
-	//ASSERT_EQ(Vector(-1., 0.}, get_nearest_point_on_circle(Vector(-1., 0.), 1.));
 
-	/*
-	   (0.894427;0.447214)
-	   (0.707107;0.707107)
-	   (-0.707107;-0.707107)
-	   */
-
-	std::cout << get_nearest_point_on_circle(Vector(2., 1.)) << std::endl;
-	std::cout << get_nearest_point_on_circle(Vector(2., 2.)) << std::endl;
-	std::cout << get_nearest_point_on_circle(Vector(-2., -2.)) << std::endl;
-	std::cout << get_nearest_point_on_circle(Vector(0., 0.)) << std::endl;
+	const auto mid = Vector{0.f, 0.f};
+	{
+		auto n = get_nearest_point_on_circle(Vector{-1.234f, 0.f}, mid, 1.);
+		auto p = Vector{-1., 0.};
+		ASSERT_EQ(p, n);
+	}
+	{
+		auto n = get_nearest_point_on_circle(Vector(-2., -2.), mid, 1.);
+		auto p = Vector{-0.707107, -0.707107};
+		ASSERT_EQ(p, n);
+	}
+	{
+		auto n = get_nearest_point_on_circle(Vector(2.52, -1.92), mid, 1.);
+		auto p = Vector{0.77, -0.59};
+		ASSERT_EQ(p, n);
+	}
 }
 
 TEST_F(AlgoTest, RotateTowards) {
@@ -51,9 +56,9 @@ TEST_F(AlgoTest, RotateTowards) {
 	const auto rot = 0.;
 	
 	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(0., 1.)), 180.);
-	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(1., 0.)), 90.);
-	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(1., 1.)), 135.);
-	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(2., 2.)), 135.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(-1., 0.)), 90.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(1., 1.)), 225.);
+	ASSERT_FLOAT_EQ(rotateTowards(me, rot, Vector(2., 2.)), 225.);
 }
 
 TEST_F(AlgoTest, UnicycleToDiff) {

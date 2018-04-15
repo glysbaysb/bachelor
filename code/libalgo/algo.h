@@ -69,8 +69,8 @@ struct Vector
 	}
 
 	friend double angle(const Vector& a, const Vector& b) {
-		auto tmp = (a.x_* b.x_ + a.y_ * b.y_);
-		return acos(tmp / (a.length() * b.length())) * 180 / M_PI;
+		auto dotproduct = (a.x_* b.x_ + a.y_ * b.y_);
+		return acos(dotproduct / (a.length() * b.length())) * 180 / M_PI;
 	}
 
 	friend bool operator<(const Vector& a, const Vector& b) {

@@ -67,37 +67,38 @@ static float PID(float e, float timeFrame, float& integral, float& lastError)
 
 static std::pair<int, int> _move(const Info* const info, const SimulationObject& me)
 {
-	const auto CIRCLE_RADIUS = 1.0f;
-	const auto TOLERANCE = 0.05f;
+	const auto CIRCLE_RADIUS = 5.0f;
+	const auto TOLERANCE = 0.25f;
 
 	const auto myPos = Vector{me.x, me.y};
 	/* is in a correct position, i.e. somewhere +-Xm around the middle */
-	bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
+	const bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
 		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
 
-	auto dest = onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y});
-	auto len = (dest - myPos).length() * 100;
-	std::cout << "move from " << myPos << " to " << dest << '\n';
-	auto rot = rotateTowards(myPos, me.rotation, dest);
+	const auto dest = Vector{5, 5};//onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y}, {0., 0.}, CIRCLE_RADIUS);
+	const auto len = (dest - myPos).length() * 100.;
+	std::cout << "move from " << myPos << " to " << dest << '\t' << len << '\n';
+	const auto rot = rotateTowards(myPos, me.rotation, dest);
 	std::cout << "current rot " << me.rotation << ". need to turn: " << rot << '\n';
 
 	/* basically facing in the right direction? -> forward */
 	if(rot > -5 && rot < 5) {
-		std::cout << "forward\n";
-		auto ret = unicycle_to_diff(len, 0);
+		// Problem: Vor oder zuruck? Links oder rechts?
+		auto ret = unicycle_to_diff(len, rot);
 		return {ret.x_, ret.y_};
 	} 
 	/* else: rotate in place */
-	else if(rot < -5 || rot > 180) {
+	else if(rot < -5 && rot > -180) {
 		std::cout << "left\n";
-		auto ret = unicycle_to_diff(0, -abs(rot) * 3);
+		auto ret = unicycle_to_diff(0, rot);
 		return {ret.x_, ret.y_};
 	} else if(rot > 5 && rot < 180) {
 		std::cout << "right\n";
-		auto ret = unicycle_to_diff(0, abs(rot) * 3);
+		auto ret = unicycle_to_diff(0, -rot);
 		return {ret.x_, ret.y_};
 	} else {
 		std::cout << rot << " not handled" << std::endl;
+		return {0., 0.};
 	}
 }
 
