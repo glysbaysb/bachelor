@@ -86,13 +86,13 @@ static bool _isInsideCircle(const Vector& position, const double& radius)
 
 double rotateTowards(const Vector& a, const double rotation, const Vector& b)
 {
-	auto d = (a - b).norm();
+	auto d = (b - a).norm();
 	auto facing = Vector(sin(rotation/ 180 * M_PI), cos(rotation/ 180 * M_PI)).norm();
 
 	auto x = angle(facing, d);
 
 	/* correct the angle, if it's on the left */
-	auto dotZ = d.y_ * facing.x_ - d.x_ * facing.y_;
+	auto dotZ = d.x_ * facing.y_ - d.y_ * facing.x_;
 	if(dotZ < 0) {
 		x = -x;
 	}

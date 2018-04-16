@@ -83,6 +83,7 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 
 	/* basically facing in the right direction? -> forward */
 	if(rot > -5 && rot < 5) {
+		std::cout << "accel\n";
 		// Problem: Vor oder zuruck? Links oder rechts?
 		auto ret = unicycle_to_diff(len, rot);
 		return {ret.x_, ret.y_};
