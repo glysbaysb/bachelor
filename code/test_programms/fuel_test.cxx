@@ -91,7 +91,7 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 	/* else: rotate in place */
 	else if(rot < -5 && rot > -180) {
 		std::cout << "left\n";
-		auto ret = unicycle_to_diff(0, rot);
+		auto ret = unicycle_to_diff(0, -rot);
 		return {ret.x_, ret.y_};
 	} else if(rot > 5 && rot < 180) {
 		std::cout << "right\n";
