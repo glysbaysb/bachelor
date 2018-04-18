@@ -9,8 +9,6 @@ diesem Punkt der Arbeit.
 
 Hat das gleiche Grundproblem wie 8.
 
-Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
-
 11.2 fehlt noch einiges, oder?
 
 12
@@ -19,14 +17,6 @@ Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
 entscheiden - gleiches Problem wie in 11.
 
 12.2 Siehe Kapitel 11, gleiches Problem.
-
-Insgesamt frage ich mich nach dem Lesen von 11 und 12 aber, warum es
-nicht eine sprachunabhängige RPC-Implementierung getan hätte. Dass es
-solche gibt, haben Sie im RPC-Kapitel gesagt und mir fallen da auch
-mindestens zwei ein. Im C#-Kontext wäre z.B. das Dotnet-Remoting eine
-lohnenswerte Alternative, oder eben das uralte CORBA. Ich vermute, dass
-Sie Gründe haben, die gegen so etwas sprechen, aber die müssen genannt
-und argumentiert werden.
 
 13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
 
