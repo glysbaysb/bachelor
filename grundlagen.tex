@@ -6,22 +6,6 @@
 Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
 Dies gibt auch das Bewegungsmodell vor: \hyperref[diffs]{\textit{differential steering}}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
 
-\subsubsection{Khepera}\label{khepera}
-Die Khepera-Roboterserie existiert seit Mitte der 90er Jahre, das neuste Modell ist der Khepera IV
-\footnote{Vergleiche: \cite{Soares2016}}.
-Dieser Roboter hat eine zylindrische Grundform mit einem Durchmesser von 140mm und einer
-H{\"{o}}he von 58mm. Der Roboter wiegt 540g und kann zus{\"{a}}tzlich bis zu 2kg Nutzlast tragen.
-
-Auf der Unterseite sind 2 starre R{\"{a}}der, angetrieben von jeweils einem elektrischen Servomotor.
-Damit erreicht der Roboter Geschwindigkeiten von bis zu einem Meter pro Sekunde. Um die Position des
-Roboters odeometrisch bestimmen zu k{\"{o}}nnen, geben die Motoren auch aus, wie oft sich das
-jeweilige Rad schon gedreht hat. Zus{\"{a}}tzlich dazu hat der Roboter auch Infrarot-, Ultraschall-
-und Lichtsensoren, mit denen die Umgebung wahrgenommen werden kann. Dies kann z.B. genutzt werden
-um Kollisionen zu vermeiden. Mithilfe der integrierten Beschleunigungs- und Gyrosensoren kann
-der Roboter auch seine Geschwindigkeit und seine Neigungswinkel feststellen.
-
-Gesteuert wird der Khepera IV von einer ARM CPU, auf der ein vollwertiges Linux l{\"{a}}uft. Des weiteren gibt es auch ein WLAN Modul, eine Kamera und Lautsprecher plus Mikrophon.
-
 \begin{figure}
 	\centering
 	\includevisio{k4-detail1.png}
@@ -31,15 +15,16 @@ Gesteuert wird der Khepera IV von einer ARM CPU, auf der ein vollwertiges Linux 
 \clearpage
 
 \subsubsection{Differential Steering}\label{diffs}
-Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Es kann zwischen drei Bewegungsarten unterschieden werden:
+Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Eine Rotation wird durch eine unterschiedliche Rotationsgeschwindigkeit der R{\"{a}}der
+erm{\"{o}}glicht; bekannt ist dieses Prinzip vom Rollstuhl. Es kann zwischen drei Bewegungsarten unterschieden werden:
 \begin{itemize}
 \item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
 \item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung rotieren, wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
 \item Falls die R{\"{a}}der gleisch schneller, aber in unterschiedliche Richtunge rotieren, wendet der Roboter auf der Stelle.
 \end{itemize}
 
-Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Motors zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ den
-linken Motor beschreibt. \gls{R} ist der Radius eines Rades, und \gls{L} die Distanz zwischen den R{\"{a}}dern.
+Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Rades zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ das
+linke Rad beschreibt. \gls{R} ist der Radius eines Rades, und \gls{L} die Distanz zwischen den R{\"{a}}dern.
 Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 \begin{subequations}\label{eq:diffs}
 \begin{align}
@@ -297,20 +282,25 @@ Da Konstruktor und Dekonstrktor nicht {\"{u}}berschrieben werden k{\"{o}}nnen, g
 
 Es gibt auch weitere {\"{u}}berschreibare Funktionen, mit denen es m{\"{o}}glich ist sich in verschiedene Zwischenschritte des Renderprozesses
 einzuklinken (zum Beispiel OnWillRenderObject, OnPostRender, ...). Das gleiche gilt auch f{\"{u}}r Inputevents (beispielsweise OnMouseMove) und
-die Ereginisse der Physikengine (OnCollisionStart(), ...).
+die Ereignisse der Physikengine (OnCollisionStart(), ...).
 
 \clearpage
 \section{Kommunikation}
-\todo{bla bla dadurch das es verschiedene systembestandteile gibt bla bla kommunikation noetig, bla bla
-verschiedene moeglichkeiten bla bla einige vorgestellt bla bla dann ausgewaehlt}
 
 \subsection{Interaktionsmuster}
-In einem verteilten System m{\"{u}}ssen die verschiedenen Rechner miteinander kommunizieren um
-gemeinsam ihr Ziel zu erreichen. Die Kommunikation kann verschiedene Arten annehmen. Um dies zu verdeutlichen
-werden diese Mustern mit menschlicher Kommunikation verglichen.
+In einem verteilten System (wie hier) ist es n{\"{o}}tig das die Kommunikationspartner miteinander kommunizieren.
+Dies ist auf verschiedene Arten m{\"{o}}glich, daher werden hier exemplarisch einige dargestellt und daraus eine
+Auswahl getroffen um die speziellen Anforderungen dieses Systems zu erf{\"{u}}llen.
 
 \subsubsection{Message Passing}
-\todo{}
+Beim kommunizieren miteinander werden Informationen ausgetauscht. Die simpelste Art der Kommunikation zwischen
+Programmen ist das \textit{message passing}, hierbei schickt ein Kommunikationspartner eine Nachricht die an einen bestimmten anderen
+Kommunikationspartner adressiert ist.
+
+Bei diesem Interaktionsmuster ist es die Aufgabe der Programmierer die Nachricht zu interpretieren
+(also die {\"{U}}bersetzung in ein verst{\"{a}}ndliches Format, zum Beispiel unter Beachtung der Byte-Reihenfolge) und
+basierend auf den ausgetauschten Nachrichten zum Beispiel eine Frage - Antwort Beziehung herzustellen.
+
 
 \subsubsection{Request-Reply}
 Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
@@ -326,14 +316,21 @@ Um das \textit{Request-Reply} Interaktionsmuster einfacher an die verschiedenen 
 Probleme anzupassen, gibt es die \textit{Remote Procedure Calls} als Spezialisierung des \textit{request-
 reply}. Dabei wird versucht die ganze Kommunikation so weit zu verstecken und abstrahieren das es so wirkt
 als k{\"{o}}nnten Funktion \textit{remote} (also in einem anderen Programm auf einem anderen Rechner) wie
-lokale Funktionen aufgerufen werden.
+lokale Funktionen aufgerufen werden. Dies erleichtert die Arbeit der Programmierer enorm, sie m{\"{u}}ssen
+sich (im besten Fall) gar keine Gedanken mehr {\"{u}}ber die Kommunikation machen und es werden nur
+ohnehin bekannt Sprachkonstrukte (der Aufruf von Funktionen) genutzt.
+\footnote{Gerade bei der Programmierung von fehlertoleranten Systemen kann diese Abstraktion allerdings
+kontraproduktiv sein. Beispielsweise wird durch die Abstraktion auf einen Funktionsaufruf die M{\"{o}}glichkeit
+einen Timeout vorzugeben "verbaut"}
+
+F{\"{u}}r die Programmierenden hat dieses Modell den Vorteil das die Nachricht des anderen Systems schon
+interpretiert wurde, es muss also weniger Quellcode selbst geschrieben werden.
 
 \subsubsection{Publish-Subscribe}
 Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
 
-\todo{darf ich mich hier auf die simulation beziehen? es wird ja eigentlich nur zur verdeutlichung
-eines allgemeinen Problemes benutzt}
-Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten. Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
+Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten.
+Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
 Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es, die Kommunikation {\"{u}}ber UDP Broadcasts
 laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht empfangen, ohne
 dass sich der Sender darum k{\"{u}}mmern muss an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
@@ -371,12 +368,13 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 
 \subsubsection{Anforderungen}
 Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen 
-aufrufen kann. Auch das Publish Suscribe Muster sollte genutzt werden, da alle Voter/Roboter die gleichen
-Informationen {\"{u}}ber den Weltstatus empfangen m{\"{u}}ssen um dann gemeinsam sinnvolle Bewegungen
-auszuf{\"{u}}hren.
+aufrufen kann. Da alle Voter/Roboter die gleichen Informationen {\"{u}}ber den Weltstatus empfangen m{\"{u}}ssen um
+dann gemeinsam sinnvolle Bewegungen auszuf{\"{u}}hren, diese also von der Simulation an alle gleichzeitig verteilt werden
+muss, bietet sich auch das Publish Subscribe Interaktionsmuster an.
 
-Es gibt allerdings keine Netzwerklibrary, die dieses Pattern und RPC anbietet; da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als dieses Pattern, zum Beispiel, grpc beizubringen, wird
-diese Funktionalit{\"{a}}t vorgezogen.
+Diese beiden Interaktionsmuster k{\"{o}}nnen kombiniert werden; Es gibt allerdings keine Netzwerklibrary, die gleichzeitig beides anbietet.
+Da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als andersrum, wird diese Funktionalit{\"{a}}t bei der Auswahl der
+Netzwerkbibliothek vorgezogen. Dies ist das Hauptkriterium.
 
 Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt 
 werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Da die Netzwerkbibliothek nicht

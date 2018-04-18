@@ -5,31 +5,9 @@ diskutiert, die aber schon unterstellen, dass das grundsätzliche
 Vorgehen klar ist. Dazu gibt es aber noch keinerlei Überlegungen an
 diesem Punkt der Arbeit.
 
-9
-
-Der Satz danach ist nicht sinnvoll: "Abhilfe"... wovon denn? Was wird da
-gelöst? Die verschiedenen Eigenschaften nun gerade NICHT. RPC ist ein
-Programmierparadigma, keine Softwarelösung, die irgendwelche
-Eigenschaften mit sich bringt.
-
-In der aktuellen Form frage ich mich, welchen Sinn dieses Kapitel hat.
-Es ist extrem Highlevel und hat damit für die Arbeit aktuell keine
-weitere Aussage ausser der, dass es RPC gibt.
-
-10
-
-Die Idee gefällt mir, Sie müssten aber vollständiger sein und nicht nur
-zwei Ansätze vorstellen. Mindestens "Message Passing" müsste dazu und
-ich würde zudem RPC als eine Spezialform von Request/Reply ergänzen. Das
-löst auch das Problem mit Kapitel 9.
-
 11
 
 Hat das gleiche Grundproblem wie 8.
-
-11.1 Ausserdem treffen Sie hier quasi im Nebensatz eine der
-wichtigsten Entwurfsentscheidungen der Arbeit (RPC + Pub/Sub) und
-begründen diese nicht wirklich.
 
 Tabelle 1 braucht zwingend Text - wenigstens auf dem Level von 11.2
 
@@ -51,10 +29,6 @@ Sie Gründe haben, die gegen so etwas sprechen, aber die müssen genannt
 und argumentiert werden.
 
 13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
-
-Rest okay. Eventuell könnten die Systemdetails vom Khepera weg, weil
-hier nicht nutzbringend. Statt dessen könnte man auf Kettenfahrzeuge
-oder das Segway verweisen, die nach dem gleichen Schema funktionieren.
 
 14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.
 
@@ -104,30 +78,15 @@ Rest von 16 ist noch nicht fertig, oder?
 
 
 
-Global: Mir fehlt immer noch ein erkennbarer roter Faden, vor allem
-bleibt unklar, was Anforderung, Hintergrund, Entwurf, Ansatz,
-Architektur, Umsetzung ist, da recht viel gewechselt wird dazwischen.
-
-Die Teile für sich sind okay, sie brauchen nur die richtige Reihenfolge
-und Überleitungen.
-
-
-
 Zeitplan
 --------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-		 |				| fehlerinj konf senden --> testen.
-								wahrschienlichkeit = 0
-								ob das ueberhaupt jemals passieren wird
 						| wenn fehlerinjektor an -> kamera bewegt sich nicht?
-		 | ecc			| pakete > 255b
-		 | algo			| scheiÃbewegung (das ruckeln in unity &
-		 wegfindung)
-		 | ficfg        | koennen illegale werte rauskommen? also z.b.
-		 rotation > 360
 		 | thesis		| 
 		 |				| blender designen
+		 |				| rote zone am rand
+		 |				| static libraries
 ---------+--------------+----------------
 
 
