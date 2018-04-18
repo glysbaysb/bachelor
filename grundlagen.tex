@@ -382,6 +382,10 @@ nur im Simulationsprogramm selbst sondern auch im Studenteninterface eingesetzt 
 um alle Eventualit{\"{a}}ten wie zum Beispiel \textit{exceptions} abzuhandeln die Studierenden auch C++
 Kentnisse haben. Da dies nicht vorausgesetzt werden kann ist eine rein in C geschriebene Bibliothek vorzuziehen.
 
+Durch die Benutzung von Unity\ref{unity} ist allerdings vorgegeben das dass Simulationsprogramm selbst weder in C noch
+in C\# geschrieben wird, zur Auswahl stehen zum Beispiel C\# und JavaScript. Daher ist es auch wichtig ob die Netzwerkbibliothek
+auch mit anderen Sprachen genutzt werden kann, oder es Alternativimplementierungen gibt.
+
 \clearpage % make sure the table is, at least, in the right section
 \begin{table}[h]
 \centering
@@ -389,10 +393,10 @@ Kentnisse haben. Da dies nicht vorausgesetzt werden kann ist eine rein in C gesc
 	\toprule
 	Name & RPC & Publish-Subscribe & C++ Runtimeabh{\"{a}}ngigkeit & andere Sprachen \\
 	\midrule
-	SunRPC & \checkmark & \xmark & \checkmark & C\#, Java, ... \\
-	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, Python, Java, ... \\
-	ZeroMQ\cite{zeromq} & \xmark & \checkmark & \xmark & C\#, Python, Java, ... \enquote{40+ languages} \\
-	nanomsg\cite{nanomsg} & \xmark & \checkmark & \checkmark & C\#, Python, Java, ... (25 Sprachen) \\
+	SunRPC & \checkmark & \xmark & \checkmark & C\#, ... \\
+	grpc\cite{grpc} & \checkmark & \xmark & \xmark & C\#, ... \\
+	ZeroMQ\cite{zeromq} & \xmark & \checkmark & \xmark & C\#, ... \enquote{40+ languages} \\
+	nanomsg\cite{nanomsg} & \xmark & \checkmark & \checkmark & C\#, ... (25 Sprachen) \\
 	\bottomrule
 \end{tabu}
 \caption{Anforderungen an die Netzwerkbibliothek}
