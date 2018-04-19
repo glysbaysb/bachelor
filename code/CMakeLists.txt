@@ -3,9 +3,12 @@ project(ft_robot_simulation)
 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(BUILD_SHARED_LIBRARIES OFF)
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
 # Build third party libs
 set(NN_STATIC_LIB on)
+
 add_subdirectory(third_party/nanomsg)
 include_directories(third_party/)
 add_subdirectory(third_party/msgpack)

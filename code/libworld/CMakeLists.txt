@@ -11,5 +11,5 @@ target_link_libraries(${PROJECT_NAME} nanomsg pthread rpc ficfg)
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_DIRECTORY}
 )
-
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-static")
 
