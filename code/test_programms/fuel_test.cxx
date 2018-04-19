@@ -1,6 +1,5 @@
 /**
- * @file A simple test application that tries to move a robot directly. I've
- * used it to check the differential steering algorithm.
+ * @file A simple test application that tries to move the robot along some predefined waypoints
  */
 #include <iostream>
 #include <iterator>
@@ -11,18 +10,33 @@
 #include <libnetwork/network.h>
 #include <libalgo/algo.h>
 
+#define WAYPOINTS 20
+struct WAYPOINT {
+	float phi_;
+	float x_;
+	float y_;
+
+	WAYPOINT(float phi, float x, float y) {
+		phi_ = phi;
+		x_ = x;
+		y_ = y;
+	}
+};
 
 typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
+	std::vector<WAYPOINT> waypoints;
 } Info;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
+static std::vector<WAYPOINT> _gen_path(unsigned int);
 
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
+	callbackInfo.waypoints = _gen_path(WAYPOINTS);
 
 	if(argc < 3) {
 		printf("%s host interface\n", argv[0]);
@@ -65,7 +79,7 @@ static float PID(float e, float timeFrame, float& integral, float& lastError)
 
 
 
-static std::pair<int, int> _move(const Info* const info, const SimulationObject& me)
+static std::pair<int, int> _move(const SimulationObject& me)
 {
 	const auto CIRCLE_RADIUS = 5.0f;
 	const auto TOLERANCE = 0.25f;
@@ -75,7 +89,7 @@ static std::pair<int, int> _move(const Info* const info, const SimulationObject&
 	const bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
 		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
 
-	const auto dest = Vector{5, 5};//onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y}, {0., 0.}, CIRCLE_RADIUS);
+	const auto dest = onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y}, {0., 0.}, CIRCLE_RADIUS);
 	const auto len = (dest - myPos).length() * 100.;
 	std::cout << "move from " << myPos << " to " << dest << '\t' << len << '\n';
 	const auto rot = rotateTowards(myPos, me.rotation, dest);
@@ -118,11 +132,26 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
-			auto m = _move(info, ws->objects[i]);
+			auto m = _move(ws->objects[i]);
 			moveRobot(info->worldCtx, ws->objects[i].id, m.first, m.second);
 		}
 	}
 }
 
+/**
+ * Generates a path (with @cnt edges) along a circle with radius 1
+ *
+ */
+std::vector<WAYPOINT> _gen_path(const unsigned int cnt) {
+	std::vector<WAYPOINT> points;
 
+	for(auto i = 0.; i < 360; i += (360. / cnt)) {
+		auto degInRad = i * M_PI / 180;
 
+		auto x = sin(degInRad);
+		auto y = cos(degInRad);
+		points.emplace(WAYPOINT{i, x, y});
+	}
+
+	return points;
+}
