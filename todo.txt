@@ -5,19 +5,6 @@ diskutiert, die aber schon unterstellen, dass das grundsätzliche
 Vorgehen klar ist. Dazu gibt es aber noch keinerlei Überlegungen an
 diesem Punkt der Arbeit.
 
-11
-
-Hat das gleiche Grundproblem wie 8.
-
-11.2 fehlt noch einiges, oder?
-
-12
-
-12.1 Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
-entscheiden - gleiches Problem wie in 11.
-
-12.2 Siehe Kapitel 11, gleiches Problem.
-
 13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
 
 14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.

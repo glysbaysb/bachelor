@@ -3,16 +3,11 @@
 \todo{einleitung}
 
 \subsection{Bewegungsmuster}
-Die simulierten Roboter sind an den Kepheraroboter angelehnt, einen gerade im unitversit{\"{a}}ren Bereich weit verbreiteten Roboter mit 2 Motoren und 2 starren R{\"{a}}dern.
-Dies gibt auch das Bewegungsmodell vor: \hyperref[diffs]{\textit{differential steering}}, auch \textit{differential drive} genannt. Ausf{\"{u}}hrlicher wird dies im zugeh{\"{o}}rigen Unterkapitel erkl{\"{a}}rt.
+In der Simulation sollen sich Roboter bewegen, daf{\"{u}}r muss festgelegt werden, wie diese sich bewegen. Denkbar w{\"{a}}ren verschiedene Bewegungsmuster, zum
+Beispiel der aufrechte bipedale Gang, eine Art "Hovercraft", ein zweiachsiges Auto, ein Rollstuhl und viele weitere.
 
-\begin{figure}
-	\centering
-	\includevisio{k4-detail1.png}
-	\caption{Der Khepera IV Roboter}
-	\label{fig:kheperaiv}
-\end{figure}
-\clearpage
+Hier wird das \textit{differential steering} Model vorgestellt und auch genutzt; es ist ein weit verbreitet, leicht verst{\"{a}}ndlich hat aber trotzdem bestimmte
+Limitierungen die eine Regelung n{\"{o}}tig machen.
 
 \subsubsection{Differential Steering}\label{diffs}
 Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Eine Rotation wird durch eine unterschiedliche Rotationsgeschwindigkeit der R{\"{a}}der
@@ -38,6 +33,14 @@ Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 \end{align}
 \end{subequations}
 
+\begin{figure}
+	\centering
+	\includevisio{k4-detail1.png}
+	\caption{Der Khepera IV Roboter}
+	\label{fig:kheperaiv}
+\end{figure}
+
+
 \subsubsection{Wegfindung}
 Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nung auf allen Achsen) bewegen kann, wird die Wegfindung
 erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problems) k{\"{o}}nnte der Roboter sich erst auf der Stelle
@@ -46,6 +49,27 @@ drehen, bis er das Ziel "anguckt" und sich dann gradlienig auf dieses zubewegen.
 Falls einer der beiden Robotermotoren allerdings nicht vollst{\"{a}}ndig funktionst{\"{u}}chtig ist, ist dies nicht m{\"{o}}glich. Eine m{\"{o}}gliche
 Alternative w{\"{a}}hre es eine Kurve zu fahren, dies muss allerdings -- abh{\"{a}}ngig von der zur{\"{u}}ckzulegenden Strecke -- nicht immer m{\"{o}}glich
 sein.
+
+\paragraph{Bewegung zu einem Punkt} Um zu einem bestimmten Punkt hinzufahren (z.B. zur Ladestation),
+wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation wird immer in Bezug
+auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigonometrische Funktionen bestimmt werden:
+\begin{equation}
+\label{eq:M}
+	M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)
+\end{equation}
+Die n{\"{a}}chste Bewegung gerade nach vorne wird dann anhand dieser Werte "aufgeteilt". Falls der Roboter
+in einem 90\textdegree Winkel nach rechts "guckt" ($M_i = \bigl(\begin{smallmatrix} 0 \\ 1 \end{smallmatrix}\bigr)$)
+w{\"{u}}rde er sich beim nach vorne fahren auf der Y-Achse nach rechts bewegen.
+
+Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ D_i = \gls{F} - P_i $
+
+Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel
+fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des Winkels berechnet wird, das
+Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer (egal ob das Ziel links oder rechts liegt) nach
+rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die falsche Richtung drehen.
+Das Vorzeichen kann allerdings berechnet werden, in dem man die Bewegungsvektoren in drei Dimensionen betrachtet
+und das Keuzprodukt bildet. Dabei gibt das Vorzeichen der Z Kompenente des resultierenden Vektors das Vorzeichen
+des Winkels an.
 
 \subsection{Physiksimulation der Platte}
 Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
@@ -196,6 +220,12 @@ ausbalanciert noch dazu gedacht, ist den Energiespeicher aufzuf{\"{u}}llen. Dies
 haben: Entweder bewegt der Roboter sich unkontrolliert oder er wird falsch angesteuert. Beide F{\"{a}}lle
 passieren falls die Controller falsche Steuerkommandos senden, oder theoretisch richtige Steuerkommandos
 falsch ausgewertet werden.
+
+Die tats{\"{a}}chliche Auswirkung dieses Zustandes h{\"{a}}ngt von der momentanen Stellung der Roboter (und ihrer
+Stati) auf der Platte ab und kann nicht allgemein bestimmt werden. Generell l{\"{a}}sst sich nur sagen das dieser
+Roboter nicht mehr genutzt werden kann um die Platete auszubalancieren und die verbleibenden Roboter nun auch noch
+die Bewegungen dieses Roboters ausgleichen m{\"{u}}ssen.
+
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{fm_robot2}
@@ -226,7 +256,7 @@ ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar s
 
 \paragraph{Einfache Benutzung} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
-Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schließlich wie verbreitet diese
+Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schlie{\ss}lich wie verbreitet diese
 \textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
 Es gibt viele \textit{game engines}, genannt seien hier zum Beispiel Cryengine\ref{cryengine}, Unity, Blender, Source
@@ -237,7 +267,7 @@ Community welche bei Problemen helfen kann, eine gute Dokumentation sondern es i
 programmiert, w{\"{a}}hrend Unity in C\# oder JavaScript programmiert werden kann. Daher baut die Simulation auf
 Unity auf.
 
-\subsection{Unity}
+\subsection{Unity}\label{unity}
 Unity ist eine von Unity Technologies entwickelte \textit{game engine}, die 2005 f{\"{u}}r Macintosh entwickelt wurde und in der Zwischenzeit auf 27 Plattformen portiert wurde.
 
 In dieser Arbeit wird es benutzt, um die Welt und die Interaktionen zwischen den Objekten zu simulieren und diese auch anzuzeigen. Mithilfe einer Scriptingschnittstelle kann das Geschehen modifiziert werden, z.B. kann die Welt

@@ -534,32 +534,10 @@ und die weniger kritischen k{\"{o}}nnen/m{\"{u}}ssen diese Bewegung dann ausglei
 jeder berechneten Roboterbewegung die Weltkippwinkel neu berechnet, so dass die vollsten Roboter die Bewegungen
 der vorher berechneten mit in ihre Entscheidung einbeziehen.
 
-\paragraph{Bewegung zu einem Punkt} Um zu einem bestimmten Punkt hinzufahren (z.B. zur Ladestation),
-wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die Rotation wird immer in Bezug
-auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigonometrische Funktionen bestimmt werden:
-\begin{equation}
-\label{eq:M}
-	M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)
-\end{equation}
-Die n{\"{a}}chste Bewegung gerade nach vorne wird dann anhand dieser Werte "aufgeteilt". Falls der Roboter
-in einem 90\textdegree Winkel nach rechts "guckt" ($M_i = \bigl(\begin{smallmatrix} 0 \\ 1 \end{smallmatrix}\bigr)$)
-w{\"{u}}rde er sich beim nach vorne fahren auf der Y-Achse nach rechts bewegen.
-
-Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ D_i = \gls{F} - P_i $
-
-Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel 
-fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des Winkels berechnet wird, das
-Vorzeichen allerdings nicht. Der Roboter w{\"{u}}rde also immer (egal ob das Ziel links oder rechts liegt) nach 
-rechts drehen, damit den Winkel vergr{\"{o}}{\ss}ern und noch st{\"{a}}rker in die falsche Richtung drehen.
-Das Vorzeichen kann allerdings berechnet werden, in dem man die Bewegungsvektoren in drei Dimensionen betrachtet 
-und das Keuzprodukt bildet. Dabei gibt das Vorzeichen der Z Kompenente des resultierenden Vektors das Vorzeichen 
-des Winkels an.
 
 Um nun zu einem Punkt zu fahren wird sich anhand des Drehwinkels gedreht und entsprechend des Distanzvektores 
-bewegt. Da Rotation und Translation gleichzeitig ausgef{\"{u}}hrt werden, f{\"{a}}hrt der Roboter eine Kurve.
-\footnote{Es w{\"{a}}hre auch m{\"{o}}glich erst die Rotation, dann die Translation durchzuf{\"{u}}hren}
-Da sich der Winkel stetig verkleinert, dreht sich der Roboter immer weniger. Die Geschwindigkeit wird nicht
-angepasst.
+bewegt. Rotation und Translation werden nacheinander ausgef{\"{u}}hrt. Dies ist zwar langsamer, erleichtert die
+Implementierung aber ungemein.
 
 \paragraph{Ausbalancieren} Auch das ausbalancieren kann als Bewegung zu einem Punkt aufgefasst werden.
 Die Platte ist ja durch die Gewichte der Roboter aus dem Gleichgewicht gebracht worden, um sie wieder ins
