@@ -79,21 +79,12 @@ static float PID(float e, float timeFrame, float& integral, float& lastError)
 
 
 
-static std::pair<int, int> _move(const SimulationObject& me)
+static std::pair<int, int> _move(const Vector& curr, float rotation, const Vector& dest)
 {
-	const auto CIRCLE_RADIUS = 5.0f;
-	const auto TOLERANCE = 0.25f;
-
-	const auto myPos = Vector{me.x, me.y};
-	/* is in a correct position, i.e. somewhere +-Xm around the middle */
-	const bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
-		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
-
-	const auto dest = onCircle ? myPos : get_nearest_point_on_circle({me.x, me.y}, {0., 0.}, CIRCLE_RADIUS);
-	const auto len = (dest - myPos).length() * 100.;
-	std::cout << "move from " << myPos << " to " << dest << '\t' << len << '\n';
-	const auto rot = rotateTowards(myPos, me.rotation, dest);
-	std::cout << "current rot " << me.rotation << ". need to turn: " << rot << '\n';
+	const auto len = (dest - curr).length() * 100.;
+	std::cout << "move from " << curr << " to " << dest << '\t' << len << '\n';
+	const auto rot = rotateTowards(curr, rotation, dest);
+	std::cout << "current rot " << rotation << ". need to turn: " << rot << '\n';
 
 	/* basically facing in the right direction? -> forward */
 	if(rot > -5 && rot < 5) {
@@ -117,6 +108,19 @@ static std::pair<int, int> _move(const SimulationObject& me)
 	}
 }
 
+static std::pair<int, int> _follow_path(const SimulationObject& me) {
+	const auto CIRCLE_RADIUS = 5.0f;
+	const auto TOLERANCE = 0.25f;
+
+	const auto myPos = Vector{me.x, me.y};
+	/* is in a correct position, i.e. somewhere +-Xm around the middle */
+	const bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
+		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
+
+	const auto dest = onCircle ? myPos : get_nearest_point_on_circle(myPos, {0., 0.}, CIRCLE_RADIUS);
+	return _move(myPos, me.rotation, dest);
+}
+
 static void worldStatusCallback(const WorldStatus* ws, void* additional)
 {
 	Info* info = (Info*)additional;
@@ -132,7 +136,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
-			auto m = _move(ws->objects[i]);
+			auto m = _follow_path(ws->objects[i]);
 			moveRobot(info->worldCtx, ws->objects[i].id, m.first, m.second);
 		}
 	}
@@ -150,7 +154,7 @@ std::vector<WAYPOINT> _gen_path(const unsigned int cnt) {
 
 		auto x = sin(degInRad);
 		auto y = cos(degInRad);
-		points.emplace(WAYPOINT{i, x, y});
+		points.push_back(WAYPOINT{i, x, y});
 	}
 
 	return points;
