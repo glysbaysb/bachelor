@@ -1,5 +1,20 @@
 /**
  * @file A simple test application that tries to move the robot along some predefined waypoints
+ *
+ * The Info structure is passed to the worldStatusCallback() which makes the robot follow the path
+ * defined in Info::waypoints. When the robot is instantied it probably is not on the path, so it
+ * moves to the nearest way point. Once that point has almost been reached the robot follows along
+ * the path.
+ *
+ * Following the path means driving successively to each of the waypoints. For simplicity we assume
+ * that the robot has reached the waypoint once it is in a certain distance. However consider this:
+ * The robot moves towards A and reaches it finally. Now it should move to point B, but point A is
+ * nearer (as the robot actually is at A) and thus will always move back towards A. It essentially
+ * becomes stuck.
+ * To circumvent that the Info structure has a member Info::nextWaypoint. The robot always is moved
+ * towards that. That member is only updated if:
+ * a) the robot is not on (/near) the path
+ * b) a new waypoint has been reached
  */
 #include <iostream>
 #include <iterator>
