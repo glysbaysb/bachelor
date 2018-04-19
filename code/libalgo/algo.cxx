@@ -148,3 +148,9 @@ WAYPOINT get_nearest_waypoint(const Vector& myPos, const std::vector<WAYPOINT>& 
 
 	return nearest;
 }
+
+Vector operator-(const WAYPOINT& a, const Vector& b)
+{
+	auto tmp = Vector(a);
+	return Vector(tmp.x_ - b.x_, tmp.y_ - b.y_);
+}

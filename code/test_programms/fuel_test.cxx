@@ -10,33 +10,21 @@
 #include <libnetwork/network.h>
 #include <libalgo/algo.h>
 
-#define WAYPOINTS 20
-struct WAYPOINT {
-	float phi_;
-	float x_;
-	float y_;
-
-	WAYPOINT(float phi, float x, float y) {
-		phi_ = phi;
-		x_ = x;
-		y_ = y;
-	}
-};
 
 typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
 	std::vector<WAYPOINT> waypoints;
+	WAYPOINT nextWaypoint; 
 } Info;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
-static std::vector<WAYPOINT> _gen_path(unsigned int);
 
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
-	callbackInfo.waypoints = _gen_path(WAYPOINTS);
+	callbackInfo.waypoints = gen_path(WAYPOINTS);
 
 	if(argc < 3) {
 		printf("%s host interface\n", argv[0]);
@@ -108,7 +96,7 @@ static std::pair<int, int> _move(const Vector& curr, float rotation, const Vecto
 	}
 }
 
-static std::pair<int, int> _follow_path(const SimulationObject& me) {
+static std::pair<int, int> _follow_path(const SimulationObject& me, const std::vector<WAYPOINT>& path, WAYPOINT& nearestWaypoint) {
 	const auto CIRCLE_RADIUS = 5.0f;
 	const auto TOLERANCE = 0.25f;
 
@@ -117,8 +105,31 @@ static std::pair<int, int> _follow_path(const SimulationObject& me) {
 	const bool onCircle = !_isInsideCircle(myPos, CIRCLE_RADIUS - TOLERANCE) &&
 		_isInsideCircle(myPos, CIRCLE_RADIUS + TOLERANCE);
 
-	const auto dest = onCircle ? myPos : get_nearest_point_on_circle(myPos, {0., 0.}, CIRCLE_RADIUS);
-	return _move(myPos, me.rotation, dest);
+	/* if not on circle, move there */
+	if(!onCircle) {
+		nearestWaypoint = get_nearest_waypoint(myPos, path);
+
+		return _move(myPos, me.rotation, nearestWaypoint);
+	}
+	/* else follow path */
+	else {
+		/* point reached? -> find next */
+		auto dist = (nearestWaypoint - myPos).length();
+		if(dist < TOLERANCE) {
+			size_t currIdx = -1;
+			for(size_t i = 0; i < path.size(); i++) {
+				if(nearestWaypoint == path[i]) {
+					currIdx = i;
+					break;
+				}
+			}
+
+			nearestWaypoint = path[(currIdx + 1) % path.size()];
+		}
+
+		/* go there */
+		return _move(myPos, me.rotation, nearestWaypoint);
+	}
 }
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional)
@@ -136,26 +147,8 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
 
-			auto m = _follow_path(ws->objects[i]);
+			auto m = _follow_path(ws->objects[i], info->waypoints, info->nextWaypoint);
 			moveRobot(info->worldCtx, ws->objects[i].id, m.first, m.second);
 		}
 	}
-}
-
-/**
- * Generates a path (with @cnt edges) along a circle with radius 1
- *
- */
-std::vector<WAYPOINT> _gen_path(const unsigned int cnt) {
-	std::vector<WAYPOINT> points;
-
-	for(auto i = 0.; i < 360; i += (360. / cnt)) {
-		auto degInRad = i * M_PI / 180;
-
-		auto x = sin(degInRad);
-		auto y = cos(degInRad);
-		points.push_back(WAYPOINT{i, x, y});
-	}
-
-	return points;
 }

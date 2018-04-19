@@ -35,6 +35,10 @@ struct WAYPOINT {
 	}
 
 	WAYPOINT() : WAYPOINT(361, 1000*1000, 1000*1000) { 	}
+
+	friend bool operator==(const WAYPOINT& a, const WAYPOINT& b) {
+		return ((a.x_ - b.x_) < FLT_EPSILON) && ((a.y_ - b.y_) < FLT_EPSILON);
+	}
 };
 
 #define CRIT_THRESHHOLD 20
@@ -103,6 +107,8 @@ struct Vector
 		return Vector{a * b.x_, a * b.y_};
 	}
 };
+
+Vector operator-(const WAYPOINT& a, const Vector& b);
 
 class Object
 {
