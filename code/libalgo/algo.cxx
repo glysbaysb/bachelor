@@ -118,3 +118,33 @@ Vector unicycle_to_diff(const double vel, const double angle)
 	};
 	return x;
 }
+
+std::vector<WAYPOINT> gen_path(const unsigned int cnt) {
+	std::vector<WAYPOINT> points;
+
+	for(auto i = 0.; i < 360; i += (360. / cnt)) {
+		auto degInRad = i * M_PI / 180;
+
+		auto x = sin(degInRad);
+		auto y = cos(degInRad);
+		points.push_back(WAYPOINT{i, x, y});
+	}
+
+	return points;
+}
+
+WAYPOINT get_nearest_waypoint(const Vector& myPos, const std::vector<WAYPOINT>& path)
+{
+	auto nearest = WAYPOINT();
+
+	for(auto&& p : path) {
+		auto distNearest = Vector(nearest.x_, nearest.y_) - myPos;
+		auto distNew = Vector(p.x_, p.y_) - myPos;
+
+		if(distNew < distNearest) {
+			nearest = p;
+		}
+	}
+
+	return nearest;
+}

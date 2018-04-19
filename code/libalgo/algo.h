@@ -22,6 +22,21 @@
 #include <cfloat>
 #include <cmath>
 
+#define WAYPOINTS 20
+struct WAYPOINT {
+	float phi_;
+	float x_;
+	float y_;
+
+	WAYPOINT(float phi, float x, float y) {
+		phi_ = phi;
+		x_ = x;
+		y_ = y;
+	}
+
+	WAYPOINT() : WAYPOINT(361, 1000*1000, 1000*1000) { 	}
+};
+
 #define CRIT_THRESHHOLD 20
 #define SAFE_THRESHHOLD 80
 
@@ -36,6 +51,8 @@ struct Vector
 		x_(x), y_(y)
 	{
 	}
+
+	Vector(WAYPOINT w) : Vector(w.x_, w.y_) { }
 
 	Vector operator+(const Vector& a) const
 	{
@@ -202,5 +219,13 @@ Vector get_nearest_point_on_circle(const Vector& pos, const Vector& circleMid = 
 double rotateTowards(const Vector& a, const double rotation, const Vector& b);
 
 Vector unicycle_to_diff(const double vel, const double angle);
+
+/**
+ * Generates a path (with @cnt edges) along a circle with radius 1
+ *
+ */
+std::vector<WAYPOINT> gen_path(unsigned int);
+
+WAYPOINT get_nearest_waypoint(const Vector& myPos, const std::vector<WAYPOINT>& path);
 
 #endif // ALGO_H
