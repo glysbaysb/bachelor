@@ -25,6 +25,7 @@
 #include <libnetwork/network.h>
 #include <libalgo/algo.h>
 
+const auto CIRCLE_RADIUS = 5.0f;
 
 typedef struct {
 	int robot;
@@ -39,7 +40,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional);
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
-	callbackInfo.waypoints = gen_path(WAYPOINTS);
+	callbackInfo.waypoints = gen_path(WAYPOINTS, CIRCLE_RADIUS);
 
 	if(argc < 3) {
 		printf("%s host interface\n", argv[0]);
@@ -112,7 +113,6 @@ static std::pair<int, int> _move(const Vector& curr, float rotation, const Vecto
 }
 
 static std::pair<int, int> _follow_path(const SimulationObject& me, const std::vector<WAYPOINT>& path, WAYPOINT& nearestWaypoint) {
-	const auto CIRCLE_RADIUS = 5.0f;
 	const auto TOLERANCE = 0.25f;
 
 	const auto myPos = Vector{me.x, me.y};

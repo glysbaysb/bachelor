@@ -227,10 +227,10 @@ double rotateTowards(const Vector& a, const double rotation, const Vector& b);
 Vector unicycle_to_diff(const double vel, const double angle);
 
 /**
- * Generates a path (with @cnt edges) along a circle with radius 1
+ * Generates a path (with @cnt edges) along a circle with radius @radius
  *
  */
-std::vector<WAYPOINT> gen_path(unsigned int);
+std::vector<WAYPOINT> gen_path(unsigned int, const float radius);
 
 WAYPOINT get_nearest_waypoint(const Vector& myPos, const std::vector<WAYPOINT>& path);
 

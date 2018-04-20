@@ -119,7 +119,7 @@ Vector unicycle_to_diff(const double vel, const double angle)
 	return x;
 }
 
-std::vector<WAYPOINT> gen_path(const unsigned int cnt) {
+std::vector<WAYPOINT> gen_path(const unsigned int cnt, const float radius) {
 	std::vector<WAYPOINT> points;
 
 	for(auto i = 0.; i < 360; i += (360. / cnt)) {
@@ -127,7 +127,7 @@ std::vector<WAYPOINT> gen_path(const unsigned int cnt) {
 
 		auto x = sin(degInRad);
 		auto y = cos(degInRad);
-		points.push_back(WAYPOINT{i, x, y});
+		points.push_back(WAYPOINT{i, x * radius, y * radius});
 	}
 
 	return points;
