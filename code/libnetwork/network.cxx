@@ -53,11 +53,12 @@ int ECCUDP::poll(int timeout, std::vector<RecvPacket>& packets)
 	/* as I always go through the whole array of pollfds, there's
 	   no point in saving it.
 	   todo: don't do that then: abort for loop, if all events have been consume */
-	if(::poll(pollfds.data(), pollfds.size(), timeout) < 0) {
+	int ret = 0;
+	if((ret = ::poll(pollfds.data(), pollfds.size(), timeout)) < 0) {
+		perror("poll");
 		return -1;
 	}
 
-	int ret = 0;
 	for(auto&& pollfd : pollfds) {
 		if((pollfd.revents & POLLIN) == POLLIN) {
 			auto packet = RecvPacket(512);// todo: better size
@@ -112,30 +113,33 @@ int ECCUDP::createBroadcastSockets(std::int16_t port, const char* interface)
 		}
 
 		if(std::string(i->ifa_name) != interface) {
-			std::cout << "skip: " << i->ifa_name << '\n';
 			continue;
 		}
 
 		int sock = -1;
 		if((sock = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 			s = -1;
+			goto RET;
 		}
 
 		int broadcastEnable=1;
 		if(::setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
 			s = -2;
+			goto RET;
 		}
 
 		sockaddr_in* sin = (sockaddr_in*)i->ifa_broadaddr;
 		sin->sin_port = (in_port_t)htons(port);
 
 		char buf[100];
-		if(inet_ntop(AF_INET, (const void*)&sin->sin_addr, buf, sizeof(buf)) != nullptr) {
-			printf("broadcast: %s\n", buf);
+		if(inet_ntop(AF_INET, (const void*)&sin->sin_addr, buf, sizeof(buf)) == nullptr) {
+			s = -3;
+			goto RET;
 		}
 
 		if(::connect(sock, (const sockaddr*)sin, sizeof(sockaddr_in)) < 0) {
-			s = -3;
+			s = -4;
+			goto RET;
 		}
 
 #ifdef DEBUG
@@ -144,6 +148,7 @@ int ECCUDP::createBroadcastSockets(std::int16_t port, const char* interface)
 		_broadcastSockets.push_back(sock);
 	}
 
+RET:
 	::freeifaddrs(ifs);
 
 	return s;

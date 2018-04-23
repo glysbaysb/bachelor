@@ -11,4 +11,4 @@ set(SOURCE_FILES_CONTROLLER main.cxx)
 add_executable(controller ${SOURCE_FILES_CONTROLLER})
 target_link_libraries(controller m network rpc algo)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-static")
+#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-static")

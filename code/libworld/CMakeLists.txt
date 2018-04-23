@@ -7,7 +7,8 @@ set(SOURCE_FILES_LIBWORLD world.c)
 add_library(${PROJECT_NAME} STATIC
 	${SOURCE_FILES_LIBWORLD}
 )
-target_link_libraries(${PROJECT_NAME} nanomsg pthread rpc ficfg)
+
+target_link_libraries(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/third_party/nanomsg/libnanomsg.a pthread rpc ficfg anl)
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_DIRECTORY}
 )

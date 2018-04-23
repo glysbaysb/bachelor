@@ -15,4 +15,4 @@ target_include_directories(network PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set_target_properties(network PROPERTIES LINK_FLAGS "-static")
+#set_target_properties(network PROPERTIES LINK_FLAGS "-static")

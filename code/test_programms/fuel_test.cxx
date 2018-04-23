@@ -123,6 +123,7 @@ static std::pair<int, int> _follow_path(const SimulationObject& me, const std::v
 	/* if not on circle, move there */
 	if(!onCircle) {
 		nearestWaypoint = get_nearest_waypoint(myPos, path);
+		std::cout << "get to circle " << nearestWaypoint << std::endl;
 
 		return _move(myPos, me.rotation, nearestWaypoint);
 	}
@@ -131,6 +132,8 @@ static std::pair<int, int> _follow_path(const SimulationObject& me, const std::v
 		/* point reached? -> find next */
 		auto dist = (nearestWaypoint - myPos).length();
 		if(dist < TOLERANCE) {
+			std::cout << "next one after " << nearestWaypoint << std::endl;
+
 			size_t currIdx = -1;
 			for(size_t i = 0; i < path.size(); i++) {
 				if(nearestWaypoint == path[i]) {

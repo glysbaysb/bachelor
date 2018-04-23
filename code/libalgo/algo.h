@@ -39,6 +39,11 @@ struct WAYPOINT {
 	friend bool operator==(const WAYPOINT& a, const WAYPOINT& b) {
 		return ((a.x_ - b.x_) < FLT_EPSILON) && ((a.y_ - b.y_) < FLT_EPSILON);
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const WAYPOINT& wp) {
+		return os << wp.phi_ << ' ' << wp.x_ << ';' << wp.y_ << '\n';
+	}
+
 };
 
 #define CRIT_THRESHHOLD 20
