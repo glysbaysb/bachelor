@@ -7,9 +7,10 @@
 	\label{fig:simulation}
 \end{figure}
 
-Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung einer 
-{\"{U}}bungsaufgabe zum Modul "Ausfallsichere Systeme" -- entfaltet, im zweiten auf die dazu ben{\"{o}}tigten
-Grundlagen eingegangen und als letztes wird der L{\"{o}}sungsweg skizziert. 
+Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung eines
+Simulationswerkzeuges, das als {\"{U}}bungsaufgabe fungiert, zum Modul "Ausfallsichere Systeme" -- entfaltet,
+im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der L{\"{o}}sungsweg 
+skizziert. 
 
 Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
 Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende {\"{U}}bungsaufgabe nicht optimal ist.
@@ -86,8 +87,7 @@ Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranst
 nutzbar sein. Damit soll auch Menschen ohne Fachkenntnisse ein interessanter Einblick in die 
 Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
 
-\clearpage
-\section{Die ausfallsichere Heizung}\label{heizung}
+\subsection{Die ausfallsichere Heizung}\label{heizung}
 Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
 beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
@@ -144,8 +144,7 @@ erst ein Sensor, dann das Netzwerk aus und danach steckt die Klappe fest.
 Gerade bei Doppelfehlern, in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen {\"{A}}rmen 
 ausfallen, gibt es die Gefahr, dass sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
 
-\clearpage
-\section{Diskussion}
+\subsection{Diskussion}
 Diese bestehende {\"{U}}bungsaufgabe hat allerdings einige Probleme, welche bei Konzeption und Bau einer neuen
 {\"{U}}bungsaufgabe vermieden werden sollen.
 \todo{was stoert was kann besser sein}
@@ -261,7 +260,7 @@ allerdings die Idee dieser Aufgabe beibehalten; die neue Aufgabe soll nur die id
 ausmerzen.
 
 \clearpage
-\section{Anforderungen -> Simulationsidee}
+\section{Konkretisierung der Anforderungen}
 Um die vorhandene Simulationsidee ohne die vorhanden Schwachstellen neu zu erstellen, so das die Anforderungen
 (wie in \ref{anforderung} beschrieben erf{\"{u}}llt werden) ist es n{\"{o}}tig diese eher abstrakten Anforderungen in
 technische Merkmale zu "{\"{u}}bersetzen".
@@ -291,8 +290,7 @@ n{\"{o}}tig. Dies ist gerade im Lehrkontext wichtig, damit m{\"{o}}glichst viele
 k{\"{o}}nnen und es im besten Fall sogar n{\"{o}}tig ist das die Studenten zwischen verschiedenen Alternativen w{\"{a}}hlen
 m{\"{u}}ssen.
 
-\clearpage
-\section{Simulationsidee}
+\subsection{Simulationsidee}
 Es wurde sich entschieden die Grundidee der Simulation beizubehalten, diese allerdings neu zu implementieren um die Kritikpunkte am
 bestehenden System auszumerzen. Im folgenden wird die Grundidee noch einmal konkretisiert:
 
@@ -342,3 +340,39 @@ Zusammenfassend besteht das ganze System aus diesen Teilen:
 \paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden;
 die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
 Daher ist es notwendig, ein Interface ins "Innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
+
+\subsection{Architekturkonzept}
+Nach dem ausarbeiten der Anforderungen an das Simulationswerkzeug und die Entscheidung {\"{u}}ber den Simulationsablauf (inklusive
+der Trennung zwischen f{\"{u}}r die Studierenden vorgefertigten Teil und den von diesen selbst zu implementierenden) ist es n{\"{o}}tig
+die Systembestandteile aufzulisten. Dabei werden auch die Beziehungen zwischen ihnen aufgef{\"{u}}hrt, da diese Einfluss auf die
+Architektur haben.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Komponenten1}
+	\caption{Ben{\"{o}}tigte Systembestandteile und ihre Beziehungen}
+	\label{fig:arch_pre}
+\end{figure}
+
+Der Hauptbestandteil der Simulation ist die Physiksimulation. Sie ist daf{\"{u}}r zust{\"{a}}ndig
+das sich die Roboter bewegen, betankt werden k{\"{o}}nnen, muss Informationen {\"{u}}ber den
+Status der Simulation (z.B. Roboterpositionen) bereitstellen und auch die Roboter basierend
+auf den Steuerbefehlen der Voter bewegen (unter Beachtung aller physikalischen Eigenschaften
+des Roboters und der Fehlerinjektion).
+
+Um die Roboter zu steuern muss a) der Status der Roboter bekannt sein b) es f{\"{u}}r den
+Voter m{\"{o}}glich sein die Steuerbefehle an die Simulation weiter zu reichen. Beides
+erm{\"{o}}glicht das Interface.
+
+F{\"{u}}r die Fehlerinjektion ist der Fehlerinjektionssmanager zus{\"{a}}ndig. Die Physiksimulation
+benutzt diesen um Roboterspezifische Fehler\ref{fm-robot} zu injezieren, w{\"{a}}hrend das
+Interface basierend auf dem Fehlerinjektionsmanager die Informationen {\"{u}}ber den
+Status der Welt verf{\"{a}}lscht.
+
+Um den Simulationsstatus verfolgen zu k{\"{o}}nnen ist eine visuelle Anzeige hilfreich. Daher
+ist ein Bestandteil der Simulation ein Anzeigeprogramm.
+
+Jede Voterinstanz ist daf{\"{u}}r zust{\"{a}}ndig ihren Roboter in der Simulation zu steuern.
+Daf{\"{u}}r m{\"{u}}ssen die Steuerkommandos an die Physiksimulation weitergeleitet werden,
+dies {\"{u}}bernimmt das Interface. Der Controller ist komplett den Studenten {\"{u}}berlassen-
+Es gibt nur die Einschr{\"{a}}nkung das alle Kommunikation zur Simulation hin, {\"{u}}ber den Voter erfolgen muss.

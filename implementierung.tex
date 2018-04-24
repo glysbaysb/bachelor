@@ -3,6 +3,13 @@
 Das ganze System besteht aus verschiedenen Teilen (zum Beispiel der Simulationsserver, der Voter und die Controller) welche
 auf bestimmten Arten miteinander kommunizieren und alle eine Funktion erf{\"{u}}llen.
 
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Komponenten2}
+	\caption{Implementierte Systembestandteile und ihre Beziehungen}
+	\label{fig:arch}
+\end{figure}
+
 \subsection{Simulation}
 Der wichtigste Teil dieser Bachelorarbeit ist die Simulation. Sie soll nicht nur ein physikalisch glaubw{\"{u}}rdiges Modell
 f{\"{u}}r Roboterbewegungen darstellen, den Votern die ben{\"{o}}tigten Informationen zur Steuerung bereitstellen und die
@@ -17,7 +24,7 @@ mit dem System interagieren lassen.
 	\centering
 	\includevisio[width=\textwidth]{ClassDiagram}
 	\caption{Klassendiagramm}
-	\label{fig:arch}
+	\label{fig:uml}
 \end{figure}
 
 In der ersten Kategorie sind dabei die RPC Klasse die Daten serialisiert und dann {\"{u}}ber \textit{publish-suscribe} anderen
@@ -47,7 +54,7 @@ die gleichen Informationen kriegen und anhand dieser dann reagieren.
 
 Durch die Verwendung einer zentralen Instanz ist die eine H{\"{a}}lfte der Isolation zwischen verschiedenen Instanzen realisiert:
 Die Voter jeder Instanz verbinden sich mit ihrer Instanz, diese sendet ihre Informationen nur an die verbundenen Voter.
-\footnote{Der andere Teil --- die Isolation zwischen verschiedenen Instanzen in Bezug auf Controller und Voter -- kann entweder
+\footnote{Der andere Teil --- die Isolation zwischen verschiedenen Instanzen in Bezug auf Controller und Voter --- kann entweder
 durch die Benutzung verschiedener Ports oder den Gebrauch mehrere \textit{subnets} erreicht werden.}
 
 Ein Nachteil dieser L{\"{o}}sung ist das sie einen \textit{single point of failure} erschafft. Fehler in dem Simulationsprogramm
