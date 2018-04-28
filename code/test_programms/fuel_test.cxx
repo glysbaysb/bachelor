@@ -34,18 +34,36 @@ typedef struct {
 	std::vector<WAYPOINT> waypoints;
 	WAYPOINT nextWaypoint; 
 } Info;
+struct PI {
+	float i;
+	float e_prev;
+	time_t t_prev;
+
+	void clear() {
+		i = e_prev = 0.0f;
+		t_prev = time(NULL);
+	}
+};
+static struct {
+	PI onCircle;
+	PI toCircle;
+} controllers;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
 
 int main(int argc, char** argv)
 {
-	Info callbackInfo = {0};
-	callbackInfo.waypoints = gen_path(WAYPOINTS, CIRCLE_RADIUS);
-
 	if(argc < 3) {
 		printf("%s host interface\n", argv[0]);
 		return 0;
 	}
+
+	Info callbackInfo = {0};
+	callbackInfo.waypoints = gen_path(WAYPOINTS, CIRCLE_RADIUS);
+
+	controllers.onCircle.clear();
+	controllers.toCircle.clear();
+
 
 	callbackInfo.network = new Network(argv[2], 7777, 7777);
 
@@ -65,16 +83,34 @@ int main(int argc, char** argv)
 	detachFromWorld(callbackInfo.worldCtx);
 }
 
-static float PID(float e, float timeFrame, float& integral, float& lastError)
+static float clamp(float v, float min, float max)
 {
-	const float P = 1,
-		D = 0.001f,
-		I = 0.05f;
+	assert(max > min);
 
-	integral += e * timeFrame;
-	float deriv = 0;// (e - lastError) / timeFrame;
-	lastError = e;
-	return e * P + integral * I + deriv * D;
+	if(v < min) {
+		v = min;
+	} else if(v > max) {
+		v = max;
+	}
+
+	return v;
+}
+
+static float PID(float e, PI& pi)
+{
+	const float P = 0.01f,
+		//D = 0.001f,
+		I = 0.005f;
+
+	auto timeFrame = time(NULL) - pi.t_prev;
+	pi.t_prev = time(NULL);
+
+	pi.i += e * timeFrame;
+	float deriv = 0;// (e - pi.e_prev) / timeFrame;
+	pi.e_prev = e;
+
+	auto ret = e * P + pi.i * I/* + deriv * D*/;
+	return clamp(ret, -10, 10);
 }
 
 /* reuse the static functions. kinda ugly but whatevs */
@@ -82,8 +118,7 @@ static float PID(float e, float timeFrame, float& integral, float& lastError)
 #include <libalgo/algo.cxx>
 
 
-
-static std::pair<int, int> _move(const Vector& curr, float rotation, const Vector& dest)
+static std::pair<int, int> _move(const Vector& curr, float rotation, const Vector& dest, PI& pi)
 {
 	const auto len = (dest - curr).length() * 100.;
 	std::cout << "move from " << curr << " to " << dest << '\t' << len << '\n';
@@ -94,23 +129,24 @@ static std::pair<int, int> _move(const Vector& curr, float rotation, const Vecto
 	if(rot > -5 && rot < 5) {
 		std::cout << "accel\n";
 		// Problem: Vor oder zuruck? Links oder rechts?
-		auto ret = unicycle_to_diff(len, rot);
+		auto ret = unicycle_to_diff(PID(len, pi), rot);
 		return {ret.x_, ret.y_};
 	} 
 	/* else: rotate in place */
 	else if(rot < -5 && rot > -180) {
 		std::cout << "left\n";
-		auto ret = unicycle_to_diff(0, -rot);
+		auto ret = unicycle_to_diff(0, PID(-rot, pi));
 		return {ret.x_, ret.y_};
 	} else if(rot > 5 && rot < 180) {
 		std::cout << "right\n";
-		auto ret = unicycle_to_diff(0, -rot);
+		auto ret = unicycle_to_diff(0, PID(-rot, pi));
 		return {ret.x_, ret.y_};
 	} else {
 		std::cout << rot << " not handled" << std::endl;
 		return {0., 0.};
 	}
 }
+
 
 static std::pair<int, int> _follow_path(const SimulationObject& me, const std::vector<WAYPOINT>& path, WAYPOINT& nearestWaypoint) {
 	const auto TOLERANCE = 0.25f;
@@ -122,13 +158,17 @@ static std::pair<int, int> _follow_path(const SimulationObject& me, const std::v
 
 	/* if not on circle, move there */
 	if(!onCircle) {
+		controllers.onCircle.clear(); // clear other controller, to ready it for next use
+
 		nearestWaypoint = get_nearest_waypoint(myPos, path);
 		std::cout << "get to circle " << nearestWaypoint << std::endl;
 
-		return _move(myPos, me.rotation, nearestWaypoint);
+		return _move(myPos, me.rotation, nearestWaypoint, controllers.toCircle);
 	}
 	/* else follow path */
 	else {
+		controllers.toCircle.clear(); // see above
+
 		/* point reached? -> find next */
 		auto dist = (nearestWaypoint - myPos).length();
 		if(dist < TOLERANCE) {
@@ -146,7 +186,7 @@ static std::pair<int, int> _follow_path(const SimulationObject& me, const std::v
 		}
 
 		/* go there */
-		return _move(myPos, me.rotation, nearestWaypoint);
+		return _move(myPos, me.rotation, nearestWaypoint, controllers.onCircle);
 	}
 }
 
