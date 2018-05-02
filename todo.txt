@@ -59,18 +59,19 @@ Zeitplan
 --------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-						| wenn fehlerinjektor an -> kamera bewegt sich nicht?
-		 | thesis		| 
 		 |				| blender designen
-		 |				| rote zone am rand
+		 |				| evaluationstests
+		 |				| -> PI Regler
+		 |				| wenn Robot dod -> Rauch
+		 |				| Die Platte kippt zu krass, falsch, alles moegliche...
+		 |				|  z.B. 
+		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
+		 |				| Laden die Roboter noch?
 ---------+--------------+----------------
 
 
 fixe ideen
 ----------
-die Daten die empfangen werden, vergleichen mit den selbst berechneten. Falls zu krasser
-Fehler (rundungsfehler, mem corruption, ...) -> software rejunivation
-
 momentan les ich immer nur ein packet bei jedem poll() aufruf...
 
 refactoring

@@ -290,3 +290,91 @@ n{\"{o}}tig. Dies ist gerade im Lehrkontext wichtig, damit m{\"{o}}glichst viele
 k{\"{o}}nnen und es im besten Fall sogar n{\"{o}}tig ist das die Studenten zwischen verschiedenen Alternativen w{\"{a}}hlen
 m{\"{u}}ssen.
 
+\clearpage
+\section{Konzeption}
+\subsection{Simulationsidee}
+Es wurde sich entschieden die Grundidee der Simulation beizubehalten, diese allerdings neu zu implementieren um die Kritikpunkte am
+bestehenden System auszumerzen. Im folgenden wird die Grundidee noch einmal konkretisiert:
+
+Die simulierte Welt besteht aus einer kreisf{\"{o}}rmigen Platte. Auf dieser k{\"{o}}nnen bis zu \gls{N}
+Roboter und $1$ F{\"{u}}llstation (\gls{F}) platziert werden. Die Summe alle Gewichte kippt die Platte;
+sind die Gewichte zu ungleichm{\"{a}}{\ss}ig verteilt, kippt die Platte um und die Simulation endet.
+
+Die Roboter k{\"{o}}nnen sich frei auf der Platte bewegen, verbrauchen dabei aber Energie und m{\"{u}}ssen diese dann irgendwann
+an der F{\"{u}}llstation auff{\"{u}}llen. Auch wenn die Roboter sich nicht bewegen, verbrauchen sie Energie (allerdings weniger
+schnell).
+
+Gesteuert werden die Roboter von bis zu \gls{M} $(M \geq N)$ Controllern. Einer oder mehr Controller stimmen sich ab,
+so dass:
+\begin{itemize}
+\item die Roboter ihre Energie immer rechtzeitig auff{\"{u}}llen
+\item die Roboter nicht kollidieren
+\item die Platte nicht kippt
+\end{itemize}
+
+Dieser Abstimmungsvorgang sollte fehlertolerant implementiert werden, so dass auch beim Ausfall eines (oder mehrerer) Controller die Roboter sich immer noch koordiniert bewegen.
+(Abh{\"{a}}ngig vom Verh{\"{a}}ltnis der Anzahl der Controller zur Anzahl der Roboter k{\"{o}}nnen verschiedene Stufen der Fehlertoleranz erreicht werden.\cite[s.149]{Werner00})
+Daraus folgt das die Studierenden in ihrer L{\"{o}}sung eine Konsensbildung implementieren m{\"{u}}ssen.
+
+Die Voter und Controller laufen auf Virtuellen Maschinen, jeweils eine VM pro Voter- oder Controllerinstanz.
+Diese VMs befinden sich in einem Netzwerk, das durch eine Fehlerinjektion UDP Pakete verf{\"{a}}lscht --
+dies simuliert ein fehlertr{\"{a}}chtiges Netzwerk, wie es zum Beispiel bei Funknetzwerken der Fall ist.
+Es wird vorgegeben, dass die gesamte Kommunikation der Studentenprogramme {\"{u}}ber UDP stattfinden muss.
+Dies f{\"{u}}hrt dazu das die Studierenden Gegenmassnahmen gegen die Verf{\"{a}}lschung ergreifen m{\"{u}}ssen, denkbar
+w{\"{a}}hre hier zum Beispiel eine Kanalkodierung zur Vorw{\"{a}}rtsfehlerkorrektur.
+Die Kommunikation von Simulation zu den Votern ist nicht betroffen, sie soll nicht verf{\"{a}}lscht werden. (Statdessen
+kann die Schnittstelle gezieltere Verf{\"{a}}lschungen vornehmen.)
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Netzwerk}
+	\caption{Aufteilung der Netzwerkteilnehmer}
+	\label{fig:network}
+\end{figure}
+
+Zusammenfassend besteht das ganze System aus diesen Teilen:
+\begin{itemize}
+	\item Die Simulation berechnet die Bewegungen und implementiert das physikalische Modell. Sie {\"{u}}bernimmt auch die Visualisierung. Per Definition ist sie ausfallsicher.
+	\item Der Voter sammelt die Steuerkommandos von den Controllern, bildet daraus das Steuerergebniss und sendet dies an die Simulation. Er ist per Definition ausfallsicher gegen \textit{crash failures}.
+	\item Die Controller generieren Steuerkommandos. Sie k{\"{o}}nnen jederzeit ausfallen.
+\end{itemize}
+
+\paragraph{Nutzung durch die Studenten} Von den Studierenden muss nicht die gesamte Simulation erstellt werden;
+die {\"{U}}bungsaufgabe bezieht sich nur auf die Abstimmung zwischen den Controllern und die Ansteuerung der Roboter.
+Daher ist es notwendig, ein Interface ins "Innere" der Simulation bereitzustellen, das dann von den Studenten genutzt wird.
+
+\subsection{Architekturkonzept}
+Nach dem ausarbeiten der Anforderungen an das Simulationswerkzeug und die Entscheidung {\"{u}}ber den Simulationsablauf (inklusive
+der Trennung zwischen f{\"{u}}r die Studierenden vorgefertigten Teil und den von diesen selbst zu implementierenden) ist es n{\"{o}}tig
+die Systembestandteile aufzulisten. Dabei werden auch die Beziehungen zwischen ihnen aufgef{\"{u}}hrt, da diese Einfluss auf die
+Architektur haben.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{Komponenten1}
+	\caption{Ben{\"{o}}tigte Systembestandteile und ihre Beziehungen}
+	\label{fig:arch_pre}
+\end{figure}
+
+Der Hauptbestandteil der Simulation ist die Physiksimulation. Sie ist daf{\"{u}}r zust{\"{a}}ndig
+das sich die Roboter bewegen, betankt werden k{\"{o}}nnen, muss Informationen {\"{u}}ber den
+Status der Simulation (z.B. Roboterpositionen) bereitstellen und auch die Roboter basierend
+auf den Steuerbefehlen der Voter bewegen (unter Beachtung aller physikalischen Eigenschaften
+des Roboters und der Fehlerinjektion).
+
+Um die Roboter zu steuern muss a) der Status der Roboter bekannt sein b) es f{\"{u}}r den
+Voter m{\"{o}}glich sein die Steuerbefehle an die Simulation weiter zu reichen. Beides
+erm{\"{o}}glicht das Interface.
+
+F{\"{u}}r die Fehlerinjektion ist der Fehlerinjektionssmanager zus{\"{a}}ndig. Die Physiksimulation
+benutzt diesen um Roboterspezifische Fehler\ref{fm-robot} zu injezieren, w{\"{a}}hrend das
+Interface basierend auf dem Fehlerinjektionsmanager die Informationen {\"{u}}ber den
+Status der Welt verf{\"{a}}lscht.
+
+Um den Simulationsstatus verfolgen zu k{\"{o}}nnen ist eine visuelle Anzeige hilfreich. Daher
+ist ein Bestandteil der Simulation ein Anzeigeprogramm.
+
+Jede Voterinstanz ist daf{\"{u}}r zust{\"{a}}ndig ihren Roboter in der Simulation zu steuern.
+Daf{\"{u}}r m{\"{u}}ssen die Steuerkommandos an die Physiksimulation weitergeleitet werden,
+dies {\"{u}}bernimmt das Interface. Der Controller ist komplett den Studenten {\"{u}}berlassen-
+Es gibt nur die Einschr{\"{a}}nkung das alle Kommunikation zur Simulation hin, {\"{u}}ber den Voter erfolgen muss.
