@@ -34,14 +34,15 @@ typedef struct {
 	std::vector<WAYPOINT> waypoints;
 	WAYPOINT nextWaypoint; 
 } Info;
+
 struct PI {
 	float i;
 	float e_prev;
-	time_t t_prev;
+	timespec t_prev;
 
 	void clear() {
 		i = e_prev = 0.0f;
-		t_prev = time(NULL);
+		clock_gettime(CLOCK_MONOTONIC, &t_prev);
 	}
 };
 static struct {
@@ -98,19 +99,22 @@ static float clamp(float v, float min, float max)
 
 static float PID(float e, PI& pi)
 {
-	const float P = 0.01f,
+	const float P = 0.05f,
 		//D = 0.001f,
-		I = 0.005f;
+		I = 0.01f;
 
-	auto timeFrame = time(NULL) - pi.t_prev;
-	pi.t_prev = time(NULL);
+	timespec tmp;
+	clock_gettime(CLOCK_MONOTONIC, &tmp);
+	auto timeFrame = (pi.t_prev.tv_sec - tmp.tv_sec) * 1000 +
+		lround(pi.t_prev.tv_nsec / 1.0e6 - pi.t_prev.tv_nsec / 1.0e6);
+	clock_gettime(CLOCK_MONOTONIC, &pi.t_prev);
 
 	pi.i += e * timeFrame;
+	pi.i = clamp(pi.i, -10, 10);
 	float deriv = 0;// (e - pi.e_prev) / timeFrame;
 	pi.e_prev = e;
 
-	auto ret = e * P + pi.i * I/* + deriv * D*/;
-	return clamp(ret, -10, 10);
+	return e * P + pi.i * I/* + deriv * D*/;
 }
 
 /* reuse the static functions. kinda ugly but whatevs */
