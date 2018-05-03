@@ -59,14 +59,15 @@ Zeitplan
 --------
 Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
-		 |				| blender designen
-		 |				| evaluationstests
+		 | test_prog	| evaluationstests
 		 |				| -> PI Regler
-		 |				| wenn Robot dod -> Rauch
+		 | unity		| wenn Robot dod -> Rauch
 		 |				| Die Platte kippt zu krass, falsch, alles moegliche...
 		 |				|  z.B. 
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
 		 |				| Laden die Roboter noch?
+		 |	thesis	    | Komponentenbilder neu, z.B. fehlt manuelle
+		 |				|   Fehlerinjektion
 ---------+--------------+----------------
 
 

@@ -10,16 +10,11 @@ auf bestimmten Arten miteinander kommunizieren und alle eine Funktion erf{\"{u}}
 	\label{fig:arch}
 \end{figure}
 
-\subsection{Simulation}
-Der wichtigste Teil dieser Bachelorarbeit ist die Simulation. Sie soll nicht nur ein physikalisch glaubw{\"{u}}rdiges Modell
-f{\"{u}}r Roboterbewegungen darstellen, den Votern die ben{\"{o}}tigten Informationen zur Steuerung bereitstellen und die
-Steuerkommandos auch empfangen und ausf{\"{u}}hren sondern dies auch graphisch darstellen. Dar{\"{u}}ber hinaus soll die
-Simulation das Geschehen auch graphisch darstellen und dem Benutzer die M{\"{o}}glichkeit geben mit der Simulation zu
-interagieren, zum einen durch Bewegen der Kamera, zum anderen durch eine Fernsteuerung eines Roboters, zwecks Fehlerinjektion.
 
-Um all diese Aufgaben zu erf{\"{u}}llen gibt es mehrere Klassen. Diese lassen sich grob in zwei Kategorien einteilen: als
-erstes die Klassen die f{\"{u}}r die Simulation und das Netzwerk zust{\"{a}}ndig sind, als zweites die Klassen die den Benutzer
-mit dem System interagieren lassen.
+Das Simulationsprogramm besteht aus mehreren Komponenten; deren Funktionalit{\"{a}}t wurde noch weiter in Klassen untergliedert. Allerdings
+ist es auf dieser feineren Ebene teilweise sinnvoll Klassen zu bilden die logisch Teile von zweien der Komponenten abbilden. Eine andere
+m{\"{o}}gliche Sicht auf das Simulationsprogramm ist daher die Einteilung in zwei Kategorien: als erstes die Klassen die f{\"{u}}r die
+Simulation und das Netzwerk zust{\"{a}}ndig sind, als zweites die Klassen die den Benutzer mit dem System interagieren lassen.
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{ClassDiagram}
@@ -27,15 +22,93 @@ mit dem System interagieren lassen.
 	\label{fig:uml}
 \end{figure}
 
-In der ersten Kategorie sind dabei die RPC Klasse die Daten serialisiert und dann {\"{u}}ber \textit{publish-suscribe} anderen
-zur Verf{\"{u}}gung stellt. Sie nimmt auch Steuerkommandos an und leitet diese an den jeweiligen Roboter weiter. Dieser f{\"{u}}hr
-das Steuerkommando dann aus -- allerdings unter Beachtung des Fehlermodells; es kann also sein das zu diesem Zeitpunkt zum
-Beispiel ein Motor ausgefallen ist und daher sich nur der andere bewegen kann.
+\subsection{Physiksimulation}
+Der wichtigste Teil dieser Bachelorarbeit ist die Simulation. Sie soll nicht nur ein physikalisch glaubw{\"{u}}rdiges Modell
+f{\"{u}}r Roboterbewegungen darstellen, den Votern die ben{\"{o}}tigten Informationen zur Steuerung bereitstellen und die
+es erm{\"{o}}glichen das empfange Steuerkommandos ausf{\"{u}}hren werden. Dar{\"{u}}ber hinaus soll das Geschehen auch graphisch
+dargestellt werden und dem Benutzer die M{\"{o}}glichkeit gegeben werden mit der Simulation zu interagieren, zum einen
+durch Bewegen der Kamera, zum anderen durch eine Fernsteuerung eines Roboters (zwecks Fehlerinjektion). Auch diese
+Anforderungen wirken sich auf die Implementierung der Physiksimulation aus. 
 
-Um dem Benutzer die M{\"{o}}glichkeit zu geben einen anderen Teil der Simulation zu sehen, gibt es die Klasse "Camera Controller".
-Sie ist daf{\"{u}}r zust{\"{a}}ndig die Kamera zu bewegen. Abgesehen von den Objekten in der Welt wird, oben links in der Ecke,
-auch angezeigt wie stark die Welt gekippt ist. Dies erledigt das "Radar" Skript, das drei farbige Kreise zeichnet welche die
-Kippung symbolisieren und auf diesen einen schwarzen Kreis zeichnet der anzeigt wie stark gerade gekippt wurde.
+F{\"{u}}r das Kippen der Platte ist die Klasse PlatePhysics zust{\"{a}}ndig. Sie ist von MonoBehaviour abgeleitet und ist daher
+in das Unity Eventsystem eingebunden --- dies erlaubt es innerhalb der Funktion LateUpdate() f{\"{u}}r jeden \textit{\ref{Frame}} den momentanen
+Stand der Physiksimulation abzufragen und die Platte entsprechend zu rotieren / kippen.
+
+Der Kippwinkel der Platte wird durch zwei Faktoren bestimmt, das statische und das dynamische Ungleichgewicht. Die Informationen {\"{u}}ber
+das statische Gleichgewicht werden von DrawPressureVector() bestimmt. Das dynamische Gleichgewicht wird innerhalb PlatePhysics berechnet,
+jeder RobotController {\"{u}}bergibt beim Ausf{\"{u}}hren einer Bewegung diese auch an PlatePhysics. Diese werden dann aufsummiert, ged{\"{a}}mpft
+und schlie{\ss}lich zusammen mit dem statischen Gleichgewicht als Plattenrotation / -kippwinkel gesetzt.
+
+Auch f{\"{u}} die Ladestation gibt es eine Klasse, diese erkennt Kollisionen mit anderen Objekten (also den Robotern) und l{\"{a}}dt diese auf
+solange der Roboter sich an der Ladestation bedinet.
+
+Eine weitere wichtige Klasse ist RobotController. Um die Roboter zu steueren (ob {\"{u}}ber die manuelle Fehlerinjektion oder mithilfe des
+Controllers) und dabei a) das Fehlermodell und b) den physikalischen Status (Ladestatus, momentane Geschwindigkeit, ...) zu beachten. In der
+Funktion FixedUpdate, die einmal pro \textit{Frame} aufgef{\"{u}}hrt wird, wird der Roboter bewegt. Dabei n{\"{a}}hrt sich der Roboter den
+gew{\"{u}}nschten Beschleunigungen und Rotationen an.
+
+\subsection{Anzeige}\label{graphics}
+F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten, die diese Aufgabe l{\"{o}}sen
+sollen muss es m{\"{o}}glich sein einzusch{\"{a}}tzen wie der momentane Status der Simulation ist.
+Also: wo befinden sich Roboter, wie voll sind sie, wie stark kippt die Platte? All dies soll auch, wie
+in \hyperref[anforderung]{Anforderung 5} festgelegt, visuell ansprechend sein.
+
+Da die Unity Engine auch eine vollwertige Grafikengine ist (dies war ja schliesslich ein Kriterium),
+kann diese Funktionalit{\"{a}}t genutzt werden. Das Simulationsprogramm ist nicht nur f{\"{u}}r die
+reine Simulation sondern auch f{\"{u}}r die Anzeige verantwortlich.
+
+Angezeigt wird eine kreisf{\"{o}}rmige Platte auf der sich die verschiedenen Roboter bewegen. Auch die
+Ladestation wird angezeigt.
+
+\paragraph{CameraController} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese
+werden verschiedene Skripte angegeh{\"{a}}ngt, um z.B. dem Benutzer die M{\"{o}}glichkeit zu
+geben die Kamera zu bewegen und damit einen anderen Teil der Simulation genauer zu betrachten.
+
+Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert --
+dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der Platte visuell ausgeglichen
+werden k{\"{o}}nnte. Um immer einen Teil der Simulation im Blick haben zu k{\"{o}}nnen schwebt die Kamera
+{\"{u}}ber der Platte und schaut in einem 20\textdegree Winkel schr{\"{a}}g nach unten.
+
+\paragraph{Lichtquelle} Damit etwas sichtbar wird, muss es von Licht getroffen werden. In der Simulation
+gibt es daher ein Spotlight. Dies befindet sich weit von der Platte entfernt und scheint in einem steilen Winkel
+von links oben auf diese.
+
+\paragraph{Radar} Um einzusch{\"{a}}tzen wie stark die Platte gekippt wurde, k{\"{o}}nnen sich die Studenten einmal
+innerhalb der Simulation die Platte anschauen. Um etwas genauer sehen zu k{\"{o}}nen wie die Roboter stehen m{\"{u}}ssten
+m{\"{u}}ssten um die Platte ins statische Gleichgewicht zu bringen, wird der momentane Schwerpunkt der Platte visuell
+dargestellt.
+
+Dies geschieht durch die Klasse Radar. Sie zeichnet mehrere {\"{u}}berlappende Kreise in die linke, obere Bildschirmecke;
+drei der Kreise (Gr{\"{u}}n, Gelb, Rot) symbolisieren die Platte. Auf diesen wird ein schwarzer Kreis gezeichnet, der den
+momentanen Schwerpunkt angibt. Anhand der Farbe des Kreises auf welchen der momentane Schwerpunkt liegt ist es sehr einfach
+abzulesen wie kritisch der Kippwinkel der Platte, und damit wie gut die Regelung, ist. Und anhand der zweidimensionalen Position
+des Schwerpunktindikators k{\"{o}}nnen die Roboter bewegt werden.
+
+\paragraph{FaultInjector_Player} F{\"{u}}r die Studierenden soll es m{\"{o}}glich sein einen Roboter fernzusteuern um damit
+gew{\"{u}}nschte Roboterkonstellationen gezielt herbeizuf{\"{u}}hren. Um anzuzeigen ob die manuelle Fehlerinktion gerade aktiv
+oder inaktiv ist wird dem Benutzer, in der Mitte des Bildschirms, dies textuell Text angezeigt.
+
+\subsection{Fehlerinjektion - Physik}
+Da es in einer Simulation keine mechanischen (o.{\"{a}}.) Fehler geben kann, das Ziel des Simulationswerkzeuges aber gerade ist
+die Studierenden ein fehlertoleranter Systeme entwickelen zu lassen braucht es eine Fehlerinjektion.
+
+Die RobotController konsultieren bevor sie eine neue Zielbeschleunigung und -rotation setzen die Fehlerinjektion {\"{u}}ber den
+Status ihres Roboters. Falls beispielsweise einer der Motoren nicht funktioniert hat das Auswirkungen auf die Zielbeschleunigung
+(die Richtung und die L{\"{a}}nge des Beschleunigungsvektores werden ge{\"{a}}ndert). Die Informationen {\"{u}}ber den Status
+jedes Motoren werden also von der Fehlerinjektionsklasse gespeichert und bereitgestellt.
+
+\subsection{Interface - Simulationsprogramm}
+Die Kommunikation zwischen Simulationsprogramm und Voter macht es n{\"{o}}tig das auf beiden Seiten eine Schnittstelle existiert
+welche die Kommunikation abstrahiert. Auf der Seite des Simulationsprogrammes wird dies haupts{\"{a}}chlich durch die Klasse
+HandleRPCRequests abgehandelt.
+
+An den Voter muss in periodischen Abst{\"{a}}nden der Status der Platte und der sich auf ihr befindenen Roboter gesendet werden.
+Daf{\"{u}}r gibt es den pubSock member, eine Instanz der Klasse PublishSocket aus der NNanoMsg Bibliothek. Die andere Aufgabe
+dieser Klasse ist es Steuerbefehle der Controller anzunehmen und diese dann an die Roboter weiterzugeben. Daf{\"{u}}r gibt es
+den repSock. Beide Aufgaben m{\"{u}}ssen immer wieder ausgef{\"{u}}hrt werden, anstatt einen neuen Thread zu starten werden
+nicht-blockierende Funktionen benutzt und sich in das Unityevensystem eingeh{\"{a}}ngt.
+
+\subsection{Interface - Voter}
 
 \subsection{Kommunikation zwischen den Systemteilen}
 Bei verteilten Systemen (wie diesem) ist einer der wichtigsten Punkte wie die Kommunikation zwischen den Systemteilen abl{\"{a}}uft.
@@ -88,39 +161,6 @@ diese Funktionalit{\"{a}}t bereitstellt. Sie kann benutzt werden um einen neuen 
 Im Fehlermodell gibt es auch eine Anforderung das einzelene Voter andere Informationen {\"{u}}ber den Status der Welt
 bekommen sollen als andere. Daher ist die Bibliothek nicht nur f{\"{u}}r die reine Kommunikation zust{\"{a}}ndig, sondern wird auch
 benutzt um diese Art von Fehler zu injizieren.
-
-\subsection{Anzeige}\label{graphics}
-F{\"{u}}r interessierte Sch{\"{u}}ler und auch f{\"{u}}r die Studenten, die diese Aufgabe l{\"{o}}sen
-sollen muss es m{\"{o}}glich sein einzusch{\"{a}}tzen wie der momentane Status der Simulation ist.
-Also: wo befinden sich Roboter, wie voll sind sie, wie stark kippt die Platte? All dies soll auch, wie
-in \hyperref[anforderung]{Anforderung 5} festgelegt, visuell ansprechend sein.
-
-Da die Unity Engine auch eine vollwertige Grafikengine ist (dies war ja schliesslich ein Kriterium),
-kann diese Funktionalit{\"{a}}t genutzt werden. Das Simulationsprogramm ist nicht nur f{\"{u}}r die
-reine Simulation sondern auch f{\"{u}}r die Anzeige verantwortlich.
-
-Angezeigt wird eine kreisf{\"{o}}rmige Platte auf der sich die verschiedenen Roboter bewegen. Auch die
-Ladestation wird angezeigt.
-
-\paragraph{Kamera} Die Sicht auf die simulierte Welt geschieht durch das Unity Objekt "Camera". An diese
-werden verschiedene Skripte angegeh{\"{a}}ngt, um z.B. dem Benutzer die M{\"{o}}glichkeit zu
-geben die Kamera zu bewegen und damit einen anderen Teil der Simulation genauer zu betrachten.
-
-Die Kamera kann {\"{u}}ber die Pfeiltasten bewegt werden, ein Kippen der Kamera ist nicht implementiert --
-dies w{\"{u}}rde auch verwirren, da damit eventuell der Kippwinkel der Platte visuell ausgeglichen
-werden k{\"{o}}nnte. Um immer einen Teil der Simulation im Blick haben zu k{\"{o}}nnen schwebt die Kamera
-{\"{u}}ber der Platte und schaut in einem 20\textdegree Winkel schr{\"{a}}g nach unten.
-
-\paragraph{Lichtquelle} Damit etwas sichtbar wird, muss es von Licht getroffen werden. In der Simulation
-gibt es daher ein Spotlight. Dies befindet sich weit von der Platte entfernt und scheint in einem steilen Winkel
-von links oben auf diese.
-
-\paragraph{User Interface} Desweiteren wird dem Benutzer, in der Mitte, als Text angezeigt ob die
-Fernsteuerungsfehlerinjektion an- oder ausgeschaltet ist. Das Radar oben links zeigt an wie stark die Platte
-durch die Gewichte der Roboter und der Ladestation gekippt wurde und kann genutzt werden um einzusch{\"{a}}tzen
-wie gut die Regelung ist.
-
-\todo{mehr?}
 
 
 \clearpage
