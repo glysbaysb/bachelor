@@ -1,10 +1,3 @@
-Teil 2:
-
-Der erste Teil endet mit einer Idee. Hier werden jetzt Grundlagen
-diskutiert, die aber schon unterstellen, dass das grundsätzliche
-Vorgehen klar ist. Dazu gibt es aber noch keinerlei Überlegungen an
-diesem Punkt der Arbeit.
-
 13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
 
 14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.
@@ -12,22 +5,6 @@ diesem Punkt der Arbeit.
 Teil III:
 
 15
-
-Ganz an den Anfang würde ich das Grobbild aus Kapitel 7 stellen und das
-dann verfeinern, ehe es an die einzelnen Bauteile geht. Vor allem können
-Sie dann schon einmal global sagen, was wie kommuniziert und können
-entsprecehnde Entscheidungen begründen. Quasi eine Art "Top-down-Approach".
-
-15.1 Ein Klassendiagramm ist durchaus relevanter Teil des Entwurfs, ich
-würde es aber eher nicht bei "Architektur" erwarten... Eventuell
-schauen, wie Sie global Ihre Texte in Ansatz/Entwurf -> Architektur ->
-Umsetzung gliedern können.
-
-15.2 Würde ich vor alle anderen Subsysteme setzen. Liesse sich auch gut
-aus dem eingangs genannten Bild begründen. Ansonsten gefällt mir 15.2
-unter "Architektur" viel besser als 15.1
-
-15.3 Ähnlich 15.1
 
 Insgesamt haben Sie hier sehr viele Vorgriffe.
 
