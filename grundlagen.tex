@@ -153,7 +153,7 @@ tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kan
 Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schlie{\ss}lich wie verbreitet diese
 \textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
 
-Es gibt viele \textit{game engines}, genannt seien hier zum Beispiel Cryengine\ref{cryengine}, Unity, Blender, Source
+Es gibt viele \textit{game engines}, genannt seien hier zum Beispiel Cryengine\cite{cryengine}, Unity, Blender, Source
 oder Cube. Bis auf die Cryengine w{\"{a}}hren alle kostenlos; auch die Plattformunabh{\"{a}}ngigkeit ist bei
 fast allen gegeben. Doch gerade beim letzten Kriterium stach Unity hervor. Nicht nur gibt es eine sehr gro{\ss}e
 Community welche bei Problemen helfen kann, eine gute Dokumentation sondern es ist auch m{\"{o}}glich in bekannten
@@ -195,7 +195,7 @@ den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von de
 
 Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen die von UnityEngine.MonoBehaviour
 abstammen und registriert sind werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
-der Funktion ab\footnote{Vgl. \cite{unity-exec-order}}, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist
+der Funktion ab\footnote{Vgl. \cite{unityexecorder}}, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist
 und Inputevents behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
 werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen die in dieser
 Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame. Desweiteren muss der Klassenname innerhalb einer Datei so

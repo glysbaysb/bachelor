@@ -31,7 +31,7 @@ durch Bewegen der Kamera, zum anderen durch eine Fernsteuerung eines Roboters (z
 Anforderungen wirken sich auf die Implementierung der Physiksimulation aus. 
 
 F{\"{u}}r das Kippen der Platte ist die Klasse PlatePhysics zust{\"{a}}ndig. Sie ist von MonoBehaviour abgeleitet und ist daher
-in das Unity Eventsystem eingebunden --- dies erlaubt es innerhalb der Funktion LateUpdate() f{\"{u}}r jeden \textit{\ref{Frame}} den momentanen
+in das Unity Eventsystem eingebunden --- dies erlaubt es innerhalb der Funktion LateUpdate() f{\"{u}}r jeden \textit{\gls{Frame}} den momentanen
 Stand der Physiksimulation abzufragen und die Platte entsprechend zu rotieren / kippen.
 
 Der Kippwinkel der Platte wird durch zwei Faktoren bestimmt, das statische und das dynamische Ungleichgewicht. Die Informationen {\"{u}}ber
@@ -272,7 +272,7 @@ In der simulierten Welt k{\"{o}}nnen sich bis zu \gls{N} Roboter bewegen. Diese 
 Wie sie in der Simulation dargestellt werden, wird durch das grafische Modell bestimmt. Anhand dessen bestimmen sich auch die Dimensionen, diese werden f{\"{u}}r die Kollisionerkennung
 gebraucht. Die Dimensionen, zusammen mit der Masse, ergeben das physische Modell; dieses hat Auswirkungen auf die Simulation.
 
-\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\ref{khepera} entspricht. Die Grundform des Roboters ist
+\paragraph{Grafisches Modell} Mithilfe von Blender, einem 3D Designprogramm, wurde ein Robotermodell designt, das dem Kepheraroboter\hyperref{khepera} entspricht. Die Grundform des Roboters ist
 eine S{\"{a}}ule. Auf dieser befindet sich eine Lampe die den Energielevel angezeigt; daf{\"{u}} {\"{a}}ndert sich ihre Farbe von Gr{\"{u}}n (voll), {\"{u}}ber Gelb bis Rot (leer) .
 \todo{Bild}
 
@@ -342,7 +342,7 @@ Rechnung heraus.
 Um die Platte dann tats{\"{a}}chlich zu kippen wird die Unity Funktion `AddTorque()` benutzt. Dieser wird ein Kraftvektor {\"{u}}bergeben, um sich also einem
 bestimmtem Kippwinkel anzun{\"{a}}hren wird erst die Differenz zwischen den momentanen Winkeln und den gew{\"{u}}nschten errechnet und dann eventuell auf
 einen Maximalwert heruntergesetzt (damit die Platte sich langsam zu den gew{\"{u}}nschten Winkeln hinbewegt und nicht direkt "springt"); Dieser Wert kann dann
-als XXXX auf die Platte wirken und rotiert sie in die gew{\"{u}}nschte Richtung.
+auf die Platte wirken und rotiert sie in die gew{\"{u}}nschte Richtung.
 
 \subsection{Netzwerkschnittstelle}
 Zur Kommunikation mit den Studentenprogrammen gibt es die Netzwerkschnittstelle. Hierr{\"{u}}ber bekommen die Voter die Informationen {\"{u}}ber den momentanen
