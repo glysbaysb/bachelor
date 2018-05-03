@@ -378,3 +378,49 @@ Jede Voterinstanz ist daf{\"{u}}r zust{\"{a}}ndig ihren Roboter in der Simulatio
 Daf{\"{u}}r m{\"{u}}ssen die Steuerkommandos an die Physiksimulation weitergeleitet werden,
 dies {\"{u}}bernimmt das Interface. Der Controller ist komplett den Studenten {\"{u}}berlassen-
 Es gibt nur die Einschr{\"{a}}nkung das alle Kommunikation zur Simulation hin, {\"{u}}ber den Voter erfolgen muss.
+
+\subsection{Kommunikation zwischen den Systemteilen}
+Bei verteilten Systemen (wie diesem) ist einer der wichtigsten Punkte wie die Kommunikation zwischen den Systemteilen abl{\"{a}}uft.
+Hierbei kann zwischen zwei Gruppierungen unterschieden werden: einmal die Kommunikation zwischen Simulation und Voter und andererseits
+die Kommunikationen zwischen den Controllern und zwischen Controller und Voter. Da die letztere von den Studierenden geplant werden soll,
+wird sie hier nicht weiter untersucht.
+
+Da alle Voter in der gleichen Welt miteinander interagieren sollen, ist es am einfachsten wenn die Simulation ein Server ist, zu dem sich alle
+verbinden. Dieser Server kann dann intern die Simulation vorantreiben und nur die Ergebnisse dieser weiterversenden. Die Alternative
+w{\"{a}}re ein System ohne zentrale Instanz in dem die Simulation auf jedem Robter ausgef{\"{u}}hrt wird. In diesem Fall gibt es
+allerdings das Problem das sich der Status der Simulationen voneinander desychnorisieren kann, zum Beispiel wenn ein Voter
+eine schw{\"{a}}cheren CPU hat, die l{\"{a}}nger zur Berechnung eines Simulationstaktes braucht als die anderen Voter. Daher ist
+das Modell mit zentrale Instanz vorzuziehen; es stellt automatisch sicher das alle Voter (im Normalfall, also ohne Fehler)
+die gleichen Informationen kriegen und anhand dieser dann reagieren.
+
+Durch die Verwendung einer zentralen Instanz ist die eine H{\"{a}}lfte der Isolation zwischen verschiedenen Instanzen realisiert:
+Die Voter jeder Instanz verbinden sich mit ihrer Instanz, diese sendet ihre Informationen nur an die verbundenen Voter.
+\footnote{Der andere Teil --- die Isolation zwischen verschiedenen Instanzen in Bezug auf Controller und Voter --- kann entweder
+durch die Benutzung verschiedener Ports oder den Gebrauch mehrere \textit{subnets} erreicht werden.}
+
+Ein Nachteil dieser L{\"{o}}sung ist das sie einen \textit{single point of failure} erschafft. Fehler in dem Simulationsprogramm
+wirken sich direkt auf das ganze System aus; daher wird definiert das dieses keine Fehler enth{\"{a}}hlt.
+
+F{\"{u}}r den zeitlichen Ablauf in der Simulation sind zwei M{\"{o}}glichkeiten denkbar: eine rundenbasierte Abfolge oder eine
+Abfolge in Echtzeit. Bei der rundenbasieren Simulationstrategie wird der Status der Simulation immer nach festgelegten Intervallen
+ver{\"{a}}ndert. In diesem Fall w{\"{a}}re es denkbar das die Controller und Voter 250ms Zeit haben ihre Bewegungsvorschl{\"{a}}ge
+zu berechnen und diese an die Simulation schicken. Diese sammelt sie, wendet sie alle auf einmal an und versendet den neuen Status der
+Welt. Damit beginnt die n{\"{a}}chste Runde. Die Alternative ist es das Bewegungsvorschl{\"{a}}ge direkt angewendet werden, falls
+der Abstimmungsvorgang zwischen den Controllern also schneller vonstatten geht bewegen sich die Roboter auch {\"{o}}fter.
+
+Beide M{\"{o}}glichkeiten w{\"{a}}hren realisierbar, allerdings wird die Echtzeitmethode vorgezogen. Einerseits da, gerade bei einer
+3D-Ansicht, es unangehnem auff{\"{a}}llt wenn auch nur wenige Millisekunden nichts passiert --- es wirkt als w{\"{u}}rde die
+Simulation stocken. Desweiteren ist es auch eine unrealistische Vereinfachung gegen{\"{u}}ber der realen Welt w{\"{a}}hre,
+die sich nun einmal konstant ver{\"{a}}ndert.
+
+Dies hei{\ss} zwangsl{\"{a}}ufig das eine Event-gesteuerten Kommunikation eingesetzt werden muss. Sender und Empf{\"{a}}nger
+sollen zeitlich entkoppelt sein, haupts{\"{a}}chlich ihre eigenen Aufgaben durchf{\"{u}}hren und erst zu "passenden" Zeitpunkten
+mit den jeweils anderen Kommunikationspartnern interagieren. 
+
+Damit die Studenten sich nicht um die Kommunikation zur Simulation k{\"{u}}mmern m{\"{u}}ssen brauchen sie eine Bibliothek welche
+diese Funktionalit{\"{a}}t bereitstellt. Sie kann benutzt werden um einen neuen Roboter zu erstellen und diesen zu steuern.
+Im Fehlermodell gibt es auch eine Anforderung das einzelene Voter andere Informationen {\"{u}}ber den Status der Welt
+bekommen sollen als andere. Daher ist die Bibliothek nicht nur f{\"{u}}r die reine Kommunikation zust{\"{a}}ndig, sondern wird auch
+benutzt um diese Art von Fehler zu injizieren.
+
+
