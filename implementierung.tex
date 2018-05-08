@@ -605,6 +605,16 @@ Ladestation welche die Roboter aufl{\"{a}}dt falls diese nah genug an dieser sin
 schreiben welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Die Roboter haben einen bestimmten
 Grundumsatz der nach \todo{} dazu f{\"{u}}hren w{\"{u}}rde das der Roboter seine Energie verbraucht hat. Falls der Roboter allerdings
 konstant aufgeladen wird, sollte dieser Roboter sich auch nach viel l{\"{a}}ngere Zeitspannen nicht entleeren.
+\begin{subequations}\label{eq:eval:laden}
+\begin{align}
+ e_i(t = 0) = 1000 - 1 * 0
+ \intertext{Bei einem Grundumsatz von 1 pro Sekunde}
+	e_i(t = X) &= 1000 - 1 * X  = 0
+	\implies e_i(t = 1000) &= 0
+\end{align}
+\end{subequations}
+
+
 \todo{durchfuerung, vlt einfach diagramm mit fuellstatus ueber zeit?}
 
 \subsection{Evaluierung in Bezug auf Simulation - Fehlerinjektion}
