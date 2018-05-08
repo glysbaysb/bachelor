@@ -595,22 +595,23 @@ seperat getestet werden.
 
 Ein Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
 das den Roboter mit einer festen Geschwindigkeit im Kreis fahren l{\"{a}}sst und sich beendet sobald der Roboter sich entladen
-hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches) ist
-es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
+hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches
+laut Formel \ref{eq:entladen}) ist es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
+
 \todo{durchfuehrung. am coolsten waere ein balkendiagramm, x achse sind 3 Geschwindigkeit, dann jeweils ein Balken fuer errechnet
 und gemessen}
 
 Da in der Simulation die Roboter sich nicht nur entladen sollen, sondern m{\"{o}}glichst lange fahren sollen gibt es eine
 Ladestation welche die Roboter aufl{\"{a}}dt falls diese nah genug an dieser sind. Es ist m{\"{o}}glich ein Testprogramm zu
 schreiben welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Die Roboter haben einen bestimmten
-Grundumsatz der nach \todo{} dazu f{\"{u}}hren w{\"{u}}rde das der Roboter seine Energie verbraucht hat. Falls der Roboter allerdings
+Grundumsatz der nach 1000 Sekunden\footnote{Bei einem Grundumsatz von 1 pro Sekunde und keinerlei Bewegung}
+dazu f{\"{u}}hren w{\"{u}}rde das der Roboter seine Energie verbraucht hat. Falls der Roboter allerdings
 konstant aufgeladen wird, sollte dieser Roboter sich auch nach viel l{\"{a}}ngere Zeitspannen nicht entleeren.
 \begin{subequations}\label{eq:eval:laden}
 \begin{align}
- e_i(t = 0) = 1000 - 1 * 0
- \intertext{Bei einem Grundumsatz von 1 pro Sekunde}
-	e_i(t = X) &= 1000 - 1 * X  = 0
-	\implies e_i(t = 1000) &= 0
+ e_i(t = 0) = 1000
+	e_i(t = X) = 1000 - 1 * X  = 0 \\
+	\implies e_i(t = 1000) = 0
 \end{align}
 \end{subequations}
 
