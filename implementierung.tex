@@ -549,19 +549,24 @@ um die Platte auszubalancieren.
 \section{Zusammenfassung}
 Das Ziel dieser Bachelorarbeit war die Entwicklung einer {\"{U}}bungsaufgabe um Studierenden der Fachhochschule
 S{\"{u}}dwestfalen die Grundz{\"{u}}ge der Ausfallsicheren Systeme beizubringen. Dabei soll die schon bestehende
-{\"{U}}bungsaufgabe\ref{heizung} erg{\"{a}}nzt werden; \todo{}
+{\"{U}}bungsaufgabe\ref{heizung} erg{\"{a}}nzt werden.
 
 Dabei besteht das System aus mehreren Teilen. Zum einen das Simulationsprogramm das gleichzeitig auch als
 Server f{\"{u}}r die, von den Studenten zu programmierenden, Roboter fungiert. Die Roboter bestehen aus
 einem von den Studierenden programmierten Teil; dieser benutzt die libworld um sich mit der Simulation zu
 verbinden und die Roboter in ihr zu steuern.
 
-%\begin{enumerate}
-%	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
-%	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
-%	\item Es soll visuell ansprechend sein.
-%	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
-%\end{enumerate}
+Da das Hauptziel des Simulationswerkzeuges war den Studenten eine weitere {\"{U}}bungsaufgabe zur Verf{\"{u}}gung
+zu stellen, ist das Hauptbewertungskriterium wie gut diese Simulation f{\"{u}}r diesen Zweck geeignet ist.
+
+Die anderen Kriterien sind: \todo{}
+
+\begin{enumerate}
+	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
+	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
+	\item Es soll visuell ansprechend sein.
+	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
+\end{enumerate}
 
 Es ist allerdings m{\"{o}}glich auszuwerten ob die anderen Anforderungen erf{\"{u}}llt worden sind. Als erstes
 soll hier die M{\"{o}}glichkeit betrachtet werden (im Gegensatz zur Heizung) das mehrere Gruppen gleichzeitig
@@ -570,9 +575,44 @@ verbinden zusammen mit ein wenig Absprache der Gruppe kann dieses Ziel erreicht 
 auf diesem Server l{\"{a}}uft liest beim Start eine Konfigurationdatei ein, mit der verschiedene Einstellungen
 der Fehlerinjektion frei gew{\"{a}}hlt werden k{\"{o}}nnen.
 
+Mithilfe der Beispielimplementation (und einigen speziellen Testprogrammen) ist es m{\"{o}}glich einen Systemtest
+durchzuf{\"{u}}hren. Bei einem Systemtest werden die Komponenten nicht seperat voneinander getestet, sondern das
+gesamte System wird gleichzeitig getestet. Diese Art von Tests verifiziert das Zusammenspiel der Komponenten.
+
+Die Aufgabe welche von den Studierenden zu bew{\"{a}}ltigen ist, ist es die Platte so gut wie m{\"{o}}glich zu
+stabilisieren und dabei m{\"{o}}gliche Fehler zu erkennen und so gut wie m{\"{o}}glich zu beheben. Es muss also
+ein physikalisches und ein informationstechnologisches Problem gel{\"{o}}st werden. Daher sollte das System in
+Bezug auf die Anforderungen im Hinblick auf die Korrektheit der physikalischen Simulation und der korrekten
+Funktionalit{\"{a}}t der Fehlerinjektion getestet werden.
+
 \subsection{Evaluierung in Bezug auf Lernziel}
 Wie sehr diese Bachelorarbeit als Lehrmittel zeigt, kann noch nicht evauliert werden. Dies wird erst w{\"{a}}hrend
 der Benutzung durch die Studenten ersichtlich.
 
-\subsection{Evaluierung in Bezug auf Simulation}
-% Liste: Einmal ohne FI -> balanciert, mit FI auf X% muesste nach Ys ausfallen, nach Xs ist Tank leer -> tanken funktioniert
+\subsection{Evaluierung in Bezug auf Simulation - Physik}
+Die Physiksimulation simuliert Roboterbewegungen, das Entladen der Roboter und das Kippen der Platte. Diese k{\"{o}}nnen
+seperat getestet werden.
+
+Ein Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
+das den Roboter mit einer festen Geschwindigkeit im Kreis fahren l{\"{a}}sst und sich beendet sobald der Roboter sich entladen
+hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches) ist
+es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
+\todo{durchfuehrung. am coolsten waere ein balkendiagramm, x achse sind 3 Geschwindigkeit, dann jeweils ein Balken fuer errechnet
+und gemessen}
+
+Da in der Simulation die Roboter sich nicht nur entladen sollen, sondern m{\"{o}}glichst lange fahren sollen gibt es eine
+Ladestation welche die Roboter aufl{\"{a}}dt falls diese nah genug an dieser sind. Es ist m{\"{o}}glich ein Testprogramm zu
+schreiben welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Die Roboter haben einen bestimmten
+Grundumsatz der nach \todo{} dazu f{\"{u}}hren w{\"{u}}rde das der Roboter seine Energie verbraucht hat. Falls der Roboter allerdings
+konstant aufgeladen wird, sollte dieser Roboter sich auch nach viel l{\"{a}}ngere Zeitspannen nicht entleeren.
+\todo{durchfuerung, vlt einfach diagramm mit fuellstatus ueber zeit?}
+
+\subsection{Evaluierung in Bezug auf Simulation - Fehlerinjektion}
+Da die Fehlerinjektion die Fehler zuf{\"{a}}llig injeziert ist eine statistische Auswertung notwendig. Das hei{\ss}t praktisch das
+der gleiche Versuch mehrmals ausgef{\"{u}}hrt werden muss und der Anteil der "gegl{\"{u}}ckten" Versuche mit dem Erwartungswert
+verglichen wird.
+
+F{\"{u}}r den ersten Test wird die Fehlerinjektionswahrscheinlichkeit f{\"{u}}r den Motor A einmal auf ann{\"{a}}hrend null und einmal
+auf ann{\"{a}}hrend eins gesetzt. Dann wird die durchschnittliche Zeit verglichen die der Roboter braucht um eine Strecke mit fester
+L{\"{a}}nge abzufahren --- falls die Fehlerinjektion wirkt, also der Motor immer wieder mal tempor{\"{a}}r ausf{\"{a}}llt sollte die
+Zeit um die Strecke abzufahren proportional mit der Fehlerinjektionswahrscheinlichkeit steigen.
