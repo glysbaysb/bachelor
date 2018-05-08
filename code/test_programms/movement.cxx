@@ -16,6 +16,8 @@ typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
+
+	int fuel;
 } Info;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
@@ -46,7 +48,7 @@ int main(int argc, char** argv)
 	printf("Created robot %d\n", callbackInfo.robot);
 	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
 
-	while(1) {
+	while(callbackInfo.fuel > 0) {
 		callbackInfo.network->poll(1);
 	}
 
@@ -64,8 +66,9 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		printf("\tPos: (%f:%f)\n", ws->objects[i].x, ws->objects[i].y);
 		printf("\tMass: %f\n", ws->objects[i].m);
 
-		if(ws->objects[i].type == ROBOT) {
+		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
+			info->fuel = ws->objects[i].fuel; 
 
 			auto wheels = unicycle_to_diff(V, W);
 			moveRobot(info->worldCtx, ws->objects[i].id, wheels.x_, wheels.y_);

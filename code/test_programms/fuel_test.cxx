@@ -31,8 +31,11 @@ typedef struct {
 	int robot;
 	void* worldCtx;
 	Network* network;
+
 	std::vector<WAYPOINT> waypoints;
 	WAYPOINT nextWaypoint; 
+
+	int fuel;
 } Info;
 
 struct PI {
@@ -77,7 +80,7 @@ int main(int argc, char** argv)
 	printf("Created robot %d\n", callbackInfo.robot);
 	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
 
-	while(1) {
+	while(callbackInfo.fuel > 0) {
 		callbackInfo.network->poll(1);
 	}
 
@@ -208,6 +211,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			printf("\tFuel: %d\n", ws->objects[i].fuel);
+			info->fuel = ws->objects[i].fuel; 
 
 			auto m = _follow_path(ws->objects[i], info->waypoints, info->nextWaypoint);
 			moveRobot(info->worldCtx, ws->objects[i].id, m.first, m.second);
