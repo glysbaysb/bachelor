@@ -28,6 +28,7 @@ int V = 0,
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
+	callbackInfo.fuel = 1;
 
 	if(argc < 5) {
 		printf("%s host interface forward angle\n", argv[0]);

@@ -38,16 +38,6 @@ typedef struct {
 	int fuel;
 } Info;
 
-struct PI {
-	float i;
-	float e_prev;
-	timespec t_prev;
-
-	void clear() {
-		i = e_prev = 0.0f;
-		clock_gettime(CLOCK_MONOTONIC, &t_prev);
-	}
-};
 static struct {
 	PI onCircle;
 	PI toCircle;
@@ -63,6 +53,7 @@ int main(int argc, char** argv)
 	}
 
 	Info callbackInfo = {0};
+	callbackInfo.fuel = 1;
 	callbackInfo.waypoints = gen_path(WAYPOINTS, CIRCLE_RADIUS);
 
 	controllers.onCircle.clear();
@@ -85,39 +76,6 @@ int main(int argc, char** argv)
 	}
 
 	detachFromWorld(callbackInfo.worldCtx);
-}
-
-static float clamp(float v, float min, float max)
-{
-	assert(max > min);
-
-	if(v < min) {
-		v = min;
-	} else if(v > max) {
-		v = max;
-	}
-
-	return v;
-}
-
-static float PID(float e, PI& pi)
-{
-	const float P = 0.05f,
-		//D = 0.001f,
-		I = 0.01f;
-
-	timespec tmp;
-	clock_gettime(CLOCK_MONOTONIC, &tmp);
-	auto timeFrame = (pi.t_prev.tv_sec - tmp.tv_sec) * 1000 +
-		lround(pi.t_prev.tv_nsec / 1.0e6 - pi.t_prev.tv_nsec / 1.0e6);
-	clock_gettime(CLOCK_MONOTONIC, &pi.t_prev);
-
-	pi.i += e * timeFrame;
-	pi.i = clamp(pi.i, -10, 10);
-	float deriv = 0;// (e - pi.e_prev) / timeFrame;
-	pi.e_prev = e;
-
-	return e * P + pi.i * I/* + deriv * D*/;
 }
 
 /* reuse the static functions. kinda ugly but whatevs */

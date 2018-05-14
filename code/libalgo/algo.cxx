@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <numeric>
+#include <cassert>
 
 #include "algo.h"
 
@@ -153,4 +154,37 @@ Vector operator-(const WAYPOINT& a, const Vector& b)
 {
 	auto tmp = Vector(a);
 	return Vector(tmp.x_ - b.x_, tmp.y_ - b.y_);
+}
+
+static float clamp(float v, float min, float max)
+{
+	assert(max > min);
+
+	if(v < min) {
+		v = min;
+	} else if(v > max) {
+		v = max;
+	}
+
+	return v;
+}
+
+float PID(float e, PI& pi)
+{
+	const float P = 2.f,
+		//D = 0.001f,
+		I = 0.01f;
+
+	timespec tmp;
+	clock_gettime(CLOCK_MONOTONIC, &tmp);
+	auto timeFrame = (pi.t_prev.tv_sec - tmp.tv_sec) * 1000 +
+		lround(pi.t_prev.tv_nsec / 1.0e6 - pi.t_prev.tv_nsec / 1.0e6);
+	clock_gettime(CLOCK_MONOTONIC, &pi.t_prev);
+
+	pi.i += e * timeFrame;
+	pi.i = clamp(pi.i, -10, 10);
+	float deriv = 0;// (e - pi.e_prev) / timeFrame;
+	pi.e_prev = e;
+
+	return e * P + pi.i * I/* + deriv * D*/;
 }

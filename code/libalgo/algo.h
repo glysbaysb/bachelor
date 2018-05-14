@@ -239,4 +239,17 @@ std::vector<WAYPOINT> gen_path(unsigned int, const float radius);
 
 WAYPOINT get_nearest_waypoint(const Vector& myPos, const std::vector<WAYPOINT>& path);
 
+struct PI {
+	float i;
+	float e_prev;
+	timespec t_prev;
+
+	void clear() {
+		i = e_prev = 0.0f;
+		clock_gettime(CLOCK_MONOTONIC, &t_prev);
+	}
+};
+
+float PID(float e, PI& pi);
+
 #endif // ALGO_H
