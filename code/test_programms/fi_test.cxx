@@ -21,32 +21,27 @@ struct Info {
 
 	int fuel;
 
-	Vector last;
+	PI controller;
 	float rotation; //! saves the inital rotation as the robot approaches the edge
+	Vector rotPosition; //! position where to robot stopped moving and started rotation,
+						//! used to check whether the robot moved far away from that
+						//! position to not always oscillate betwween MOVE and ROTATE
 	bool initalized;
 
+	Vector last;
 	float distance; //! sum_{i} (curr - last) \\ last = curr
 
 	enum {
 		MOVE,
-		ROTATE
+		ROTATE,
+		MOVE_AWAY,
 	} state;
 
-	Info() : robot(0), worldCtx(nullptr), network(nullptr), fuel(0), initalized(false), distance(0.f), last(0, 0) {
+	Info() : robot(0), worldCtx(nullptr), network(nullptr), fuel(1),
+		initalized(false), distance(0.f), last(0, 0), rotPosition(0, 0), state(MOVE)
+	{
 	}
 };
-
-struct PI {
-	float i;
-	float e_prev;
-	timespec t_prev;
-
-	void clear() {
-		i = e_prev = 0.0f;
-		clock_gettime(CLOCK_MONOTONIC, &t_prev);
-	}
-};
-PI controller;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
 
@@ -58,8 +53,7 @@ int main(int argc, char** argv)
 	}
 
 	Info callbackInfo;
-
-	controller.clear();
+	callbackInfo.controller.clear();
 
 	callbackInfo.network = new Network(argv[2], 7777, 7777);
 
@@ -72,45 +66,12 @@ int main(int argc, char** argv)
 	printf("Created robot %d\n", callbackInfo.robot);
 	startProcessingWorldEvents(callbackInfo.worldCtx, &worldStatusCallback, (void*)&callbackInfo);
 
-	const auto DISTANCE = 5;
-	while(callbackInfo.fuel > 0 && callbackInfo.distance < DISTANCE) {
+	const auto DISTANCE = 100;
+	while(!callbackInfo.initalized || (callbackInfo.fuel > 0 && callbackInfo.distance < DISTANCE)) {
 		callbackInfo.network->poll(1);
 	}
 
 	detachFromWorld(callbackInfo.worldCtx);
-}
-
-static float clamp(float v, float min, float max)
-{
-	assert(max > min);
-
-	if(v < min) {
-		v = min;
-	} else if(v > max) {
-		v = max;
-	}
-
-	return v;
-}
-
-static float PID(float e, PI& pi)
-{
-	const float P = 0.05f,
-		//D = 0.001f,
-		I = 0.01f;
-
-	timespec tmp;
-	clock_gettime(CLOCK_MONOTONIC, &tmp);
-	auto timeFrame = (pi.t_prev.tv_sec - tmp.tv_sec) * 1000 +
-		lround(pi.t_prev.tv_nsec / 1.0e6 - pi.t_prev.tv_nsec / 1.0e6);
-	clock_gettime(CLOCK_MONOTONIC, &pi.t_prev);
-
-	pi.i += e * timeFrame;
-	pi.i = clamp(pi.i, -10, 10);
-	float deriv = 0;// (e - pi.e_prev) / timeFrame;
-	pi.e_prev = e;
-
-	return e * P + pi.i * I/* + deriv * D*/;
 }
 
 /* reuse the static functions. kinda ugly but whatevs */
@@ -133,36 +94,55 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 		/* initalize? */
 		if(!info->initalized) {
+			info->initalized = true;
 			info->last = myPos;
 		} else {
 			info->distance += (myPos - info->last).length();
+			info->last = myPos;
 		}
 
 		/* move */
-		printf("%lu:%d", time(nullptr), ws->objects[i].fuel);
+		printf("%lu;%d;%f;(%f:%f);\n", time(nullptr), ws->objects[i].fuel, info->distance, myPos.x_, myPos.y_);
 		info->fuel = ws->objects[i].fuel; 
 
 		switch(info->state) {
 		case Info::MOVE: {
-			// todo: is near end? break;
+			auto nearEnd = _isInsideCircle(myPos, 10);
+			if(!nearEnd) {
+				info->rotation = me.rotation;
+				info->state = Info::ROTATE;
+				break;
+			}
 
 			info->rotation = me.rotation;
-			auto m = unicycle_to_diff(1, 0);
+			auto m = unicycle_to_diff(200, 0);
 			moveRobot(info->worldCtx, ws->objects[i].id, m.x_, m.y_);
-
-			break;
 		}
+		break;
 		case Info::ROTATE: {
 			// rotation complete?
-			if(abs(me.rotation - info->rotation) > 175) {
+			auto rot = abs(me.rotation - info->rotation);
+			if(rot > 175) {
+				info->controller.clear();
+				info->rotPosition = myPos;
+				info->state = Info::MOVE_AWAY;
 				break;
 			}
 			
-			auto m = unicycle_to_diff(0, 1);
+			auto err = 180 - rot;
+			auto m = unicycle_to_diff(0, PID(err, info->controller));
 			moveRobot(info->worldCtx, ws->objects[i].id, m.x_, m.y_);
-
-			break;
 	    }
+		break;
+		case Info::MOVE_AWAY: {
+			if(abs((myPos - info->rotPosition).length()) > 2) {
+				info->state = Info::MOVE;
+			}
+			info->rotation = me.rotation;
+			auto m = unicycle_to_diff(200, 0);
+			moveRobot(info->worldCtx, ws->objects[i].id, m.x_, m.y_);
+	    }
+		break;
 		}
 	}
 }
