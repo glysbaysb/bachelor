@@ -172,8 +172,8 @@ static float clamp(float v, float min, float max)
 float PID(float e, PI& pi)
 {
 	const float P = 2.f,
-		//D = 0.001f,
-		I = 0.01f;
+		D = 0.01f,
+		I = 0.1f;
 
 	timespec tmp;
 	clock_gettime(CLOCK_MONOTONIC, &tmp);
@@ -183,8 +183,8 @@ float PID(float e, PI& pi)
 
 	pi.i += e * timeFrame;
 	pi.i = clamp(pi.i, -10, 10);
-	float deriv = 0;// (e - pi.e_prev) / timeFrame;
+	float deriv = (e - pi.e_prev) / timeFrame;
 	pi.e_prev = e;
 
-	return e * P + pi.i * I/* + deriv * D*/;
+	return e * P + pi.i * I + deriv * D;
 }

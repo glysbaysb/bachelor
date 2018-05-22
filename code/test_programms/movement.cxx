@@ -60,16 +60,13 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 {
 	Info* info = (Info*)additional;
 
-	printf("(%f:%f)\n", ws->xTilt, ws->yTilt);
 
 	for(size_t i = 0; i < ws->numOfObjects; i++) {
-		printf("#%d is a %s\n", ws->objects[i].id, ws->objects[i].type == ROBOT ? "robot" : "fuel station");
-		printf("\tPos: (%f:%f)\n", ws->objects[i].x, ws->objects[i].y);
-		printf("\tMass: %f\n", ws->objects[i].m);
-
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
-			printf("\tFuel: %d\n", ws->objects[i].fuel);
 			info->fuel = ws->objects[i].fuel; 
+
+			printf("%lu;%d;(%f:%f);\n", time(nullptr), ws->objects[i].fuel,
+					ws->objects[i].x, ws->objects[i].y);
 
 			auto wheels = unicycle_to_diff(V, W);
 			moveRobot(info->worldCtx, ws->objects[i].id, wheels.x_, wheels.y_);

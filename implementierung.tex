@@ -593,7 +593,40 @@ der Benutzung durch die Studenten ersichtlich.
 Die Physiksimulation simuliert Roboterbewegungen, das Entladen der Roboter und das Kippen der Platte. Diese k{\"{o}}nnen
 seperat getestet werden.
 
-Ein Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
+Das Bewegungsmuster der Roboter ist an den \textit{differential drive}\ref{diff} angelehnt. Dazu wird f{\"{u}}r den ersten Test ein
+Roboter nach festen Regeln bewegt. Durch die spezifischen Begebenheiten des \textit{differential drive} gibt es beispielsweise die einfachen
+Bewegungsmuster:
+\begin{enumerate}
+	\item Eine Bewegung gerade nach vorn
+	\item Eine Bewegung gerade nach hinten
+	\item Eine Rotation auf der Stelle (im Uhrzeigersinn)
+	\item Eine Rotation auf der Stelle (gegen den Uhrzeigersinn)
+\end{enumerate}
+
+Aus diesen k{\"{o}}nnen sich weitere Bewegungsarten zusammensetzen. Um zu testen ob in der Simulation die Bewegungsarten korrekt implementiert
+wurden, werden die abgefahren Wege f{\"{u}}r diese aufgezeichnet und mit den erwarteten Wegen verglichen.
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{bewegungsmuster_simpel}
+  \caption{Die Grundbewegungsarten}
+  \label{fig:move1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{bewegungsmuster_kombi}
+  \caption{Kombinierte Bewegungsarten}
+  \label{fig:move2}
+\end{subfigure}
+\caption{Verschiedene Bewegungsarten}
+\label{fig:move}
+\end{figure}
+
+Es wird ersichtlich das bei der Roatation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen
+Bewegung nach vorne und hinten erkennbar. \todo{ka ob die kombinierten richtig sind. waren jedenfalls 200 100 und 100 200}
+
+Ein weiterer Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
 das den Roboter mit einer festen Geschwindigkeit {\"{u}}ber die Platte fahren l{\"{a}}sst und sich beendet sobald der Roboter sich
 entladen hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches
 laut Formel \ref{eq:entladen}) ist es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
