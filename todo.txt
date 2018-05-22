@@ -42,7 +42,7 @@ Deadline | Module		|	was
 		 |				| Die Platte kippt zu krass, falsch, alles moegliche...
 		 |				|  z.B. 
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
-		 |				| Laden die Roboter noch?
+		 |				| Laden die Roboter noch? --> muesste fertig sein
 		 |	thesis	    | Komponentenbilder neu, z.B. fehlt manuelle
 		 |				|   Fehlerinjektion
 ---------+--------------+----------------
@@ -69,3 +69,5 @@ broadcast test:
 qemudev: nc -ub 192.168.38.255 7777 -s 192.168.38.182
 	socat - UDP-DATAGRAM:192.168.38.255:7777,broadcast
 rpidev01: nc -ulp 7777 192.168.38.181
+
+Im Unity Editor nicht "Is Trigger" anschalten, dann kollidiert es nicht mehr
