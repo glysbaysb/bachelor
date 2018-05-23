@@ -595,6 +595,7 @@ der Benutzung durch die Studenten ersichtlich.
 Die Physiksimulation simuliert Roboterbewegungen, das Entladen der Roboter und das Kippen der Platte. Diese k{\"{o}}nnen
 seperat getestet werden.
 
+\subsubsection{Bewegungsmuster}
 Das Bewegungsmuster der Roboter ist an den \textit{differential drive}\ref{diff} angelehnt. Dazu wird f{\"{u}}r den ersten Test ein
 Roboter nach festen Regeln bewegt. Durch die spezifischen Begebenheiten des \textit{differential drive} gibt es beispielsweise die einfachen
 Bewegungsmuster:
@@ -628,6 +629,7 @@ wurden, werden die abgefahren Wege f{\"{u}}r diese aufgezeichnet und mit den erw
 Es wird ersichtlich das bei der Roatation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen
 Bewegung nach vorne und hinten erkennbar. \todo{ka ob die kombinierten richtig sind. waren jedenfalls 200 100 und 100 200}
 
+\subsubsection{Auf/Entladen}
 Ein weiterer Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
 das den Roboter mit einer festen Geschwindigkeit {\"{u}}ber die Platte fahren l{\"{a}}sst und sich beendet sobald der Roboter sich
 entladen hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches
@@ -650,24 +652,33 @@ konstant aufgeladen wird, sollte dieser Roboter sich auch nach viel l{\"{a}}nger
 \end{align}
 \end{subequations}
 
-
-\todo{durchfuerung, vlt einfach diagramm mit fuellstatus ueber zeit?}
+Hierbei wurde ein Programm geschrieben welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Das Programm
+beendet sich sobald der Roboter sich komplett entladen hat --- falls dies in unter 1000s passiert, funktioniert das Aufladen des
+Roboters nicht, falls es l{\"{a}}nger dauert (oder sogar niemals passiert), funktioniert die Ladestation.
+\todo{durchfuehrung}
 
 \subsection{Evaluierung in Bezug auf Simulation - Fehlerinjektion}
 Da die Fehlerinjektion die Fehler zuf{\"{a}}llig injeziert ist eine statistische Auswertung notwendig. Das hei{\ss}t praktisch das
 der gleiche Versuch mehrmals ausgef{\"{u}}hrt werden muss und der Anteil der "gegl{\"{u}}ckten" Versuche mit dem Erwartungswert
 verglichen wird.
 
-F{\"{u}}r den ersten Test wird die Fehlerinjektionswahrscheinlichkeit f{\"{u}}r den Motor A einmal von (ann{\"{a}}hrend) null immer
+\subsubsection{Tempro{\"{a}}re Fehler}
+F{\"{u}}r den ersten Test wird die Fehlerinjektionswahrscheinlichkeit f{\"{u}}r den Motor A von (ann{\"{a}}hrend) null immer
 weiter erh{\"{o}}ht. Falls die Fehlerinjektion wirkt, also der Motor immer wieder mal tempor{\"{a}}r ausf{\"{a}}llt sollte die
 Zeit um eine Strecke abzufahren proportional mit der Fehlerinjektionswahrscheinlichkeit steigen.
-\footnote{In diesem Fall wurden 4 Messdurchg{\"{a}}nge aufgezeichnet und nur der Mittelwert der ersten 60s gezeigt.}
+\footnote{In diesem Fall wurden jeweils 4 Messdurchg{\"{a}}nge aufgezeichnet und nur der Mittelwert der ersten 60s gezeigt.}
 
 \begin{figure}
 	\centering
 	\includevisio[width=\textwidth]{zemsf}
 	\caption{Zur{\"{u}}ckgelegte Entfernung mit steigender Fehlerwahrscheinlichkeit}
-	\label{fig:}
+	\label{fig:zemsf}
 \end{figure}
 
+\subsubsection{Stuck-At Fehler}
+Neben dem Ausfall eines Motors soll auch ein \textit{stuck-at} Verhalten simuliert werden. Um dies zu testen wird der Roboter mit
+vorgegeben Motorgeschwindigkeiten fahren gelassen, und dabei die Fehlerwahrscheinlichkeit f{\"{u}}r ein Stuck-At Verhalten des
+rechten Motors immer weiter erh{\"{o}}ht. Anhand der zur{\"{u}}ckgelegten Wege ist es nun m{\"{o}}glich zu sehen ob der Roboter
+einen immer st{\"{a}}rker werdenen Rechtsdrall aufweist.
+\todo{durchfuehrung}
 

@@ -148,17 +148,15 @@ und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Cont
 Die simulierten Roboter {\"{a}}hneln dem Khepera Roboter und haben daher 2 Motoren. Diese beiden Motoren k{\"{o}}nnen unabh{\"{a}}ngig von einander fehlerhaft sein. Fehlerhaft
 hei{\ss}t hier:
 \begin{itemize}
-	\item Die H{\"{a}}ufigkeit von Hardwarefehler wird oft mithilfe der Badewannenkurve modelliert. Sie besagt,
-		dass Hardware entweder kurz nach Inbetriebnahme oder nach langer Betriebszeit mit hoher
-		Wahrscheinlichkeit fehlerhaft ist, und in der Zwischenzeit nur mit niedriger Wahrscheinlichkeit.
-		F{\"{u}}r die Motoren der Roboter wird ein vereinfachtes Modell genutzt, in dem die Wahrscheinlichkeit 
-		f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf
-		Null sinkt. Falls der Motor in dieser Zeit Fehler aufweist, bleibt diese Fehler auch.
-	\item Desweiteren kann ein Motor tempor{\"{a}}r ein \textit{stuck-at}-Verhalten aufweisen. Dieses
-		kann jederzeit passieren und entweder tempor{\"{a}}rer oder permament sein.
-		Die Wahrscheinlichkeiten f{\"{u}}r das Auftreten eines permamenten oder tempor{\"{a}}ren
-		\textit{stuck-at}-Fehlers sind unabh{\"{a}}ngig voneinander einstellbar.
+	\item Eine Art des Motorausfalls ist es das dieser keinerlei Leistung mehr erbringt.
+	\item Desweiteren kann ein Motor ein \textit{stuck-at}-Verhalten aufweisen.
 \end{itemize}
+
+Diese beiden Fehlerklassen k{\"{o}}nnen entweder tempor{\"{a}}r oder permament auftreten. Hierbei haben die tempor{\"{a}}ren Fehler
+eine konstante Auftrittswahrscheinlichkeit, wohingegen die permamenten Fehler einem vereinfachtes Modell der Badewannenkurve {\"{a}}hneln,
+in dem die Wahrscheinlichkeit  f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf Null sinkt.
+Es werden also die ersten zwei drittel der Badewannenkurve simuliert. Im Falle das w{\"{a}}hren der fr{\"{u}}hen Ausf{\"{a}}llzeit Fehler
+injeziert werden, bleiben diese auch.
 
 Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
 bei einem Roboter mit 2 fehlerhaften Motoren ist dies nicht der Fall. Es soll m{\"{o}}glich sein verschiedene 
