@@ -41,7 +41,7 @@ def parse_file(f):
 	
 	return data
 
-def mean_from_2d_dict(d):
+def min_max_from_2d_dict(d):
 	# get those keys that exist in all dicts
 	keys = set()
 	for k, v in d.iteritems():
@@ -50,14 +50,17 @@ def mean_from_2d_dict(d):
 		else:
 			keys &= set(v.keys())
 	
-	# find mean for each key
-	ret = []
+	# find min, max for each key
+	mins = []
+        maxs = []
 	for key in keys:
-		vals = [d[i][key] for i in xrange(0, len(d))]
+		vals = sorted([d[i][key] for i in xrange(0, len(d))])
+		mins.insert(int(key), vals[0])
+		maxs.insert(int(key), vals[-1])
 		#ret.insert(int(key), vals[len(vals) / 2])
-		ret.insert(int(key), sum(vals) / len(vals))
+		#ret.insert(int(key), sum(vals) / len(vals))
 
-	return list(keys), ret
+	return list(keys), mins, maxs
 
 
 if __name__ == '__main__':
@@ -79,27 +82,18 @@ if __name__ == '__main__':
 		lines[p][n] = parse_file(f)
 
 	colors = ['b', 'r', 'm', 'k', 'c', 'g']
-	styles = ['.', 'o', 'v', '*', 'd', 'H']
 	for p, measurements in lines.iteritems():
 		color = colors[p / 10] # p is in steps of ten, so divide to get the index
-		'''
-		plt.plot(measurements[0].keys(), measurements[0].values(), color, label="%i%%" % (p))
-		'''
-		'''
-		for n, measurement in measurements.iteritems():
-			style = styles[n]
-			if n == 0:
-				plt.plot(measurement.keys(), measurement.values(), color + style, label="%i%%" % (p))
-			else:
-				plt.plot(measurement.keys(), measurement.values(), color + style)
-		'''
-		style = styles[p / 10]
-		x, y = mean_from_2d_dict(measurements)
-		plt.plot(x[:60], y[:60], color, label="%i%%" % (p))
+		x, y_min, y_max = min_max_from_2d_dict(measurements)
+                plt.fill_between(x[:60], y_min[:60], y_max[:60], where=y_max>y_min, facecolor=color, label="%i%%" % (p), alpha=0.3)
+
+                plt.plot(x[:60:3], y_min[:60:3], color + '.-')
+                plt.plot(x[:60:3], y_max[:60:3], color + '.-')
 
 	leg = plt.legend(loc='best', shadow=True, fancybox=True)
 	leg.get_frame().set_alpha(0.5)
 
+        plt.grid(color='gray')
 	plt.xlabel("Zeit (in s)")
 	plt.ylabel("Zurueckgelegte Entfernung (in m)")
 	plt.suptitle("Zurueckgelegte Entfernung mit steigender Fehlerwahrscheinlichkeit")
