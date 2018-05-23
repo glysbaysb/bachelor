@@ -423,12 +423,9 @@ typedef struct SimulationObject {
 
 \clearpage
 \section{Beispielimplementation}
-
-\todo{20 ist okay, man könnte am Anfang aber nochmal den Bogen zum großen
-Bild/Ziel schliessen}
-
 Um das Prinzip dieser Simulation, ob den Studierenden des Moduls Ausfallsichere Systeme oder Besuchern, zu verdeutlichen, ist ein Teil der Bachelorarbeit die Implementierung einer
-Beispielimplementation.
+Beispielimplementation. Diese soll eine "abgespeckte" Version des von den Studierenden zu entwickelendes Programmes sein und dazu genutzt werden um zu {\"{u}}berpr{\"{u}}fen ob die
+Simulation tats{\"{a}}chlich als Lehrmittel eingesetzt werden kann.
 
 \paragraph{Ablauf} Jede Viertelsekunde sendet die Welt Statusinformationen aus. Diese Informationen werden von den Votern empfangen, k{\"{o}}nnen
 aber auf dem {\"{U}}bertragungsweg zum Controller potenziel verf{\"{a}}lscht worden sein. Also wird f{\"{u}}r jedes Objekt der Welt der Konsensalgorithmus ausgef{\"{u}}hrt. Wenn ein Konsens {\"{u}ber den Status der Welt hergestellt wurde, berechnet 
@@ -609,21 +606,16 @@ Bewegungsmuster:
 Aus diesen k{\"{o}}nnen sich weitere Bewegungsarten zusammensetzen. Um zu testen ob in der Simulation die Bewegungsarten korrekt implementiert
 wurden, werden die abgefahren Wege f{\"{u}}r diese aufgezeichnet und mit den erwarteten Wegen verglichen.
 \begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.4\linewidth]{bewegungsmuster_simpel}
-  \caption{Die Grundbewegungsarten}
-  \label{fig:move1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.4\linewidth]{bewegungsmuster_kombi}
-  \caption{Kombinierte Bewegungsarten}
-  \label{fig:move2}
-\end{subfigure}
-\caption{Verschiedene Bewegungsarten}
-\label{fig:move}
+	\centering
+	\includevisio[width=\textwidth]{bewegungsmuster_simpel}
+	\caption{Die Grundbewegungsarten}
+	\label{fig:move1}
+\end{figure}%
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{bewegungsmuster_kombi}
+	\caption{Kombinationen der Grundbewegungsarten}
+	\label{fig:move2}
 \end{figure}
 
 Es wird ersichtlich das bei der Roatation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen

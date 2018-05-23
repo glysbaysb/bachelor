@@ -1,6 +1,6 @@
 \clearpage
 \section{Physiksimulation}
-\todo{einleitung}
+In diesem Kapitel werden die ben{\"{o}}tigten physikalischen Grundlagen erl{\"{a}}utert.
 
 \subsection{Bewegungsmuster}
 In der Simulation sollen sich Roboter bewegen, daf{\"{u}}r muss festgelegt werden, wie diese sich bewegen. Denkbar w{\"{a}}ren verschiedene Bewegungsmuster, zum
@@ -100,19 +100,6 @@ Das Ziel ist es die Platte auszubalancieren, also soll gelten:
 \begin{equation}\label{eq:gleichgewicht}
 	V(x) = V(y) = 0
 \end{equation}
-
-\subsubsection{Kippwinkel}
-\todo{woanders hinbewegen. ist eher implementation}
-Diese Kr{\"{a}}fte f{\"{u}}hren dazu das die Platte kippt. Es ist definiert das der maximale Kippwinkel von 10\textdegree erreicht wird, falls sich alle
-Objekte (also vollgetankte Roboter und Ladestation) am {\"{a}}ussersten Rand der Platte befinden. Um den momentanen Kippwinkel zu ermittelen werden nun
-die momentan wirkenden Kr{\"{a}}fte mit den maximal m{\"{o}}glichen Kr{\"{a}}ften verrechnet; dies geschieht mit einem simplen Dreisatz:
-
-\begin{align}\label{eq:tilt-from-maxtilt}
-10\degree = Max, X\degree = Curr \\
-\Rightarrow \frac{Max}{Curr} = \frac{10}{X} \\
-\Rightarrow \frac{1}{X} = \frac{Max}{10 \times Curr} \\
-\Rightarrow X = \frac{10 \times Curr}{Max}
-\end{align}
 
 \subsubsection{Dynamischen Gleichgewicht}
 Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
@@ -283,7 +270,6 @@ nicht die Abarbeitung dieser Daten.
 	\caption{Publish-Subscribe}
 	\label{fig:pubsub}
 \end{figure}
-\todo{sieht kacke aus. kleiner und andere Auflösung?}
 
 \subsection{Netzwerklibrary}
 Um die Kommunikation zwischen den einzelnen Netzwerkteilnehmern nicht komplett selbst zu implementieren, k{\"{o}}nnen bereits bestehende Netzwerklibraries genutzt werden.
@@ -351,7 +337,7 @@ damit die Studenten nicht um \textit{exceptions} oder andere Spezialf{\"{a}}lle 
 die Benutzung eines Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
 
 \todo{warum ueberhaupt binarprotokoll? "Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
-entscheiden - gleiches Problem wie in 11." denke mal das heit die anforderungen klarer herausarbeiten}
+entscheiden - gleiches Problem wie in 11." denke mal das heisst die anforderungen klarer herausarbeiten}
 
 \subsection{Anforderungen}
 Das wichtigste Auswahlkriterium der Serialsierungslibrary ist, dass es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.

@@ -44,6 +44,8 @@ Deadline | Module		|	was
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
 		 |				| Laden die Roboter noch? --> muesste fertig sein
 		 |				| fehlerinjektion stuck at
+		 |				| gibt es den maximalen kippwinkel noch?
+		 @				| roboter lampe
 		 |	thesis	    | die neuen Bewegungsbilder, so das man was erkennt
 ---------+--------------+----------------
 
