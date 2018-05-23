@@ -11,9 +11,6 @@ def parse_file(f):
 
 	data = {}
 	for line in f:
-		if len(data) > 200:
-			break
-
 		# various other output, e.g. the robot id after it was created
 		if len(line) < 4:
 			continue
@@ -65,13 +62,14 @@ def min_max_from_2d_dict(d):
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
-		print "%s in ..." % (sys.argv[0])
+		print "%s samples in ..." % (sys.argv[0])
 		sys.exit(0)
 
-	lines = {}
+        samples = int(sys.argv[1])
 
+	lines = {}
 	pattern = re.compile("\d+") # filename is "fi_%p%_%n%.csv"
-	for filename in sys.argv[1:]:
+	for filename in sys.argv[2:]:
 		p, n = [int(x) for x in pattern.findall(filename)]
 		print p, n
 
@@ -85,10 +83,10 @@ if __name__ == '__main__':
 	for p, measurements in lines.iteritems():
 		color = colors[p / 10] # p is in steps of ten, so divide to get the index
 		x, y_min, y_max = min_max_from_2d_dict(measurements)
-                plt.fill_between(x[:60], y_min[:60], y_max[:60], where=y_max>y_min, facecolor=color, label="%i%%" % (p), alpha=0.3)
+                plt.fill_between(x[:samples], y_min[:samples], y_max[:samples], where=y_max>y_min, facecolor=color, label="%i%%" % (p), alpha=0.3)
 
-                plt.plot(x[:60:3], y_min[:60:3], color + '.-')
-                plt.plot(x[:60:3], y_max[:60:3], color + '.-')
+                plt.plot(x[:samples:3], y_min[:samples:3], color + '.-')
+                plt.plot(x[:samples:3], y_max[:samples:3], color + '.-')
 
 	leg = plt.legend(loc='best', shadow=True, fancybox=True)
 	leg.get_frame().set_alpha(0.5)

@@ -44,9 +44,7 @@ Deadline | Module		|	was
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
 		 |				| Laden die Roboter noch? --> muesste fertig sein
 		 |				| fehlerinjektion stuck at
-		 |	thesis	    | Komponentenbilder neu, z.B. fehlt manuelle
-		 |				|   Fehlerinjektion
-		 |				| die neuen Bewegungsbilder, so das man was erkennt ;)
+		 |	thesis	    | die neuen Bewegungsbilder, so das man was erkennt
 ---------+--------------+----------------
 
 
