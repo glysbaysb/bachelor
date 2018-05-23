@@ -111,7 +111,13 @@ den repSock. Beide Aufgaben m{\"{u}}ssen immer wieder ausgef{\"{u}}hrt werden, a
 nicht-blockierende Funktionen benutzt und sich in das Unityevensystem eingeh{\"{a}}ngt.
 
 \subsection{Interface - Voter}
+Am anderen Ende der Kommunikation, also auf Seite des Studentenprogrammes, {\"{u}}bernimmt dies die libworld. Dort werden die
+Nachrichten {\"{u}}ber Nanomsg empfangen, dekodiert und dann interpretiert, was zum aufrufen der Callbacks f{\"{u}}hrt\ref{interface}.
 
+Im Gegensatz zum Simulationsprogramm muss sich diese Seite der Schnittstelle in das Studentenprogramm einf{\"{u}}gen, allerdings
+gibt es ja keinerlei Vorgaben an dessen Architektur. Am simpelsten ist es daher wenn es die Aufgabe der Studierenden ist periodisch
+mithilfe des Interfaces nach neuen Nachrichten (also z.B. Weltstatusinformationen) zu horchen. Dies erm{\"{o}}glicht die Nutzung
+innerhalb eines eigenen Threads, oder in einer event-basierten Architektur beispielsweise mit timerfd.
 
 \clearpage
 \section{Fehlerinjektion}
