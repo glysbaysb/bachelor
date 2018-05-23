@@ -7,6 +7,6 @@ do
 
 	for j in `seq 0 4`
 	do
-		./build/test_programms/fi > test_results/fi-$i-$j.csv
+		./build/test_programms/fi localhost eth1 > test_results/fi-$i-$j.csv
 	done
 done
