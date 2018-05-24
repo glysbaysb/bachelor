@@ -1,4 +1,4 @@
-\clearpage
+arpage
 \section{Einf{\"{u}}hrung}
 \begin{figure}
 	\centering
@@ -8,12 +8,12 @@
 \end{figure}
 
 Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung eines
-Simulationswerkzeuges, das als {\"{U}}bungsaufgabe fungiert, zum Modul "Ausfallsichere Systeme" -- entfaltet,
+Simulationswerkzeuges, das als Praktikumsaufgabe fungiert, zum Modul "Ausfallsichere Systeme" -- entfaltet,
 im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der L{\"{o}}sungsweg 
 skizziert. 
 
 Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
-Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende {\"{U}}bungsaufgabe nicht optimal ist.
+Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende Praktikumsaufgabe nicht optimal ist.
 Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
 
 Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um 
@@ -76,19 +76,19 @@ muss ein Problembewusstsein geschaffen werden. Um dann wirklich ausfallsichere S
 \subsection{Aufgabenstellung} 
 Diese Kenntnisse zu vermitteln ist die Aufgabe des Moduls "Ausfallsichere Systeme" im Rahmen des Studienganges 
 "Technische Informatik". Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und einen praktischen Teil (eine 
-{\"{U}}bungsaufgabe). Die {\"{U}}bungsaufgabe soll eine M{\"{o}}glichkeit geben, das in der Vorlesung erworbene 
+Praktikumsaufgabe). Die Praktikumsaufgabe soll eine M{\"{o}}glichkeit geben, das in der Vorlesung erworbene 
 theoretische Wissen anzuwenden. Dabei werden die Studierenden aus den gelernten Techniken die richtigen 
 f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen abw{\"{a}}gen und sie dann zu 
 implementieren. Durch die  praktische Anwendung wird das Gelernte wiederholt und vertieft, was zu einem besseren 
 Verst{\"{a}}ndnis f{\"{u}}hrt. 
 
-Die Aufgabe dieser Bachelorarbeit ist die Konzeption einer solchen praktischen {\"{U}}bungsaufgabe. 
+Die Aufgabe dieser Bachelorarbeit ist die Konzeption einer solchen praktischen Praktikumsaufgabe. 
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt 
 nutzbar sein. Damit soll auch Menschen ohne Fachkenntnisse ein interessanter Einblick in die 
 Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
 
 \subsection{Die ausfallsichere Heizung}\label{heizung}
-Eine {\"{U}}bungsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
+Eine Praktikumsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
 L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
 beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
 
@@ -145,14 +145,14 @@ Gerade bei Doppelfehlern, in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper i
 ausfallen, gibt es die Gefahr, dass sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
 
 \subsection{Diskussion}
-Diese bestehende {\"{U}}bungsaufgabe hat allerdings einige Probleme, welche bei Konzeption und Bau einer neuen
-{\"{U}}bungsaufgabe vermieden werden sollen.
+Diese bestehende Praktikumsaufgabe hat allerdings einige Probleme, welche bei Konzeption und Bau einer neuen
+Praktikumsaufgabe vermieden werden sollen.
 
 Weil die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft 
 ($ \approx (13*13*55)cm^3$) aufheizen m{\"{u}}ssen, ist die Regelung sehr tr{\"{a}}ge. Damit ist es als
 Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
 bis die Temperatur eingeregelt wurde, dann ein Fehler injiziert wurde (zum Beispiel eine Heizung
-ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert wurde. Bei einer neuen {\"{U}}bungsaufgabe
+ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert wurde. Bei einer neuen Praktikumsaufgabe
 soll das System schneller reagieren, am besten sogar instantan.
 
 Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits, dass es bei gro{\ss}en Gruppen
@@ -160,7 +160,7 @@ an Sch{\"{u}}lern unm{\"{o}}glich wird, dass alle etwas f{\"{u}}hlen k{\"{o}}nne
 die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet, m{\"{u}}ssen
 alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die
 allermeiste Zeit mit warten und nur wenig Zeit mit produktiver Arbeit. Um dies zu vermeiden w{\"{a}}hre es
-hilfreich wenn die Ersatz{\"{u}}bungsaufgabe gleichzeitig von mehreren Teams unabh{\"{a}}nig voneinander bearbeitet
+hilfreich wenn die Ersatzpraktikumsaufgabe gleichzeitig von mehreren Teams unabh{\"{a}}nig voneinander bearbeitet
 werden k{\"{o}}nte.
 
 Das letzes Problem ist, dass die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- also wenn sie sich zu sehr aufheizt --
@@ -253,7 +253,7 @@ um sich in den Standard einzuarbeiten und sein Programm basierend auf diesem zu 
 Dies gilt gerade auch unter dem Gesichtspunkt, dass die Ausfallsicherheit im Vordergrund stehen sollte und
 nicht die Einarbeitung in einen Standard.
 
-Aus all diesen Gr{\"{u}}nden wurde entschieden, eine neue {\"{U}}bungsaufgabe zu entwickeln. Bei dieser wird
+Aus all diesen Gr{\"{u}}nden wurde entschieden, eine neue Praktikumsaufgabe zu entwickeln. Bei dieser wird
 allerdings die Idee dieser Aufgabe beibehalten; die neue Aufgabe soll nur die identifizierten Schwachstellen
 ausmerzen.
 
@@ -263,7 +263,7 @@ Um die vorhandene Simulationsidee ohne die vorhanden Schwachstellen neu zu erste
 (wie in \ref{anforderung} beschrieben erf{\"{u}}llt werden) ist es n{\"{o}}tig diese eher abstrakten Anforderungen in
 technische Merkmale zu "{\"{u}}bersetzen".
 
-Da es nicht m{\"{o}}glich sein soll die neue {\"{U}}bungsaufgabe zu besch{\"{a}}digen, muss es eine reine Softwareaufgabe
+Da es nicht m{\"{o}}glich sein soll die neue Praktikumsaufgabe zu besch{\"{a}}digen, muss es eine reine Softwareaufgabe
 sein. Diese k{\"{o}}nnen im schlimmsten Fall einfach noch einmal neu gestartet werden um (tempor{\"{a}}re) Fehler zu
 beheben.
 
