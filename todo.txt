@@ -1,33 +1,45 @@
-13. Erster Satz... wieder Mischung aus Lösung und Grundlagen.
+1: Uebungsaufgabe -> Praktikumsaufgabe
 
-14 Würde ich allgemeiner benennen, habe aber keine spontan gute Idee.
+Das ganze fungiert auch nicht als Aufgabe, sondern ist Grundlage einer solchen.
 
-Teil III:
+Den Text ganz vorne bei 1 wÃ¼rde ich hinter Motivation und Aufgabenstellung setzen.
 
-15
+1.1 Referenzen! ...z.B. zu Therac 25
 
-Insgesamt haben Sie hier sehr viele Vorgriffe.
+1.1 Ausfallsicherheit kommt sehr spÃ¤t... etwas mehr dazu.
 
-Fehlt zudem nicht noch einiges, z.B. die Ansatzpunkte für die Voter usw.?
+1.3 & 1.4 -> eigenes Kapitel
 
-16. Was hat das bei "Implementierung" zu suchen? Das ist durchaus
-relevant für den Entwurf...
+1.3 geht mir zu unsystematisch vor. Mehr zwischen Details der Technik, dem Lernziel und mÃ¶glichen AnsÃ¤tzen / Fehlermodellen trennen.
 
-Auch sollte man sagen, dass es hier um das zu simulierende Fehlermodell
-geht und nicht um das Fehlermodell Ihres Systems.
+1.4 text zu Wippe recht unmotiviert. Muss mehr eingefÃ¼hrt werden, zudem ist das Fehlermodell falsch. Da kann viel mehr ausfallen!
 
-16.1 Warum nicht einfach die Badewannenkurve? Nur das early life
-abzubilden halte ich nicht für zielführend, denn Ausfälle sind immer
-möglich. Ich würde eher so vereinfachen, dass man das early life
-weglässt und eine konstante Fehlerrate annimmt (also nur das useful life).
+3. Vielleicht etwas mehr Motivation fÃ¼r die balanzierenden Roboter als solche - also warum dieses Projekt?
 
-Rest von 16 ist noch nicht fertig, oder?
+Das Java-Anzeigeprogramm wurde viel spÃ¤ter dazugebaut... die originale GUI basiert auf Nextstep.
 
-17 ist okay
+Ebenso wird CORBA nur an der Stelle verwendet. Intern wird es nicht verwendet.
 
-18 braucht irgendeine Verknüpfung zu 15.1
+Fehlermodell statt Nennung von MÃ¶glichkeiten?
 
-19 Teile von 19 hätte ich mir in 15 gewünscht bei der Architektur
+5: Ziele priorisieren?
+
+5: Ich wÃ¼rde an den Anfang stellen, was "geliefert" wird und was die Studis machen mÃ¼ssen (nÃ¤mlich die Controller und deren Kommunikation). Das muss ganz klar deutlich gemacht werden, aktuell ist das aus dem Text heraus nicht nachvollziehbar.
+
+
+7: Fehlerfreiheit der SImulation besser begrÃ¼nden!
+
+5-7 lesen sich im Zusammenhang holprig und auch recht knapp.
+
+>8: Hier wÃ¼rde ich eher Freiheitsgrade des Fehlermodells beschreiben - was man dann konkret einstellt, ist ja ohnehin eine andere Sache. Sie argumentieren hier mit Schwierigkeitsgraden usw... ich wÃ¼rde statt dessen eher die "Stellschrauben" vorstellen, die das Fehlermodell parametrisierbar machen.
+kapiere ich nicht, ich sag doch was man alles aendern kann
+
+8.5 Wozu brauchen wir das in der Arbeit? Das ist doch eher fÃ¼r die Studis interessant.
+
+>10 Die Gameengine fÃ¤llt hier aus dem Himmel (oder ich habe das in 5-7 Ã¼bersehe)
+Mhm ich sag doch vorher warum ich Physik- und Grafik haben will und dann hier das die ja beides hat
+
+Teil IV Implementation habe ich nur Ã¼berflogen
 
 
 
