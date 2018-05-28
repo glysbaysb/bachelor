@@ -36,41 +36,22 @@ bietet enorme, jeden Tag ersichtlich werdende Vorteile, birgt jedoch auch Risike
 Denn durch die steigende Komplexit{\"{a}}t der Hard- und Software wird das System fehleranf{\"{a}}lliger. Es gibt 
 mehr Komponenten, also kann mehr kaputt gehen. Letztlich ist es nicht m{\"{o}}glich, in hochkomplexen Systemen ein 
 absolut perfektes, v{\"{o}}llig fehlerfreies System zu entwickeln. 
-Was bei einem Bowlingabend f{\"{u}}r die Mitspieler nicht besonders kritisch ist, wird zu einem Problem,in unmittelbar 
-lebenswichtigen Bereichen wie der Strom- und Wasserversorgung, Fahrassistenz und {\"{a}}hnlichem. Auch kleine 
-Fehler dort k{\"{o}}nnen enorme Konsequenzen haben. Ein tragisches Beispiel ist der Therac-25, eine Maschine zur 
-Strahlentherapie. Durch verschiedene Softwarefehler kam es unter bestimmten Umst{\"{a}}nden zu {\"{u}}berh{\"{o}}hten 
-Strahlendosen, die teilweise t{\"{o}}dlich endeten.
 
-Aus dem bislang Festgestellten ergibt sich die zwingende Notwendigkeit, Hard- und Software gr{\"{u}}ndlich zu 
-testen. Es gibt verschiedene Arten von Tests und Teststrategien, die das System aus unterschiedlichen Blickwinkeln 
-betrachten. Hierbei kann, zum Beispiel, zwischen static und dynamic testing unterschieden werden. 
+Gibt es M{\"{o}}glichkeiten das ein System auch im Fehlerfall noch (teilweise) funktioniert? Beispielsweise ist ein
+Auto nicht mehr nutzbar wenn der Motor --- aus welchem Grund auch immer --- ausf{\"{a}}llt. Ein Flugzeug dahingegen
+hat mehrere Motoren und kann deshalb den Ausfall eines Motores verkraften. In diesem Fall wird also die Ausfallsicherheit
+durch eine Redundanz (der Motoren) erh{\"{o}}ht. Dies ist aber keine universale L{\"{o}}sung, beispielsweise w{\"{a}}ren
+die Kosten f{\"{u}}, und die Gewichtszunahme durch, einen zweiten Motor bei einem normalen Auto nicht verkraftbar.
 
-Bei statischem Testen wird der Quellcode untersucht, das Programm oder  Programmbestandteile aber nicht 
-ausgef{\"{u}}hrt. Ein Beispiel daf{\"{u}}r ist static analysis, bei der der Programmcode auf auf{\"{a}}llige
-Codekonstrukte untersucht wird, die h{\"{a}}ufig zu Fehlern f{\"{u}}hren -- wie zum Beispiel die Benutzung nicht 
-initialisierter Variablen. 
+Redundanz an sich l{\"{o}}st auch nicht alle Probleme. Beispielsweise k{\"{o}}nnten Daten automatisch immer auf mehrere
+Festplatten geschrieben werden (\textit{RAID 1}). Falls aber nun festgestellt wird das die Daten die eigentlich gleich
+sein sollten auf zwei Festplatten unterschiedlich sind, ist es nicht klar welche der beiden Festplatten noch die korrekten
+Daten aufweise und auf welcher die Daten verf{\"{a}}lscht wurden. 
 
-Ein anderer Ansatz sind die code reviews, bei denen der programmierte Code mit weiteren Programmieren besprochen 
-wird, um nach dem Vier-Augen-Prinzip weitere Probleme zu identifizieren.
-
-Ein Beispiel f{\"{u}}r das dynamische Testen sind Unit-Tests, bei denen eine logische Einheit des Systems isoliert 
-getestet wird, in dem sie mit vorher festgelegten Parametern ausgef{\"{u}}hrt wird und das Ergebnis mit einem 
-erwarteten Ergebnis verglichen wird. Zum Beispiel k{\"{o}}nnen bei einem Navigationsger{\"{a}}t die Wegfindung, die 
-Anzeige und das Interpretieren der Kartendaten als eigene Module programmiert und getestet werden. Um die 
-Wegfindung zu testen, w{\"{u}}rde dann eine k{\"{u}}nstliche Karte genutzt und getestet, ob der 
-Wegfindungsalgorithmus f{\"{u}}r vorher definierte Strecken auf dieser Karte die k{\"{u}}rzesten Wege findet. 
-
-Es gibt allerdings auch F{\"{a}}lle, in denen es nicht machbar ist das System komplett durchzutesten. 
-Beispielsweise ist es zwar mit spezieller Hardware m{\"{o}}glich, den Befehlssatz einer CPU zu emulieren und zu 
-{\"{u}}berpr{\"{u}}fen, ob bestimmte Befehlskombinationen zu Problemen f{\"{u}}hren. Allerdings ist die 
-Geschwindigkeit der Tests um mehrere Gr{\"{o}}ssenordnungen kleiner als die der tats{\"{a}}chlichen CPU, so das 
-eine einzige x86 CPU in der ersten Sekunde mehr Instruktionen ausf{\"{u}}hrt als w{\"{a}}hrend des gesamten 
-Testzyklus \cite{kaplan}. Es ist also unm{\"{o}}glich die CPU komplett durchzutesten, was dazu f{\"{u}}hrt das CPUs 
-trotzdem noch Fehler enthalten, ein ber{\"{u}}hmtes Beispiel ist der Pentium F00F Bug.
-
-Da also Testen alleine nicht ausreicht ist es besonders wichtig bei der Designphase angefangen die Ausfallsicherheit immer einzuplanen. Daf{\"{u}}r
-muss ein Problembewusstsein geschaffen werden. Um dann wirklich ausfallsichere System zu entwickeln braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
+Durch die zunehmende Digitalisierung werden immer mehr Bereiche zunehmend technisiert. Dies f{\"{u}}hrt zwingend notwendig
+dazu die darin enthaltene Hard- und Software gr{\"{u}}ndlich zu  testen und vor allem schon w{\"{a}}hrend der Designphase
+die Ausfallsicherheit immer im Blick zu haben und einzuplanen. Daf{\"{u}}r muss als erstes ein Problembewusstsein geschaffen
+werden. Um dann wirklich ausfallsichere System zu entwickeln braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
 {\"{u}}ber das Design und die Entwicklung solcher.
 
 \subsection{Aufgabenstellung} 
