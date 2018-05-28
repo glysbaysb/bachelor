@@ -7,23 +7,6 @@
 	\label{fig:simulation}
 \end{figure}
 
-Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung eines
-Simulationswerkzeuges, die als Grundlage f{\"{u}}r eine Praktikumsaufgabe -- im Modul "Ausfallsichere Systeme" --
-fungieren soll entfaltet, im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der
-L{\"{o}}sungsweg skizziert. 
-
-Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
-Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende Praktikumsaufgabe nicht optimal ist.
-Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
-
-Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um 
-mechanische und physische Konzepte wie das \textit{differential steering} und auch um informationstechnologische Aspekte
-wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.
-
-Darauf aufbauend wird dann im dritten Teil die Implementierung beschrieben, mit besonderem Fokus auf dem 
-Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit 
-gezogen.
-
 \subsection{Motivation}
 Seit der Einf{\"{u}}hrung der Computer und vor allem seit dem rasanten Wachstums des Internets, werden Computer in immer 
 mehr Bereichen eingesetzt. Das betrifft nicht nur die eigentlichen "Personal-Computer" auf dem Schreibtisch, 
@@ -63,10 +46,30 @@ f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen abw{\"
 implementieren. Durch die  praktische Anwendung wird das Gelernte wiederholt und vertieft, was zu einem besseren 
 Verst{\"{a}}ndnis f{\"{u}}hrt. 
 
-Die Aufgabe dieser Bachelorarbeit ist die Konzeption einer solchen weiteren Praktikumsaufgabe. 
+Die Aufgabe dieser Bachelorarbeit ist die Konzeption eines Simulationswerkzeuges das zu einer solchen weiteren
+Praktikumsaufgabe werden soll. 
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt 
 nutzbar sein. Damit soll auch Menschen ohne Fachkenntnisse ein interessanter Einblick in die 
 Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
+
+\subsection{Gliederung}
+Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung eines
+Simulationswerkzeuges, die als Grundlage f{\"{u}}r eine Praktikumsaufgabe -- im Modul "Ausfallsichere Systeme" --
+fungieren soll entfaltet, im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der
+L{\"{o}}sungsweg skizziert. 
+
+Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
+Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende Praktikumsaufgabe nicht optimal ist.
+Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
+
+Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um 
+mechanische und physische Konzepte wie das \textit{differential steering} und auch um informationstechnologische Aspekte
+wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.
+
+Darauf aufbauend wird dann im dritten Teil die Implementierung beschrieben, mit besonderem Fokus auf dem 
+Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit 
+gezogen.
+
 
 \section{Die ausfallsichere Heizung}\label{heizung}
 Eine Praktikumsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
