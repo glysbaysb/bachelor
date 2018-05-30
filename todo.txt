@@ -1,3 +1,12 @@
+a) Wie soll die Arbeit abgegeben werden, also ausgedruckt, eingeschlagen,
+getackert?
+b) Sim geht nicht so wirklich, was tun?
+c) Feedback war das teilweise Sachen falsch sind (z.b. 1.4): besser Sachen
+raus als was falsches drin oder nicht?
+
+cxnmwpotrm&$)1
+-----
+
 1.3 geht mir zu unsystematisch vor. Mehr zwischen Details der Technik, dem Lernziel und mÃ¶glichen AnsÃ¤tzen / Fehlermodellen trennen.
 
 1.4 text zu Wippe recht unmotiviert. Muss mehr eingefÃ¼hrt werden, zudem ist das Fehlermodell falsch. Da kann viel mehr ausfallen!
@@ -19,7 +28,8 @@ Fehlermodell statt Nennung von MÃ¶glichkeiten?
 
 5-7 lesen sich im Zusammenhang holprig und auch recht knapp.
 
->8: Hier wÃ¼rde ich eher Freiheitsgrade des Fehlermodells beschreiben - was man dann konkret einstellt, ist ja ohnehin eine andere Sache. Sie argumentieren hier mit Schwierigkeitsgraden usw... ich wÃ¼rde statt dessen eher die "Stellschrauben" vorstellen, die das Fehlermodell parametrisierbar machen.
+>8: Hier wÃ¼rde ich eher Freiheitsgrade des Fehlermodells beschreiben - was man dann konkret einstellt, ist ja ohnehin eine andere Sache. Sie argumentieren hier mit Schwierigkeitsgraden usw..
+> ich wÃ¼rde statt dessen eher die "Stellschrauben" vorstellen, die das Fehlermodell parametrisierbar machen.
 kapiere ich nicht, ich sag doch was man alles aendern kann
 
 8.5 Wozu brauchen wir das in der Arbeit? Das ist doch eher fÃ¼r die Studis interessant.
@@ -44,7 +54,6 @@ Deadline | Module		|	was
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
 		 |				| Laden die Roboter noch? --> muesste fertig sein
 		 |				| fehlerinjektion stuck at
-		 |				| gibt es den maximalen kippwinkel noch?
 		 @				| roboter lampe
 		 |	thesis	    | die neuen Bewegungsbilder, so das man was erkennt
 ---------+--------------+----------------

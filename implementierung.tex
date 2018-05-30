@@ -333,11 +333,8 @@ wird dieser Roboter aufgeladen. Die Ladefunktion ~\ref{eq:laden} ist hier eine e
 \subsection{Die Platte}\label{plate}
 Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmigen Platte, die, basierend auf den Gewichten welche sich auf ihr befinden kippt.
 
-Die Kr{\"{a}}fte die auf die Platte wirken berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y}. Es wird definiert das die Platte um
-maximal 10\textdegree kippen kann; dies sei der Fall wenn die Ladestation und alle Roboter (vollgetankt) am {\"{a}}u{\ss}ersten Rand stehen. Diese theoretisch
-m{\"{o}}gliche Maximalkraft entspricht also den 10\textdegree; mithilfe des Dreisatzes ist es nun m{\"{o}}glich die tats{\"{a}}chlichen momentanen Kippwinkel
-zu errechnen.
-
+Die Kr{\"{a}}fte die auf die Platte wirken berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y} und der Summe aller Kr{\"{a}}fte des
+dynamischen Gleichgewichtes\ref{eq:schwinungen}.
 Allerdings wird diese Rechnung erst ausgef{\"{u}}hrt wenn sich 2 (oder mehr) Roboter auf der Platte befinden. Vorher wirkt das Gewicht der Ladestation zu
 stark und die Platte ist schon beim Start so stark gekippt das sie nicht mehr ausbalanciert werden kann.
 
@@ -618,7 +615,7 @@ werden Punkte die sp{\"{a}}ter angefahren werden dunkler gezeichnet als helle; d
 \end{figure}
 
 Es wird ersichtlich das bei der Roatation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen
-Bewegung nach vorne und hinten erkennbar. \todo{ka ob die kombinierten richtig sind. waren jedenfalls 200 100 und 100 200}
+Bewegung nach vorne und hinten erkennbar.
 
 \subsubsection{Auf/Entladen}
 Ein weiterer Testfall ist ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben
@@ -653,7 +650,7 @@ Da die Fehlerinjektion die Fehler zuf{\"{a}}llig injeziert ist eine statistische
 der gleiche Versuch mehrmals ausgef{\"{u}}hrt werden muss und der Anteil der "gegl{\"{u}}ckten" Versuche mit dem Erwartungswert
 verglichen wird.
 
-\subsubsection{Tempro{\"{a}}re Fehler}
+\subsubsection{Tempor{\"{a}}re Fehler}
 F{\"{u}}r den ersten Test wird die Fehlerinjektionswahrscheinlichkeit f{\"{u}}r den Motor A von (ann{\"{a}}hrend) null immer
 weiter erh{\"{o}}ht. Falls die Fehlerinjektion wirkt, also der Motor immer wieder mal tempor{\"{a}}r ausf{\"{a}}llt sollte die
 Zeit um eine Strecke abzufahren proportional mit der Fehlerinjektionswahrscheinlichkeit steigen.
