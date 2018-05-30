@@ -142,6 +142,11 @@ Das Ziel der Aufgabe ist es, Studierenden etwas {\"{u}}ber ausfallsichere System
 muss auch etwas ausfallen, denn nur dann wird getestet ob die Auswirkungen des Ausfalls abgemindert werden 
 konnten.
 
+Die Nutzung einer Simulation erm{\"{o}}glicht es auch die Ausfallwahrscheinlichkeiten bei Bedarf
+anzupassen, wohingegen die Ausfallwahrscheinlichkeiten bei einem real existierenden System fest sind und
+nur schwer (bis gar nicht) beeinflussbar sind. Dies erm{\"{o}}glicht es beispielsweise erst einmal ohne
+Fehlerinjektion zu arbeiten und dann die Fehlerrate nach und nach zu erh{\"{o}}hen.
+
 Im Fehlermodell wird festgelegt, was alles -- und auf welche Weise -- ausfallen kann. Dabei wird f{\"{u}}r jeden Bestandteil der Simulation ein eigenes Fehlermodell aufgestellt. Die Bestandteile
 der Simulation sind hier die simulierte Welt mit ihren Robotern (und den dazugeh{\"{o}}rigen Motoren/Aktoren
 und Sensoren), die Kommunikationswege zwischen Voter und Controller und die Controller selbst.
@@ -157,7 +162,7 @@ hei{\ss}t hier:
 Diese beiden Fehlerklassen k{\"{o}}nnen entweder tempor{\"{a}}r oder permament auftreten. Hierbei haben die tempor{\"{a}}ren Fehler
 eine konstante Auftrittswahrscheinlichkeit, wohingegen die permamenten Fehler einem vereinfachtes Modell der Badewannenkurve {\"{a}}hneln,
 in dem die Wahrscheinlichkeit  f{\"{u}}r einen Ausfall bis zu einer bestimmten Betriebslaufzeit einstellbar ist und danach auf Null sinkt.
-Es werden also die ersten zwei drittel der Badewannenkurve simuliert. Im Falle das w{\"{a}}hren der fr{\"{u}}hen Ausf{\"{a}}llzeit Fehler
+Es werden also die ersten zwei drittel der Badewannenkurve simuliert. Im Falle das w{\"{a}}hrend der fr{\"{u}}hen Ausfallzeit Fehler
 injeziert werden, bleiben diese auch.
 
 Da jeder der \gls{N} Roboter 2 Motoren hat, k{\"{o}}nnten theoretisch auch 2 Motoren kaputt gehen. Ein Roboter mit einem fehlerhaften Motor kann allerdings immernoch sinnvoll genutzt werden,
@@ -179,7 +184,7 @@ Platte balanciert k{\"{o}}nnen, brauchen sie Informationen {\"{u}}ber den Status
 (und die der anderen Roboter) Position in dieser. Diese Informationen sind direkt verf{\"{u}}gbar
 und m{\"{u}}ssen nicht, zum Beispiel odeometrisch, erst herausgefunden werden. In der realen Welt sind
 Sensoren, wie sie hier vielleicht h{\"{a}}tten simuliert werden k{\"{o}}nnen, nat{\"{u}}rlich manchmal 
-fehlerbehaftet. Um dies nachzubilden k{\"{o}}nnen, die Informationen {\"{u}}ber den Weltstatus auf
+fehlerbehaftet. Um dies nachzubilden k{\"{o}}nnen die Informationen {\"{u}}ber den Weltstatus auf
 verschiedene Arten fehlerhaft an den Roboter weitergeleitet werden.
 
 Als erstes ist es m{\"{o}}glich, dass der Roboter einfach keinerlei Informationen mehr bekommt, also ein \textit{omission failure} vorliegt. Ein \textit{stuck-at} Fehler liegt
@@ -209,7 +214,7 @@ der Resourceverteilung (RAM, CPU Zeit) kommen.
 \subsection{Auswirkungen}
 Nachdem Fehlermodelle f{\"{u}}r die verschiedenen Elemente des Systems entwickelt wurden, kann
 betrachtet werden, welche Auswirkungen die verschiedenen Fehler haben k{\"{o}}nnen. Hierbei werden nur
-die Auswirkungen in Bezug auf die Platte betrachtet.
+die Auswirkungen in Bezug auf die Stabilit{\"{a}}t der Platte betrachtet.
 
 \paragraph{Unkontrollierte Bewegung} Falls sich ein Roboter unkontrolliert bewegt (also ein oder
 mehrere Motoren einen \textit{stuck-at}-Fehler und die verbliebenden Motoren gar nicht mehr funktionieren)
