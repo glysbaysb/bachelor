@@ -85,10 +85,13 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 	Info* info = (Info*)additional;
 
+	bool found = false;
 	for(size_t i = 0; i < ws->numOfObjects; i++) {
 		if(ws->objects[i].type != ROBOT || ws->objects[i].id != info->robot) {
 			continue;
 		}
+		found = true;
+
 		auto me = ws->objects[i];
 		const auto myPos = Vector{me.x, me.y};
 
@@ -144,5 +147,10 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 	    }
 		break;
 		}
+	}
+
+	/* if the robot was not found (maybe it died?) then stop the programm too */
+	if(!found) {
+		info->fuel = 0;
 	}
 }

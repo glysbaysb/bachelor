@@ -22,8 +22,8 @@ typedef struct {
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
 
-int V = 0,
-	W = 0;
+int L = 0,
+	R = 0;
 
 int main(int argc, char** argv)
 {
@@ -31,12 +31,12 @@ int main(int argc, char** argv)
 	callbackInfo.fuel = 1;
 
 	if(argc < 5) {
-		printf("%s host interface forward angle\n", argv[0]);
+		printf("%s host interface L R\n", argv[0]);
 		return 0;
 	}
 
-	V = std::stoi(argv[3]);
-	W = std::stoi(argv[4]);
+	L = std::stoi(argv[3]);
+	R = std::stoi(argv[4]);
 
 	callbackInfo.network = new Network(argv[2], 7777, 7777);
 
@@ -68,8 +68,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 			printf("%lu;%d;(%f:%f);\n", time(nullptr), ws->objects[i].fuel,
 					ws->objects[i].x, ws->objects[i].y);
 
-			auto wheels = unicycle_to_diff(V, W);
-			moveRobot(info->worldCtx, ws->objects[i].id, wheels.x_, wheels.y_);
+			moveRobot(info->worldCtx, ws->objects[i].id, L, R);
 		}
 	}
 }

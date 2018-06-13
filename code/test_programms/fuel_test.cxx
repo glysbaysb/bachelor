@@ -38,9 +38,22 @@ typedef struct {
 	int fuel;
 } Info;
 
+struct ControllerTuple {
+	PI accel;
+	PI left;
+	PI right;
+
+	void clear() {
+		accel.clear();
+		left.clear();
+		right.clear();
+	}
+};
+
 static struct {
-	PI onCircle;
-	PI toCircle;
+	ControllerTuple  onCircle;
+	ControllerTuple  toCircle;
+
 } controllers;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
@@ -83,7 +96,7 @@ int main(int argc, char** argv)
 #include <libalgo/algo.cxx>
 
 
-static std::pair<int, int> _move(const Vector& curr, float rotation, const Vector& dest, PI& pi)
+static std::pair<int, int> _move(const Vector& curr, float rotation, const Vector& dest, ControllerTuple& pis)
 {
 	const auto len = (dest - curr).length() * 100.;
 	std::cout << "move from " << curr << " to " << dest << '\t' << len << '\n';
@@ -93,18 +106,24 @@ static std::pair<int, int> _move(const Vector& curr, float rotation, const Vecto
 	/* basically facing in the right direction? -> forward */
 	if(rot > -5 && rot < 5) {
 		std::cout << "accel\n";
+		pis.left.clear(); pis.right.clear();
+
 		// Problem: Vor oder zuruck? Links oder rechts?
-		auto ret = unicycle_to_diff(PID(len, pi), rot);
+		auto ret = unicycle_to_diff(PID(len, pis.accel), rot);
 		return {ret.x_, ret.y_};
 	} 
 	/* else: rotate in place */
 	else if(rot < -5 && rot > -180) {
 		std::cout << "left\n";
-		auto ret = unicycle_to_diff(0, PID(-rot, pi));
+		pis.accel.clear(); pis.right.clear();
+
+		auto ret = unicycle_to_diff(0, PID(rot, pis.left));
 		return {ret.x_, ret.y_};
 	} else if(rot > 5 && rot < 180) {
 		std::cout << "right\n";
-		auto ret = unicycle_to_diff(0, PID(-rot, pi));
+		pis.accel.clear(); pis.left.clear();
+
+		auto ret = unicycle_to_diff(0, PID(rot, pis.right));
 		return {ret.x_, ret.y_};
 	} else {
 		std::cout << rot << " not handled" << std::endl;
