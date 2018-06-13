@@ -39,10 +39,12 @@ if __name__ == '__main__':
 	colors = [('Greys', 'grey'),
                 ('Blues', 'blue'),
                 ('Greens', 'green'),
-                ('Reds', 'red')
+                ('Reds', 'red'),
+				('Oranges', 'orange'),
+				('Purples', 'purple'),
         ]
 	fig, ax = plt.subplots()
-        legend_elements = []
+	legend_elements = []
 
 	for name, measurement in data.iteritems():
 		print name, len(measurement)
@@ -59,11 +61,11 @@ if __name__ == '__main__':
 		ax.scatter(x, y, c=opacity, cmap=color[0])
                 legend_elements.append(Patch(facecolor=color[1], label=name))
 	
-        ''' Grid and size of plot '''
+	''' Grid and size of plot '''
 	ax.margins(0.05)
 	ax.grid(color='grey')
 
-        ''' Only print a few axis steps '''
+	''' Only print a few axis steps '''
 	ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
 	ax.xaxis.set_major_locator(ticker.MultipleLocator(base=2.5))
 	ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))

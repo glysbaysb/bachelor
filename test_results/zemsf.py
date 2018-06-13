@@ -91,7 +91,7 @@ if __name__ == '__main__':
 	leg = plt.legend(loc='best', shadow=True, fancybox=True)
 	leg.get_frame().set_alpha(0.5)
 
-        plt.grid(color='gray')
+	plt.grid(color='gray')
 	plt.xlabel("Zeit (in s)")
 	plt.ylabel("Zurueckgelegte Entfernung (in m)")
 	plt.suptitle("Zurueckgelegte Entfernung mit steigender Fehlerwahrscheinlichkeit")
