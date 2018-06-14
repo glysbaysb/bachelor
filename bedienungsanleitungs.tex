@@ -133,7 +133,11 @@ Beispiel. Da Fehler oft nach dem Modell der Badewannenkurve auftreten ist es in 
 des ersten Abschnitts dieser Kurve anzugeben.
 \lstinputlisting[language=json]{../fault_injector.json}
 
-Desweiteren sollen auch die physikalischen Parameter der Simulation an sich frei einstellbar sein; dies geschieht in `phys.json`. Dort k{\"{o}}nen, neben den Schwingkonstanten
+Motoren k{\"{o}}nen entweder ganz ausfallen oder auf einem bestimmten Wert fest stecken bleiben. Diese beiden Arten des Ausfalls k{\"{o}}nnen f{\"{u}}r jeden Motor seperat
+gesetzt werden. Dabei ist es auch m{\"{o}}glich diese zwei Arten der Fehlfunktion frei einer Fehlerart (konstant vs Badewannenkurve) zuzuordnen. Jede der 4 Kombinationen
+(engineAStuck, engineBStuck, engineABroken, engineBBroken) kann also entweder mit einer konstanten Wahrscheinlichkeit auftreten oder der vereinfachten Badewannenkurve folgend.
+
+Desweiteren sollen auch die physikalischen Parameter der Simulation an sich frei einstellbar sein; dies geschieht in `physics.json`. Dort k{\"{o}}nen, neben den Schwingkonstanten
 $\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel und weitere Einstellungen wie das Basisgewicht eines Roboters oder der Zeitabstand zwischen dem
 Senden der Weltstatusinformationen eingestellt werden.
 \lstinputlisting[language=json]{../physics.json}
