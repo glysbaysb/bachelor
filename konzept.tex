@@ -84,7 +84,8 @@ Interface basierend auf dem Fehlerinjektionsmanager die Informationen {\"{u}}ber
 Status der Welt verf{\"{a}}lscht.
 
 Um den Simulationsstatus verfolgen zu k{\"{o}}nnen ist eine visuelle Anzeige hilfreich. Daher
-ist ein Bestandteil der Simulation ein Anzeigeprogramm.
+ist ein Bestandteil der Simulation ein Anzeigeprogramm welches die Bewegungen der Roboter und weitere
+Elemente der Simulation anzeigt.
 
 Jede Voterinstanz ist daf{\"{u}}r zust{\"{a}}ndig ihren Roboter in der Simulation zu steuern.
 Daf{\"{u}}r m{\"{u}}ssen die Steuerkommandos an die Physiksimulation weitergeleitet werden,
@@ -225,7 +226,6 @@ kann dieser Roboter nicht mehr genutzt werden um die Platte auszubalancieren.
 	\caption{Fehlerbaum: Unkontrollierte Bewegung eines Roboters}
 	\label{fig:fault-tree-robot}
 \end{figure}
-\clearpage
 
 \paragraph{Inkorrekte Bewegungen} Ein Roboter bewegt sich "falsch", wenn seine Bewegung weder die Platte 
 ausbalanciert noch dazu gedacht, ist den Energiespeicher aufzuf{\"{u}}llen. Dies kann verschiedene Gr{\"{u}}nde 

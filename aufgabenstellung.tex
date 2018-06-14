@@ -27,9 +27,9 @@ durch eine Redundanz (der Motoren) erh{\"{o}}ht. Dies ist aber keine universale 
 die Kosten f{\"{u}}, und die Gewichtszunahme durch, einen zweiten Motor bei einem normalen Auto nicht verkraftbar.
 
 Redundanz an sich l{\"{o}}st auch nicht alle Probleme. Beispielsweise k{\"{o}}nnten Daten automatisch immer auf mehrere
-Festplatten geschrieben werden (\textit{RAID 1}). Falls aber nun festgestellt wird das die Daten die eigentlich gleich
+Festplatten geschrieben werden (\textit{RAID 1}). Falls aber nun festgestellt wird das die Daten welche eigentlich gleich
 sein sollten auf zwei Festplatten unterschiedlich sind, ist es nicht klar welche der beiden Festplatten noch die korrekten
-Daten aufweise und auf welcher die Daten verf{\"{a}}lscht wurden. 
+Daten aufweist und auf welcher die Daten verf{\"{a}}lscht wurden. 
 
 Durch die zunehmende Digitalisierung werden immer mehr Bereiche zunehmend technisiert. Dies f{\"{u}}hrt zwingend notwendig
 dazu die darin enthaltene Hard- und Software gr{\"{u}}ndlich zu  testen und vor allem schon w{\"{a}}hrend der Designphase
@@ -177,9 +177,10 @@ von mehreren Gruppen genutzt werden und stellt keine Einschr{\"{a}}nkungen an di
 oder der ben{\"{o}}tigten Konzepte.
 
 An der Humboldt Universit{\"{a}}t Berlin (in Zusammenarbeit mit Daimler Benz) wurde eine solche
-Simulation\cite{Werner00} entwickelt. In dieser soll eine simulierte Platte durch die Bewegung von 
-simulierten Robotern ausbalanciert werden. Das Gewicht jedes Roboters wirkt auf die Platte, bringt sie also
-aus dem Gleichgewicht.
+Simulation\cite{Werner00} entwickelt. Die Simulation wurde damals von Herrn Richling betreut, daher ist das Konzept
+und die Eigenarten der Implementierung bekannt. In dieser soll eine simulierte Platte durch die Bewegung von 
+simulierten Robotern ausbalanciert werden. Das Gewicht und die Bewegungen jedes Roboters wirkt auf die Platte, bringt
+sie also aus dem Gleichgewicht.
 
 Die Roboter m{\"{u}}ssen sich nun so bewegen, dass jede durch einen Roboter ausge{\"{u}}bte Kraft von einem
 anderen Roboter eliminiert wird. Damit es nicht m{\"{o}}glich ist, einmal eine Stellung einzunehmen,
@@ -193,12 +194,7 @@ verh{\"{a}}lt sich die naive Implementation im Falle eines \textit{timing faults
 Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. 
 
 Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem, 
-w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf
-einem Windowsrechner laufen kann. Die Teilnehmern kommunizieren {\"{u}}ber CORBA 
-miteinander\cite{predictablecorba}. CORBA ist ein Standard, {\"{u}}ber den Programme auf
-mehreren Rechnern miteinander kommunizieren k{\"{o}}nnen, auch falls sie in verschiedenen Programmiersprachen 
-geschrieben wurden. Zus{\"{a}}tzlich zur reinen RPC Funktionalit{\"{a}}t abstrahiert es, unter anderem, 
-Transkationen und Zeitsynchronisation.
+w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann. 
 
 In das System k{\"{o}}nnen Fehler injiziert werden, zum Beispiel kann ein Roboter ferngesteuert bewegt werden. Auch
 die Controller k{\"{o}}nnen entweder beendet werden oder ihnen kann die Netzwerkverbindung entzogen werden. Es ist
@@ -220,9 +216,8 @@ physikalische Simulation m{\"{u}}sste also erweitert werden.
 
 Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf 
 NeXTStep Rechner entwickelt -- diese existieren an der Fachhochschule S{\"{u}}dwestfalen nicht, das Programm 
-m{\"{u}}sste also erst portiert werden. Auch wird CORBA heutzutage nur noch wenig genutzt, also ist der Aufwand,
-um sich in den Standard einzuarbeiten und sein Programm basierend auf diesem zu entwickeln, nicht vertretbar. 
-Dies gilt gerade auch unter dem Gesichtspunkt, dass die Ausfallsicherheit im Vordergrund stehen sollte und
+m{\"{u}}sste also erst portiert werden. Der Aufwand um sich einzuarbeiten und sein Programm basierend auf
+NeXTStep zu entwickeln ist nicht vertretbar. Gerade auch weil die Ausfallsicherheit im Vordergrund stehen sollte und
 nicht die Einarbeitung in einen Standard.
 
 Aus all diesen Gr{\"{u}}nden wurde entschieden, ein Simulationswerkzeug zu entwickeln das als weitere Praktikumsaufgabe
