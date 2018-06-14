@@ -1,43 +1,61 @@
-a) Wie soll die Arbeit abgegeben werden, also ausgedruckt, eingeschlagen,
-getackert?
-b) Sim geht nicht so wirklich (siehe Bilder), was tun? War alles umsonst?
-c) Feedback war das teilweise Sachen falsch/ueberfluessig sind (z.b. 1.4, 8.5): besser Sachen
-raus als was falsches drin oder nicht?
+Hallo Herr Richling,
+
+ich habe sie heute nach dem Mittagessen verpasst, wollte ihnen aber schnell
+drei kleine Fragen stellen:
+
+a) Wie soll die Arbeit abgegeben werden, also zweifach ausgedruckt und dann
+eingeschlagen oder getackert oder etwas ganz anderes?
+b) Feedback von ihnen war das teilweise Sachen falsch/ueberfluessig sind
+(bezog sich da zum Beispiel auf das Fehlermodell der Wippe und die Fehlerbaume)
+Ist es fuer die Note allgemein besser ueberfluessige Sachen drin zu lassen
+oder herauszunehmen? Und wie sieht es bei unvollstaendigen oder gar falschen
+aus?
+c) Wenn sie sich nochmal in der Arbeit die Evaluation ansehen, gibt es dort
+ein Bild in dem der Roboter mit festen Geschwindigkeiten gefahren werden soll.
+Ich glaube die genauen Zahlen waren vL = 75, vR = 25 dies muesste
+normalerweise zu einer kreisfoermigen Bewegung fuehren. In der Simulation wird
+daraus allerdings eine irgendwie anders gestaltete Bewegung, der Roboter
+faengt an sich kreisfoermig zu bewegen und wechselt dann die Richtung und
+beginnt einen neuen Kreis. Und so weiter, usw.
+Mir ist momentan nicht klar woran das liegt, aber eigentlich heisst dies ja
+das die Simulation momentan nicht steuerbar und damit quasi wertlos ist.
+
+Ein schoenes langes Wochenende ihnen.
+Geert Ijewski
 
 cxnmwpotrm&$)1
 -----
 
-1.3 geht mir zu unsystematisch vor. Mehr zwischen Details der Technik, dem Lernziel und mÃ¶glichen AnsÃ¤tzen / Fehlermodellen trennen.
+>1.3 geht mir zu unsystematisch vor. Mehr zwischen Details der Technik, dem Lernziel und mÃ¶glichen AnsÃ¤tzen / Fehlermodellen trennen.
 
 
-3. Vielleicht etwas mehr Motivation fÃ¼r die balanzierenden Roboter als solche - also warum dieses Projekt?
+>3. Vielleicht etwas mehr Motivation fÃ¼r die balanzierenden Roboter als solche - also warum dieses Projekt?
 
-Das Java-Anzeigeprogramm wurde viel spÃ¤ter dazugebaut... die originale GUI basiert auf Nextstep.
+>Das Java-Anzeigeprogramm wurde viel spÃ¤ter dazugebaut... die originale GUI basiert auf Nextstep.
 
-Ebenso wird CORBA nur an der Stelle verwendet. Intern wird es nicht verwendet.
+>Ebenso wird CORBA nur an der Stelle verwendet. Intern wird es nicht verwendet.
 
-Fehlermodell statt Nennung von MÃ¶glichkeiten?
+>Fehlermodell statt Nennung von MÃ¶glichkeiten?
+zu aufwaendig
 
-5: Ziele priorisieren?
+>5: Ziele priorisieren?
 
-5: Ich wÃ¼rde an den Anfang stellen, was "geliefert" wird und was die Studis machen mÃ¼ssen (nÃ¤mlich die Controller und deren Kommunikation). Das muss ganz klar deutlich gemacht werden, aktuell ist das aus dem Text heraus nicht nachvollziehbar.
+>5: Ich wÃ¼rde an den Anfang stellen, was "geliefert" wird und was die Studis machen mÃ¼ssen (nÃ¤mlich die Controller und deren Kommunikation). Das muss ganz klar deutlich gemacht werden, aktuell ist das aus dem Text heraus nicht nachvollziehbar.
 
 
-7: Fehlerfreiheit der SImulation besser begrÃ¼nden!
+>7: Fehlerfreiheit der SImulation besser begrÃ¼nden!
 
-5-7 lesen sich im Zusammenhang holprig und auch recht knapp.
+>5-7 lesen sich im Zusammenhang holprig und auch recht knapp.
 
 >8: Hier wÃ¼rde ich eher Freiheitsgrade des Fehlermodells beschreiben - was man dann konkret einstellt, ist ja ohnehin eine andere Sache. Sie argumentieren hier mit Schwierigkeitsgraden usw..
 > ich wÃ¼rde statt dessen eher die "Stellschrauben" vorstellen, die das Fehlermodell parametrisierbar machen.
 kapiere ich nicht, ich sag doch was man alles aendern kann. Mhm naja hab
 jedenfalls einen neuen Absatz dazugepackt
 
-8.5 Wozu brauchen wir das in der Arbeit? Das ist doch eher fÃ¼r die Studis interessant.
-
 >10 Die Gameengine fÃ¤llt hier aus dem Himmel (oder ich habe das in 5-7 Ã¼bersehe)
 Mhm ich sag doch vorher warum ich Physik- und Grafik haben will und dann hier das die ja beides hat
 
-Teil IV Implementation habe ich nur Ã¼berflogen
+>Teil IV Implementation habe ich nur Ã¼berflogen
 
 
 

@@ -38,7 +38,7 @@ def parse_file(f):
 	
 	return data
 
-def min_max_from_2d_dict(d):
+def mean_from_2d_dict(d):
 	# get those keys that exist in all dicts
 	keys = set()
 	for k, v in d.iteritems():
@@ -47,29 +47,25 @@ def min_max_from_2d_dict(d):
 		else:
 			keys &= set(v.keys())
 	
-	# find min, max for each key
-	mins = []
-        maxs = []
+	# find mean for each key
+	ret = []
 	for key in keys:
-		vals = sorted([d[i][key] for i in xrange(0, len(d))])
-		mins.insert(int(key), vals[0])
-		maxs.insert(int(key), vals[-1])
+		vals = [d[i][key] for i in d.keys()]
 		#ret.insert(int(key), vals[len(vals) / 2])
-		#ret.insert(int(key), sum(vals) / len(vals))
+		ret.insert(int(key), sum(vals) / len(vals))
 
-	return list(keys), mins, maxs
+	return list(keys), ret
 
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
-		print "%s samples in ..." % (sys.argv[0])
+		print "%s in ..." % (sys.argv[0])
 		sys.exit(0)
 
-        samples = int(sys.argv[1])
-
 	lines = {}
+
 	pattern = re.compile("\d+") # filename is "fi_%p%_%n%.csv"
-	for filename in sys.argv[2:]:
+	for filename in sys.argv[1:]:
 		p, n = [int(x) for x in pattern.findall(filename)]
 		print p, n
 
@@ -80,18 +76,27 @@ if __name__ == '__main__':
 		lines[p][n] = parse_file(f)
 
 	colors = ['b', 'r', 'm', 'k', 'c', 'g']
+	styles = ['.', 'o', 'v', '*', 'd', 'H']
 	for p, measurements in lines.iteritems():
 		color = colors[p / 10] # p is in steps of ten, so divide to get the index
-		x, y_min, y_max = min_max_from_2d_dict(measurements)
-                plt.fill_between(x[:samples], y_min[:samples], y_max[:samples], where=y_max>y_min, facecolor=color, label="%i%%" % (p), alpha=0.3)
-
-                plt.plot(x[:samples:3], y_min[:samples:3], color + '.-')
-                plt.plot(x[:samples:3], y_max[:samples:3], color + '.-')
+		'''
+		plt.plot(measurements[0].keys(), measurements[0].values(), color, label="%i%%" % (p))
+		'''
+		'''
+		for n, measurement in measurements.iteritems():
+			style = styles[n]
+			if n == 0:
+				plt.plot(measurement.keys(), measurement.values(), color + style, label="%i%%" % (p))
+			else:
+				plt.plot(measurement.keys(), measurement.values(), color + style)
+		'''
+		style = styles[p / 10]
+		x, y = mean_from_2d_dict(measurements)
+		plt.plot(x, y, color, label="%i%%" % (p))
 
 	leg = plt.legend(loc='best', shadow=True, fancybox=True)
 	leg.get_frame().set_alpha(0.5)
 
-	plt.grid(color='gray')
 	plt.xlabel("Zeit (in s)")
 	plt.ylabel("Zurueckgelegte Entfernung (in m)")
 	plt.suptitle("Zurueckgelegte Entfernung mit steigender Fehlerwahrscheinlichkeit")
