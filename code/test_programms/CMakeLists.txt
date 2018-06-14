@@ -23,3 +23,7 @@ target_link_libraries(genmsgpack msgpackc)
 set(SOURCE_FILES_FI fi_test.cxx)
 add_executable(fi ${SOURCE_FILES_FI})
 target_link_libraries(fi pthread rpc network world)
+
+set(SOURCE_FILES_M2F move2fuel.cxx)
+add_executable(m2f ${SOURCE_FILES_M2F})
+target_link_libraries(m2f pthread rpc network world algo)
