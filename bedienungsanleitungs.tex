@@ -16,6 +16,9 @@
 \newcommand{\includevisio}[2][]{\includegraphics[#1]{#2}}
 \graphicspath{{../images/}}
 \usepackage{listings}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{booktabs}
 
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
@@ -69,7 +72,7 @@
 
 \thispagestyle{empty}
 \begin{center}
-	\includevisio{fhlogo}\\
+	\includevisio[width=\textwidth]{fhlogo}\\
 	\large
 	\textbf{Fachbereich f{\"{u}r}}
 	\textbf{Elektrotechnik und Informationstechnik}\\
@@ -80,7 +83,7 @@
 	\textbf{Benutzerhandbuch}\\
 	\Huge
 	\vspace*{1cm}
-	\textsf{\textbf{XXXXXXXXXXXXXXXXXXXX}}\\
+	\textsf{\textbf{Simulationswerkzeug f{\"{u}}r das Praktikum Ausfallsichere Systeme}}\\
 	\vspace*{3cm}
 	
 	\vfill
@@ -134,6 +137,39 @@ Desweiteren sollen auch die physikalischen Parameter der Simulation an sich frei
 $\omega_t$ und $\delta$, auch der Radius der Platte, der Maximalkippwinkel und weitere Einstellungen wie das Basisgewicht eines Roboters oder der Zeitabstand zwischen dem
 Senden der Weltstatusinformationen eingestellt werden.
 \lstinputlisting[language=json]{../physics.json}
+
+Eine genauere Beschreibung der in physics.json einstellbaren physikalsichen Gr{\"{o}}{\ss}en, folgt in dieser Tabelle.
+\begin{table}[h]
+\centering
+	\begin{tabular}{c | p{8cm}}
+	\toprule
+	Name & Funktionalit{\"{a}}t \\
+	\midrule
+	delta & Der Exponent im E-Funktionsterm der D{\"{a}}mpfung \\
+	omega & Der Faktor im Sinusterm der D{\"{a}}mpfung \\
+	%max_angle & Gibt den maximalen Kippwinkel der Platte an\\
+	redzoneSize & Wie gro{\ss} der gef{\"{a}}hrliche Bereich sein soll \\
+	dynamicForceDivider & Wie stark sollen die Kr{\"{a}}fte des dynamischen Gleichgewichts reduziert werden? \\
+	R & Der Radradius \\
+	L & Der Abstand zwischen den R{\"{a}}dern \\
+	zUnrealistic & Falls der Roboter h{\"{o}}her "fliegt", wird er entfernt \\
+	deAccelConstant & Gibt an wie stark sich die Beschleunigung pro Frame verringert \\
+	deRotateConstant & Gibt an wie stark sich die Rotationskraft pro Frame verringert \\
+	fuel\_weigth & So viel wiegt jede einzelne Ladungseinheit\\
+	robot\_base\_weight & Das Grundgewicht des Roboters \\
+	fuelstation\_weight & Das Gewicht der Ladestation \\
+	max\_fuel & Wie viele Ladungseinheiten passen maximal in den Roboter? \\
+	fuel\_per\_cycle & Was ist der Grundumsatz? \\
+	engine\_coefficent & $(vR + vL) / engine\_coefficent$ wird bei jedem Frame verbraucht \\
+	time\_delta\_between\_world\_status & In welchem Abstand werden Weltstatusinformationen abgeschickt? \\
+	debugHelpers & Sind die Debughilfselemente eingestellt? \\
+	dbgXradius & Welchen X-Radius soll die Debugellipse haben? \\
+	dbgYradius & Welchen Y-Radius soll die Debugellipse haben? \\
+	\bottomrule
+\end{tabular}
+\caption{Anforderungen an die Netzwerkbibliothek}
+\end{table}
+
 
 Diese Dateien werden beim Start des Programmes gelesen und ausgewertet. Zur Laufzeit ist keine {\"{A}}nderung der Parameter m{\"{o}}glich, hierf{\"{u}}r muss das Programm
 neu gestartet werden.

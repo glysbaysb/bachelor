@@ -1,1 +1,29 @@
-/mnt/c/Users/2016-12-27/Documents/ft_robot_simulation/physics.json
+{
+	"delta" : 0.5,
+	"omega_d" : 3.0,
+	"max_angle": 10.0,
+	"redzoneSize": 0.05,
+	"dynamicForceDivider": 10.0,
+	
+	"R":0.5,
+	"L":1.0,
+	
+	"zUnrealistic":5.0,
+	
+	"deAccelConstant": 0.9,
+	"deRotateConstant": 0.9,
+	
+	"fuel_weight" : 0.0003,
+	"robot_base_weight": 1.0,
+	"fuelstation_weight": 5.0,
+	
+	"max_fuel": 1000.0,
+	"fuel_per_cycle": 10.0,
+	"engine_coefficent": 50.0,
+	
+	"time_delta_between_world_status" : 0.1,
+	
+	"debugHelpers": true,
+	"dbgXradius": 5.0,
+	"dbgYradius": 5.0
+}

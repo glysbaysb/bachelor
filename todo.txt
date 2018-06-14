@@ -46,6 +46,8 @@ Deadline | Module		|	was
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
 		 |				| Laden die Roboter noch? --> muesste fertig sein
 		 @				| roboter lampe
+		 | misc			| mutex in libnetwork, beim warten auf robot id
+		 |				| udp packet groesse anpassen
 ---------+--------------+----------------
 
 

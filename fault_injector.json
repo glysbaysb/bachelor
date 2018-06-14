@@ -1,1 +1,24 @@
-/mnt/c/Users/2016-12-27/Documents/ft_robot_simulation/fault_injector.json
+{
+	"robot" : {
+		"engineAStuck" : {
+			"perm": {"after": 10, "chance" : 0.0001}
+		},
+		"engineABroken" : {
+			"temp": 0.0000
+		},
+		"engineBStuck" : {
+			"temp": 0.0001
+		},
+		"engineABroken" : {
+			"perm": {"after": 120, "chance" : 0.0001}
+		},
+		"maxEnginesBroken": 3,
+		"maxEnginesBrokenPerRobot": 0
+	},
+
+	"network" : {
+		"dropWorldStatus": 0.0001,
+		"fakeWorldStatus": 0.0001,
+		"dupWorldStatus": 0.0001
+	}
+}
