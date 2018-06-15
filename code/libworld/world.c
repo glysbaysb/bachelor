@@ -368,20 +368,16 @@ int startProcessingWorldEvents(void* ctx_, TypeGetWorldStatusCallback cb, void* 
 	return 0;
 }
 
-static float clamp(float v, float min, float max)
+static float clamp(int v, int lower, int upper)
 {
-	assert(max > min);
+	assert(upper > lower);
 
-	if(v < min) {
-		v = min;
-	} else if(v > max) {
-		v = max;
-	}
-
-	return v;
+#define MAX(a,b) ((a) > (b) ? a : b)
+#define MIN(a,b) ((a) < (b) ? a : b)
+	return MAX(lower, MIN(v, upper));
 }
 
-int moveRobot(void* ctx_, int id, float vL, float vR) {
+int moveRobot(void* ctx_, int id, int vL, int vR) {
 	WorldContext* ctx = (WorldContext*)ctx_;
 
 	/* is this request for a robot that this voter is allowed to control? */
@@ -396,10 +392,13 @@ int moveRobot(void* ctx_, int id, float vL, float vR) {
 	msgpack_sbuffer_init(&sbuf);
 	msgpack_packer_init(&pk, &sbuf, &msgpack_sbuffer_write);
 
+
 	msgpack_pack_array(&pk, 3);
 	msgpack_pack_int32(&pk, id);
-	msgpack_pack_int32(&pk, clamp(vL, -100., 100.));
-	msgpack_pack_int32(&pk, clamp(vR, -100., 100.));
+	vL = clamp(vL, -100, 100);
+	msgpack_pack_int32(&pk, vL);
+	vR = clamp(vR, -100, 100);
+	msgpack_pack_int32(&pk, vR);
 
 	/* create request with params */
 	void* out = NULL; size_t outLen = 0;
