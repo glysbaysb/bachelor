@@ -74,11 +74,17 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 			auto my = Vector(ws->objects[i].x, ws->objects[i].y);
 
-			auto phi = rotateTowards(my, ws->objects[i].rotation, info->fuelStation);
-			auto len = (info->fuelStation - my).length();
-
-			auto move = unicycle_to_diff(len, phi);
-			moveRobot(info->worldCtx, ws->objects[i].id, move.x_, move.y_);
+			auto phi = rotateTowards(my, ws->objects[i].rotation, info->fuelStation) / 3;
+			auto len = (my - info->fuelStation).length();
+			if(len < 1) {
+				moveRobot(info->worldCtx, ws->objects[i].id, 0, 0);
+			} else {
+				auto move = unicycle_to_diff(len * 10, phi);
+				while(move.length() < 10) {
+					move = Vector(move.x_ * 2, move.y_ * 2);
+				}
+				moveRobot(info->worldCtx, ws->objects[i].id, move.x_, move.y_);
+			}
 		}
 	}
 }
