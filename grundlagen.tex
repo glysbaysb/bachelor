@@ -5,16 +5,16 @@ In diesem Kapitel werden die ben{\"{o}}tigten physikalischen Grundlagen erl{\"{a
 In der Simulation sollen sich Roboter bewegen, daf{\"{u}}r muss festgelegt werden, wie diese sich bewegen. Denkbar w{\"{a}}ren verschiedene Bewegungsmuster, zum
 Beispiel der aufrechte bipedale Gang, eine Art "Hovercraft", ein zweiachsiges Auto, ein Rollstuhl und viele weitere.
 
-Hier wird das \textit{differential steering} Model vorgestellt und auch genutzt; es ist ein weit verbreitet, leicht verst{\"{a}}ndlich hat aber trotzdem bestimmte
-Limitierungen die eine Regelung n{\"{o}}tig machen.
+Hier wird das \textit{differential steering} Modell vorgestellt und auch genutzt; es ist weit verbreitet, leicht verst{\"{a}}ndlich, hat aber trotzdem bestimmte
+Limitierungen, die eine Regelung n{\"{o}}tig machen.
 
 \subsubsection{Differential Steering}\label{diffs}
 Beim \textit{differential steering} k{\"{o}}nnen die R{\"{a}}der nicht, wie z.B. beim Auto, geschwenkt werden -- sie sind fest. Eine Rotation wird durch eine unterschiedliche Rotationsgeschwindigkeit der R{\"{a}}der
 erm{\"{o}}glicht; bekannt ist dieses Prinzip vom Rollstuhl. Es kann zwischen drei Bewegungsarten unterschieden werden:
 \begin{itemize}
 \item Falls die R{\"{a}}der gleich schnell drehen, f{\"{a}}hrt der Roboter gerade nach vorne oder hinten.
-\item Falls die R{\"{a}}der unterschiedlich schnell, aber in die gleiche Richtung rotieren, wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
-\item Falls die R{\"{a}}der gleisch schneller, aber in unterschiedliche Richtunge rotieren, wendet der Roboter auf der Stelle.
+\item Falls die R{\"{a}}der unterschiedlich schnell rotieren wird eine Kurve gefahren. Dabei dreht sich der Roboter in Richtung des langsamer rotierenden Rades.
+\item Falls die R{\"{a}}der gleich schnell, aber in unterschiedliche Richtung rotieren, wendet der Roboter auf der Stelle.
 \end{itemize}
 
 Diese Bewegungen k{\"{o}}nnen auch mathematisch ausgedr{\"{u}}ckt werden. Dabei gibt $V_r(t)$ die Rotationsgeschwindigkeit des rechten Rades zum Zeitpunkt t an, w{\"{a}}hrend $V_l(t)$ das
@@ -23,27 +23,20 @@ Folgende Gleichungen aus \cite{Dudek2010, Egerstedt}:
 \begin{subequations}\label{eq:diffs}
 \begin{align}
 	\Theta(t) &= \Theta(0) + \frac{R}{L} \int_0^t \mathrm{v_R(t) - v_L(t)}\mathrm{d}t \label{eq:diffs-theta}\\
-\intertext{Mithilfe der Orientierung zum Zeitpunkt $t$ ist es m{\"{o}}glich die "Fahrtrichtung" zum
+	\intertext{Mithilfe der Orientierung ($\Theta$) zum Zeitpunkt $t$ ist es m{\"{o}}glich die "Fahrtrichtung" zum
 	Zeitpunkt $t$ zu bestimmen. Eine Multiplikation dieser mit den Geschwindigkeitsvektoren ergibt den
 	Bewegungsvektor zum Zeitpunkt $t$ - daraus l{\"{a}}sst sich die Position ermitteln:
 }
 	x(t) &= x(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) + v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-x}\\
-	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) \times \cos\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
+	y(t) &= y(0) + \frac{1}{2} \int_0^t \mathrm{\big(v_R(t) - v_L(t)\big) \times \sin\big(\Theta(t)\big)}\mathrm{d}t \label{eq:diffs-y}
 \end{align}
 \end{subequations}
 
-\begin{figure}
-	\centering
-	\includevisio{k4-detail1.png}
-	\caption{Der Khepera IV Roboter}
-	\label{fig:kheperaiv}
-\end{figure}
-
 
 \subsubsection{Wegfindung}
-Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nung auf allen Achsen) bewegen kann, wird die Wegfindung
-erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problems) k{\"{o}}nnte der Roboter sich erst auf der Stelle
-drehen, bis er das Ziel "anguckt" und sich dann gradlienig auf dieses zubewegen.
+Da ein \textit{differential steering} Roboter sich nicht-holonomisch (ohne Beschr{\"{a}}nkung auf allen Achsen) bewegen kann, wird die Wegfindung
+erschwert. Zur L{\"{o}}sung dieses Problems (auch bekannt als inverses kinematisches Problem) k{\"{o}}nnte der Roboter sich erst auf der Stelle
+drehen, bis er das Ziel "anguckt" und sich dann gradlinig auf dieses zubewegen.
 
 Falls einer der beiden Robotermotoren allerdings nicht vollst{\"{a}}ndig funktionst{\"{u}}chtig ist, ist dies nicht m{\"{o}}glich. Eine m{\"{o}}gliche
 Alternative w{\"{a}}hre es eine Kurve zu fahren, dies muss allerdings -- abh{\"{a}}ngig von der zur{\"{u}}ckzulegenden Strecke -- nicht immer m{\"{o}}glich
@@ -56,11 +49,13 @@ auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigonome
 \label{eq:M}
 	M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)
 \end{equation}
+\todo{sin und cos vertauschen, weil im einheitskreis andersrum}
 Die n{\"{a}}chste Bewegung gerade nach vorne wird dann anhand dieser Werte "aufgeteilt". Falls der Roboter
 in einem 90\textdegree Winkel nach rechts "guckt" ($M_i = \bigl(\begin{smallmatrix} 0 \\ 1 \end{smallmatrix}\bigr)$)
 w{\"{u}}rde er sich beim nach vorne fahren auf der Y-Achse nach rechts bewegen.
 
 Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ D_i = \gls{F} - P_i $
+\todo{striche drueber, buchstaben erklaeren}
 
 Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel
 fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des Winkels berechnet wird, das
@@ -71,7 +66,7 @@ und das Keuzprodukt bildet. Dabei gibt das Vorzeichen der Z Kompenente des resul
 des Winkels an.
 
 \subsection{Physiksimulation der Platte}
-Das zu erreichende Ziel ist es die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
+Das zu erreichende Ziel ist, die Platte m{\"{o}}glichst "still" in einem Gleichgewicht zu halten, also
 die Kippwinkel und die {\"{A}}nderungsrate des Kippwinkels zu minimieren.
 
 Dabei ist der Kippwinkel abh{\"{a}}ngig von der Verteilung der Gewichte auf der Platte, w{\"{a}}hrend die
@@ -80,13 +75,13 @@ werden in den nachfolgenden Kapiteln behandelt.
 
 \subsubsection{Statisches Gleichgewicht}
 Die Platte ist im statischen Gleichgewicht wenn alle Kr{\"{a}}fte/Gewichte (der Objekte, also der F{\"{u}}llstation und aller Roboter) die auf sie wirken, sich zu Null aufaddieren.
-Dabei werden die Objekte als Vektoren bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
+Dabei werden die Objekte als Vektoren, bestehend aus Gewicht und Abstand zum Mittelpunkt betrachtet.
 
 Um das Kippen der Platte auf der links-rechts und vorne-hinten Achse getrennt angeben zu k{\"{o}}nnen, werden diese getrennt voneinander ausgerechnet. Dabei wird das Hebelgesetz
 im eindimensionalen Fall (wie auf einer Wippe) angewandt, also Distanz mal Masse ergibt die Kraft in dieser Richtung
-\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en}.
+\footnote{Da die Positionsbestandteile (x und y) einzeln betrachtet werden, muss der Winkel nicht in die Rechnung einflie{\ss}en.}.
 
-F{\"{u}}r die in Links-Rechts wirkende Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt
+F{\"{u}}r die in Links-Rechts wirkenden Kr{\"{a}}fte gilt Gleichung ~\ref{eq:forces:x}, f{\"{u}}r die Kr{\"{a}}fte die beschreiben wie die Platte nach vorne-hinten gekippt
 gilt Gleichung ~\ref{eq:forces:y}.
 \begin{subequations}\label{eq:forces}
 \begin{align}
@@ -95,12 +90,12 @@ gilt Gleichung ~\ref{eq:forces:y}.
 \end{align}
 \end{subequations}
 
-Das Ziel ist es die Platte auszubalancieren, also soll gelten:
+Das Ziel ist es, die Platte auszubalancieren, also soll gelten:
 \begin{equation}\label{eq:gleichgewicht}
 	V(x) = V(y) = 0
 \end{equation}
 
-\subsubsection{Dynamischen Gleichgewicht}
+\subsubsection{Dynamisches Gleichgewicht}
 Eine Geschwindigkeits{\"{a}}nderung der Roboter erzeugt einen Impuls, auch dieser wirkt auf die Platte. Die Energie des Impulses ist proportional zur
 {\"{A}}nderung und schwingt dann langsam ab. Da ein geschlossenes System simuliert wird, ist dem Impuls eine gleich gro{\ss}e Kraft entgegen gerichtet.
 Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathematisch ausgedr{\"{u}}ckt:
@@ -110,8 +105,8 @@ Diese beiden Kr{\"{a}}fte f{\"{u}}hren zu einer (abklingenden) Schwingung. Mathe
 \cite{wiki:schwingung}
 \footnote{$\delta$ und $\omega_d$ sind in der Simulation frei einstellbar}
 
-Hierbei ist $s(t)$ ein Vektor, in dem die Geschwindigkeits{\"{a}}nderung in X-, Y- und Z-Richtung die jeweiligen Elemente sind. Um die gesamte Schwindung der
-Platte zu bestimmen werden die Ergebnissvektoren der einzelnen Roboter aufaddiert.
+Hierbei ist $s(t)$ ein Vektor, in dem die Geschwindigkeits{\"{a}}nderung in X-, Y- und Z-Richtung die jeweiligen Elemente sind. Um die gesamte Schwingung der
+Platte zu bestimmen, werden die Ergebnisvektoren der einzelnen Roboter aufaddiert.
 
 \clearpage
 \section{Game Engine}
@@ -137,12 +132,12 @@ ohne gro{\ss}en Aufwand auf mehrere System (hier Windows und Linux) portierbar s
 \paragraph{Einfache Benutzung} Das Hauptkriterium ist die einfache Benutzung. Dies beeinhaltet zum einen die
 tats{\"{a}}chliche Nutzung (also: gibt es einen graphischen Leveleditor? Wie kann die Interaktionen zwischen
 Objekten gesteuert werden?), zum anderen die Qualit{\"{a}}t der Dokumentation. Und schlie{\ss}lich wie verbreitet diese
-\textit{engine} ist, und damit auch wie einfach es ist bei Problemen Hilfestellungen zu bekommen.
+\textit{engine} ist, und damit auch wie einfach es ist, bei Problemen Hilfestellungen zu bekommen.
 
 Es gibt viele \textit{game engines}, genannt seien hier zum Beispiel Cryengine\cite{cryengine}, Unity, Blender, Source
 oder Cube. Bis auf die Cryengine w{\"{a}}hren alle kostenlos; auch die Plattformunabh{\"{a}}ngigkeit ist bei
 fast allen gegeben. Doch gerade beim letzten Kriterium stach Unity hervor. Nicht nur gibt es eine sehr gro{\ss}e
-Community welche bei Problemen helfen kann, eine gute Dokumentation sondern es ist auch m{\"{o}}glich in bekannten
+Community, welche bei Problemen helfen kann, eine gute Dokumentation, auch es ist auch m{\"{o}}glich in bekannten
 (normalen) Programmiersprachen die Engine zu steuern. Beispielsweise wird die Unreal Engine mit UnrealScript
 programmiert, w{\"{a}}hrend Unity in C\# oder JavaScript programmiert werden kann. Daher baut die Simulation auf
 Unity auf.
@@ -172,25 +167,25 @@ Ein integraler Teil moderner Videospiele ist eine realistische physikalische Umg
 \subsubsection{Scripting bei Unity}
 Alle Elemente der Unity Engine k{\"{o}}nnen vom Programmierer gesteuert werden, daf{\"{u}}r k{\"{o}}nnen
 die Skriptsprachen C\#, JavaScript und Boo genutzt werden.\cite{wiki:unity}
-Um dies zu erm{\"{o}}glichen ist es aus dem Skript heraus m{\"{o}}glich, alle Eigenschaften
+Um dies zu erm{\"{o}}glichen, ist es aus dem Skript heraus m{\"{o}}glich, alle Eigenschaften
 der Objekte \footnote{Dies beinhaltet nicht nur die Roboter und F{\"{u}}llstationen sondern auch die Kamera
 oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet, dass solange ein Objekt mit dieser kollidiert, testet, ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
-Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen die von UnityEngine.MonoBehaviour
-abstammen und registriert sind werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
+Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen\todo{funktionen in diesen}, die von UnityEngine.MonoBehaviour
+abstammen und registriert sind, werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
 der Funktion ab\footnote{Vgl. \cite{unityexecorder}}, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist
 und Inputevents behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
-werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen die in dieser
+werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen, die in dieser
 Funktion vorgenommen werden, haben also schon Auswirkungen auf den momentanen Frame. Desweiteren muss der Klassenname innerhalb einer Datei so
 hei{\ss}en wie die Datei selbst.
 
-Da Konstruktor und Dekonstrktor nicht {\"{u}}berschrieben werden k{\"{o}}nnen, gibt es die virtual functions Start() und OnDestroy(). Diese
-{\"{u}}bernehmen die Aufgaben des Konstruktor und Dekonstrktors.
+Da Konstruktor und Dekonstruktor nicht {\"{u}}berschrieben werden k{\"{o}}nnen, gibt es die virtual functions Start() und OnDestroy(). Diese
+{\"{u}}bernehmen die Aufgaben des Konstruktor und Dekonstruktors.
 
-Es gibt auch weitere {\"{u}}berschreibare Funktionen, mit denen es m{\"{o}}glich ist sich in verschiedene Zwischenschritte des Renderprozesses
+Es gibt auch weitere {\"{u}}berschreibbare Funktionen, mit denen es m{\"{o}}glich ist, sich in verschiedene Zwischenschritte des Renderprozesses
 einzuklinken (zum Beispiel OnWillRenderObject, OnPostRender, ...). Das gleiche gilt auch f{\"{u}}r Inputevents (beispielsweise OnMouseMove) und
 die Ereignisse der Physikengine (OnCollisionStart(), ...).
 
@@ -198,66 +193,69 @@ die Ereignisse der Physikengine (OnCollisionStart(), ...).
 \section{Kommunikation}
 
 \subsection{Interaktionsmuster}
-In einem verteilten System (wie hier) ist es n{\"{o}}tig das die Kommunikationspartner miteinander kommunizieren.
+In einem verteilten System (wie hier) ist es n{\"{o}}tig, dass die Kommunikationspartner miteinander kommunizieren.
 Dies ist auf verschiedene Arten m{\"{o}}glich, daher werden hier exemplarisch einige dargestellt und daraus eine
 Auswahl getroffen um die speziellen Anforderungen dieses Systems zu erf{\"{u}}llen.
 
 \subsubsection{Message Passing}
-Beim kommunizieren miteinander werden Informationen ausgetauscht. Die simpelste Art der Kommunikation zwischen
-Programmen ist das \textit{message passing}, hierbei schickt ein Kommunikationspartner eine Nachricht die an einen bestimmten anderen
+Beim Kommunizieren miteinander werden Informationen ausgetauscht. Die simpelste Art der Kommunikation zwischen
+Programmen ist das \textit{message passing}, hierbei schickt ein Kommunikationspartner eine Nachricht, die an einen bestimmten anderen
 Kommunikationspartner adressiert ist.
 
-Bei diesem Interaktionsmuster ist es die Aufgabe der Programmierer die Nachricht zu interpretieren
+Bei diesem Interaktionsmuster ist es die Aufgabe der Programmierer, die Nachricht zu interpretieren
 (also die {\"{U}}bersetzung in ein verst{\"{a}}ndliches Format, zum Beispiel unter Beachtung der Byte-Reihenfolge) und
 basierend auf den ausgetauschten Nachrichten zum Beispiel eine Frage - Antwort Beziehung herzustellen.
 
-
 \subsubsection{Request-Reply}
 Bei einer Kommunikation zwischen zwei Menschen / System, oder allgemeiner: Kommunikationspartnern,
-ist meistens so das einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
+ist meistens so, dass einer redet, dann die andere Person antwortet. Es gibt also \textit{request}
 und \textit{reply}.
 
-Diese Form der Kommunikation ist gut geeignet f{\"{u}} Client-Server Kommunikation wie das
-aufrufen von Websites. Allerdings kann diese Art von Kommunikation zu Problemen f{\"{u}}hren falls sich die
+Diese Form der Kommunikation ist gut geeignet f{\"{u}}r Client-Server Kommunikation wie das
+Aufrufen von Websites. Allerdings kann diese Art von Kommunikation zu Problemen f{\"{u}}hren, falls sich die
 Informationen schnell {\"{a}}ndern -- die verschiedenen Clients fragen den Server leicht zeitversetzt an und
 agieren dann vielleicht basierend auf leicht unterschiedlichen Informationen.
 
 Um das \textit{Request-Reply} Interaktionsmuster einfacher an die verschiedenen Anforderungen verschiedener
 Probleme anzupassen, gibt es die \textit{Remote Procedure Calls} als Spezialisierung des \textit{request-
-reply}. Dabei wird versucht die ganze Kommunikation so weit zu verstecken und abstrahieren das es so wirkt
+reply}. Dabei wird versucht, die ganze Kommunikation so weit zu verstecken und abstrahieren, das es so wirkt
 als k{\"{o}}nnten Funktion \textit{remote} (also in einem anderen Programm auf einem anderen Rechner) wie
 lokale Funktionen aufgerufen werden. Dies erleichtert die Arbeit der Programmierer enorm, sie m{\"{u}}ssen
 sich (im besten Fall) gar keine Gedanken mehr {\"{u}}ber die Kommunikation machen und es werden nur
 ohnehin bekannt Sprachkonstrukte (der Aufruf von Funktionen) genutzt.
 \footnote{Gerade bei der Programmierung von fehlertoleranten Systemen kann diese Abstraktion allerdings
 kontraproduktiv sein. Beispielsweise wird durch die Abstraktion auf einen Funktionsaufruf die M{\"{o}}glichkeit
-einen Timeout vorzugeben "verbaut"}
+einen Timeout vorzugeben "verbaut".}
 
-F{\"{u}}r die Programmierenden hat dieses Modell den Vorteil das die Nachricht des anderen Systems schon
+F{\"{u}}r die Programmierenden hat dieses Modell den Vorteil, dass die Nachricht des anderen Systems schon
 interpretiert wurde, es muss also weniger Quellcode selbst geschrieben werden.
 
 \subsubsection{Publish-Subscribe}
-Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Votrag.
+Die andere intuitiv verst{\"{a}}ndliche Kommunikationsform ist der Vortrag.
 
 Die Simulation muss mit einer nicht vorab bestimmbaren Anzahl von Votern/Robotern arbeiten.
 Die Kommunikationspartner k{\"{o}}nnen auch jederzeit ausfallen oder es k{\"{o}}nnen neue hinzukommen.
-Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}hre es, die Kommunikation {\"{u}}ber UDP Broadcasts
+Eine erste L{\"{o}}sungm{\"{o}}glichkeit w{\"{a}}re es, die Kommunikation {\"{u}}ber UDP Broadcasts
 laufen zu lassen. Dadurch w{\"{u}}rden alle Kommunikationspartner automatisch die Nachricht empfangen, ohne
-dass sich der Sender darum k{\"{u}}mmern muss an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
+dass sich der Sender darum k{\"{u}}mmern muss, an wen Nachrichten gesendet werden m{\"{u}}ssen. Da die
 Voter aber in unterschiedlichen Subnetzen sein k{\"{o}}nnen, ist dies nicht m{\"{o}}glich.
 
 Abhilfe schafft das Publish-Subscribe Kommunikationspattern\cite{pubsub}. Dort gibt es einen Publisher (in
 diesem Fall die Simulation) und Subscriber (die Voter/Roboter). Die Subscriber verbinden sich mit dem
 Publisher und teilen ihm mit, welche Art von Nachrichten sie interessiert. Der Publisher verteilt dann die
-Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Informationen an alle Subscriber zu denen momentan ein Kontakt m{\"{o}}glich ist.
+Nachrichten, die zu nicht vorhersehbaren Zeitpunkten kommen, anhand dieser Informationen an alle Subscriber,
+zu denen momentan ein Kontakt m{\"{o}}glich ist.
 
 Dies hat drei gro{\ss}e Vorteile. Es gibt eine r{\"{a}}umliche Trennung, das hei{\ss}t der Publisher muss
-nichts {\"{u}}ber die Subscriber (zum Beispiel Anzahl, IP Adresse) und andersrum wissen. Es reicht
-wenn beide wissen wo sie sich "treffen" k{\"{o}}nnen. Als zweites gibt es eine zeitliche Trennung zwischen
+nichts {\"{u}}ber die Subscriber (zum Beispiel Anzahl, IP Adresse) wissen. Das gleiche gilt auch andersherum.
+Es reicht
+wenn beide wissen, wo sie sich "treffen" k{\"{o}}nnen. Als zweites gibt es eine zeitliche Trennung zwischen
 den Kommunikationspartner -- der Publisher kann Nachrichten verschicken, ohne sich dar{\"{u}}ber Gedanken
-machen zu m{\"{u}}ssen wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
-uninteressant ist wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
-Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes. Die Nachrichten werden Daten
+machen zu m{\"{u}}ssen, wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
+uninteressant ist, wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
+Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes.
+\todo{git blame hier stand mal was vernuenftiges}
+Die Nachrichten werden Daten
 von ihrer Herstellung verschickt, das Senden einer Nachricht ist also (aus Sicht des
 Publishers) O(1) in Bezug auf die Anzahl der Subscriber. Auch auf Seiten des Subscribers gibt es eine
 Asynchronit{\"{a}}t, die empfangen Daten werden mithilfe eines Callback angenommen und blockieren damit
@@ -277,22 +275,22 @@ Diese bieten, zum Beispiel, die M{\"{o}}glichkeit an einem entfernten Netzwerkte
 
 \subsubsection{Anforderungen}
 Um verteilte Systeme zu programmieren, bietet sich das RPC Modell an, mit dem auf einem anderen Rechner Funktionen 
-aufrufen kann. Da alle Voter/Roboter die gleichen Informationen {\"{u}}ber den Weltstatus empfangen m{\"{u}}ssen um
-dann gemeinsam sinnvolle Bewegungen auszuf{\"{u}}hren, diese also von der Simulation an alle gleichzeitig verteilt werden
-muss, bietet sich auch das Publish Subscribe Interaktionsmuster an.
+aufgerufen werden k{\"{o}}nnen. Alle Voter/Roboter m{\"{u}}ssen die gleichen Informationen {\"{u}}ber den Weltstatus empfangen, um
+dann gemeinsam sinnvolle Bewegungen auszuf{\"{u}}hren, diese m{\"{u}}ssen also von der Simulation an alle gleichzeitig verteilt werden
+muss. Damit bietet sich auch das Publish Subscribe Interaktionsmuster an.
 
 Diese beiden Interaktionsmuster k{\"{o}}nnen kombiniert werden; Es gibt allerdings keine Netzwerklibrary, die gleichzeitig beides anbietet.
-Da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als andersrum, wird diese Funktionalit{\"{a}}t bei der Auswahl der
+Da es einfacher ist, auf Publish-Subscribe ein RPC Modell aufzubauen, als andersherum, wird diese Funktionalit{\"{a}}t bei der Auswahl der
 Netzwerkbibliothek vorgezogen. Dies ist das Hauptkriterium.
 
 Netzwerkbibliotheken, die in C++ geschrieben wurden, k{\"{o}}nnen zwar (mit einem Interface) auch unter C benutzt 
 werden, f{\"{u}}gen dem Programm dann aber "heimlich" die C++ Runtime hinzu. Da die Netzwerkbibliothek nicht
-nur im Simulationsprogramm selbst sondern auch im Studenteninterface eingesetzt werden soll, m{\"{u}}sste dann
+nur im Simulationsprogramm selbst, sondern auch im Studenteninterface eingesetzt werden soll, m{\"{u}}sste dann
 um alle Eventualit{\"{a}}ten wie zum Beispiel \textit{exceptions} abzuhandeln die Studierenden auch C++
-Kentnisse haben. Da dies nicht vorausgesetzt werden kann ist eine rein in C geschriebene Bibliothek vorzuziehen.
+Kentnisse haben. Da dies nicht vorausgesetzt werden kann, ist eine rein in C geschriebene Bibliothek vorzuziehen.
 
-Durch die Benutzung von Unity\ref{unity} ist allerdings vorgegeben das dass Simulationsprogramm selbst weder in C noch
-in C\# geschrieben wird, zur Auswahl stehen zum Beispiel C\# und JavaScript. Daher ist es auch wichtig ob die Netzwerkbibliothek
+Durch die Benutzung von Unity\ref{unity} ist allerdings vorgegeben, dass das Simulationsprogramm selbst weder in C noch
+in C\# geschrieben wird, zur Auswahl stehen zum Beispiel C\# und JavaScript. Daher ist es auch wichtig, ob die Netzwerkbibliothek
 auch mit anderen Sprachen genutzt werden kann, oder es Alternativimplementierungen gibt.
 
 \begin{table}[h]
@@ -315,66 +313,10 @@ Aus dieser vergleichenden Darstellung wird klar, dass nanomsg am besten geeignet
 \subsubsection{nanomsg}
 nanomsg ist eine komplett in C geschrieben Netzwerkbibliothek, mit einer API die der POSIX Socket API gleicht (es wird sich also, zum Beispiel mit nn\_connect() verbunden oder mit nn\_send() gesendet).
 Der gro{\ss}e Vorteil von nanomsg sind die implementierten {\"{U}}bertragungsarten. Je nach gew{\"{u}}nschter {\"{U}}bertragungsart wird ein unterschiedlicher Socket erstellt, dieser erlaubt die
-Interaktion mit den anderen Netzwerkteilnehmern die auch diese {\"{U}}bertragunsart benutzen.
+Interaktion mit den anderen Netzwerkteilnehmern die auch diese {\"{U}}bertragungsart benutzen.
 
 Beispielhaft wird nun auf einige der genutzten Arten eingegangen.
 
 \paragraph{{\"{U}}bertragungsarten}
 \subparagraph{Request-Reply} Die intuitiv verst{\"{a}}ndlichste Art zu kommunizieren ist es eine Frage zu stellen, die dann vom Gegen{\"{u}}ber beantwortet wird. In nanomsg ist dies die request-reply
 {\"{U}}bertragungsart.
-
-\clearpage
-\section{Serialisierung}
-\todo{das ist doch konzeptionell auf einer anderen Ebene als sagen wir mal Game Engine oder Physiksim.? Ist doch im
-vergleich dazu unwichtig}
-
-Da das Simulationsprogramm mithilfe der Unity 3D Engine geschrieben werden soll ist die Benutzung von C\#
-vorgeschrieben; der Rest der Arbeit (also das Interface f{\"{u}}r die Studenten) soll aber in C geschreiben werden
-damit die Studenten nicht um \textit{exceptions} oder andere Spezialf{\"{a}}lle abzuhandeln sich erst in
-(beispielsweise) C++ hereinarbeiten m{\"{u}}ssen. Die Verwendung verschiedener Sprachen erschwert allerdings
-die Benutzung eines Bin{\"{a}}rprotokoll -- aus diesem Grund werden die Daten serialisiert.
-
-\todo{warum ueberhaupt binarprotokoll? "Sie nennen hier kaum Anforderungen, sondern sortieren schon aus und
-entscheiden - gleiches Problem wie in 11." denke mal das heisst die anforderungen klarer herausarbeiten}
-
-\subsection{Anforderungen}
-Das wichtigste Auswahlkriterium der Serialsierungslibrary ist, dass es eine C (f{\"{u}}r das Studenteninterface) und eine C\# Version (f{\"{u}}r Unity) gibt.
-Desweiteren sollen die serialisierten Nachrichten m{\"{o}}glichst klein sein, um auch nach der Anwendung
-eines fehlerkorrigierenden Codes so wenig Redudanz wie m{\"{o}}glich aufzuweisen und damit nur wenig f{\"{u}}r Paketverf{\"{a}}lschungen anf{\"{a}}llig zu sein.
-
-\begin{table}[h]
-\centering
-\begin{tabu}{c | c | c | c | p{5cm}}
-	\toprule
-	Name & Wenig Redudanz? & C Version & C\# Version \\
-	\midrule
-	JSON & \xmark & \checkmark & \checkmark \\
-	XML & \xmark & \checkmark & \checkmark \\
-	ProtoBuf & \checkmark & \xmark\footnotemark & \checkmark \\
-	Msgpack\cite{msgpack} & \checkmark & \checkmark & \checkmark \\
-	BSON & \checkmark & \checkmark & \checkmark \\
-	\bottomrule
-\end{tabu}
-\caption{Anforderungen an die Serialisierungsbibliothek}
-\end{table}
-\footnotetext{Es existieren unoffizielle, nicht mehr weiterentwickelte Implementation} 
-
-Bekannte Serialisierungsformate wie JSON und XML enthalten zu viel Redudanzen und k{\"{o}}nnen ausgeschlossen werden. Zur Auswahl bleiben damit beispielsweise BSON und MsgPack.
-Bei BSON werden die Daten an sich effizient serialisiert, allerdings wird immer der Feldname mitgesendet. Dies erleichtert zwar die Versionierbarkeit, vergr{\"{o}}{\ss}ert
-die Nachricht allerdings. Aus diesem Grund wird MsgPack als Serialisierungsformat genutzt.
-
-\subsection{MessagePack}
-MessagePack ist ein in {\"{u}}ber 50 Sprachen verf{\"{u}}gbares Serialisierungsframework, dessen Nachrichten besonders wenig Redudanzen enthalten sollen. Beispielhaft wird hier auf die Serialisierung von
-Integern und Zeichenketten mit fester L{\"{a}}nge eingegangen.
-
-Die Grundpidee von MessagePack ist es Datentypen nicht mit fester Breite sondern nur mit der minmal n{\"{o}}tigen Breite (oder wenigstens einer Ann{\"{a}}hrung an diese) abzuspeichern.
-\paragraph{Integer} Da Datens{\"{a}}tze oftmals aus vielen kleinen Integerwerte bestehen, macht es Sinn gerade die Serialsierung dieser zu optimieren. Im Gegensatz zur "normalen" Verarbeitung als immer gleich breite (zum Beispiel 64bit) Zahlen, werden vorzeichenlose Integerwerte kleiner als 128 in einem Byte abgespeichert; der Wert des Bytes entspricht dabei dem Wert des Integers. Dahingegen signalisiert ein gesetztes MSB das es kein (kleiner) Integerwert sondern ein anderer Datentyp ist.
-\paragraph{Fixed Size String} Um kleinere Zeichenketten zu encodieren, gibt es erst ein Signalzeichen,
-in dem die obersten 3 bits gesetzt sind. Die restlichen 5bits geben die L{\"{a}}nge der Zeichenkette an --
-also maximal $2^5 - 1 = 31$ Zeichen. Dies f{\"{u}}hrt zu einem durchschnittlichen Overhead von
-$ \frac{1}{\frac{2^5-1}{2}} \approx 6\% $.
-
-L{\"{a}}ngere Zeichenketten werden mit anderen Signalzeichen kodiert, beispielsweise 0xDB f{\"{u}}r eine Zeichenketten mit der Maximall{\"{a}}nge von $(2^{32})-1$ Zeichen.
-In diesem Fall folgt die L{\"{a}}ng als 32bit big endian
-\footnote{L{\"{a}}ngen werden immer in big-endian, kodiert um den Datenaustausch auch zwischen Rechnern unterschiedlicher Architekturen gew{\"{a}}hrleisten zu k{\"{o}}nen.}
-Wert mit fester Breite. Also ein verschwindend geringer durchschnittlicher Overhead von $ \frac{1}{\frac{2^{32}-1}{2}} = 0.00000004\% $.
