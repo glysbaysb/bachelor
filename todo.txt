@@ -41,11 +41,9 @@ Deadline | Module		|	was
 		 | test_prog	| evaluationstests
 		 |				| -> aufladen
 		 | unity		| wenn Robot dod -> Rauch
-		 |				| Die Platte kippt zu krass, falsch, alles moegliche...
-		 |				|  z.B. 
+		 |				| ?Die Platte kippt zu krass, falsch, alles moegliche...
+		 |				|  z.B. ?
 		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
-		 |				| Laden die Roboter noch? --> muesste fertig sein
-		 @				| roboter lampe
 		 | misc			| mutex in libnetwork, beim warten auf robot id
 		 |				| udp packet groesse anpassen
 ---------+--------------+----------------

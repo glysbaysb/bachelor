@@ -19,21 +19,21 @@ Denn durch die steigende Komplexit{\"{a}}t der Hard- und Software wird das Syste
 mehr Komponenten, also kann mehr kaputt gehen. Letztlich ist es nicht m{\"{o}}glich, in hochkomplexen Systemen ein 
 absolut perfektes, v{\"{o}}llig fehlerfreies System zu entwickeln. 
 
-Gibt es M{\"{o}}glichkeiten das ein System auch im Fehlerfall noch (teilweise) funktioniert? Beispielsweise ist ein
-Auto nicht mehr nutzbar wenn der Motor --- aus welchem Grund auch immer --- ausf{\"{a}}llt. Ein Flugzeug dahingegen
+Gibt es M{\"{o}}glichkeiten, dass ein System auch im Fehlerfall noch (teilweise) funktioniert? Beispielsweise ist ein
+Auto nicht mehr nutzbar, wenn der Motor --- aus welchem Grund auch immer --- ausf{\"{a}}llt. Ein Flugzeug dahingegen
 hat mehrere Motoren und kann deshalb den Ausfall eines Motores verkraften. In diesem Fall wird also die Ausfallsicherheit
 durch eine Redundanz (der Motoren) erh{\"{o}}ht. Dies ist aber keine universale L{\"{o}}sung, beispielsweise w{\"{a}}ren
-die Kosten f{\"{u}}, und die Gewichtszunahme durch, einen zweiten Motor bei einem normalen Auto nicht verkraftbar.
+die Kosten f{\"{u}}r und die Gewichtszunahme durch einen zweiten Motor bei einem normalen Auto nicht verkraftbar.
 
 Redundanz an sich l{\"{o}}st auch nicht alle Probleme. Beispielsweise k{\"{o}}nnten Daten automatisch immer auf mehrere
-Festplatten geschrieben werden (\textit{RAID 1}). Falls aber nun festgestellt wird das die Daten welche eigentlich gleich
-sein sollten auf zwei Festplatten unterschiedlich sind, ist es nicht klar welche der beiden Festplatten noch die korrekten
+Festplatten geschrieben werden (\textit{RAID 1}). Falls aber nun festgestellt wird, dass die Daten, welche eigentlich gleich
+sein sollten auf zwei Festplatten unterschiedlich sind, ist es nicht klar, welche der beiden Festplatten noch die korrekten
 Daten aufweist und auf welcher die Daten verf{\"{a}}lscht wurden. 
 
 Durch die zunehmende Digitalisierung werden immer mehr Bereiche zunehmend technisiert. Dies f{\"{u}}hrt zwingend notwendig
 dazu die darin enthaltene Hard- und Software gr{\"{u}}ndlich zu  testen und vor allem schon w{\"{a}}hrend der Designphase
 die Ausfallsicherheit immer im Blick zu haben und einzuplanen. Daf{\"{u}}r muss als erstes ein Problembewusstsein geschaffen
-werden. Um dann wirklich ausfallsichere System zu entwickeln braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
+werden. Um dann wirklich ausfallsichere Systeme zu entwickeln, braucht man nat{\"{u}}rlich auch bestimmte Kentnisse 
 {\"{u}}ber das Design und die Entwicklung solcher.
 
 \subsection{Aufgabenstellung} 
@@ -41,44 +41,41 @@ Diese Kenntnisse zu vermitteln ist die Aufgabe des Moduls "Ausfallsichere System
 "Technische Informatik". Daf{\"{u}}r gibt es einen theoretischen (die Vorlesung) und einen praktischen Teil (eine 
 Praktikumsaufgabe). Die Praktikumsaufgabe soll eine M{\"{o}}glichkeit geben, das in der Vorlesung erworbene 
 theoretische Wissen anzuwenden. Dabei werden die Studierenden aus den gelernten Techniken die richtigen 
-f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen abw{\"{a}}gen und sie dann zu 
-implementieren. Durch die  praktische Anwendung wird das Gelernte wiederholt und vertieft, was zu einem besseren 
+f{\"{u}}r die Aufgabe heraussuchen m{\"{u}}ssen, diese gegen Alternativen abw{\"{a}}gen und sie dann
+implementieren. Durch die praktische Anwendung wird das Gelernte wiederholt und vertieft, was zu einem besseren 
 Verst{\"{a}}ndnis f{\"{u}}hrt. 
 
-Die Aufgabe dieser Bachelorarbeit ist die Konzeption eines Simulationswerkzeuges das zu einer solchen weiteren
+Die Aufgabe dieser Bachelorarbeit ist die Konzeption eines Simulationswerkzeuges, das zu einer solchen weiteren
 Praktikumsaufgabe werden soll. 
 Zus{\"{a}}tzlich soll das fertige Produkt auch im Rahmen von Informationsveranstaltungen als Demonstrationsprojekt 
 nutzbar sein. Damit soll auch Menschen ohne Fachkenntnisse ein interessanter Einblick in die 
 Komplexit{\"{a}}t ausfallsicherer Systeme gegeben werden.
 
 \subsection{Gliederung}
-Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem-- die Entwicklung eines
-Simulationswerkzeuges, die als Grundlage f{\"{u}}r eine Praktikumsaufgabe -- im Modul "Ausfallsichere Systeme" --
-fungieren soll entfaltet, im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der
-L{\"{o}}sungsweg skizziert. 
-
-Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
+Diese Bachelorarbeit besteht aus drei Teilen. Im ersten wird das zu l{\"{o}}sende Problem --- die Entwicklung eines
+Simulationswerkzeuges, die als Grundlage f{\"{u}}r eine Praktikumsaufgabe --- im Modul "Ausfallsichere Systeme" --- fungieren soll,
+entfaltet, im zweiten auf die dazu ben{\"{o}}tigten Grundlagen eingegangen und als letztes wird der
+L{\"{o}}sungsweg skizziert.  Der erste Teil besteht aus einer Darlegung des Problems, um den Sinn und Zweck dieser Arbeit zu verdeutlichen. 
 Danach wird erkl{\"{a}}rt, warum die bislang an der FH S{\"{u}}dwestfalen existierende Praktikumsaufgabe nicht optimal ist.
 Basierend auf dieser Analyse werden die Anforderungen an die neue Aufgabe entwickelt. 
 
 Im zweiten Teil werden als erstes die ben{\"{o}}tigten Grundlagen zur Umsetzung erkl{\"{a}}rt. Dabei geht es einerseits um 
 mechanische und physische Konzepte wie das \textit{differential steering} und auch um informationstechnologische Aspekte
-wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.
-
+wie die Serialisierung von Daten oder verschiedene Netzwerkkommunikationsarten.  
 Darauf aufbauend wird dann im dritten Teil die Implementierung beschrieben, mit besonderem Fokus auf dem 
 Fehlermodell und der Fehlerinjektion. Zum Schluss wird die Simulation anhand der Kriterien evaluiert und ein Fazit 
 gezogen.
 
 
 \section{Existierende Praktikumsaufgaben und m{\"{o}}gliche Alternativen}\label{heizung}
-Eine Praktikumsaufgabe im Module Ausfallsichere System wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe zwei von Heizk{\"{o}}rpern, zweier
-L{\"{u}}fter, einer Klappe und mehrer Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
+Eine Praktikumsaufgabe im Modul Ausfallsichere Systeme wurde im Sommersemester 2016 an der FH S{\"{u}}dwestfalen entwickelt. Das Ziel war es, mithilfe von zwei Heizk{\"{o}}rpern, zwei
+L{\"{u}}ftern, einer Klappe und mehreren Temperatursensoren eine Temperatur zu regeln. F{\"{u}}r die Regelung m{\"{u}}ssen sich drei Rechner abstimmen, denn einer kontrolliert
 beide Heizungen, einer beide L{\"{u}}fter und der dritte die Klappe. Um sich abzustimmen k{\"{o}}nnen die Rechner {\"{u}}ber UDP und I\textsuperscript{2}C miteinander kommunizieren.
 
 Das Gesamtsystem ist Y-f{\"{o}}rmig aufgebaut; an den Armen des Ypsilon befindet sich jeweils ein Heizk{\"{o}}rper und ein L{\"{u}}fter; an dem Punkt, an dem sich
 die Arme treffen, ist die Klappe, die den Luftstrom eines Arms ganz oder teilweise blockieren kann (diese Luft wird dann nach oben abgeleitet).
 
-Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
+Um die Temperaturen in den Armen und die Temperatur des Luftstromes zu messen, gibt es Temperatursensoren. Jeweils ein Temperatursensor im Luftausgangsstrom ist einem
 der Rechner zugeordnet. Zus{\"{a}}tzlich hat der L{\"{u}}ftungsrechner einen Temperatursensor pro Arm zwischen L{\"{u}}fter und Heizung, und der Heizungsrechner jeweils
 einen Temperatursensor vor der Heizung.
 
@@ -97,7 +94,7 @@ Beispielsweise kann es vorkommen das ein Heizk{\"{o}}rper ausf{\"{a}}llt, bezieh
 Heizk{\"{o}}rper ein Fehler injiziert wird\footnote{In diesem Fall wird die Stromversorgung gekappt},
 also sich nicht weiter aufheizen kann. Dies muss erst einmal erkannt werden, zum Beispiel
 durch den Vergleich des Sollwertes der Heizungsansteuerung und den Lufttemperaturen vor und hinter der Heizk{\"{o}}rper. Falls diese Temperaturen gleich sind,
-wurde die Luft die vom L{\"{u}}fter Richtung Ausgang bewegt wurde, nicht aufgew{\"{a}}rmt, ergo heizt dieser Heizk{\"{o}}rper nicht. Dann k{\"{o}}nnen sich die
+wurde die Luft, die vom L{\"{u}}fter Richtung Ausgang bewegt wurde, nicht aufgew{\"{a}}rmt, ergo heizt dieser Heizk{\"{o}}rper nicht. Dann k{\"{o}}nnen sich die
 Rechner abstimmen, wie sie die Temperatur trotzdem ansteigen lassen k{\"{o}}nnen, zum Beispiel ob der {\"{u}}brig gebliene Heizk{\"{o}}rper st{\"{a}}rker heizen
 soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
@@ -105,7 +102,7 @@ soll, oder ob dieser weniger gek{\"{u}}hlt werden soll.
 
 Um die Kommunikation zu testen, k{\"{o}}nnen auch die Kommunikationswege ausfallen\footnote{Hierbei
 wird das LAN-Kabel aus dem Switch gezogen, wodurch dieser Rechner keine Verbindung mehr zu den anderen hat.
-Das gleiche gilt f{\"{u}}r die I\textsuperscript{2}C Leitungen}.
+Das gleiche gilt f{\"{u}}r die I\textsuperscript{2}C Leitungen.}.
 Was passiert, wenn der Heizungsrechner nicht mehr erreichbar ist, aber eine Heizung weniger stark heizen soll?
 Da es zwei Kommunikationswege gibt, kann normalerweise UDP/IP f{\"{u}}r die Kommunikation verwendt werden
 und I\textsuperscript{2}C nur als \textit{hot standby}. Alternativ wird ein {\"{U}}bertragungsweg nur
@@ -114,7 +111,7 @@ Steuerprogramm ausf{\"{u}}hrt. Der Ausfall einer der beiden Leitung kann anhand 
 anderen erkannt werden.
 
 Als letztes k{\"{o}}nnen auch die Temperatursensoren ausfallen. Im Luftausgangsstrom, wo drei Sensoren 
-nebeneinander angeordnet sind, ist es m{\"{o}}glich den
+nebeneinander angeordnet sind, ist es m{\"{o}}glich, den
 Ausfall eines Sensors anhand der Diskrepanz der Messergebnisse aller Sensoren zu erkennen. Eine m{\"{o}}gliche 
 Strategie, um die Ausgangstemperatur zu
 bestimmen, w{\"{a}}re also, die \textit{triple modular redudancy} auszunutzen und den Mittelwert aller nicht klar als 
@@ -124,7 +121,7 @@ erkennen, dass ein Sensor einen fehlerhaften Messwert geliefert hat.
 
 Nat{\"{u}}rlich ist es auch denkbar, dass mehrere dieser Fehler auftreten, also beispielsweise f{\"{a}}llt
 erst ein Sensor, dann das Netzwerk aus und danach steckt die Klappe fest.
-Gerade bei Doppelfehlern, in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen {\"{A}}rmen 
+Gerade bei Doppelfehlern, in denen eine L{\"{u}}ftung und ein Heizk{\"{o}}rper in unterschiedlichen Armen 
 ausfallen, gibt es die Gefahr, dass sich ein Arm {\"{u}}berhitzt und besch{\"{a}}digt wird.
 
 Diese bestehende Praktikumsaufgabe hat allerdings einige Probleme, welche bei Konzeption und Bau einer neuen
@@ -132,25 +129,25 @@ Praktikumsaufgabe vermieden werden sollen.
 
 Weil die Heizungen eine beschr{\"{a}}nkte Leistung haben und eine gro{\ss}e Menge Luft 
 ($ \approx (13*13*55)cm^3$) aufheizen m{\"{u}}ssen, ist die Regelung sehr tr{\"{a}}ge. Damit ist es als
-Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten
+Vorf{\"{u}}hrobjekt zum Beispiel f{\"{u}}r Schulklassen ungeeignet, diese k{\"{o}}nnen nicht 10 Minuten warten,
 bis die Temperatur eingeregelt wurde, dann ein Fehler injiziert wurde (zum Beispiel eine Heizung
-ausf{\"{a}}llt), dieser Ausfall erkannt wird und dann gegengesteuert wurde. Bei einer neuen Praktikumsaufgabe
-soll das System schneller reagieren, am besten sogar instantan.
+ausf{\"{a}}llt), dieser Ausfall erkannt wurde und dann gegengesteuert wurde. Bei einer neuen Praktikumsaufgabe
+soll das System schneller reagieren, am besten sogar direkt.
 
 Desweiteren gibt es dieses System nur einmal. Das bedeutet einerseits, dass es bei gro{\ss}en Gruppen
-an Sch{\"{u}}lern unm{\"{o}}glich wird, dass alle etwas f{\"{u}}hlen k{\"{o}}nnen und andererseits, es durch
+an Sch{\"{u}}lern unm{\"{o}}glich wird, dass alle etwas wahrnehmen k{\"{o}}nnen und andererseits, es durch
 die lange Regelzeit zu Koordinationsproblemen kommt. W{\"{a}}hrend eine Gruppe ihr Programm testet, m{\"{u}}ssen
 alle anderen Gruppen warten. Da fast jeder Test mehrere Minuten dauert, verbringen die Gruppen die
-allermeiste Zeit mit warten und nur wenig Zeit mit produktiver Arbeit. Um dies zu vermeiden w{\"{a}}hre es
-hilfreich wenn die Ersatzpraktikumsaufgabe gleichzeitig von mehreren Teams unabh{\"{a}}nig voneinander bearbeitet
-werden k{\"{o}}nte.
+allermeiste Zeit mit Warten und nur wenig Zeit mit produktiver Arbeit. Um dies zu vermeiden, w{\"{a}}re es
+hilfreich wenn die Ersatzpraktikumsaufgabe gleichzeitig von mehreren Teams unabh{\"{a}}ngig voneinander bearbeitet
+werden k{\"{o}}nnte.
 
 Das letzes Problem ist, dass die Heizung bei unsachgem{\"{a}}ssem Gebrauch -- also wenn sie sich zu sehr aufheizt --
-besch{\"{a}}digt, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Danach muss sie erst aufw{\"{a}}ndig
+besch{\"{a}}digt wird, da sich die Heizwiederst{\"{a}}nde selbst ausl{\"{o}}ten. Danach muss sie erst aufw{\"{a}}ndig
 repariert werden und ist in der Zwischenzeit nicht benutzbar. Daher sollte die Alternativaufgabe keine besch{\"{a}}digbaren
-Teile beeinhalten.
+Teile beinhalten.
 
-Auch w{\"{a}}re es sch{\"{o}}n wenn es noch subtilere M{\"{o}}glichkeiten der Fehlerinjektion g{\"{a}}be. Zum Beispiel ist
+Auch w{\"{a}}re es sch{\"{o}}n, wenn es noch subtilere M{\"{o}}glichkeiten der Fehlerinjektion g{\"{a}}be. Zum Beispiel ist
 es nur m{\"{o}}glich die L{\"{u}}fter komplett abzuschalten, aber keine \textit{stuck-at} Fehler zu injezieren.
 Gerade bei der Netzwerkkommunikation g{\"{a}}be es viele M{\"{o}}glichkeiten um Zeitfehler und Wertefehler zu injizieren.
 
@@ -159,14 +156,14 @@ Gerade bei der Netzwerkkommunikation g{\"{a}}be es viele M{\"{o}}glichkeiten um 
 Aus den Schwachstellen der vorhanden L{\"{o}}sung l{\"{a}}sst sich ableiten, was das neue System leisten soll:
 \begin{enumerate}
 	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
-	\item Es muss m{\"{o}}glich sein mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
-	\item Es soll auch m{\"{o}}glich sein au{\ss}erhalb des MR Labores an der Problemstellung weiterzuarbeiten.
+	\item Es muss m{\"{o}}glich sein, mehrere Instanzen gleichzeitig laufen zu lassen. Damit werden die Koordinierungsprobleme vermieden.
+	\item Es soll auch m{\"{o}}glich sein, au{\ss}erhalb des MR Labors an der Problemstellung weiterzuarbeiten.
 	\item In dem neuen System muss die Fehlerinjektion parametrisierbar sein. Damit ist es m{\"{o}}glich,
 		die Aufgabe bei Bedarf zu vereinfachen oder zu verkomplizieren, zum Beispiel in dem bestimmte
-		Arten der Fehlerinjektion ganz auschgeschaltet werden.
+		Arten der Fehlerinjektion ganz ausgeschaltet werden.
 	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
 	\item Es soll visuell ansprechend sein.
-	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
+	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht besch{\"{a}}digt werden.
 \end{enumerate}
 
 \clearpage
@@ -187,10 +184,10 @@ die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen
 mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen solange sie noch Energiereserven haben, 
 m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
 
-Das Ziel dieser Simulation war zu demonstrieren, dass auch in Echtzeitsystem eine Konsensfindung m{\"{o}}glich
+Das Ziel dieser Simulation war zu demonstrieren, dass auch in Echtzeitsystemen eine Konsensfindung m{\"{o}}glich
 ist. Fall ein Ergebniss durch \textit{triple modular redudancy} und einen Voter bestimmt werden soll, 
-verh{\"{a}}lt sich die naive Implementation im Falle eines \textit{timing faults}, so dass die
-Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. 
+verh{\"{a}}lt sich die naive Implementation im Falle eines \textit{timing faults} so, dass die
+Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. \todo{die neue sache aber halt nicht} 
 
 Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem, 
 w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann. 
@@ -199,34 +196,34 @@ In das System k{\"{o}}nnen Fehler injiziert werden, zum Beispiel kann ein Robote
 die Controller k{\"{o}}nnen entweder beendet werden oder ihnen kann die Netzwerkverbindung entzogen werden. Es ist
 auch m{\"{o}}glich einen Roboter fernzusteuern und damit direkten Einfluss auf die Simulation zu nehmen.
 
-Die balancieren Robotern w{\"{u}}rden den Anforderungen an vielen Stellen entsprechen, zum Beispiel
-unterscheidet sie sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
+Die balancierenden Robotern w{\"{u}}rden den Anforderungen an vielen Stellen entsprechen, zum Beispiel
+unterscheiden sie sich stark von der ausfallsicheren Heizung, es k{\"{o}}nnen mehrere Instanzen
 gleichzeitig laufen und die Fehlerinjektion ist parametrisierbar. Gerade die dahinterliegende Idee ist
 leicht verst{\"{a}}ndlich und gut geeignet; die Implementation weisst allerdings einige Schwachstellen auf.
 
-Ein erster Kritikpunk ist das Anzeige nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu entwickelt werden.
+Ein erster Kritikpunkt ist, das die Anzeige nicht mehr zeitgem{\"{a}}ss ist, diese m{\"{u}}sste also neu entwickelt werden.
 
 Auch ist das physikalische Modell der Simulation sehr rudiment{\"{a}}r: die Roboter k{\"{o}}nnen sich
 holonomisch, also ohne Limitationen in alle Richtungen, bewegen. Dies ist aber bei den meisten Robotern
 nicht der Fall, diese haben auf Grund ihres Aufbaus bestimmte Limitationen. Zum Beispiel ist es un{\"{u}}blich, 
-dass sich Roboter vertikal frei bewegen k{\"{o}}nen. Des weiteren gibt es in der Simulation keine mechanischen 
+dass sich Roboter vertikal frei bewegen k{\"{o}}nnen. Des weiteren gibt es in der Simulation keine mechanischen 
 Gleichgewichte -- auch dies eine unrealistische Vereinfachung gegen{\"{u}}ber der echten Welt. Die
 physikalische Simulation m{\"{u}}sste also erweitert werden.
 
 Das gr{\"{o}}{\ss}ere Problem ist allerdings das Alter der Simulation. Sie wurde in den neunziger Jahren auf 
-NeXTStep Rechner entwickelt -- diese existieren an der Fachhochschule S{\"{u}}dwestfalen nicht, das Programm 
+NeXTStep Rechnern entwickelt -- diese existieren an der Fachhochschule S{\"{u}}dwestfalen nicht, das Programm 
 m{\"{u}}sste also erst portiert werden. Der Aufwand um sich einzuarbeiten und sein Programm basierend auf
 NeXTStep zu entwickeln ist nicht vertretbar. Gerade auch weil die Ausfallsicherheit im Vordergrund stehen sollte und
 nicht die Einarbeitung in einen Standard.
 
-Aus all diesen Gr{\"{u}}nden wurde entschieden, ein Simulationswerkzeug zu entwickeln das als weitere Praktikumsaufgabe
-genutzt werden kann. Bei diesem wird die Grundidee der balancierend Roboter beibehalten; es sollen nur die identifizierten
+Aus all diesen Gr{\"{u}}nden wurde entschieden, ein Simulationswerkzeug zu entwickeln, das als weitere Praktikumsaufgabe
+genutzt werden kann. Bei diesem wird die Grundidee der balancierenden Roboter beibehalten; es soll nur die identifizierten
 Schwachstellen ausmerzen.
 
 \clearpage
 \section{Konkretisierung der Anforderungen}
-Um die vorhandene Simulationsidee ohne die vorhanden Schwachstellen neu zu erstellen, so das die Anforderungen
-(wie in \ref{anforderung} beschrieben erf{\"{u}}llt werden) ist es n{\"{o}}tig diese eher abstrakten Anforderungen in
+Um die vorhandene Simulationsidee ohne die vorhanden Schwachstellen neu zu erstellen, so dass die Anforderungen
+(wie in \ref{anforderung} beschrieben) erf{\"{u}}llt werden, ist es n{\"{o}}tig diese eher abstrakten Anforderungen in
 technische Merkmale zu "{\"{u}}bersetzen".
 
 Es wird definiert das die Simulation (zusammen mit der Fehlerinjektion) den Studierenden vorgegeben wird, w{\"{a}hrend
@@ -235,26 +232,26 @@ weniger Arbeit haben. Der Hauptvorteil ist aber das es eine f{\"{u}}r alle gleic
 erst m{\"{o}}glich ist die Studentenprogramme miteinander zu vergleichen.
 
 Da es nicht m{\"{o}}glich sein soll das Simulationswerkeug zu besch{\"{a}}digen, muss es eine reine Softwareaufgabe
-sein. Diese k{\"{o}}nnen im schlimmsten Fall einfach noch einmal neu gestartet werden um (tempor{\"{a}}re) Fehler zu
+sein. Diese k{\"{o}}nnen im schlimmsten Fall einfach noch einmal neu gestartet werden, um (tempor{\"{a}}re) Fehler zu
 beheben.
 
-Bei einer Softwarel{\"{o}}sung ist es auch m{\"{o}}glich die Ausf{\"{u}}hrung mehrerer Instanzen unabh{\"{a}}nig voneinander
-zu erlauben, damit mehrere Studierendengruppen gleichzeitig ihre L{\"{o}}sung entwickeln k{\"{o}}nnen. Daher ist es notwendig
-das es keinerlei Resourcen gibt die sich alle Instanzen teilen m{\"{u}}ssen --- das Programm sollte also selbstst{\"{a}}nig und
-ohne weitere Komponenten laufen. Bei einem verteilten System das {\"{u}}ber ein IP-Netzwerk per Broadcast kommuniziert ist es
+Bei einer Softwarel{\"{o}}sung ist es auch m{\"{o}}glich, die Ausf{\"{u}}hrung mehrerer Instanzen unabh{\"{a}}ngig voneinander
+zu erlauben, damit mehrere Studierendengruppen gleichzeitig ihre L{\"{o}}sung entwickeln k{\"{o}}nnen. Daher ist es notwendig,
+dass es keinerlei Resourcen gibt, die sich alle Instanzen teilen m{\"{u}}ssen. Das Programm sollte also selbstst{\"{a}}ngig und
+ohne weitere Komponenten laufen. Bei einem verteilten System, das {\"{u}}ber ein IP-Netzwerk per Broadcast kommuniziert, ist es
 auch wichtig eine Trennung der verschiedenen Instanzen zu erm{\"{o}}glichen (dies kann z.B. durch die Verwendung verschiedener
 Ports erreicht werden).
 
 Desweiteren erlaubt der Einsatz einer Simulation ein eigenes Fehlermodell zu definieren. Wenn das Fehlermodell nicht fest
-implementiert wird, sondern bei Bedarf ge{\"{a}}ndert werden kann soll es auch m{\"{o}}glich sein einzelne Fehlerquellen an/auszuschalten
+implementiert wird, sondern bei Bedarf ge{\"{a}}ndert werden kann, soll es auch m{\"{o}}glich sein einzelne Fehlerquellen an/auszuschalten
 oder die Wahrscheinlich mit der Fehler auftreten anzupassen. Damit w{\"{a}}re die Anforderung nach der Parametresierbarkeit
 der Fehlerinjektion erf{\"{u}}llt.
 
-Durch den Einsatz einer Simulation ist es auch m{\"{o}}glich die Visualisierung frei zu w{\"{a}}hlen; zum Beispiel kann die 2D
-Vogelperspektive wie in der Orginalimplementation der balancierenden Roboter durch eine 3D Ansicht abgel{\"{o}}st werden.
+Durch den Einsatz einer Simulation ist es auch m{\"{o}}glich, die Visualisierung frei zu w{\"{a}}hlen; zum Beispiel kann die 2D
+Vogelperspektive (wie in der Orginalimplementation der balancierenden Roboter) durch eine 3D Ansicht abgel{\"{o}}st werden.
 
 Durch die Simulationsidee, den Ablauf der Steuerung der balancierenden Roboter, ist der Einsatz verschiedener Techniken um
 fehlertolerante Systeme --- wie zum Beispiel die Konsensbildung mit einem Voter oder verschiedene Arten der Vorw{\"{a}}rtsfehlerkorrektur ---
 n{\"{o}}tig. Dies ist gerade im Lehrkontext wichtig, damit m{\"{o}}glichst viele Konzepte sinnvoll angewandt werden
-k{\"{o}}nnen und es im besten Fall sogar n{\"{o}}tig ist das die Studenten zwischen verschiedenen Alternativen w{\"{a}}hlen
+k{\"{o}}nnen und es im besten Fall sogar n{\"{o}}tig, ist dass die Studenten zwischen verschiedenen Alternativen w{\"{a}}hlen
 m{\"{u}}ssen.
