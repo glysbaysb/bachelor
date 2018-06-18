@@ -180,10 +180,9 @@ sie also aus dem Gleichgewicht.
 
 \begin{figure}
 	\centering
-	\includevisio[\textwidth]{k4-detail1.png}
+	\includevisio[width=\textwidth]{k4-detail1.png}
 	\caption{Der Khepera IV Roboter}
 	\label{fig:kheperaiv}
-	\todo{kleiner}
 \end{figure}
 
 
@@ -193,10 +192,10 @@ die zum Gleichgewicht f{\"{u}}hrt und dort zu verharren, haben die Roboter einen
 mit der Zeit leerer wird. Da die Roboter sich nur bewegen k{\"{o}}nnen solange sie noch Energiereserven haben, 
 m{\"{u}}ssen sie hin und wieder diesen Speicher an einer Ladestation auff{\"{u}}llen.
 
-Das Ziel dieser Simulation war zu demonstrieren, dass auch in Echtzeitsystemen eine Konsensfindung m{\"{o}}glich
-ist. Fall ein Ergebniss durch \textit{triple modular redudancy} und einen Voter bestimmt werden soll, 
+Fall ein Ergebniss durch \textit{triple modular redudancy} und einen Voter bestimmt werden soll, 
 verh{\"{a}}lt sich die naive Implementation im Falle eines \textit{timing faults} so, dass die
-Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. \todo{die neue sache aber halt nicht} 
+Einhaltung der Echtzeitanforderungen nicht mehr garantiert werden kann. Das Ziel dieser Simulation war zu demonstrieren,
+dass auch in Echtzeitsystemen eine Konsensfindung m{\"{o}}glich sein kann.
 
 Die Simulation und die Controller wurden in Objective-C geschrieben und laufen auf dem NeXTStep Betriebssystem, 
 w{\"{a}}hrend das Anzeigeprogramm Java basiert ist und z.B. auf einem Windowsrechner laufen kann. 

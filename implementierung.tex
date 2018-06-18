@@ -89,7 +89,7 @@ des Schwerpunktindikators k{\"{o}}nnen die Roboter bewegt werden.
 gew{\"{u}}nschte Roboterkonstellationen gezielt herbeizuf{\"{u}}hren. Um anzuzeigen, ob die manuelle Fehlerinjektion gerade aktiv
 oder inaktiv ist wird dem Benutzer in der Mitte des Bildschirms dies als Text angezeigt.
 
-\subsection{Fehlerinjektion - Physik umbennenenenenene}
+\subsection{FaultInjector\_Engine}
 Da es in einer Simulation keine mechanischen (o.{\"{a}}.) Fehler geben kann, das Ziel des Simulationswerkzeuges aber gerade ist,
 die Studierenden ein fehlertolerantes System entwicklen zu lassen braucht es eine Fehlerinjektion.
 
@@ -592,7 +592,7 @@ Die Physiksimulation simuliert Roboterbewegungen, das Entladen der Roboter und d
 separat getestet werden.
 
 \subsubsection{Bewegungsmuster}
-Das Bewegungsmuster der Roboter ist an den \textit{differential drive}\ref{diff-drive} angelehnt. Dazu wird f{\"{u}}r den ersten Test ein
+Das Bewegungsmuster der Roboter ist an den \textit{differential drive}\ref{diffs} angelehnt. Dazu wird f{\"{u}}r den ersten Test ein
 Roboter nach festen Regeln bewegt. Durch die spezifischen Begebenheiten des \textit{differential drive} gibt es beispielsweise die einfachen
 Bewegungsmuster:
 \begin{enumerate}
@@ -616,8 +616,7 @@ werden Punkte, die sp{\"{a}}ter angefahren werden, dunkler gezeichnet als helle;
 	\includevisio[width=\textwidth]{bewegungsmuster_kombi}
 	\caption{Kombinationen der Grundbewegungsarten}
 	\label{fig:move2}
-\end{figure}
-\clearpage
+\end{figure}%
 
 Es wird ersichtlich, dass bei der Rotation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen
 Bewegung nach vorne und hinten erkennbar.
@@ -625,8 +624,8 @@ Bewegung nach vorne und hinten erkennbar.
 \subsubsection{Auf/Entladen}
 Ein weiterer Testfall ist, ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben,
 dass den Roboter mit einer festen Geschwindigkeit {\"{u}}ber die Platte fahren l{\"{a}}sst und sich beendet, sobald der Roboter sich
-entladen hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches
-laut Formel \ref{eq:entladen}) ist es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
+entladen hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches)
+ist es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
 
 \todo{durchfuehrung. am coolsten waere ein balkendiagramm, x achse sind 3 Geschwindigkeit, dann jeweils ein Balken fuer errechnet
 und gemessen}

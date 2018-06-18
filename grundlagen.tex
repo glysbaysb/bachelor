@@ -47,15 +47,13 @@ wird zu erst die Rotation des Roboters in einen Bewegungsvektor umgerechnet. Die
 auf eine feste Richtung angegeben, also kann der Bewegungsvektor durch trigonometrische Funktionen bestimmt werden:
 \begin{equation}
 \label{eq:M}
-	M_i = \bigl(\begin{smallmatrix} sin(R_i) \\ cos(R_i) \end{smallmatrix}\bigr)
+	\vec{M_i} = \bigl(\begin{smallmatrix} cos(R_i) \\ sin(R_i) \end{smallmatrix}\bigr)
 \end{equation}
-\todo{sin und cos vertauschen, weil im einheitskreis andersrum}
 Die n{\"{a}}chste Bewegung gerade nach vorne wird dann anhand dieser Werte "aufgeteilt". Falls der Roboter
 in einem 90\textdegree Winkel nach rechts "guckt" ($M_i = \bigl(\begin{smallmatrix} 0 \\ 1 \end{smallmatrix}\bigr)$)
 w{\"{u}}rde er sich beim nach vorne fahren auf der Y-Achse nach rechts bewegen.
 
-Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ D_i = \gls{F} - P_i $
-\todo{striche drueber, buchstaben erklaeren}
+Die Distanz zum Ziel l{\"{a}}sst sich trivial durch Vektorsubtraktion berechnen: $ \vec{D_i} = \vec{\gls{F}} - \vec{N_i} $
 
 Der Winkel zwischen diesen beiden Vektoren gibt an, wie weit der Roboter sich drehen muss um gerade zu dem Ziel
 fahren zu k{\"{o}}nnen. Dabei muss beachtet werden, dass nur der Wert des Winkels berechnet wird, das
