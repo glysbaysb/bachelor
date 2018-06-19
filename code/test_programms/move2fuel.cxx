@@ -76,7 +76,7 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 
 			auto phi = rotateTowards(my, ws->objects[i].rotation, info->fuelStation) / 3;
 			auto len = (my - info->fuelStation).length();
-			if(len < 1) {
+			if(len < 0.75) {
 				moveRobot(info->worldCtx, ws->objects[i].id, 0, 0);
 			} else {
 				auto move = unicycle_to_diff(len * 10, phi);

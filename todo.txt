@@ -1,5 +1,9 @@
-fuuuuck ich hatte ne idee fuer den ausblick. ich glaube irgendwas mit bessere physik? anstatt
-ach ka.
+- wie oft abgeben?
+- copyshop iwo in hagen?
+- wo uberhaupt abgeben, da unten oder bei ihm?
+
+fuuuuck ich hatte ne idee fuer den ausblick. ich glaube irgendwas mit bessere physik? 
+realistischeres verlangsamen oder sowas. also nicht einfach nur mal konstante
 
 cxnmwpotrm&$)1
 -----
@@ -43,12 +47,14 @@ Deadline | Module		|	was
 ---------+--------------+-----------------------------------------------------------
 		 | test_prog	| evaluationstests
 		 |				| -> aufladen
-		 | unity		| wenn Robot dod -> Rauch
-		 |				| ?Die Platte kippt zu krass, falsch, alles moegliche...
+		 | unity		| Die Platte kippt zu krass, falsch, alles moegliche...
 		 |				|  z.B. ?
-		 |				| ?Iwie fÃ¤llt ab dem dritten roboter alle durch?
+		 |				| Ladestation clipping fehler
 		 | misc			| mutex in libnetwork, beim warten auf robot id
 		 |				| udp packet groesse anpassen
+		 |				| komponentenbilder neu
+		 |				| bedienungsanleitung die json nochmal neu
+		 |				| radar realistisch?
 ---------+--------------+----------------
 
 

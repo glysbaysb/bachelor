@@ -1,3 +1,47 @@
+move robot -53036(100;75)
+UnityEngine.MonoBehaviour:print(Object)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:147)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+\phi 1.570796 cos(\phi) = -4.371139E-08 dX = -1.912373E-08 dY = 0.4375
+UnityEngine.MonoBehaviour:print(Object)
+RobotController:Move(Single, Single, Boolean) (at Assets/Scripts/RobotController.cs:149)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:154)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+
+-------------
+
+move robot -62734(100;0)
+UnityEngine.MonoBehaviour:print(Object)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:147)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+\phi 6.283185 cos(\phi) = 1 dX = 0.25 dY = 4.371139E-08
+UnityEngine.MonoBehaviour:print(Object)
+RobotController:Move(Single, Single, Boolean) (at Assets/Scripts/RobotController.cs:149)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:154)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+----
+move robot -90046(100;100)
+UnityEngine.MonoBehaviour:print(Object)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:147)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+\phi = 0 cos(\phi) = 1 dX = 0.5 dY = 0
+UnityEngine.MonoBehaviour:print(Object)
+RobotController:Move(Single, Single, Boolean) (at Assets/Scripts/RobotController.cs:149)
+HandleRPCRequests:MoveRobot(Int32[]) (at Assets/Scripts/HandleRPCRequests.cs:154)
+HandleRPCRequests:handleRPC() (at Assets/Scripts/HandleRPCRequests.cs:45)
+HandleRPCRequests:Update() (at Assets/Scripts/HandleRPCRequests.cs:136)
+
+
 http://lami.epfl.ch/team/michel/khep-sim/
 nachwippen...
 
