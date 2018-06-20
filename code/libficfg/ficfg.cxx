@@ -55,11 +55,12 @@ void getFiCfgCallback(void* optional, msgpack_object_array* params) {
 	FiCfg* cfg = (FiCfg*)optional;
 
 	assert(params->size == 3);
-	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	cfg->dropWorldStatus = params->ptr[0].via.i64;
-	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	cfg->dupWorldStatus = params->ptr[1].via.i64;
 	assert(params->ptr[2].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[2].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
-	cfg->fakeWorldStatus = params->ptr[2].via.i64;
+	assert(params->ptr[1].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[1].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+	assert(params->ptr[0].type == MSGPACK_OBJECT_POSITIVE_INTEGER || params->ptr[0].type == MSGPACK_OBJECT_NEGATIVE_INTEGER);
+
+	cfg->dropWorldStatus = params->ptr[2].via.i64;
+	cfg->dupWorldStatus = params->ptr[0].via.i64;
+	cfg->fakeWorldStatus = params->ptr[1].via.i64;
 }
 

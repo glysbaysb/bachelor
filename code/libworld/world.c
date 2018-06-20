@@ -334,11 +334,11 @@ static void* networkHandler(void* ctx_) {
 			nn_freemsg(buf);
 		}
 	}
+
 	if(r < 0) {
 		fprintf(stderr, "%s", nn_strerror(nn_errno()));
 		return NULL;
 	}
-	
 
 	return NULL;
 }
