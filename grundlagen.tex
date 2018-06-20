@@ -172,8 +172,8 @@ oder statische Objekte wie Mauern.} auszulesen und zu manipulieren.
 Beispielsweise wurde der F{\"{u}}llstation ein Skript zugeordnet, dass solange ein Objekt mit dieser kollidiert, testet, ob dies Objekt ein Roboter ist, und falls dies der Fall ist,
 den Roboter auftankt. Ein anderes Skript bewegt die Kamera abh{\"{a}}ngig von den Tastatureingaben des Benutzers.
 
-Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. Alle Klassen\todo{funktionen in diesen}, die von UnityEngine.MonoBehaviour
-abstammen und registriert sind, werden w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
+Um die Skripte in Unity zu integrieren, m{\"{u}}ssen sie bestimmte Eigenschaften haben. In allen Klassen die von UnityEngine.MonoBehaviour
+abstammen k{\"{o}}nnen bestimmte Funktionen registriert werden welche w{\"{a}}hrend der Berechnung jedes Frames aufgerufen. Der genau Zeitpunkt dieses Aufrufes h{\"{a}}ngt von
 der Funktion ab\footnote{Vgl. \cite{unityexecorder}}, beispielsweise wird Update() genau einmal pro Frame aufgerufen nachdem die Physikengine fertig ist
 und Inputevents behandelt wurden. Im Gegensatz dazu kann FixedUpdate() mehrmals oder sogar gar nicht w{\"{a}}hrend der Renderung eines Frames aufgerufen
 werden, abh{\"{a}}ngig von der Framerate. Daf{\"{u}}r wird FixedUpdate() vor der Physikengine aufgerufen, {\"{A}}nderungen, die in dieser
@@ -252,9 +252,8 @@ den Kommunikationspartner -- der Publisher kann Nachrichten verschicken, ohne si
 machen zu m{\"{u}}ssen, wann diese beim Subscriber ankommen, w{\"{a}}hrend es f{\"{u}}r den Subscriber
 uninteressant ist, wann die Nachricht versendet wurde. Der letze Vorteil ist die Entkoppelung von
 Nachrichten{\"{u}}bertragung und den anderen Aufgaben des Programmes.
-\todo{git blame hier stand mal was vernuenftiges}
-Die Nachrichten werden Daten
-von ihrer Herstellung verschickt, das Senden einer Nachricht ist also (aus Sicht des
+Die Nachrichten werden an die Netzwerkbibliothek weitergeleitet welche das Senden der Nachricht abstrahiert.
+Das Senden einer Nachricht ist also (aus Sicht des
 Publishers) O(1) in Bezug auf die Anzahl der Subscriber. Auch auf Seiten des Subscribers gibt es eine
 Asynchronit{\"{a}}t, die empfangen Daten werden mithilfe eines Callback angenommen und blockieren damit
 nicht die Abarbeitung dieser Daten.

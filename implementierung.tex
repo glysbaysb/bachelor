@@ -93,11 +93,10 @@ oder inaktiv ist wird dem Benutzer in der Mitte des Bildschirms dies als Text an
 Da es in einer Simulation keine mechanischen (o.{\"{a}}.) Fehler geben kann, das Ziel des Simulationswerkzeuges aber gerade ist,
 die Studierenden ein fehlertolerantes System entwicklen zu lassen braucht es eine Fehlerinjektion.
 
-\todo{umschreiben}
-Die RobotController konsultieren bevor sie eine neue Zielbeschleunigung und -rotation setzen die Fehlerinjektion {\"{u}}ber den
-Status ihres Roboters. Falls beispielsweise einer der Motoren nicht funktioniert hat das Auswirkungen auf die Zielbeschleunigung
-(die Richtung und die L{\"{a}}nge des Beschleunigungsvektores werden ge{\"{a}}ndert). Die Informationen {\"{u}}ber den Status
-jedes Motoren werden also von der Fehlerinjektionsklasse gespeichert und bereitgestellt.
+Bevor eine neue Zielbeschleunigung und -rotation {\"{u}}bernommen wird, {\"{u}}berpr{\"{u}}ft die Fehlerinjektion den
+Status Roboters. Falls beispielsweise einer der Motoren nicht funktioniert, oder genau in diesem Moment ausf{\"{a}}llt,
+hat das Auswirkungen auf die Zielbeschleunigung (die Richtung und die L{\"{a}}nge des Beschleunigungsvektores werden
+ge{\"{a}}ndert). Die Informationen {\"{u}}ber den Status jedes Motoren werden also von der Fehlerinjektionsklasse gespeichert und bereitgestellt.
 
 \subsection{Interface - Simulationsprogramm}
 Die Kommunikation zwischen Simulationsprogramm und Voter macht es n{\"{o}}tig, dass auf beiden Seiten eine Schnittstelle existiert,
@@ -307,18 +306,16 @@ Falls nicht gen{\"{u}}gend Energie f{\"{u}}r Bewegung und Rotation vorhanden ist
 Die Bewegung des Roboters wird vorgegeben durch $V_l(t)$ und $ V_r(t)$. Diese werden vom Controller, {\"{u}}ber den Voter an die Simulation
 weitergegeben und dann von Unity verarbeitet. Die neue Position und der neue Rotationswinkel des Roboters werden errechnet und,
 falls gen{\"{u}}gen Energie vorhanden, auch eingenommen - dazu wird der \textit{rigidbody} des Roboters manipuliert.
-Um die Bewegung fl{\"{u}}ssiger darzustellen wird zwischen den momentanen und gew{\"{u}}nschten Positionen / Winkel linear interpoliert.
-\todo{umschreiben}
 
 Hierbei muss auch die Fehlerinjektion beachtet werden. Es ist m{\"{o}}glich, dass die gew{\"{u}}nschte Drehzahl eines Motors nicht eingenommen werden
 kann, entweder weil dieser momentan ein \textit{stuck-at}-Verhalten aufweist, oder kaputt (definiert als: Drehzahl = 0) ist. Daf{\"{u}}r wird bevor
 die Bewegung durchgef{\"{u}}hrt wird {\"{u}}berpr{\"{u}}ft, ob einer der beiden Motoren momentan nicht korrekt funktioniert; dann w{\"{u}}rde sich der
 Motor nicht wie angesteuert verhalten, die Fehlerinjektion hat Vorrang.
 
-Mit diesem Wert wird nun normal weitergerechnet, also
-erst die {\"{U}}berpr{\"{u}}fung ob der Roboter sich von der verbleibenden Energiemenge her so bewegen kann, und -- falls dies der Fall ist -- wird nun
-nach und nach diese Drehzahl der Motoren eingenommen was zu einer Rotation und Translation des Roboters f{\"{u}}hrt.
-\todo{umschreiben}
+Die nun ausgerechnete Drehzahl wird in eine Beschleunigung umgerechnet. Dieser Beschleunigung soll sich der Roboter ann{\"{a}}hren. Daf{\"{u}}r wird
+aus der Wunschbeschleunigung und der momentanen Beschleunigung die Differenz errechnet und diese dem Roboter als Ansto{\ss}kraft hinzugef{\"{u}}gt.
+Dadurch das die Beschleunigung im zweidimensionalen Raum angegeben wird, kann sich der Roboter in alle Richtungen bewegen (nat{\"{u}}rlich unter
+Beachtung der nicht-holonomit{\"{a}}t).
 
 \subsection{Die Ladestation}\label{fuelstation}
 Innerhalb der Welt muss eine Ladestation platziert werden, um den Roboter die M{\"{o}}glichkeit zu geben sich aufzuladen. Auch diese wird durch ihren Vektor $ F = \bigl(\begin{smallmatrix} x \\ y \\ w \end{smallmatrix}\bigr)$ beschrieben. Eine Ladestation hat dabei ein festes Gewicht: $ w(F) = 5 $.
@@ -556,21 +553,16 @@ um die Platte auszubalancieren.
 Da das Hauptziel des Simulationswerkzeuges war, den Studenten eine weitere Praktikumsaufgabe zur Verf{\"{u}}gung
 zu stellen, ist das Hauptbewertungskriterium wie gut diese Simulation f{\"{u}}r diesen Zweck geeignet ist.
 
-Die anderen Kriterien sind: \todo{}
-
-\begin{enumerate}
-	\item Die Alternativaufgabe soll sich stark von der ausfallsicheren Heizung unterscheiden, damit die Studierenden eine tats{\"{a}}chliche Wahl haben.
-	\item Um die Aufgabe zu l{\"{o}}sen, muss eine Vielzahl von Konzepten der Ausfallsicherheit genutzt werden.
-	\item Es soll visuell ansprechend sein.
-	\item Es darf auch durch unsachgem{\"{a}}ssen Gebrauch nicht gesch{\"{a}}digt werden
-\end{enumerate}
-
 Es ist allerdings m{\"{o}}glich auszuwerten, ob die anderen Anforderungen erf{\"{u}}llt worden sind. Als erstes
 soll hier die M{\"{o}}glichkeit betrachtet werden, das mehrere Gruppen gleichzeitig
 an ihrer L{\"{o}}sung arbeiten k{\"{o}}nnen. Durch die Nutzung eines Servers zu dem sich die Voter/Roboter
-verbinden zusammen mit ein wenig Absprache der Gruppe kann dieses Ziel erreicht werden. Die Simulation, welche
-auf diesem Server l{\"{a}}uft, liest beim Start eine Konfigurationdatei ein, mit der verschiedene Einstellungen
-der Fehlerinjektion frei gew{\"{a}}hlt werden k{\"{o}}nnen.
+verbinden zusammen mit ein wenig Absprache der Gruppe kann dieses Ziel erreicht werden.
+Die Simulation, welche auf diesem Server l{\"{a}}uft, liest beim Start eine Konfigurationdatei ein, mit der verschiedene Einstellungen
+der Fehlerinjektion frei gew{\"{a}}hlt werden k{\"{o}}nnen. Dies erf{\"{u}}llt die Anforderungen an die Parameterisierbarkeit.
+
+Die Grundidee der Simulation ist komplett anders als die Grundidee der ausfallsicheren Heizung, dadurch k{\"{o}}nnen
+die Studenten eine Aufgabe anhand ihrere Interessen und F{\"{a}}higkeiten auswa{\"{a}}hlen. Mithilfe der Unity gameengine
+war es auch m{\"{o}}glich die Darstellung der Simulation um einiges ansprechender zu machen.
 
 
 Mithilfe der Beispielimplementation (und einigen speziellen Testprogrammen) ist es m{\"{o}}glich einen Systemtest
@@ -667,12 +659,8 @@ Zeit um eine Strecke abzufahren proportional mit der Fehlerinjektionswahrscheinl
 	\label{fig:zemsf}
 \end{figure}
 
-\subsubsection{Stuck-At Fehler}
-Neben dem Ausfall eines Motors soll auch ein \textit{stuck-at} Verhalten simuliert werden. Um dies zu testen wird der Roboter mit
-vorgegeben Motorgeschwindigkeiten fahren gelassen, und dabei die Fehlerwahrscheinlichkeit f{\"{u}}r ein Stuck-At Verhalten des
-rechten Motors immer weiter erh{\"{o}}ht. Anhand der zur{\"{u}}ckgelegten Wege ist es nun m{\"{o}}glich zu sehen ob der Roboter
-einen immer st{\"{a}}rker werdenen Rechtsdrall aufweist.
-\todo{durchfuehrung}
+\subsubsection{Netzwerkfehlerinjektion}
+stehen bleiben, gucken ob sich roboter bewegt --> fehler im weltstatus
 
 \clearpage
 \section{Zusammenfassung}
@@ -685,4 +673,5 @@ Server f{\"{u}}r die, von den Studenten zu programmierenden, Roboter fungiert. D
 einem von den Studierenden programmierten Teil; dieser benutzt die libworld um sich mit der Simulation zu
 verbinden und die Roboter in ihr zu steuern.
 
-\todo{was habe ich geschafft, was nicht}
+Durch die Evaluationstests ist es m{\"{o}}glich die Funktionalit{\"{a}}t der Simulation teilweise zu {\"{u}}berpr{\"{u}}fen.
+Allerdings ist es n{\"{o}}tig die Konstanten etwas anzupassen um das physikalsiche Verhalten der Simulation zu verbessern.

@@ -108,13 +108,12 @@ absetzen.
 
 \subsection{Kompilierung}
 Um {\"{A}}nderungen an der Simulation durchzuf{\"{u}}hrend, oder sie nur auf eine andere Plattform
-zu portieren ist der Unity Editor 2017 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskompatibel zu {\"{a}}lteren Versionen. Im Unity Editor
+zu portieren ist der Unity Editor 2018 n{\"{o}}tig; das Projekt ist nicht r{\"{u}}ckw{\"{a}}rtskompatibel zu {\"{a}}lteren Versionen. Im Unity Editor
 ist eine IDE enthalten, mit der es m{\"{o}}glich ist den C\# Code zu kompilieren, bei der Installation wird allerdings die Installation von Visual Studio
 2017 vorgeschlagen. Diese f{\"{u}}gt sich (mit den richtigen Plugins) besser in das Geschehen ein, so das es zum Beispiel m{\"{o}}glich ist, im Code
 Breakpointe zu setzen; falls dieser dann getroffen wird, wird das Spiel pausiert und kann debuggt werden (also k{\"{o}}nnen die Variablen eingesehen
 und ver{\"{a}}ndert werden und es ist m{\"{o}}glich durch den Quellcode in Einzelschritten durchzugehen).
 
-\todo{iwo hochladen?}
 
 \subsection{Installation}
 Das Simulationsprogramm muss nicht installiert werden, sondern kann direkt gestartet werden. Damit es die Konfigurationsdateien "fault\_injector.json" und
@@ -123,6 +122,8 @@ Das Simulationsprogramm muss nicht installiert werden, sondern kann direkt gesta
 Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
 Dazu werden jeweils zwei Unterordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
+
+Im gleichen Ordner wie die Hauptdatei (ft\_robot\_simulation.exe) m{\"{u}}ssen auch die Datei unityplayer.dll und der Dateienordner liegen.
 
 \subsection{Einstellungen}
 Die Simulationsparameter sollen vom Benutzer {\"{a}}nderbar sein, alle Einstellungsm{\"{o}}glichkeiten werden in verschiedenen JSON Dateien (mit festem Namen) aufgelistet.
@@ -149,14 +150,16 @@ Eine genauere Beschreibung der in physics.json einstellbaren physikalsichen Gr{\
 	\toprule
 	Name & Funktionalit{\"{a}}t \\
 	\midrule
-	delta & Der Exponent im E-Funktionsterm der D{\"{a}}mpfung \\
-	omega & Der Faktor im Sinusterm der D{\"{a}}mpfung \\
+	delta & Der Exponent im E-Funktionsterm der D{\"{a}}mpfung f{\"{u}}r das dynamische Gleichgewicht \\
+	omega & Der Faktor im Sinusterm der D{\"{a}}mpfung s.o \\
 	%max_angle & Gibt den maximalen Kippwinkel der Platte an\\
-	redzoneSize & Wie gro{\ss} der gef{\"{a}}hrliche Bereich sein soll \\
-	dynamicForceDivider & Wie stark sollen die Kr{\"{a}}fte des dynamischen Gleichgewichts reduziert werden? \\
+	redzoneSize & Wie gro{\ss} der gef{\"{a}}hrliche Bereich sein soll, in Relation zur Plattengr{\"{o}}sse \\
+	forceDivider & Wie stark sollen die Kr{\"{a}}fte des dynamischen Gleichgewichts reduziert werden? \\
 	R & Der Radradius \\
 	L & Der Abstand zwischen den R{\"{a}}dern \\
 	zUnrealistic & Falls der Roboter h{\"{o}}her "fliegt", wird er entfernt \\
+	spawnHeight & In welcher H{\"{o}}he sollen die Roboter erstellt werden? \\
+	spawnRadius & Wie gro{\ss} ist der Kreis in dem die Roboter erstellt werden? \\
 	deAccelConstant & Gibt an wie stark sich die Beschleunigung pro Frame verringert \\
 	deRotateConstant & Gibt an wie stark sich die Rotationskraft pro Frame verringert \\
 	fuel\_weigth & So viel wiegt jede einzelne Ladungseinheit\\
@@ -174,7 +177,6 @@ Eine genauere Beschreibung der in physics.json einstellbaren physikalsichen Gr{\
 \caption{Anforderungen an die Netzwerkbibliothek}
 \end{table}
 
-
 Diese Dateien werden beim Start des Programmes gelesen und ausgewertet. Zur Laufzeit ist keine {\"{A}}nderung der Parameter m{\"{o}}glich, hierf{\"{u}}r muss das Programm
 neu gestartet werden.
 
@@ -185,10 +187,6 @@ dann mit den Pfeiltasten bewegt werden. Mithilfe der Tabulatortaste ist es m{\"{
 wird in der Mitte des Bildschirms angezeigt.
 
 Um die Sicht auf die Simulation zu ver{\"{a}}ndern ist es m{\"{o}}glich die Kameraposition mit den W-A-S-D Tasten zu manipulieren.
-
-Erst wenn sich zwei Roboter auf der Platte befinden kippt diese auch. Die Kippwinkel werden in der Mitte des Bildschirms als Zahl angezeigt. Desweiteren gibt es in der
-linken oberen Ecke eine Anzeige um einzusch{\"{a}}tzen wie "kritisch" die Platte schon gekippt ist. Dies wird durch verschiedenfarbige, in einander liegenden Kreisen
-symbolisiert. Dabei zeigt der innerste, gr{\"{u}}ne, an das die Platte gut ausbalanciert ist, w{\"{a}}hrend der {\"{a}}usserste, rote das Gegenteil bedeutet.
 
 
 \section{Der Code des Interfaces, inklusive Beispielimplementation}
@@ -241,4 +239,3 @@ Beispielimplementation (wie die Unit-tests f{\"{u}}r libnetwork und libecc), tei
 Alle Tests k{\"{o}}nnen mit dem Shellskript "run-tests.sh" ausgef{\"{u}}hrt werden und geben dann den Status der einzelenen Teste aus.
 
 \end{document}
-

@@ -1,6 +1,22 @@
-- wie oft abgeben?
+t(0): accel= (1, 0, 1),
+      vel(0, 0, 0),
+      force(0, 0, 0)
+t(0.0) < t(x) < t(0.1):
+      accel wird langsamer
+      vel wird groesser *in dem* ich force draufaddiere
+      -> force = acce - vel
+und dann wird accel neu berechnet
+
+irgendwie die maximal mÃ¶glich beschleunigung am anfang ausrechnen?
+weil force nicht direkt drauf gerechnet wird, sondern iwie mit der reibung verrechnet werden muss?
+den teil hab ich nicht kapiert
+iwie gravitation nochmal konfigurierbar machen
+
+zUnrealistic muss auch anders gerechnet werden, ich kann nicht einfach nur Z beachten sondern muss Abstand zur Platte machen
+
+- wie oft abgeben? -> unten fragen
 - copyshop iwo in hagen?
-- wo uberhaupt abgeben, da unten oder bei ihm?
+- was gehoert ins fazit -> "feintuning der parameter noetig"
 
 fuuuuck ich hatte ne idee fuer den ausblick. ich glaube irgendwas mit bessere physik? 
 realistischeres verlangsamen oder sowas. also nicht einfach nur mal konstante
