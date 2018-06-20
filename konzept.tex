@@ -41,7 +41,6 @@ Zusammenfassend besteht das ganze System aus diesen Teilen:
 \begin{itemize}
 	\item Die Simulation berechnet die Bewegungen und implementiert das physikalische Modell. Sie {\"{u}}bernimmt auch die Visualisierung. Per Definition ist sie ausfallsicher.
 	\item Der Voter sammelt die Steuerkommandos von den Controllern, bildet daraus das Steuerergebnis und sendet dies an die Simulation. Er ist per Definition ausfallsicher gegen \textit{crash failures}.
-		\todo{das sollte glaube begrundet werden}
 	\item Die Controller generieren Steuerkommandos. Sie k{\"{o}}nnen jederzeit ausfallen.
 \end{itemize}
 
@@ -90,6 +89,10 @@ Jede Voterinstanz ist daf{\"{u}}r zust{\"{a}}ndig, ihren Roboter in der Simulati
 Daf{\"{u}}r m{\"{u}}ssen die Steuerkommandos an die Physiksimulation weitergeleitet werden,
 dies {\"{u}}bernimmt das Interface. Der Controller ist komplett den Studenten {\"{u}}berlassen ---
 es gibt nur die Einschr{\"{a}}nkung das alle Kommunikation zur Simulation hin, {\"{u}}ber den Voter erfolgen muss.
+
+Die Physiksimulation ist per definition ausfallsicher. Sie muss immer erreichbar sein und den Status der Simulation fehlerfrei weiter zu
+treiben. Dies ist Teil des Fehlermodells in dem die simulierte/reale Welt nun einmal fehlerfrei ist --- es kann nicht sein das die
+Realit{\"{a}}t keine Signale mehr liefert, oder pl{\"{o}}tzlich bestimmte Naturgesetze nicht mehr gelten.
 
 \clearpage
 \section{Kommunikation zwischen den Systemteilen}
