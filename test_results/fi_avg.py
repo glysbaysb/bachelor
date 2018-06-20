@@ -35,7 +35,7 @@ if __name__ == '__main__':
 		label = raw_input("Name fuer %s:" % (filename,))
 
 		f = csv.reader(open(filename), delimiter=';')
-		data[label] = (parse_file(f) / 1e5)
+		data[label] = (parse_file(f) / 1e6)
 
         ''' Add the measurements '''
 	colors = [('Greys', 'grey'),
