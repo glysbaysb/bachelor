@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <cmath>
+#include <chrono>
 #include <libworld/world.h>
 #include <libnetwork/network.h>
 #include <libalgo/algo.h>
@@ -18,6 +19,8 @@ typedef struct {
 	Network* network;
 
 	int fuel;
+
+	std::chrono::system_clock::time_point lastWorldstatus;
 } Info;
 
 static void worldStatusCallback(const WorldStatus* ws, void* additional);
@@ -28,6 +31,7 @@ int L = 0,
 int main(int argc, char** argv)
 {
 	Info callbackInfo = {0};
+	callbackInfo.lastWorldstatus = std::chrono::system_clock::now();
 	callbackInfo.fuel = 1;
 
 	if(argc < 5) {
@@ -65,8 +69,12 @@ static void worldStatusCallback(const WorldStatus* ws, void* additional)
 		if(ws->objects[i].type == ROBOT && ws->objects[i].id == info->robot) {
 			info->fuel = ws->objects[i].fuel; 
 
-			printf("%lu;%d;(%f:%f);\n", time(nullptr), ws->objects[i].fuel,
-					ws->objects[i].x, ws->objects[i].y);
+			auto now = std::chrono::system_clock::now();
+			auto timePassed = now - info->lastWorldstatus;
+			info->lastWorldstatus = std::chrono::system_clock::now();
+
+			printf("%lu;%d;(%f:%f);%ld\n", time(nullptr), ws->objects[i].fuel,
+					ws->objects[i].x, ws->objects[i].y, timePassed.count());
 
 			moveRobot(info->worldCtx, ws->objects[i].id, L, R);
 		}
