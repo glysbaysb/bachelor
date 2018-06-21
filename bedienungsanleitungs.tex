@@ -68,7 +68,6 @@
 %\thispagestyle{empty}
 %\clearpage
 
-\todo{config dateien, x{86|64} order rueberkopieren}
 
 \thispagestyle{empty}
 \begin{center}
@@ -120,7 +119,9 @@ Das Simulationsprogramm muss nicht installiert werden, sondern kann direkt gesta
 "physics.json" findt m{\"{u}}ssen diese im gleichen Verzeichniss liegen.
 
 Da die \href{https://github.com/mhowlett/NNanomsg}{NNanomsg Bibliothek} genutzt wird, um mit den Votern zu kommunizieren, muss diese auch der Simulation beigelegt werden. 
-Dazu werden jeweils zwei Unterordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden. F{\"{u}}r die
+Dazu werden jeweils zwei Unterordner, einer namens x86, einer namens x64 angelegt in welche dann die jeweiligen vorkompilierten Dateien gelegt werden
+\footnote{Auf unterschiedlichen Rechner funktionieren die DLLs teilweise nicht, teilweise doch. In diesem Fall hilft es meistens sich die Orginaldateien
+von github herunterzuladen}. F{\"{u}}r die
 Benutzung unter Windows sind dies .DLL Dateien, bei Linux sind es .so Dateien.
 
 Im gleichen Ordner wie die Hauptdatei (ft\_robot\_simulation.exe) m{\"{u}}ssen auch die Datei unityplayer.dll und der Dateienordner liegen.

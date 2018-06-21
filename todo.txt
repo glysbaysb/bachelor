@@ -1,22 +1,6 @@
-t(0): accel= (1, 0, 1),
-      vel(0, 0, 0),
-      force(0, 0, 0)
-t(0.0) < t(x) < t(0.1):
-      accel wird langsamer
-      vel wird groesser *in dem* ich force draufaddiere
-      -> force = acce - vel
-und dann wird accel neu berechnet
-
-irgendwie die maximal mÃ¶glich beschleunigung am anfang ausrechnen?
-weil force nicht direkt drauf gerechnet wird, sondern iwie mit der reibung verrechnet werden muss?
-den teil hab ich nicht kapiert
-iwie gravitation nochmal konfigurierbar machen
-
-zUnrealistic muss auch anders gerechnet werden, ich kann nicht einfach nur Z beachten sondern muss Abstand zur Platte machen
-
-- wie oft abgeben? -> unten fragen
+- wie oft abgeben?
 - copyshop iwo in hagen?
-- was gehoert ins fazit -> "feintuning der parameter noetig"
+- wo uberhaupt abgeben, da unten oder bei ihm?
 
 fuuuuck ich hatte ne idee fuer den ausblick. ich glaube irgendwas mit bessere physik? 
 realistischeres verlangsamen oder sowas. also nicht einfach nur mal konstante
@@ -25,6 +9,7 @@ cxnmwpotrm&$)1
 -----
 
 >1.3 geht mir zu unsystematisch vor. Mehr zwischen Details der Technik, dem Lernziel und mÃ¶glichen AnsÃ¤tzen / Fehlermodellen trennen.
+reee
 
 
 >3. Vielleicht etwas mehr Motivation fÃ¼r die balanzierenden Roboter als solche - also warum dieses Projekt?
@@ -49,7 +34,7 @@ jedenfalls einen neuen Absatz dazugepackt
 >10 Die Gameengine fÃ¤llt hier aus dem Himmel (oder ich habe das in 5-7 Ã¼bersehe)
 Mhm ich sag doch vorher warum ich Physik- und Grafik haben wil (In
 Architekturkonzept) und dann hier das die gameengine ja beides hat
-vlt einfach mehr?
+vlt einfach mehr? Und andersruum.
 
 
 >Teil IV Implementation habe ich nur Ã¼berflogen
@@ -70,7 +55,10 @@ Deadline | Module		|	was
 		 |				| udp packet groesse anpassen
 		 |				| komponentenbilder neu
 		 |				| bedienungsanleitung die json nochmal neu
-		 |				| radar realistisch?
+		 |				| radar rausnehmen
+		 |				| entladefkt neu beschreiben
+		 xte FjÃ¶eromketopmswacjeinscjlich gennt aid eif dem RESPC
+		 prÃpduoertr. deswgem somd wor damm jetzt nuAufiAuf grund dieser Anforerungen.
 ---------+--------------+----------------
 
 

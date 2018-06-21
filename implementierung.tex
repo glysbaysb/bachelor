@@ -288,8 +288,10 @@ eine S{\"{a}}ule. Auf dieser befindet sich eine Lampe die den Energielevel angez
 Ein Roboter \gls{Ni} wird dabei beschrieben durch seine Position und Gewicht
 $ N_i = \bigl(\begin{smallmatrix} x(i) \\ y(i) \\ w(i) \end{smallmatrix}\bigr)$, eine
 Geschwindigkeit $ V_i = \Delta v $ und den momentanen Drehwinkel
-$ R_i = r_y(i)$. \todo{Ausdehnung}
-
+$ R_i = r_y(i)$. Dabei hat der Roboter eine Ausdehnung von einem Meter\footnote{Die Standarteinhait in Unity},
+das gleiche gilt f{\"{u}}r die Ladestation.
+Dabei hat der Roboter eine Ausdehnung von einem Meter\footnote{Die Standarteinhait in Unity},
+das gleiche gilt f{\"{u}}r die Ladestation.
 Das Gewicht des Roboters ist abh{\"{a}}ngig vom Grundgewicht des Roboters und seinem momentanen F{\"{u}}llstatus: 
 \begin{equation}\label{eq:w}
  w(N_i) = 1 + e(N_i) \times 0.03
@@ -336,7 +338,7 @@ Die simulierte Welt besteht aus einer 100 Einheiten gro{\ss}en kreisf{\"{o}}rmig
 den Bewegungskr{\"{a}}ften die auf sie wirken, kippt.
 
 Die Kr{\"{a}}fte die auf die Platte wirken, berechnen sich nach den Gleichungen \ref{eq:diffs-x}, \ref{eq:diffs-y} und der Summe aller Kr{\"{a}}fte des
-dynamischen Gleichgewichtes\ref{eq:schwingungen}.
+dynamischen Gleichgewichtes\ref{dyn-balance}.
 
 Die Impulse, welche auf die Platte wirken (beschrieben in \ref{eq:schwingung}), f{\"{u}}hren zu einer zus{\"{a}}tzlichen Kippung und einer Rotation der Platte.
 Immer wenn ein Roboter sich bewegt, wird dieser Bewegungsimpuls gespeichert. Um die momentan auf die Platte wirkenden Kr{\"{a}}fte zu errechnen, werden alle
@@ -613,34 +615,6 @@ werden Punkte, die sp{\"{a}}ter angefahren werden, dunkler gezeichnet als helle;
 Es wird ersichtlich, dass bei der Rotation auf der Stelle es f{\"{a}}lschlicherweise kleinere Bewegungen gibt. Diese sind auch bei den reinen
 Bewegung nach vorne und hinten erkennbar.
 
-\subsubsection{Auf/Entladen}
-Ein weiterer Testfall ist, ob die Bewegungen des Roboters zu einem Entladen f{\"{u}}hren. Daf{\"{u}}r wurde ein Testprogramm geschrieben,
-dass den Roboter mit einer festen Geschwindigkeit {\"{u}}ber die Platte fahren l{\"{a}}sst und sich beendet, sobald der Roboter sich
-entladen hat. Anhand der Durchlaufzeit des Programmes und der vorgegebenen Geschwindigkeit (und damit des erwarteten Verbrauches)
-ist es m{\"{o}}glich den tats{\"{a}}chlichen Verbrauch herauszufinden.
-
-\todo{durchfuehrung. am coolsten waere ein balkendiagramm, x achse sind 3 Geschwindigkeit, dann jeweils ein Balken fuer errechnet
-und gemessen}
-
-Da in der Simulation die Roboter sich nicht nur entladen sollen, sondern m{\"{o}}glichst lange fahren sollen, gibt es eine
-Ladestation, welche die Roboter aufl{\"{a}}dt, falls diese nah genug an dieser sind. Es ist m{\"{o}}glich ein Testprogramm zu
-schreiben, welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Die Roboter haben einen bestimmten
-Grundumsatz der nach 1000 Sekunden\footnote{Bei einem Grundumsatz von 1 pro Sekunde und keinerlei Bewegung.}
-dazu f{\"{u}}hren w{\"{u}}rde, dass der Roboter seine Energie verbraucht hat. Falls der Roboter allerdings
-konstant aufgeladen wird, sollte dieser Roboter sich auch nach viel l{\"{a}}ngere Zeitspannen nicht entleeren.
-\begin{subequations}\label{eq:eval:laden}
-\begin{align}
- e_i(t = 0) = 1000
-	e_i(t = X) = 1000 - 1 * X  = 0 \\
-	\implies e_i(t = 1000) = 0
-\end{align}
-\end{subequations}
-
-Hierbei wurde ein Programm geschrieben, welches den Roboter an die Ladestation heranf{\"{a}}hrt und dort stehen bleibt. Das Programm
-beendet sich sobald der Roboter sich komplett entladen hat --- falls dies in unter 1000s passiert, funktioniert das Aufladen des
-Roboters nicht, falls es l{\"{a}}nger dauert (oder sogar niemals passiert), funktioniert die Ladestation.
-\todo{durchfuehrung}
-
 \subsection{Evaluierung in Bezug auf Simulation - Fehlerinjektion}
 Da die Fehlerinjektion die Fehler zuf{\"{a}}llig injiziert ist eine statistische Auswertung notwendig. Das hei{\ss}t praktisch, dass
 der gleiche Versuch mehrmals ausgef{\"{u}}hrt werden muss und der Anteil der "gegl{\"{u}}ckten" Versuche mit dem Erwartungswert
@@ -660,7 +634,25 @@ Zeit um eine Strecke abzufahren proportional mit der Fehlerinjektionswahrscheinl
 \end{figure}
 
 \subsubsection{Netzwerkfehlerinjektion}
-stehen bleiben, gucken ob sich roboter bewegt --> fehler im weltstatus
+Ein weiterer Bestandteil der Fehlerinjektion ist das Verf{\"{a}}lschen der Weltstatusinformationen. Um die Funktionalit{\"{a}}t
+zu testen wird die durchschnittliche Dauer zwischen dem Empfangen der Weltstatusinformationen errechnet, w{\"{a}}hrend die
+Fehlerwahrscheinlichkeit des "fallen lassen" einer Weltstatusinformationen erh{\"{o}}ht wird.
+
+\begin{figure}
+	\centering
+	\includevisio[width=\textwidth]{dzzdw}
+	\caption{Durchschnittliche Zeit zwischen dem Empfangen von Weltstatusinformationen}
+	\label{fig:zemsf}
+\end{figure}
+
+Der Erwartungswert ist 100ms, denn dies wird in der Konfigurationsdatei so angegeben. Allerdings kann dieser Wert nicht
+erreicht werden --- bei einer Fehlerwahrscheinlichkeit von 0, liegt die durchschnittliche Zeit umgef{\"{a}}hr 10\% {\"{u}}ber
+dem erwarteten Wert. Dies ist aber nicht verwunderlich, schlie{\ss}lich l{\"{a}}uft die Simulation auf normalen Rechner, welche
+auch andere Aufgaben abarbeiten wordurch die Echtzeitf{\"{a}}higkeit nicht gew{\"{a}}hrleistet werden kann (und auch gar nicht
+gew{\"{u}}nscht ist).
+
+Nicht destotrotz ist es ersichtlich das mit steigender Fehlerwahrscheinlichkeite auch die durchschnittliche Dauer zum Empfangen
+von Weltstatusinformationen steigt. Das bedeutet das die Fehlerinjektion wirkt.
 
 \clearpage
 \section{Zusammenfassung}
@@ -674,4 +666,6 @@ einem von den Studierenden programmierten Teil; dieser benutzt die libworld um s
 verbinden und die Roboter in ihr zu steuern.
 
 Durch die Evaluationstests ist es m{\"{o}}glich die Funktionalit{\"{a}}t der Simulation teilweise zu {\"{u}}berpr{\"{u}}fen.
-Allerdings ist es n{\"{o}}tig die Konstanten etwas anzupassen um das physikalsiche Verhalten der Simulation zu verbessern.
+Allerdings ist es n{\"{o}}tig die Konstanten etwas anzupassen um das physikalische Verhalten der Simulation zu verbessern.
+In diesem Bereich sind auch weitere Verbesserungsm{\"{o}}glichkeiten denkbar, zum Beispiel eine Anpassung der Gravitationskraft
+oder eine realistischere Auf-/Entladekurve.
